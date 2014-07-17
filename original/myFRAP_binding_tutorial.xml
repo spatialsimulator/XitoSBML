@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:req="http://www.sbml.org/sbml/level3/version1/requiredElements/version1" xmlns:spatial="http://www.sbml.org/sbml/level3/version1/spatial/version1" level="3" version="1" req:required="true" spatial:required="true">
+  <model id="myFRAP_binding_tutorial_biochem_geometry" name="myFRAP binding tutorial_biochem geometry">
+    <annotation>
+      <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+        <vcell:VCMLSpecific>
+          <vcell:BioModel Name="myFRAP_binding_tutorial" KeyValue="76694248"/>
+          <vcell:SimulationSpec Name="biochem_geometry" KeyValue="76694225"/>
+        </vcell:VCMLSpecific>
+      </vcell:VCellInfo>
+    </annotation>
+    <listOfUnitDefinitions>
+      <unitDefinition id="substance">
+        <listOfUnits>
+          <unit kind="item" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="volume">
+        <listOfUnits>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1e-06"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="area">
+        <listOfUnits>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1e-06"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="molecules">
+        <listOfUnits>
+          <unit kind="item" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="umol_um3_litre_1">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1e-21"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="um3">
+        <listOfUnits>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1e-06"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="um2">
+        <listOfUnits>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1e-06"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="uM_um3_molecules_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-21"/>
+          <unit kind="item" exponent="-1" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="uM_s_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="0.001"/>
+          <unit kind="metre" exponent="-3" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="uM_1_s_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1000"/>
+          <unit kind="metre" exponent="3" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="-1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="s_1">
+        <listOfUnits>
+          <unit kind="second" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="uM_um_s_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-09"/>
+          <unit kind="metre" exponent="-2" scale="0" multiplier="1"/>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="pA_um_2">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1"/>
+          <unit kind="ampere" exponent="1" scale="0" multiplier="1"/>
+          <unit kind="metre" exponent="-2" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="um_s_1">
+        <listOfUnits>
+          <unit kind="dimensionless" exponent="1" scale="0" multiplier="1e-06"/>
+          <unit kind="metre" exponent="1" scale="0" multiplier="1"/>
+          <unit kind="second" exponent="-1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment id="cytosol" name="cytosol" spatialDimensions="3" size="5000" units="um3" constant="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:VCMLSpecific>
+              <vcell:OutsideCompartment Name="PM"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+        <spatial:compartmentMapping spatial:spatialId="Cytcytosol" spatial:compartment="cytosol" spatial:domainType="Cyt" spatial:unitSize="1"/>
+      </compartment>
+      <compartment id="extracellular" name="extracellular" spatialDimensions="3" size="50000" units="um3" constant="true">
+        <spatial:compartmentMapping spatial:spatialId="ECextracellular" spatial:compartment="extracellular" spatial:domainType="EC" spatial:unitSize="1"/>
+      </compartment>
+      <compartment id="nucleus" name="nucleus" spatialDimensions="3" size="500" units="um3" constant="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:VCMLSpecific>
+              <vcell:OutsideCompartment Name="NM"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+        <spatial:compartmentMapping spatial:spatialId="Nucnucleus" spatial:compartment="nucleus" spatial:domainType="Nuc" spatial:unitSize="1"/>
+      </compartment>
+      <compartment id="NM" name="NM" spatialDimensions="2" size="304.6" units="um2">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:VCMLSpecific>
+              <vcell:OutsideCompartment Name="cytosol"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+        <spatial:compartmentMapping spatial:spatialId="Cyt_Nuc_membraneNM" spatial:compartment="NM" spatial:domainType="Cyt_Nuc_membrane" spatial:unitSize="1"/>
+      </compartment>
+      <compartment id="PM" name="PM" spatialDimensions="2" size="1414" units="um2">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:VCMLSpecific>
+              <vcell:OutsideCompartment Name="extracellular"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+        <spatial:compartmentMapping spatial:spatialId="Cyt_EC_membranePM" spatial:compartment="PM" spatial:domainType="Cyt_EC_membrane" spatial:unitSize="1"/>
+      </compartment>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="rf_nucleus" compartment="nucleus" initialConcentration="5" substanceUnits="uM" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:FreeText>RAN-FITC</vcell:FreeText>
+            <vcell:VCMLSpecific>
+              <vcell:Compound Name="rf"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+      </species>
+      <species id="rB_nucleus" compartment="nucleus" substanceUnits="uM" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:FreeText>RAN_bound</vcell:FreeText>
+            <vcell:VCMLSpecific>
+              <vcell:Compound Name="rB"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+      </species>
+      <species id="BS_nucleus" compartment="nucleus" initialConcentration="20" substanceUnits="uM" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:FreeText>Binding_sites</vcell:FreeText>
+            <vcell:VCMLSpecific>
+              <vcell:Compound Name="BS"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+      </species>
+      <species id="rfB_nucleus" compartment="nucleus" initialConcentration="0" substanceUnits="uM" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:FreeText>RAN_FITC_bound</vcell:FreeText>
+            <vcell:VCMLSpecific>
+              <vcell:Compound Name="rfB"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+      </species>
+      <species id="laser_nucleus" compartment="nucleus" substanceUnits="uM" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:FreeText>light</vcell:FreeText>
+            <vcell:VCMLSpecific>
+              <vcell:Compound Name="laser"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+      </species>
+      <species id="r_cytosol" compartment="cytosol" initialConcentration="0" substanceUnits="uM" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:FreeText>RAN</vcell:FreeText>
+            <vcell:VCMLSpecific>
+              <vcell:Compound Name="r"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+      </species>
+      <species id="rf_cytosol" compartment="cytosol" initialConcentration="0" substanceUnits="uM" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:FreeText>RAN-FITC</vcell:FreeText>
+            <vcell:VCMLSpecific>
+              <vcell:Compound Name="rf"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+      </species>
+      <species id="r_nucleus" compartment="nucleus" initialConcentration="5" substanceUnits="uM" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isSpatial="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:FreeText>RAN</vcell:FreeText>
+            <vcell:VCMLSpecific>
+              <vcell:Compound Name="r"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+      </species>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="x" value="0" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+        <spatial:spatialSymbolReference spatial:spatialId="x" spatial:type="coordinateComponent"/>
+      </parameter>
+      <parameter id="y" value="0" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+        <spatial:spatialSymbolReference spatial:spatialId="y" spatial:type="coordinateComponent"/>
+      </parameter>
+      <parameter id="rf_nucleus_diff_X" value="10" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="rf_nucleus" spatial:coordinateIndex="0"/>
+      </parameter>
+      <parameter id="rf_nucleus_diff_Y" value="10" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="rf_nucleus" spatial:coordinateIndex="1"/>
+      </parameter>
+      <parameter id="rf_nucleus_BC_Xm" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="rf_nucleus" spatial:coordinateBoundary="Xmin" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="rf_nucleus_BC_Xp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="rf_nucleus" spatial:coordinateBoundary="Xmax" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="rf_nucleus_BC_Ym" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="rf_nucleus" spatial:coordinateBoundary="Ymin" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="rf_nucleus_BC_Yp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="rf_nucleus" spatial:coordinateBoundary="Ymax" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="r_cytosol_diff_X" value="10" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="r_cytosol" spatial:coordinateIndex="0"/>
+      </parameter>
+      <parameter id="r_cytosol_diff_Y" value="10" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="r_cytosol" spatial:coordinateIndex="1"/>
+      </parameter>
+      <parameter id="r_cytosol_BC_Xm" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="r_cytosol" spatial:coordinateBoundary="Xmin" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="r_cytosol_BC_Xp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="r_cytosol" spatial:coordinateBoundary="Xmax" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="r_cytosol_BC_Ym" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="r_cytosol" spatial:coordinateBoundary="Ymin" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="r_cytosol_BC_Yp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="r_cytosol" spatial:coordinateBoundary="Ymax" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="rf_cytosol_diff_X" value="10" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="rf_cytosol" spatial:coordinateIndex="0"/>
+      </parameter>
+      <parameter id="rf_cytosol_diff_Y" value="10" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="rf_cytosol" spatial:coordinateIndex="1"/>
+      </parameter>
+      <parameter id="rf_cytosol_BC_Xm" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="rf_cytosol" spatial:coordinateBoundary="Xmin" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="rf_cytosol_BC_Xp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="rf_cytosol" spatial:coordinateBoundary="Xmax" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="rf_cytosol_BC_Ym" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="rf_cytosol" spatial:coordinateBoundary="Ymin" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="rf_cytosol_BC_Yp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="rf_cytosol" spatial:coordinateBoundary="Ymax" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="r_nucleus_diff_X" value="10" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="r_nucleus" spatial:coordinateIndex="0"/>
+      </parameter>
+      <parameter id="r_nucleus_diff_Y" value="10" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:diffusionCoefficient spatial:variable="r_nucleus" spatial:coordinateIndex="1"/>
+      </parameter>
+      <parameter id="r_nucleus_BC_Xm" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="r_nucleus" spatial:coordinateBoundary="Xmin" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="r_nucleus_BC_Xp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="r_nucleus" spatial:coordinateBoundary="Xmax" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="r_nucleus_BC_Ym" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="r_nucleus" spatial:coordinateBoundary="Ymin" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="r_nucleus_BC_Yp" value="0" constant="true" req:mathOverridden="spatial" req:coreHasAlternateMath="true">
+        <spatial:boundaryCondition spatial:variable="r_nucleus" spatial:coordinateBoundary="Ymax" spatial:type="Flux"/>
+      </parameter>
+      <parameter id="KMOLE" value="0.00166112956810631" units="uM_um3_molecules_1" constant="true"/>
+    </listOfParameters>
+    <listOfInitialAssignments>
+      <initialAssignment symbol="rB_nucleus">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <apply>
+            <piecewise>
+              <piece>
+                <cn> 20 </cn>
+                <apply>
+                  <and/>
+                  <apply>
+                    <gt/>
+                    <ci> x </ci>
+                    <cn> 25 </cn>
+                  </apply>
+                  <apply>
+                    <lt/>
+                    <ci> x </ci>
+                    <cn> 30 </cn>
+                  </apply>
+                  <apply>
+                    <gt/>
+                    <ci> y </ci>
+                    <cn> 41.24 </cn>
+                  </apply>
+                  <apply>
+                    <lt/>
+                    <ci> y </ci>
+                    <cn> 46.24 </cn>
+                  </apply>
+                </apply>
+              </piece>
+              <otherwise>
+                <cn> 0 </cn>
+              </otherwise>
+            </piecewise>
+          </apply>
+        </math>
+      </initialAssignment>
+      <initialAssignment symbol="laser_nucleus">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <piecewise>
+            <piece>
+              <cn> 1 </cn>
+              <apply>
+                <lt/>
+                <apply>
+                  <plus/>
+                  <apply>
+                    <power/>
+                    <apply>
+                      <plus/>
+                      <cn> -30 </cn>
+                      <ci> x </ci>
+                    </apply>
+                    <cn> 2 </cn>
+                  </apply>
+                  <apply>
+                    <power/>
+                    <apply>
+                      <plus/>
+                      <cn> -41.24 </cn>
+                      <ci> y </ci>
+                    </apply>
+                    <cn> 2 </cn>
+                  </apply>
+                </apply>
+                <cn> 100 </cn>
+              </apply>
+            </piece>
+            <otherwise>
+              <cn> 0 </cn>
+            </otherwise>
+          </piecewise>
+        </math>
+      </initialAssignment>
+    </listOfInitialAssignments>
+    <listOfReactions>
+      <reaction id="RAN_binding" name="RAN_binding" reversible="true" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:VCMLSpecific>
+              <vcell:SimpleReaction Structure="nucleus"/>
+              <vcell:ReactionRate Name="J"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="r_nucleus" stoichiometry="1"/>
+          <speciesReference species="BS_nucleus" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="rB_nucleus" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci> Kf </ci>
+                <ci> r_nucleus </ci>
+                <ci> BS_nucleus </ci>
+              </apply>
+              <apply>
+                <minus/>
+                <apply>
+                    <times/>
+                    <ci> Kr </ci>
+                    <ci> rB_nucleus </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+          <listOfLocalParameters>
+            <localParameter id="Kf" value="0.02" units="uM_1_s_1"/>
+            <localParameter id="Kr" value="0.1" units="s_1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="bleaching1" name="bleaching1" reversible="true" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:VCMLSpecific>
+              <vcell:SimpleReaction Structure="nucleus"/>
+              <vcell:ReactionRate Name="J"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="rf_nucleus" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="r_nucleus" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="laser_nucleus"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <piecewise>
+                <piece>
+                  <apply>
+                    <times/>
+                    <ci> Vmax </ci>
+                    <ci> rf_nucleus </ci>
+                    <ci> laser_nucleus </ci>
+                  </apply>
+                  <apply>
+                    <and/>
+                    <apply>
+                      <gt/>
+                      <csymbol encoding="text" definitionURL="http://www.sbml.org/sbml/symbols/time"> t </csymbol>
+                      <cn> 10 </cn>
+                    </apply>
+                    <apply>
+                      <lt/>
+                      <csymbol encoding="text" definitionURL="http://www.sbml.org/sbml/symbols/time"> t </csymbol>
+                      <cn> 10.5 </cn>
+                    </apply>
+                  </apply>
+                </piece>
+                <otherwise>
+                  <cn> 0 </cn>
+                </otherwise>
+              </piecewise>
+            </apply>
+          </math>
+          <listOfLocalParameters>
+            <localParameter id="Vmax" value="50" units="uM_1_s_1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="RAN_FITC_binding" name="RAN_FITC_binding" reversible="true" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:VCMLSpecific>
+              <vcell:SimpleReaction Structure="nucleus"/>
+              <vcell:ReactionRate Name="J"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="BS_nucleus" stoichiometry="1"/>
+          <speciesReference species="rf_nucleus" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="rfB_nucleus" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <plus/>
+              <apply>
+                <times/>
+                <ci> Kf </ci>
+                <ci> BS_nucleus </ci>
+                <ci> rf_nucleus </ci>
+              </apply>
+              <apply>
+                <minus/>
+                <apply>
+                  <times/>
+                    <ci> Kr </ci>
+                    <ci> rfB_nucleus </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+          <listOfLocalParameters>
+            <localParameter id="Kf" value="0.02" units="uM_1_s_1"/>
+            <localParameter id="Kr" value="0.1" units="s_1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="bleaching2" name="bleaching2" reversible="true" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:VCMLSpecific>
+              <vcell:SimpleReaction Structure="nucleus"/>
+              <vcell:ReactionRate Name="J"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="rfB_nucleus" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="rB_nucleus" stoichiometry="1"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference species="laser_nucleus"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <piecewise>
+                <piece>
+                  <apply>
+                    <times/>
+                    <ci> Vmax2 </ci>
+                    <ci> rfB_nucleus </ci>
+                    <ci> laser_nucleus </ci>
+                  </apply>
+                  <apply>
+                    <and/>
+                    <apply>
+                      <gt/>
+                      <csymbol encoding="text" definitionURL="http://www.sbml.org/sbml/symbols/time"> t </csymbol>
+                      <cn> 10 </cn>
+                    </apply>
+                    <apply>
+                      <lt/>
+                      <csymbol encoding="text" definitionURL="http://www.sbml.org/sbml/symbols/time"> t </csymbol>
+                      <cn> 10.5 </cn>
+                    </apply>
+                  </apply>
+                </piece>
+                <otherwise>
+                  <cn> 0 </cn>
+                </otherwise>
+              </piecewise>
+            </apply>
+          </math>
+          <listOfLocalParameters>
+            <localParameter id="Vmax2" value="50" units="uM_1_s_1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="flux1" name="flux1" reversible="true" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:VCMLSpecific>
+              <vcell:FluxStep Structure="NM" FluxCarrier="r" FluxCarrierValence="0" FluxOption="MolecularOnly"/>
+              <vcell:ReactionRate Name="J"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="r_cytosol" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="r_nucleus" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> k1 </ci>
+              <apply>
+                <plus/>
+                <ci> r_cytosol </ci>
+                <apply>
+                  <minus/>
+                  <ci> r_nucleus </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+          <listOfLocalParameters>
+            <localParameter id="I" value="0" units="pA_um_2"/>
+            <localParameter id="k1" value="10" units="um_s_1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+      <reaction id="flux2" name="flux2" reversible="true" fast="false" req:mathOverridden="spatial" req:coreHasAlternateMath="true" spatial:isLocal="true">
+        <annotation>
+          <vcell:VCellInfo xmlns:vcell="http://sourceforge.net/projects/vcell">
+            <vcell:VCMLSpecific>
+              <vcell:FluxStep Structure="NM" FluxCarrier="rf" FluxCarrierValence="0" FluxOption="MolecularOnly"/>
+              <vcell:ReactionRate Name="J"/>
+            </vcell:VCMLSpecific>
+          </vcell:VCellInfo>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="rf_cytosol" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="rf_nucleus" stoichiometry="1"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> k2 </ci>
+              <apply>
+                <plus/>
+                <ci> rf_cytosol </ci>
+                <apply>
+                  <minus/>
+                  <ci> rf_nucleus </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+          <listOfLocalParameters>
+            <localParameter id="I" value="0" units="pA_um_2"/>
+            <localParameter id="k2" value="10" units="um_s_1"/>
+          </listOfLocalParameters>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+    <spatial:geometry spatial:coordinateSystem="Cartesian">
+      <spatial:listOfCoordinateComponents>
+        <spatial:coordinateComponent spatial:spatialId="x" spatial:componentType="cartesianX" spatial:sbmlUnit="um" spatial:index="0">
+          <spatial:boundaryMin spatial:spatialId="Xmin" spatial:value="0"/>
+          <spatial:boundaryMax spatial:spatialId="Xmax" spatial:value="48.54"/>
+        </spatial:coordinateComponent>
+        <spatial:coordinateComponent spatial:spatialId="y" spatial:componentType="cartesianY" spatial:sbmlUnit="um" spatial:index="1">
+          <spatial:boundaryMin spatial:spatialId="Ymin" spatial:value="0"/>
+          <spatial:boundaryMax spatial:spatialId="Ymax" spatial:value="71.24"/>
+        </spatial:coordinateComponent>
+      </spatial:listOfCoordinateComponents>
+      <spatial:listOfDomainTypes>
+        <spatial:domainType spatial:spatialId="EC" spatial:spatialDimensions="3"/>
+        <spatial:domainType spatial:spatialId="Nuc" spatial:spatialDimensions="3"/>
+        <spatial:domainType spatial:spatialId="Cyt" spatial:spatialDimensions="3"/>
+        <spatial:domainType spatial:spatialId="Cyt_EC_membrane" spatial:spatialDimensions="2"/>
+        <spatial:domainType spatial:spatialId="Cyt_Nuc_membrane" spatial:spatialDimensions="2"/>
+      </spatial:listOfDomainTypes>
+      <spatial:listOfDomains>
+        <spatial:domain spatial:spatialId="EC0" spatial:domainType="EC" spatial:implicit="false">
+          <spatial:listOfInteriorPoints>
+            <spatial:interiorPoint spatial:coord1="0" spatial:coord2="0" spatial:coord3="4.49999987495175e-07"/>
+          </spatial:listOfInteriorPoints>
+        </spatial:domain>
+        <spatial:domain spatial:spatialId="Cyt1" spatial:domainType="Cyt" spatial:implicit="false">
+          <spatial:listOfInteriorPoints>
+            <spatial:interiorPoint spatial:coord1="34.8115151515151" spatial:coord2="0.491310344827586" spatial:coord3="4.49999987495175e-07"/>
+          </spatial:listOfInteriorPoints>
+        </spatial:domain>
+        <spatial:domain spatial:spatialId="Nuc2" spatial:domainType="Nuc" spatial:implicit="false">
+          <spatial:listOfInteriorPoints>
+            <spatial:interiorPoint spatial:coord1="29.9084848484848" spatial:coord2="19.6524137931034" spatial:coord3="4.49999987495175e-07"/>
+          </spatial:listOfInteriorPoints>
+        </spatial:domain>
+        <spatial:domain spatial:spatialId="membrane_EC0_Cyt1" spatial:domainType="Cyt_EC_membrane" spatial:implicit="true"/>
+        <spatial:domain spatial:spatialId="membrane_Cyt1_Nuc2" spatial:domainType="Cyt_Nuc_membrane" spatial:implicit="true"/>
+      </spatial:listOfDomains>
+      <spatial:listOfAdjacentDomains>
+        <spatial:adjacentDomains spatial:spatialId="membrane_EC0_Cyt1_Cyt1" spatial:domain1="membrane_EC0_Cyt1" spatial:domain2="Cyt1"/>
+        <spatial:adjacentDomains spatial:spatialId="membrane_EC0_Cyt1_EC0" spatial:domain1="membrane_EC0_Cyt1" spatial:domain2="EC0"/>
+        <spatial:adjacentDomains spatial:spatialId="membrane_Cyt1_Nuc2_Nuc2" spatial:domain1="membrane_Cyt1_Nuc2" spatial:domain2="Nuc2"/>
+        <spatial:adjacentDomains spatial:spatialId="membrane_Cyt1_Nuc2_Cyt1" spatial:domain1="membrane_Cyt1_Nuc2" spatial:domain2="Cyt1"/>
+      </spatial:listOfAdjacentDomains>
+      <spatial:listOfGeometryDefinitions>
+        <spatial:sampledFieldGeometry spatial:spatialId="my_biochemII_homework_biochem_geometry_20121105_185018">
+          <spatial:listOfSampledVolumes>
+            <spatial:sampledVolume spatial:spatialId="EC" spatial:domainType="EC" spatial:sampledValue="0" spatial:minValue="0" spatial:maxValue="0"/>
+            <spatial:sampledVolume spatial:spatialId="Nuc" spatial:domainType="Nuc" spatial:sampledValue="1" spatial:minValue="0" spatial:maxValue="0"/>
+            <spatial:sampledVolume spatial:spatialId="Cyt" spatial:domainType="Cyt" spatial:sampledValue="2" spatial:minValue="0" spatial:maxValue="0"/>
+          </spatial:listOfSampledVolumes>
+          <spatial:sampledField spatial:spatialId="img_20121105_185018" spatial:dataType="integer" spatial:numSamples1="100" spatial:numSamples2="146" spatial:numSamples3="1">
+            <spatial:imageData>120 -100 -19 -37 -47 -114 -60 32 8 5 -48 -23 -2 -1 71 -17 -45 -92 93 21 -67 92 46 -44 -50 14 -49 -60 19 -60 52 77 -91 -81 -41 55 46 -15 -13 -114 10 35 83 -87 48 -82 -107 -28 81 55 24 -49 69 90 -93 4 121 -86 -15 49 -123 -92 25 -25 106 121 7 -85 91 89 111 76 -120 39 25 51 -30 107 -96 64 9 -95 48 86 68 -40 88 2 113 3 33 98 6 36 -60 20 -104 -32 13 -100 96 17 -113 -64 25 62 -127 48 -68 0 -95 80 -60 -89 24 -37 -107 -111 79 20 20 65 25 62 -63 34 -114 51 18 -86 56 -70 8 34 -128 96 40 -80 -125 9 -106 34 38 88 3 -36 -89 72 83 124 -60 8 113 11 43 -94 71 18 -120 -42 80 -17 -45 -64 72 40 -62 -119 -12 68 -123 -127 17 14 -125 46 -29 8 8 40 -127 26 35 66 108 -124 -120 -65 -3 112 17 -92 49 84 -58 -128 -125 -24 -97 88 119 24 22 17 48 80 65 87 -57 -124 80 25 51 -62 125 -82 -50 53 113 -126 52 -32 94 -72 -116 -63 6 -95 -124 -45 72 37 -18 53 -106 68 -72 29 107 97 43 -29 -99 -98 103 -100 -23 12 -31 125 -75 -94 12 4 -79 9 -103 49 33 68 -58 53 -9 -87 70 -109 -38 19 113 -93 77 -67 -55 -120 33 -125 76 -75 1 18 -24 -73 16 8 -48 26 102 94 -60 104 20 23 65 126 -101 -14 25 82 -59 34 -108 -52 -41 -40 -54 -104 17 34 100 78 -108 24 18 100 101 8 -112 37 33 64 54 49 -62 -56 46 70 84 -39 -57 8 33 32 17 49 80 34 96 -64 4 111 -32 4 -113 -4 71 -93 -28 42 -80 -30 94 -74 -28 -62 -111 66 -36 6 -127 -8 13 63 -78 -87 -111 63 -128 81 100 20 -52 -86 56 21 -106 40 49 10 -122 -121 54 68 104 -93 98 -100 11 54 120 1 68 66 64 -111 -127 32 97 3 64 -30 -58 -46 -47 16 37 3 -51 53 72 -59 -8 119 -119 97 43 66 -62 50 -108 -124 -127 104 -119 33 -94 38 50 -1 90 -104 40 41 70 -93 36 25 23 38 79 -40 50 126 1 79 57 52 96 </spatial:imageData>
+          </spatial:sampledField>
+        </spatial:sampledFieldGeometry>
+      </spatial:listOfGeometryDefinitions>
+    </spatial:geometry>
+  </model>
+</sbml>
