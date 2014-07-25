@@ -1,3 +1,4 @@
+package spatialplugin;
 
 
 import java.io.ByteArrayOutputStream;
@@ -215,8 +216,10 @@ public class SpatialSBMLExporter {
     ListOf lodt = geometry.getListOfDomainTypes();
     ListOf lodom = geometry.getListOfDomains();
     ListOf loadj = geometry.getListOfAdjacentDomains();
+    
     for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {       //for each domain types
-      // DomainTypes
+      
+    	// DomainTypes
       DomainType dt = new DomainType();
       dt.setSpatialId(e.getKey()); dt.setSpatialDimensions(e.getValue());
       lodt.append(dt);
@@ -226,7 +229,7 @@ public class SpatialSBMLExporter {
       dom.setSpatialId(dt.getSpatialId() + "0");
       dom.setDomainType(dt.getSpatialId());
       if (dt.getSpatialId().matches(".*membrane.*")) {    //membrane related domains' implicit are set to true
-        dom.setImplicit(true);                                   //implicit?
+        dom.setImplicit(true);
         String[] domname = dt.getSpatialId().split("_", 0);
         for (int i = 0; i < 2; i++) {                           //add info about adjacent domain
           AdjacentDomains adj = new AdjacentDomains();                    //adjacent domain only account for membrane cytosol+ extracelluar matrix and cytosol + nucleus
@@ -270,12 +273,16 @@ public class SpatialSBMLExporter {
     ListOf lcc = geometry.getListOfCoordinateComponents();
     CoordinateComponent ccx = new CoordinateComponent(spatialns);
     CoordinateComponent ccy = new CoordinateComponent(spatialns);
+    CoordinateComponent ccz = new CoordinateComponent(spatialns);
     ccx.setSpatialId("x"); ccx.setComponentType("cartesianX"); ccx.setIndex(0); ccx.setSbmlUnit("um");    //setIndex, micrometer
     ccy.setSpatialId("y"); ccy.setComponentType("cartesianY"); ccy.setIndex(1); ccy.setSbmlUnit("um");
-    setCoordinateBoundary(ccx, "X", 0, width);                                                          //what is the significance of these numbers?
+    ccz.setSpatialId("z"); ccz.setComponentType("cartesianZ"); ccz.setIndex(2); ccz.setSbmlUnit("um");
+    setCoordinateBoundary(ccx, "X", 0, width);
     setCoordinateBoundary(ccy, "Y", 0, height);
+    setCoordinateBoundary(ccz, "Z", 0, depth);
     lcc.append(ccx);                                //add coordinate x to listOfCoordinateComponents
     lcc.append(ccy);                               //add coordinate y to listOfCoordinateComponents
+    lcc.append(ccz);                               //add coordinate z to listOfCoordinateComponents
   }
 
   public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max) {         //set coordinate boundaries

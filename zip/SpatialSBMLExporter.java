@@ -270,12 +270,16 @@ public class SpatialSBMLExporter {
     ListOf lcc = geometry.getListOfCoordinateComponents();
     CoordinateComponent ccx = new CoordinateComponent(spatialns);
     CoordinateComponent ccy = new CoordinateComponent(spatialns);
+    CoordinateComponent ccz = new CoordinateComponent(spatialns);
     ccx.setSpatialId("x"); ccx.setComponentType("cartesianX"); ccx.setIndex(0); ccx.setSbmlUnit("um");    //setIndex, micrometer
     ccy.setSpatialId("y"); ccy.setComponentType("cartesianY"); ccy.setIndex(1); ccy.setSbmlUnit("um");
-    setCoordinateBoundary(ccx, "X", 0, width);                                                          //what is the significance of these numbers?
+    ccz.setSpatialId("z"); ccz.setComponentType("cartesianZ"); ccz.setIndex(2); ccz.setSbmlUnit("um");
+    setCoordinateBoundary(ccx, "X", 0, width);
     setCoordinateBoundary(ccy, "Y", 0, height);
+    setCoordinateBoundary(ccz, "Z", 0, depth);
     lcc.append(ccx);                                //add coordinate x to listOfCoordinateComponents
     lcc.append(ccy);                               //add coordinate y to listOfCoordinateComponents
+    lcc.append(ccz);                               //add coordinate z to listOfCoordinateComponents
   }
 
   public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max) {         //set coordinate boundaries

@@ -1,3 +1,4 @@
+package spatialplugin;
 /**
  *
  */
@@ -32,11 +33,12 @@ public class Spatial_SBML implements PlugInFilter {
         int width = ip.getWidth();                                //obtain width of image
         int height = ip.getHeight();                              //obtain height of image
         int depth = 1;
-        labelList = new ArrayList<Integer>();					//value of pixels of 3 domains
+        labelList = new ArrayList<Integer>();					//value of pixels of domains
         hashDomainTypes = new HashMap<String, Integer>();
         hashSampledValue = new HashMap<String, Integer>();
         String s = "";
-
+        HashMap<Integer,Integer> countDuplicate = new HashMap<Integer,Integer>();
+        
         for(int i = 0; i < pixels.length; i++) {
         	if (!hasLabel(unsignedToBytes(pixels[i]))) {                                                              //see below
         		labelList.add(new Integer(unsignedToBytes(pixels[i])));
@@ -44,6 +46,8 @@ public class Spatial_SBML implements PlugInFilter {
         	s += unsignedToBytes(pixels[i]) + ",";                                //organize pixel value in a string
         	if (i % width == width -1) {
         		s += "\n";
+        	
+        	
         	}
         }
         Collections.sort(labelList);                            //sort label list
@@ -51,16 +55,20 @@ public class Spatial_SBML implements PlugInFilter {
 
         Integer thresEC = labelList.get(0),thresCyt = labelList.get(1), thresNuc = labelList.get(2);									//value which determines the threshold of nucleus and cytosol
 
+        /**
+         * insert name mapping method here
+         */
+        // this should be deleted
         for(Integer i : labelList) {                            //for each labellist add domain data
         	if (i == thresEC) {
-        		hashSampledValue.put("EC", thresEC);   //set EC pixel value as 0
+        		hashSampledValue.put("EC", thresEC);
         		hashDomainTypes.put("EC", 3);
         	} else if (i == thresCyt) {
-        		hashSampledValue.put("Cyt", thresCyt); //set Cyt pixel value as 1
+        		hashSampledValue.put("Cyt", thresCyt);
         		hashDomainTypes.put("Cyt", 3);
         		hashDomainTypes.put("Cyt_EC_membrane", 2);
         	} else if (i == thresNuc) {
-        		hashSampledValue.put("Nuc", thresNuc); //set Nuc sample value as 5
+        		hashSampledValue.put("Nuc", thresNuc); 
         		hashDomainTypes.put("Nuc", 3);
         		hashDomainTypes.put("Cyt_Nuc_membrane", 2);
              }

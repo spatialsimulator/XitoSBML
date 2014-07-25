@@ -1,3 +1,4 @@
+package spatialplugin;
  import java.util.HashMap;
 
 
