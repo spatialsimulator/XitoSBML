@@ -52,16 +52,16 @@ public class Spatial_SBML implements PlugInFilter {
 
         
 
-        /**
-         * insert name mapping method here
-         */
-
+        /*
         NamePanel name = new NamePanel(labelList);
         hashDomainTypes = name.getDomainTypes();
-        hashSampledValue = name.getSampledValue();
-       
+        hashSampledValue = name.getSampledValue(); 
+        
+         while(!name.exited);
+         */ 
+        
         // this should be deleted
-        /*
+        
         Integer thresEC = labelList.get(0),thresCyt = labelList.get(1), thresNuc = labelList.get(2);									//value which determines the threshold of nucleus and cytosol
         for(Integer i : labelList) {                            //for each labellist add domain data
         	if (i == thresEC) {
@@ -77,7 +77,6 @@ public class Spatial_SBML implements PlugInFilter {
         		hashDomainTypes.put("Cyt_Nuc_membrane", 2);
              }
         }
-*/
 
         RawSpatialImage ri = new RawSpatialImage(pixels, width, height, depth, hashDomainTypes, hashSampledValue);
 
