@@ -23,19 +23,23 @@ public class buttonKey extends AbstractAction{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String input = new String();
-		input = (String) getValue(Action.NAME);
+		String input = (String) getValue(Action.NAME);
 		
 		if(input == "cancel"){
 			System.exit(0);
+			
 		}else{
-			System.out.print("ok");
-			
-			/**
-			 * add instance of graph
-			 */
-			
+			graph graph = new graph();
+			 
+			for(int i = 0 ; i < table.getRowCount() ; i++){
+				graph.addVertex(table.getValueAt(i, 1).toString());
+			}
 		
+			for(int i = 0 ; i < table.getRowCount() - 1; i++){
+				graph.addEdge(table.getValueAt(i, 1).toString() ,table.getValueAt(i+1, 1).toString());	
+			}
+		
+			graph.visualize();
 		}
 		
 	}

@@ -25,6 +25,7 @@ public class NamePanel extends JPanel{
 	DefaultTableModel tableModel;
 	JTable table;
 	JFrame frame;
+	boolean exited = false;
 	
 	public NamePanel(){
 		frame = new JFrame("DomainType Namer");
@@ -36,35 +37,41 @@ public class NamePanel extends JPanel{
 		this();
 		this.labelList = labelList;
 		
-		//button
-		JPanel keyPanel = new JPanel(new GridLayout(1,2));
-		String[] buttons = {"cancel","OK"};
-		
 		//table
-		String[] columnNames = {"Pixel Value","DomainType","Dimension"};
-		tableModel = new DefaultTableModel(columnNames,0);  //set size = labelList * 3
+		String[] columnNames = {"Pixel Value","DomainType","Number"};
+		  //set size = labelList * 3
+		tableModel = new DefaultTableModel(columnNames,0){
+			public boolean isCellEditable(int row, int column){				//locks the first column 
+				if(column == 0){
+					return false;
+				}else{
+					return true;
+				}
+			}
+		};
 		table = new JTable(tableModel);
 		table.setBackground(new Color(169,169,169));
 		table.setSelectionBackground(new Color(250,250,250,50));
 		table.setShowHorizontalLines(true);
 		table.setShowVerticalLines(true);
-		frame.getContentPane().add(table.getTableHeader(),BorderLayout.NORTH);
-		frame.getContentPane().add(keyPanel,BorderLayout.SOUTH);
-		frame.getContentPane().add(table,BorderLayout.CENTER);
-		
-//	 	table.setEnabled(false);
 		
 		//add each pixel into the table
 		for(int i = 0; i < labelList.size(); i++){
-			String[] tabledata = {labelList.get(i).toString(),Integer.toString(i),Integer.toString(i+3)};
+			String[] tabledata = {labelList.get(i).toString(),Integer.toString(i+3),Integer.toString(i+1)};
 			tableModel.addRow(tabledata);
 		}
 		
-		//button added
+		//button
+		JPanel keyPanel = new JPanel(new GridLayout(1,2));
+		String[] buttons = {"cancel","OK"};
 		Action[] action = {new buttonKey(buttons[0],table), new buttonKey(buttons[1],table)};
 		keyPanel.add(new JButton(action[0]));
 		keyPanel.add(new JButton(action[1]));
 	
+
+		frame.getContentPane().add(table.getTableHeader(),BorderLayout.NORTH);
+		frame.getContentPane().add(keyPanel,BorderLayout.SOUTH);
+		frame.getContentPane().add(table,BorderLayout.CENTER);
 		
 		frame.setVisible(true);
 	}
@@ -86,9 +93,13 @@ public class NamePanel extends JPanel{
 	}
 	
 	public void exit(){
+		exited = true;
 		System.exit(0);
 	}
 	
+	public boolean hasExited(){
+		return exited;
+	}
 	
 	public static void main(String args[]){
 		ArrayList<Integer> labelList = new ArrayList<Integer>();
@@ -100,7 +111,7 @@ public class NamePanel extends JPanel{
 		name.setVisible(true);
 		HashMap<String, Integer> type = name.getSampledValue();
 		Integer g = type.get("0");
-		System.out.print("aaa" + g.toString());
+	
 	}
 
 

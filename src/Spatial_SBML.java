@@ -11,7 +11,9 @@ import ij.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
+import org.sbml.libsbml.SampledVolume;
 import org.sbml.libsbml.libsbml;
 
 /**
@@ -25,14 +27,19 @@ public class Spatial_SBML implements PlugInFilter {
 	ArrayList<Integer> labelList;
 	HashMap<String, Integer> hashDomainTypes;
 	HashMap<String, Integer> hashSampledValue;
-
+    int width;
+    int height;
+    int depth;
+	
+	
+	
 	@Override
 	public void run(ImageProcessor ip) {                           //process 2d pixel data
 
 		byte[] pixels = (byte[])ip.getPixels(); 					//obtain pixels of image
-        int width = ip.getWidth();                                //obtain width of image
-        int height = ip.getHeight();                              //obtain height of image
-        int depth = 1;
+        width = ip.getWidth();                                //obtain width of image
+        height = ip.getHeight();                              //obtain height of image
+        depth = 1;
         labelList = new ArrayList<Integer>();					//value of pixels of domains
         hashDomainTypes = new HashMap<String, Integer>();
         hashSampledValue = new HashMap<String, Integer>();
@@ -77,21 +84,26 @@ public class Spatial_SBML implements PlugInFilter {
         		hashDomainTypes.put("Cyt_Nuc_membrane", 2);
              }
         }
-
-        RawSpatialImage ri = new RawSpatialImage(pixels, width, height, depth, hashDomainTypes, hashSampledValue);
-
+        
+        
+        //graph
+        graph graph = new graph();
+        for (Entry<String, Integer> e : hashSampledValue.entrySet()) {
+        	graph.addVertex(e.getKey());
+        }
+        
+        
+        graph.visualize();
+        
+        RawSpatialImage ri = new RawSpatialImage(pixels, width, height, depth, hashDomainTypes, hashSampledValue);   
         SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri);                                 //calls sbmlexporter and create sbml document with string s
-
         sbmlexp.createGeometryElements();
-
-
+        
 		//save document
 		SaveDialog sd = new SaveDialog("","",".xml");
-
 		sbmlexp.document.getModel().setId(sd.getFileName().substring(0, sd.getFileName().lastIndexOf(".")));
 		IJ.log(sd.getFileName());
 		libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + sd.getFileName());                             //write SBML document to xml filec
-
  		IJ.log(s);
         IJ.log(sbmlexp.document.toSBML());
         IJ.log(labelList.toString());

@@ -37,7 +37,6 @@ public class NamePanel extends JPanel{
 		this();
 		this.labelList = labelList;
 		
-		
 		//table
 		String[] columnNames = {"Pixel Value","DomainType","Number"};
 		  //set size = labelList * 3
@@ -58,7 +57,7 @@ public class NamePanel extends JPanel{
 		
 		//add each pixel into the table
 		for(int i = 0; i < labelList.size(); i++){
-			String[] tabledata = {labelList.get(i).toString(),Integer.toString(i),Integer.toString(i+3)};
+			String[] tabledata = {labelList.get(i).toString(),Integer.toString(i+3),Integer.toString(i+1)};
 			tableModel.addRow(tabledata);
 		}
 		
@@ -112,7 +111,7 @@ public class NamePanel extends JPanel{
 		name.setVisible(true);
 		HashMap<String, Integer> type = name.getSampledValue();
 		Integer g = type.get("0");
-		System.out.print("aaa" + g.toString());
+	
 	}
 
 

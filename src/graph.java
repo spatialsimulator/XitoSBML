@@ -1,12 +1,9 @@
 
-import java.awt.GridLayout;
 
-import javax.swing.Action;
-import javax.swing.JButton;
+import java.awt.BorderLayout;
+
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.ext.JGraphXAdapter;
 import org.jgrapht.graph.DefaultEdge;
@@ -24,7 +21,7 @@ public class graph extends JFrame{
 	graph(){
 		super();
 		frame.setSize(400,400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
 	public ListenableGraph<String, DefaultEdge> getDirectedGraph(){
@@ -32,7 +29,7 @@ public class graph extends JFrame{
 	}
 	
 	public JGraphXAdapter<String, DefaultEdge> getjgxAdapter(){
-		return jgxAdapter; 		
+		return jgxAdapter;
 	}
 	
 	public void addVertex(String name){
@@ -44,26 +41,27 @@ public class graph extends JFrame{
 	}
 	
 	public void visualize(){
-		frame.getContentPane().add(new mxGraphComponent(jgxAdapter));
+		frame.getContentPane().add(new mxGraphComponent(jgxAdapter),BorderLayout.CENTER);
         mxHierarchicalLayout layout = new mxHierarchicalLayout(jgxAdapter);
-         layout.execute(jgxAdapter.getDefaultParent());
+        layout.setIntraCellSpacing(80);
+        layout.setDisableEdgeStyle(false);
+        layout.execute(jgxAdapter.getDefaultParent());
         frame.setVisible(true);
 	}
 	
 	public static void main(String[] args){
 		
 	        graph graph = new graph();
-	        ListenableGraph<String, DefaultEdge> g = graph.getDirectedGraph();
 	        		
 	         for(Integer i = 1 ; i < 7 ; i++){
-		    	g.addVertex("v" + i.toString());
+		    	graph.addVertex("v" + i.toString());
 	         }
-	        g.addEdge("v1", "v2");
-	        g.addEdge("v1", "v3");
-	        g.addEdge("v3", "v4");
-	        g.addEdge("v4", "v5");
-	        g.addEdge("v5", "v6");
-	        g.addEdge("v4", "v6");
+	        graph.addEdge("v1", "v2");
+	        graph.addEdge("v1", "v3");
+	        graph.addEdge("v3", "v4");
+	        graph.addEdge("v4", "v5");
+	        graph.addEdge("v5", "v6");
+	        graph.addEdge("v4", "v6");
 	    	graph.visualize();
 	}
 	
