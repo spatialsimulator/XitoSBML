@@ -22,6 +22,7 @@ public class NamePanel extends JPanel{
 	ArrayList<Integer> labelList = new ArrayList<Integer>();
 	HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
 	HashMap<String, Integer> hashSampledValues = new HashMap<String, Integer>();
+	HashMap<Integer,Integer> hashDomainNum = new HashMap<Integer,Integer>(); 
 	DefaultTableModel tableModel;
 	JTable table;
 	JFrame frame;
@@ -30,16 +31,17 @@ public class NamePanel extends JPanel{
 	public NamePanel(){
 		frame = new JFrame("DomainType Namer");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
-		frame.setSize(320, 160);
+		frame.setSize(400, 160);
 	}
 
-	public NamePanel(ArrayList<Integer> labelList){
+	public NamePanel(ArrayList<Integer> labelList, HashMap<Integer,Integer> hashDomainNum){
 		this();
 		this.labelList = labelList;
+		this.hashDomainNum = hashDomainNum;
 		
 		//table
-		String[] columnNames = {"Pixel Value","DomainType","Number"};
-		  //set size = labelList * 3
+		String[] columnNames = {"Pixel Value","DomainType","Number of Domains"};
+		  //set size of table = labelList * 3
 		tableModel = new DefaultTableModel(columnNames,0){
 			public boolean isCellEditable(int row, int column){				//locks the first column 
 				if(column == 0){
@@ -57,7 +59,7 @@ public class NamePanel extends JPanel{
 		
 		//add each pixel into the table
 		for(int i = 0; i < labelList.size(); i++){
-			String[] tabledata = {labelList.get(i).toString(),Integer.toString(i+3),Integer.toString(i+1)};
+			String[] tabledata = {labelList.get(i).toString(),"Insert Name",hashDomainNum.get(labelList.get(i)).toString()};
 			tableModel.addRow(tabledata);
 		}
 		
@@ -101,13 +103,20 @@ public class NamePanel extends JPanel{
 		return exited;
 	}
 	
+	
 	public static void main(String args[]){
 		ArrayList<Integer> labelList = new ArrayList<Integer>();
 		labelList.add(new Integer(100));
 		labelList.add(new Integer(200));
 		labelList.add(new Integer(300));
+		HashMap<Integer,Integer> hashDomainNum = new HashMap<Integer,Integer>();
 		
-		NamePanel name = new NamePanel(labelList);
+		for(int i = 0 ; i < labelList.size() ; i++){
+			hashDomainNum.put(labelList.get(i),i+5);			
+		}
+
+		
+		NamePanel name = new NamePanel(labelList, hashDomainNum);
 		name.setVisible(true);
 		HashMap<String, Integer> type = name.getSampledValue();
 		Integer g = type.get("0");
