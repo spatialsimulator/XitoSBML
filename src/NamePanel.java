@@ -44,7 +44,7 @@ public class NamePanel extends JPanel{
 		  //set size of table = labelList * 3
 		tableModel = new DefaultTableModel(columnNames,0){
 			public boolean isCellEditable(int row, int column){				//locks the first column 
-				if(column == 0){
+				if(column == 0 || column == 2){
 					return false;
 				}else{
 					return true;
@@ -81,7 +81,7 @@ public class NamePanel extends JPanel{
 	//sets the datatable to the domaintype and return it
 	public HashMap<String, Integer> getDomainTypes(){	
 		for(int i = 0; i < labelList.size(); i++){
-			hashDomainTypes.put( table.getValueAt(i, 1).toString(),  Integer.parseInt(table.getValueAt(i, 0).toString()));
+			hashDomainTypes.put( table.getValueAt(i, 1).toString(), 3);
 		}
 		return hashDomainTypes;
 	}
@@ -118,8 +118,7 @@ public class NamePanel extends JPanel{
 		
 		NamePanel name = new NamePanel(labelList, hashDomainNum);
 		name.setVisible(true);
-		HashMap<String, Integer> type = name.getSampledValue();
-		Integer g = type.get("0");
+		
 	
 	}
 

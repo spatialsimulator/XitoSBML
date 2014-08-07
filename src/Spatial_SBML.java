@@ -31,9 +31,9 @@ public class Spatial_SBML implements PlugInFilter {
     int width;
     int height;
     int depth;
-    byte[] pixels; 
+    byte[] pixels;
     int matrix[];
-	
+
 	@Override
 	public void run(ImageProcessor ip) {                           //process 2d pixel data
 
@@ -45,20 +45,21 @@ public class Spatial_SBML implements PlugInFilter {
         hashDomainTypes = new HashMap<String, Integer>();
         hashSampledValue = new HashMap<String, Integer>();
         String s = "";
-        
-        
+
+
         for(int i = 0; i < pixels.length; i++) {
         	if (!hasLabel(unsignedToBytes(pixels[i]))) {                                                              //see below
         		labelList.add(new Integer(unsignedToBytes(pixels[i])));
         	}
         	s += unsignedToBytes(pixels[i]) + ",";                                //organize pixel value in a string
         	if (i % width == width -1) {
-        		s += "\n";	
+        		s += "\n";
         	}
         }
         Collections.sort(labelList);                            //sort label list
         IJ.log(labelList.toString());                           //append labelList to logPanel which is a textpanel in IJ.java
 
+/*
         //count number of objects with certain pixel value
         matrix = new int[height*width];		//identical size of matrix with image
         matrix[0] = 0;
@@ -77,7 +78,7 @@ public class Spatial_SBML implements PlugInFilter {
 					var++;
 					num.remove(unsignedToBytes(pixels[i * height + j]));
 					num.put( unsignedToBytes(pixels[i * height + j]),var);
-				}        
+				}
 			}
 		}
 
@@ -89,18 +90,20 @@ public class Spatial_SBML implements PlugInFilter {
 			Integer temp = num.get(labelList.get(i)) % 10;
 			System.out.println(labelList.get(i).toString() + " " + temp.toString());
 		}
-		
-		
+*/
+
         /*
-        NamePanel name = new NamePanel(labelList,countDomain);
-        hashDomainTypes = name.getDomainTypes();
-        hashSampledValue = name.getSampledValue(); 
-        
-         while(!name.exited);
-         */ 
-        
+        try{
+            NamePanel name = new NamePanel(labelList,hashDomainNum);
+           	hashDomainTypes = name.getDomainTypes();
+            hashSampledValue = name.getSampledValue();
+        } catch(Exception e){
+        	System.exit(0);			//when domaintype namer has canceled exit
+        }
+        */
+
         // this should be deleted
-        
+
         Integer thresEC = labelList.get(0),thresCyt = labelList.get(1), thresNuc = labelList.get(2);									//value which determines the threshold of nucleus and cytosol
         for(Integer i : labelList) {                            //for each labelList add domain data
         	if (i == thresEC) {
@@ -111,28 +114,29 @@ public class Spatial_SBML implements PlugInFilter {
         		hashDomainTypes.put("Cyt", 3);
         		hashDomainTypes.put("Cyt_EC_membrane", 2);
         	} else if (i == thresNuc) {
-        		hashSampledValue.put("Nuc", thresNuc); 
+        		hashSampledValue.put("Nuc", thresNuc);
         		hashDomainTypes.put("Nuc", 3);
         		hashDomainTypes.put("Cyt_Nuc_membrane", 2);
              }
         }
-        
+
         /*
+         * this part may not be needed if the graph is visualized on buttonkey class
         //graph
         graph graph = new graph();
         for (Entry<String, Integer> e : hashSampledValue.entrySet()) {
         	graph.addVertex(e.getKey());
         }
-        
-        
+
+
         graph.visualize();
         */
-        
-        RawSpatialImage ri = new RawSpatialImage(pixels, width, height, depth, hashDomainTypes, hashSampledValue);   
+
+        RawSpatialImage ri = new RawSpatialImage(pixels, width, height, depth, hashDomainTypes, hashSampledValue);
         SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri);                                 //calls sbmlexporter and create sbml document with string s
         sbmlexp.createGeometryElements();
-        
-		//save document
+
+		//save document  obtains the name of Model as well as the document name
 		SaveDialog sd = new SaveDialog("","",".xml");
 		sbmlexp.document.getModel().setId(sd.getFileName().substring(0, sd.getFileName().lastIndexOf(".")));
 		IJ.log(sd.getFileName());
@@ -161,28 +165,28 @@ public class Spatial_SBML implements PlugInFilter {
 			matrix[i * height + j + 1] = matrix[i * height + j];
 			recurs(i,j+1,width,height);
 		}
-		
+
 		//check left
 		if(j != 0 && pixels[i * height + j - 1] == pixels[i * height + j] && matrix[i * height + j - 1] == 0){
 			matrix[i * height + j - 1] = matrix[i * height + j];
 			recurs(i,j-1,width,height);
 		}
-		
+
 		//check down
 		if(i != height - 1 && pixels[(i+1) * height + j] == pixels[i * height + j] && matrix[(i+1) * height + j] == 0){
 			matrix[(i + 1) * height + j] = matrix[i * height + j];
 			recurs(i+1,j,width,height);
 		}
-		
+
 		//check up
 		if(i != 0 && pixels[(i-1) * height + j ] == pixels[i * height + j] && matrix[(i-1) * height + j] == 0){
 			matrix[(i - 1) * height + j] = matrix[i * height + j];
 			recurs(i-1,j,width,height);
 		}
-		
+
 	}
-	
-	
+
+
 	@Override
 	public int setup(String arg, ImagePlus imp) {                          //return flags specifying capability and needs of filter
 		this.imp = imp;

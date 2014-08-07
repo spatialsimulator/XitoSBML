@@ -10,13 +10,13 @@ public class RawSpatialImage {		//image data
 	int depth;
 	HashMap<String, Integer> hashDomainTypes;
 	HashMap<String, Integer> hashSampledValue;
-	
+
 	public RawSpatialImage() {
 		super();				//call constructor of super class
 	}
-	
+
 	public RawSpatialImage(byte[] raw, int w, int h, int d, HashMap<String, Integer> hashDomainTypes, HashMap<String, Integer> hashSampledValue) {
-		this();										//call constructor that is above 
+		this();										//call constructor that is above
 		this.raw = raw;
 		this.width = w;
 		this.height = h;
