@@ -55,6 +55,7 @@ public class SpatialSBMLExporter {
   HashMap<String, Integer> hashDomainTypes;     //store domain type with corresponding dimension
   HashMap<String, Integer> hashSampledValue;
   HashMap<Integer,Integer> hashDomainNum;
+  ArrayList<ArrayList<Integer>> adjacentsList;
   byte[] raw;
   int matrix[];
   int width, height, depth;
@@ -101,6 +102,7 @@ public class SpatialSBMLExporter {
     this();
     this.hashDomainTypes = ri.hashDomainTypes;
     this.hashSampledValue = ri.hashSampledValue;
+    this.hashDomainNum = ri.hashDomainNum;
     this.raw = ri.raw;
     this.width = ri.width;
     this.height = ri.height;
@@ -206,45 +208,11 @@ public class SpatialSBMLExporter {
 
   }
 
-	public static int unsignedToBytes(byte b) {
-	    return b & 0xFF;
-	  }
+  public static int unsignedToBytes(byte b) {
+	  return b & 0xFF;
+  }
 
   public void addDomains() {
-        //count number of objects with certain pixel value
-        matrix = new int[height*width];   //identical size of matrix with image
-        matrix[0] = 0;
-        List<Integer> pixel= new ArrayList<Integer>(hashSampledValue.values());
-        HashMap<Integer,Integer> num = new HashMap<Integer,Integer>();  //labels the object in a different number
-        int label = 0;
-        for(int i = 0 ; i < hashSampledValue.size() ; i++){
-          num.put(hashSampledValue.get(i), label);
-          label += 10;
-        }
-    for(int i = 0 ; i < height ; i++){
-      for(int j = 0 ; j < width ; j++){
-        if(matrix[i * height + j] == 0 && raw[i * height + j] != 0){
-          int var = num.get(unsignedToBytes(raw[i * height + j]));
-          matrix[i * height + j] = var;
-          recurs(i,j,width,height);
-          var++;
-          num.remove(unsignedToBytes(raw[i * height + j]));
-          num.put( unsignedToBytes(raw[i * height + j]),var);
-        }
-      }
-    }
-
-    //count number of domains in each domaintype
-    hashDomainNum = new HashMap<Integer,Integer>();
-    System.out.println("domain");
-    for(int i = 0 ; i < hashSampledValue.size() ; i++){
-      hashDomainNum.put(pixel.get(i), num.get(pixel.get(i)) % 10);
-      Integer temp = num.get(pixel.get(i)) % 10;
-      System.out.println(pixel.get(i).toString() + " " + temp.toString());
-    }
-
-    
-
      ListOf lodom = geometry.getListOfDomains();
      
      for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    			//add domains to corresponding domaintypes
@@ -340,33 +308,6 @@ public class SpatialSBMLExporter {
     cc.getBoundaryMax().setValue(max);
   }
 
-public void recurs(int i, int j, int width, int height){
-    //check right
-    if(j != width - 1 && raw[i * height + j + 1]== raw[i * height + j] && matrix[i * height + j + 1] == 0){
-      matrix[i * height + j + 1] = matrix[i * height + j];
-      recurs(i,j+1,width,height);
-    }
-
-    //check left
-    if(j != 0 && raw[i * height + j - 1] == raw[i * height + j] && matrix[i * height + j - 1] == 0){
-      matrix[i * height + j - 1] = matrix[i * height + j];
-      recurs(i,j-1,width,height);
-    }
-
-    //check down
-    if(i != height - 1 && raw[(i+1) * height + j] == raw[i * height + j] && matrix[(i+1) * height + j] == 0){
-      matrix[(i + 1) * height + j] = matrix[i * height + j];
-      recurs(i+1,j,width,height);
-    }
-
-    //check up
-    if(i != 0 && raw[(i-1) * height + j ] == raw[i * height + j] && matrix[(i-1) * height + j] == 0){
-      matrix[(i - 1) * height + j] = matrix[i * height + j];
-      recurs(i-1,j,width,height);
-    }
-
-  }
-
   /**
    * @param args
    */
@@ -381,6 +322,17 @@ public void recurs(int i, int j, int width, int height){
     hashSampledValue.put("EC", 0);
     hashSampledValue.put("Nuc", 1);
     hashSampledValue.put("Cyt", 2);
+    HashMap<Integer,Integer> hashDomainNum = new HashMap<Integer,Integer>();
+    hashDomainNum.put(0, 1);
+    hashDomainNum.put(1, 1);
+    hashDomainNum.put(2, 1);
+    ArrayList<ArrayList<Integer>> adjacentsList = new ArrayList<ArrayList<Integer>>();
+    ArrayList<Integer> temp = new ArrayList<Integer>();
+    temp.add(0,1);
+    adjacentsList.add(temp);
+    temp.clear();
+    temp.add(1,2);
+    adjacentsList.add(temp);
     byte[] raw = {                  //need to refer to spatial_SBML to acquire data
       // z=0
 
@@ -396,7 +348,7 @@ public void recurs(int i, int j, int width, int height){
       1,1,2,1
 */
     };
-    RawSpatialImage ri = new RawSpatialImage(raw, (int)Math.sqrt((double)raw.length), (int)Math.sqrt((double)raw.length), 1, hashDomainTypes, hashSampledValue);  //why does the length need to be squarerooted?
+    RawSpatialImage ri = new RawSpatialImage(raw, (int)Math.sqrt((double)raw.length), (int)Math.sqrt((double)raw.length), 1, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);  //why does the length need to be squarerooted?
     SpatialSBMLExporter ts = new SpatialSBMLExporter(ri);
     ts.createGeometryElements();
     System.out.println(ts.document.getModel().getId());

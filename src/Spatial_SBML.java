@@ -11,6 +11,7 @@ import ij.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.sbml.libsbml.SampledVolume;
@@ -25,6 +26,7 @@ public class Spatial_SBML implements PlugInFilter {
 	static boolean isRunning = false;
 	String title = "Export segmented image to Spatial SBML";
 	ArrayList<Integer> labelList;
+	static ArrayList<ArrayList<Integer>> adjacentsList;
 	HashMap<String, Integer> hashDomainTypes;
 	HashMap<String, Integer> hashSampledValue;
 	HashMap<Integer,Integer> hashDomainNum;
@@ -91,7 +93,26 @@ public class Spatial_SBML implements PlugInFilter {
 			System.out.println(labelList.get(i).toString() + " " + temp.toString());
 		}
 */
-
+        adjacentsList = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> temp = new ArrayList<Integer>();
+        
+		for(int i = 0 ; i < height - 1; i++){
+			for(int j = 0 ; j < width - 1; j++){
+				//right
+				if(matrix[i * height + j] != matrix[i * height + j + 1] && !hasLabel(Math.max(matrix[i * height + j + 1], matrix[i * height + j]), Math.min(matrix[i * height + j + 1], matrix[i * height + j]))){
+				temp.add(Math.max(matrix[i * height + j + 1], matrix[i * height + j]));temp.add(Math.min(matrix[i * height + j + 1], matrix[i * height + j ]));
+				adjacentsList.add(temp);
+				temp.clear();
+				}
+				//down
+				if(matrix[i * height + j] != matrix[(i+1) * height + j] && !hasLabel(Math.max(matrix[i * height + j], matrix[(i+1) * height + j]), Math.min(matrix[i * height + j], matrix[(i+1) * height + j]))){
+				temp.add(Math.max(matrix[i * height + j], matrix[(i+1) * height + j]));temp.add(Math.min(matrix[i * height + j], matrix[(i+1) * height + j]));
+				adjacentsList.add(temp);
+				temp.clear();
+				}
+			}	
+		}
+        
         /*
         try{
             NamePanel name = new NamePanel(labelList,hashDomainNum);
@@ -100,11 +121,20 @@ public class Spatial_SBML implements PlugInFilter {
         } catch(Exception e){
         	System.exit(0);			//when domaintype namer has canceled exit
         }
-        */
+        //show graph
+		graph graph = new graph();
+		for(Map.Entry<String, Integer> e : hashSampledValue.entrySet()){
+			for(int i = 0 ; i < hashDomainNum.get(e.getValue()) ; i++)  graph.addVertex(e.getKey() + i);
+		}
+		for(int i = 0 ; i < 1; i++){
+			graph.addEdge("1","2");	
+		}
+		graph.visualize();
+	*/
 
         // this should be deleted
 
-        Integer thresEC = labelList.get(0),thresCyt = labelList.get(1), thresNuc = labelList.get(2);									//value which determines the threshold of nucleus and cytosol
+        Integer thresEC = labelList.get(0),thresCyt = labelList.get(1), thresNuc = labelList.get(2);						//value which determines the threshold of nucleus and cytosol
         for(Integer i : labelList) {                            //for each labelList add domain data
         	if (i == thresEC) {
         		hashSampledValue.put("EC", thresEC);
@@ -120,19 +150,8 @@ public class Spatial_SBML implements PlugInFilter {
              }
         }
 
-        /*
-         * this part may not be needed if the graph is visualized on buttonkey class
-        //graph
-        graph graph = new graph();
-        for (Entry<String, Integer> e : hashSampledValue.entrySet()) {
-        	graph.addVertex(e.getKey());
-        }
 
-
-        graph.visualize();
-        */
-
-        RawSpatialImage ri = new RawSpatialImage(pixels, width, height, depth, hashDomainTypes, hashSampledValue);
+        RawSpatialImage ri = new RawSpatialImage(pixels, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
         SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri);                                 //calls sbmlexporter and create sbml document with string s
         sbmlexp.createGeometryElements();
 
@@ -146,6 +165,7 @@ public class Spatial_SBML implements PlugInFilter {
         IJ.log(labelList.toString());
 	}
 
+	//determine if the pixel value is stored in labellist
 	public boolean hasLabel(int label) {
 		for(Integer i : labelList) {
 			if (i.intValue() == label) {
@@ -155,6 +175,15 @@ public class Spatial_SBML implements PlugInFilter {
 		return false;
 	}
 
+	public static boolean hasLabel(int dom1, int dom2) {
+		for(ArrayList<Integer> i : adjacentsList) {
+			if (i.get(0) == dom1 && i.get(1) == dom2) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public static int unsignedToBytes(byte b) {
 	    return b & 0xFF;
 	  }

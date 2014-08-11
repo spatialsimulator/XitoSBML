@@ -43,7 +43,7 @@ public class NamePanel extends JPanel{
 		String[] columnNames = {"Pixel Value","DomainType","Number of Domains"};
 		  //set size of table = labelList * 3
 		tableModel = new DefaultTableModel(columnNames,0){
-			public boolean isCellEditable(int row, int column){				//locks the first column 
+			public boolean isCellEditable(int row, int column){				//locks the first and third column 
 				if(column == 0 || column == 2){
 					return false;
 				}else{
@@ -70,7 +70,7 @@ public class NamePanel extends JPanel{
 		keyPanel.add(new JButton(action[0]));
 		keyPanel.add(new JButton(action[1]));
 	
-
+		//set components 
 		frame.getContentPane().add(table.getTableHeader(),BorderLayout.NORTH);
 		frame.getContentPane().add(keyPanel,BorderLayout.SOUTH);
 		frame.getContentPane().add(table,BorderLayout.CENTER);
