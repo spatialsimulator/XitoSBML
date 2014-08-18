@@ -26,20 +26,10 @@ public class buttonKey extends AbstractAction{
 		String input = (String) getValue(Action.NAME);
 		
 		if(input == "cancel"){
-			System.exit(0);
+			System.exit(1);
 			
 		}else{
-			graph graph = new graph();
-			 
-			for(int i = 0 ; i < table.getRowCount() ; i++){
-				graph.addVertex(table.getValueAt(i, 1).toString());
-			}
-		
-			for(int i = 0 ; i < table.getRowCount() - 1; i++){
-				graph.addEdge(table.getValueAt(i, 1).toString() ,table.getValueAt(i+1, 1).toString());	
-			}
-		
-			graph.visualize();
+			System.exit(0);
 		}
 		
 	}

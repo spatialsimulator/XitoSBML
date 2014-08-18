@@ -22,7 +22,7 @@ public class NamePanel extends JPanel{
 	ArrayList<Integer> labelList = new ArrayList<Integer>();
 	HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
 	HashMap<String, Integer> hashSampledValues = new HashMap<String, Integer>();
-	HashMap<Integer,Integer> hashDomainNum = new HashMap<Integer,Integer>(); 
+	HashMap<Integer,Integer> hashLabelNum = new HashMap<Integer,Integer>(); 
 	DefaultTableModel tableModel;
 	JTable table;
 	JFrame frame;
@@ -34,17 +34,17 @@ public class NamePanel extends JPanel{
 		frame.setSize(400, 160);
 	}
 
-	public NamePanel(ArrayList<Integer> labelList, HashMap<Integer,Integer> hashDomainNum){
+	public NamePanel(ArrayList<Integer> labelList, HashMap<Integer,Integer> hashLabelNum){
 		this();
 		this.labelList = labelList;
-		this.hashDomainNum = hashDomainNum;
+		this.hashLabelNum = hashLabelNum;
 		
 		//table
 		String[] columnNames = {"Pixel Value","DomainType","Number of Domains"};
 		  //set size of table = labelList * 3
 		tableModel = new DefaultTableModel(columnNames,0){
-			public boolean isCellEditable(int row, int column){				//locks the first column 
-				if(column == 0){
+			public boolean isCellEditable(int row, int column){				//locks the first and third column 
+				if(column == 0 || column == 2){
 					return false;
 				}else{
 					return true;
@@ -59,7 +59,7 @@ public class NamePanel extends JPanel{
 		
 		//add each pixel into the table
 		for(int i = 0; i < labelList.size(); i++){
-			String[] tabledata = {labelList.get(i).toString(),"Insert Name",hashDomainNum.get(labelList.get(i)).toString()};
+			String[] tabledata = {labelList.get(i).toString(),"Insert Name",hashLabelNum.get(labelList.get(i)).toString()};
 			tableModel.addRow(tabledata);
 		}
 		
@@ -70,7 +70,7 @@ public class NamePanel extends JPanel{
 		keyPanel.add(new JButton(action[0]));
 		keyPanel.add(new JButton(action[1]));
 	
-
+		//set components 
 		frame.getContentPane().add(table.getTableHeader(),BorderLayout.NORTH);
 		frame.getContentPane().add(keyPanel,BorderLayout.SOUTH);
 		frame.getContentPane().add(table,BorderLayout.CENTER);
@@ -81,7 +81,7 @@ public class NamePanel extends JPanel{
 	//sets the datatable to the domaintype and return it
 	public HashMap<String, Integer> getDomainTypes(){	
 		for(int i = 0; i < labelList.size(); i++){
-			hashDomainTypes.put( table.getValueAt(i, 1).toString(),  Integer.parseInt(table.getValueAt(i, 0).toString()));
+			hashDomainTypes.put( table.getValueAt(i, 1).toString(), 3);
 		}
 		return hashDomainTypes;
 	}
@@ -114,12 +114,10 @@ public class NamePanel extends JPanel{
 		for(int i = 0 ; i < labelList.size() ; i++){
 			hashDomainNum.put(labelList.get(i),i+5);			
 		}
-
 		
 		NamePanel name = new NamePanel(labelList, hashDomainNum);
 		name.setVisible(true);
-		HashMap<String, Integer> type = name.getSampledValue();
-		Integer g = type.get("0");
+		
 	
 	}
 

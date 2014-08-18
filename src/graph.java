@@ -12,7 +12,6 @@ import org.jgrapht.graph.ListenableDirectedGraph;
 
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.view.mxGraph;
 
 public class graph extends JFrame{
    

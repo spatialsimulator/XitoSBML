@@ -22,7 +22,7 @@ public class NamePanel extends JPanel{
 	ArrayList<Integer> labelList = new ArrayList<Integer>();
 	HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
 	HashMap<String, Integer> hashSampledValues = new HashMap<String, Integer>();
-	HashMap<Integer,Integer> hashDomainNum = new HashMap<Integer,Integer>(); 
+	HashMap<Integer,Integer> hashLabelNum = new HashMap<Integer,Integer>(); 
 	DefaultTableModel tableModel;
 	JTable table;
 	JFrame frame;
@@ -34,10 +34,10 @@ public class NamePanel extends JPanel{
 		frame.setSize(400, 160);
 	}
 
-	public NamePanel(ArrayList<Integer> labelList, HashMap<Integer,Integer> hashDomainNum){
+	public NamePanel(ArrayList<Integer> labelList, HashMap<Integer,Integer> hashLabelNum){
 		this();
 		this.labelList = labelList;
-		this.hashDomainNum = hashDomainNum;
+		this.hashLabelNum = hashLabelNum;
 		
 		//table
 		String[] columnNames = {"Pixel Value","DomainType","Number of Domains"};
@@ -59,7 +59,7 @@ public class NamePanel extends JPanel{
 		
 		//add each pixel into the table
 		for(int i = 0; i < labelList.size(); i++){
-			String[] tabledata = {labelList.get(i).toString(),"Insert Name",hashDomainNum.get(labelList.get(i)).toString()};
+			String[] tabledata = {labelList.get(i).toString(),"Insert Name",hashLabelNum.get(labelList.get(i)).toString()};
 			tableModel.addRow(tabledata);
 		}
 		
@@ -114,7 +114,6 @@ public class NamePanel extends JPanel{
 		for(int i = 0 ; i < labelList.size() ; i++){
 			hashDomainNum.put(labelList.get(i),i+5);			
 		}
-
 		
 		NamePanel name = new NamePanel(labelList, hashDomainNum);
 		name.setVisible(true);

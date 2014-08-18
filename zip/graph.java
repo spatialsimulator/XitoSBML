@@ -1,6 +1,7 @@
 
 
-import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
 import javax.swing.JFrame;
 
@@ -22,15 +23,14 @@ public class graph extends JFrame{
 		super();
 		frame.setSize(400,400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setLayout(new GridBagLayout());
 	}
 	
 	public ListenableGraph<String, DefaultEdge> getDirectedGraph(){
 		return g;
 	}
 	
-	public JGraphXAdapter<String, DefaultEdge> getjgxAdapter(){
-		return jgxAdapter;
-	}
 	
 	public void addVertex(String name){
 		g.addVertex(name);
@@ -41,11 +41,13 @@ public class graph extends JFrame{
 	}
 	
 	public void visualize(){
-		frame.getContentPane().add(new mxGraphComponent(jgxAdapter),BorderLayout.CENTER);
+		
         mxHierarchicalLayout layout = new mxHierarchicalLayout(jgxAdapter);
         layout.setIntraCellSpacing(80);
         layout.setDisableEdgeStyle(false);
-        layout.execute(jgxAdapter.getDefaultParent());
+        layout.getGraph().setCellsLocked(true);
+        layout.run(jgxAdapter.getDefaultParent());
+        frame.add(new mxGraphComponent(jgxAdapter),new GridBagConstraints());
         frame.setVisible(true);
 	}
 	
@@ -61,7 +63,6 @@ public class graph extends JFrame{
 	        graph.addEdge("v3", "v4");
 	        graph.addEdge("v4", "v5");
 	        graph.addEdge("v5", "v6");
-	        graph.addEdge("v4", "v6");
 	    	graph.visualize();
 	}
 	

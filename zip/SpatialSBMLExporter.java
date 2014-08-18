@@ -1,7 +1,10 @@
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.zip.Deflater;
 
@@ -30,7 +33,7 @@ import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.libsbml;
 
 /**
- * 
+ *
  */
 
 /**
@@ -51,11 +54,14 @@ public class SpatialSBMLExporter {
   Geometry geometry;
   HashMap<String, Integer> hashDomainTypes;     //store domain type with corresponding dimension
   HashMap<String, Integer> hashSampledValue;
+  HashMap<String, Integer> hashDomainNum;
+  ArrayList<ArrayList<Integer>> adjacentsList;
   byte[] raw;
+  int matrix[];
   int width, height, depth;
 
   /**
-   * 
+   *
    */
   public SpatialSBMLExporter() {                    //builds the framework of SBML document
     sbmlns = new SBMLNamespaces(3,1);           //create SBML name space with level 3 version 1
@@ -64,10 +70,10 @@ public class SpatialSBMLExporter {
     // SBML Document
     document = new SBMLDocument(sbmlns);              //construct document with name space
     document.setPackageRequired("req", true);        //set req package as required
-    document.setPackageRequired("spatial", true);    //set spatial package as required	    
+    document.setPackageRequired("spatial", true);    //set spatial package as required
     model = document.createModel();  //create model using the document and return pointer
 
-    
+
     // Create Spatial
     //
     // set the SpatialPkgNamespaces for Level 3 Version 1 Spatial Version 1
@@ -96,6 +102,7 @@ public class SpatialSBMLExporter {
     this();
     this.hashDomainTypes = ri.hashDomainTypes;
     this.hashSampledValue = ri.hashSampledValue;
+    this.hashDomainNum = ri.hashDomainNum;
     this.raw = ri.raw;
     this.width = ri.width;
     this.height = ri.height;
@@ -134,14 +141,13 @@ public class SpatialSBMLExporter {
     addDomains();                               //see below
     addAdjacentDomains();                       //see below
     addGeometryDefinitions();                   //see below
-
   }
 
   public void addGeometryDefinitions(){
     SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();   //create new geometry definition and add to ListOfGeometryDefinitions list
     sfg.setSpatialId("mySampledField");                       //inherit from AbstractSpatialNamedSBase
     ListOf losg = sfg.getListOfSampledVolumes();              //get ListOfSampledVolumes
-    
+
     for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
       if (e.getValue() == 3) {                                      //if dimensions is 3
         SampledVolume sv = new SampledVolume();
@@ -151,7 +157,7 @@ public class SpatialSBMLExporter {
       }
     }
 
-    SampledField sf = sfg.createSampledField();     //create SampleField represent number of coordinates in each 
+    SampledField sf = sfg.createSampledField();     //create SampleField represent number of coordinates in each
     sf.setSpatialId("imgtest"); sf.setDataType("integer");
     sf.setInterpolationType("linear"); sf.setEncoding("compressed");
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
@@ -198,35 +204,64 @@ public class SpatialSBMLExporter {
     return intArray;
   }
 
-  public void addAdjacentDomains() {
-
+  public void addAdjacentDomains() {		//adds membrane domains and adjacents
+	     ListOf loadj = geometry.getListOfAdjacentDomains();
+	  for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    			//add domains to corresponding domaintypes
+		  DomainType dt = geometry.getDomainType(e.getKey());
+		  if (dt.getSpatialId().matches(".*membrane.*")){
+			  for (int i = 0; i < 2; i++) {                           //add info about adjacent domain
+				  String[] domname = dt.getSpatialId().split("_", 0);
+				  AdjacentDomains adj = new AdjacentDomains();                    //adjacent domain only account for membrane cytosol+ extracelluar matrix and cytosol + nucleus
+				  adj.setSpatialId(dt.getSpatialId() + "_" + domname[i] + "0");
+				  adj.setDomain1(dt.getSpatialId() + "0");
+				  adj.setDomain2(domname[i] + "0");
+				  loadj.append(adj);
+			  }
+	  }
+	  }
   }
 
-	public static int unsignedToBytes(byte b) {
-	    return b & 0xFF;
-	  }
-  
-  public void addDomains() {
+  public static int unsignedToBytes(byte b) {
+	  return b & 0xFF;
+  }
 
+  public void addDomains() {
+     ListOf lodom = geometry.getListOfDomains();
+     
+     for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    			//add domains to corresponding domaintypes
+ 		DomainType dt = geometry.getDomainType(e.getKey());
+		Domain dom = new Domain();
+		if (dt.getSpatialId().matches(".*membrane.*")){
+			dom.setSpatialId(dt.getSpatialId());
+			dom.setImplicit(true);
+	        lodom.append(dom);
+		 }else{
+			 for(int i = 0 ; i < hashDomainNum.get(e.getKey()); i++){     //add each domain
+				dom.setSpatialId(dt.getSpatialId() + i);
+				dom.setImplicit(false);
+				lodom.append(dom);
+			 }
+		 }
+     }
+     
   }
 
   public void addDomainTypes() {                        //create domain types, domain, compartment info
     ListOf lodt = geometry.getListOfDomainTypes();
-    ListOf lodom = geometry.getListOfDomains();
-    ListOf loadj = geometry.getListOfAdjacentDomains();
-    
+//    ListOf lodom = geometry.getListOfDomains();
+//    ListOf loadj = geometry.getListOfAdjacentDomains();
+
     for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {       //for each domain types
-      
     	// DomainTypes
       DomainType dt = new DomainType();
       dt.setSpatialId(e.getKey()); dt.setSpatialDimensions(e.getValue());
       lodt.append(dt);
 
-      // Domains
+/*      // Domains    should be deleted
       Domain dom = new Domain();
       dom.setSpatialId(dt.getSpatialId() + "0");
       dom.setDomainType(dt.getSpatialId());
-      if (dt.getSpatialId().matches(".*membrane.*")) {    //membrane related domains' implicit are set to true
+      if (dt.getSpatialId().matches(".*membrane.*")) {    //membrane related domains' implicit are set to true  to adjacent domain
         dom.setImplicit(true);
         String[] domname = dt.getSpatialId().split("_", 0);
         for (int i = 0; i < 2; i++) {                           //add info about adjacent domain
@@ -240,13 +275,15 @@ public class SpatialSBMLExporter {
         dom.setImplicit(false);
       }
       lodom.append(dom);
-
-      // Compartment
+*/
+      // Compartment								need changes
       Compartment c = model.createCompartment();
       c.setSpatialDimensions(e.getValue());
-      c.setConstant(true);                      //set integer as a constant
+      c.setConstant(true);                      //set compartment as a constant
+      c.setId(e.getKey()); c.setName(e.getKey());
+/* 
       if (e.getKey().equals("Cyt")) {
-        c.setId("cytosol"); c.setName("cytosol");
+          c.setId("cytosol"); c.setName("cytosol");
       } else if (e.getKey().equals("EC")) {
         c.setId("extracellular"); c.setName("extracellular");
       } else if (e.getKey().equals("Nuc")) {
@@ -256,6 +293,7 @@ public class SpatialSBMLExporter {
       } else if (e.getKey().equals("Cyt_Nuc_membrane")) {
         c.setId("NM"); c.setName("NM");
       }
+*/ 
       spatialcompplugin = (SpatialCompartmentPlugin)c.getPlugin("spatial");   //create compartment mapping which relates compartment and domain type
       CompartmentMapping cm = spatialcompplugin.getCompartmentMapping();
       cm.setSpatialId(e.getKey()+c.getId());
@@ -306,22 +344,33 @@ public class SpatialSBMLExporter {
     hashSampledValue.put("EC", 0);
     hashSampledValue.put("Nuc", 1);
     hashSampledValue.put("Cyt", 2);
+    HashMap<String,Integer> hashDomainNum = new HashMap<String,Integer>();
+    hashDomainNum.put("EC", 1);
+    hashDomainNum.put("Nuc", 1);
+    hashDomainNum.put("Cyt", 1);
+    ArrayList<ArrayList<Integer>> adjacentsList = new ArrayList<ArrayList<Integer>>();
+    ArrayList<Integer> temp = new ArrayList<Integer>();
+    temp.add(0,1);
+    adjacentsList.add(temp);
+    temp.clear();
+    temp = new ArrayList<Integer>();
+    adjacentsList.add(temp);
     byte[] raw = {                  //need to refer to spatial_SBML to acquire data
       // z=0
-      
+
          0,1,1,1,0,
          1,1,2,1,1,
          1,2,2,2,1,
          1,1,2,1,1,
          0,1,1,1,0
-      /*   
+      /*
       0,1,1,1,
       1,1,2,1,
       1,2,2,2,
       1,1,2,1
 */
     };
-    RawSpatialImage ri = new RawSpatialImage(raw, (int)Math.sqrt((double)raw.length), (int)Math.sqrt((double)raw.length), 1, hashDomainTypes, hashSampledValue);  //why does the length need to be squarerooted?
+    RawSpatialImage ri = new RawSpatialImage(raw, (int)Math.sqrt((double)raw.length), (int)Math.sqrt((double)raw.length), 1, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);  //why does the length need to be squarerooted?
     SpatialSBMLExporter ts = new SpatialSBMLExporter(ri);
     ts.createGeometryElements();
     System.out.println(ts.document.getModel().getId());
