@@ -3,10 +3,13 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,29 +18,31 @@ import javax.swing.table.DefaultTableModel;
 
 
 
-public class NamePanel extends JPanel{
-	
-	private static final long serialVersionUID = 6963081265241191096L;
+public class NamePanel extends JFrame implements ActionListener{
 
 	ArrayList<Integer> labelList = new ArrayList<Integer>();
 	HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
 	HashMap<String, Integer> hashSampledValues = new HashMap<String, Integer>();
-	HashMap<Integer,Integer> hashLabelNum = new HashMap<Integer,Integer>(); 
+	HashMap<Integer,Integer> hashLabelNum; 
 	DefaultTableModel tableModel;
 	JTable table;
 	JFrame frame;
-	boolean exited = false;
+	boolean running = false;
 	
 	public NamePanel(){
-		frame = new JFrame("DomainType Namer");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+		//super("Domain Namer");
+		frame = new JFrame("Domain Namer");
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);	
 		frame.setSize(400, 160);
 	}
 
-	public NamePanel(ArrayList<Integer> labelList, HashMap<Integer,Integer> hashLabelNum){
+	public NamePanel(ArrayList<Integer> labelList, HashMap<Integer,Integer> hashLabelNum, HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValues){
 		this();
 		this.labelList = labelList;
 		this.hashLabelNum = hashLabelNum;
+		this.hashDomainTypes = hashDomainTypes;
+		this.hashSampledValues = hashSampledValues;
+		running = true;
 		
 		//table
 		String[] columnNames = {"Pixel Value","DomainType","Number of Domains"};
@@ -56,6 +61,7 @@ public class NamePanel extends JPanel{
 		table.setSelectionBackground(new Color(250,250,250,50));
 		table.setShowHorizontalLines(true);
 		table.setShowVerticalLines(true);
+		table.getTableHeader().setReorderingAllowed(false);
 		
 		//add each pixel into the table
 		for(int i = 0; i < labelList.size(); i++){
@@ -65,61 +71,95 @@ public class NamePanel extends JPanel{
 		
 		//button
 		JPanel keyPanel = new JPanel(new GridLayout(1,2));
-		String[] buttons = {"cancel","OK"};
-		Action[] action = {new buttonKey(buttons[0],table), new buttonKey(buttons[1],table)};
-		keyPanel.add(new JButton(action[0]));
-		keyPanel.add(new JButton(action[1]));
-	
+		JButton b1 = new JButton("cancel");
+		JButton b2 = new JButton("OK");
+		keyPanel.add(b1);keyPanel.add(b2);
+		b1.addActionListener(this);b2.addActionListener(this);
+		
 		//set components 
 		frame.getContentPane().add(table.getTableHeader(),BorderLayout.NORTH);
 		frame.getContentPane().add(keyPanel,BorderLayout.SOUTH);
 		frame.getContentPane().add(table,BorderLayout.CENTER);
-		
 		frame.setVisible(true);
+		
 	}
 
 	//sets the datatable to the domaintype and return it
 	public HashMap<String, Integer> getDomainTypes(){	
 		for(int i = 0; i < labelList.size(); i++){
-			hashDomainTypes.put( table.getValueAt(i, 1).toString(), 3);
+			if(table.getValueAt(i, 1).toString() == ("Insert Name")){
+				hashDomainTypes.put("", 3);
+			}else{
+				hashDomainTypes.put( table.getValueAt(i, 1).toString(), 3);	
+			}
+			
 		}
 		return hashDomainTypes;
 	}
-
+	
 	//sets the datatable to the sampledvalue and return it
-	public HashMap<String, Integer> getSampledValue(){
+	public HashMap<String, Integer> getSampledValues(){
 		for(int i = 0; i < labelList.size(); i++){
-			hashSampledValues.put( table.getValueAt(i, 1).toString(), Integer.parseInt(table.getValueAt(i, 2).toString()));
+			if(table.getValueAt(i, 1).toString() == ("Insert Name")){
+				hashSampledValues.put("", Integer.parseInt(table.getValueAt(i, 0).toString()));
+			}else{
+				hashSampledValues.put( table.getValueAt(i, 1).toString(), Integer.parseInt(table.getValueAt(i, 0).toString()));
+			}
 		}
 		return hashSampledValues;
 	}
 	
-	public void exit(){
-		exited = true;
-		System.exit(0);
-	}
-	
-	public boolean hasExited(){
-		return exited;
-	}
-	
-	
-	public static void main(String args[]){
+	public static void main(String args[]) throws InterruptedException{
 		ArrayList<Integer> labelList = new ArrayList<Integer>();
 		labelList.add(new Integer(100));
 		labelList.add(new Integer(200));
 		labelList.add(new Integer(300));
-		HashMap<Integer,Integer> hashDomainNum = new HashMap<Integer,Integer>();
+		HashMap<Integer,Integer> LabelNum = new HashMap<Integer,Integer>();
+
 		
 		for(int i = 0 ; i < labelList.size() ; i++){
-			hashDomainNum.put(labelList.get(i),i+5);			
+			LabelNum.put(labelList.get(i),i+5);			
+		}	
+	    HashMap<String, Integer> DomainTypes = new HashMap<String, Integer>();
+	    HashMap<String, Integer> SampledValues = new HashMap<String, Integer>();		
+		NamePanel name = new NamePanel(labelList, LabelNum, DomainTypes, SampledValues);
+
+		while (name.running) {
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e) {
+
+			}
+		}
+
+		System.out.println("main");
+		for(Entry<String, Integer> en : DomainTypes.entrySet()){
+			System.out.println("main " + en.getKey() + " " + en.getValue());
 		}
 		
-		NamePanel name = new NamePanel(labelList, hashDomainNum);
-		name.setVisible(true);
+		for(Entry<String, Integer> en : SampledValues.entrySet()){
+			System.out.println("main " + en.getKey() + " " + en.getValue());
+		}
 		
-	
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String input = e.getActionCommand();
+		if(input == "cancel"){
+			frame.setVisible(false);
+			running= false;
+			this.dispose();
+		}
+		
+		if(input == "OK"){
+			hashDomainTypes = getDomainTypes();			
+			hashSampledValues = getSampledValues();
+
+			frame.setVisible(false);
+			running= false;
+			this.dispose();
+		}
+	}
 
 }

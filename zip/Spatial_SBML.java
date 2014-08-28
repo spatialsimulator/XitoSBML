@@ -11,10 +11,9 @@ import ij.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
-import org.sbml.libsbml.SampledVolume;
 import org.sbml.libsbml.libsbml;
 
 /**
@@ -49,7 +48,6 @@ public class Spatial_SBML implements PlugInFilter {
         hashSampledValue = new HashMap<String, Integer>();
         String s = "";
 
-
         for(int i = 0; i < pixels.length; i++) {
         	if (!hasLabel(unsignedToBytes(pixels[i]))) {                                                              //see below
         		labelList.add(new Integer(unsignedToBytes(pixels[i])));
@@ -61,8 +59,8 @@ public class Spatial_SBML implements PlugInFilter {
         }
         Collections.sort(labelList);                            //sort label list
         IJ.log(labelList.toString());                           //append labelList to logPanel which is a textpanel in IJ.java
+        System.out.println(s);
 
-///*
         //count number of objects with certain pixel value
         matrix = new int[height*width];		//identical size of matrix with image
         matrix[0] = 0;
@@ -74,15 +72,24 @@ public class Spatial_SBML implements PlugInFilter {
         }
 		for(int i = 0 ; i < height ; i++){
 			for(int j = 0 ; j < width ; j++){
-				if(matrix[i * height + j] == 0 && pixels[i * height + j] != 0){
-					int var = num.get(unsignedToBytes(pixels[i * height + j]));
-					matrix[i * height + j] = var;
-					recurs(i,j,width,height);
-					var++;
-					num.remove(unsignedToBytes(pixels[i * height + j]));
-					num.put( unsignedToBytes(pixels[i * height + j]),var);
+				if(matrix[i * width + j] == 0 && pixels[i * width + j] != 0){
+					label = num.get(unsignedToBytes(pixels[i * width + j]));
+					matrix[i * width + j] = label;
+					recurs(i,j);
+					label++;
+					num.remove(unsignedToBytes(pixels[i * width + j]));
+					num.put( unsignedToBytes(pixels[i * width + j]),label);
 				}
 			}
+		}
+		num.remove(0);
+		num.put(0, 1);		//assumes extracellular is only one
+		System.out.println("matrix");
+		for(int i = 0 ; i < height ; i++){
+			for(int j = 0 ; j < width ; j++){
+				System.out.print(matrix[i * width + j] + ",");
+			}
+			System.out.println();
 		}
 
 		//count number of domains in each domaintype
@@ -93,84 +100,102 @@ public class Spatial_SBML implements PlugInFilter {
 			Integer temp = num.get(labelList.get(i)) % 10;
 			System.out.println(labelList.get(i).toString() + " " + temp.toString());
 		}
-//*/
- //       /*
+
         //displays gui table to name domain types
-        try{															
-            NamePanel name = new NamePanel(labelList,hashLabelNum);
-           	hashDomainTypes = name.getDomainTypes();
-            hashSampledValue = name.getSampledValue();
-        } catch(Exception e){
-        	IJ.log("Domaintype name error");
-        	System.exit(0);			//when domaintype namer has canceled exit
-        }
-        //*/
-        
-        
-        
-        adjacentsList = new ArrayList<ArrayList<Integer>>();	//holds which pixels are adjacents 
-        ArrayList<Integer> temp = new ArrayList<Integer>();		//temporal arraylist to insert in adjacentlist
-        
+
+		NamePanel name = new NamePanel(labelList, hashLabelNum, hashDomainTypes, hashSampledValue);
+		while (name.running) {
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} // need a better solution to make this program wait
+			catch (InterruptedException e) {
+			}
+		}
+		try {
+			hashDomainTypes.toString();  // check for nullpointers
+		} catch (NullPointerException e) {
+			IJ.log("Domaintype name error");
+			System.exit(1); // when domaintype namer has canceled exit
+		}
+
+		hashDomainNum = new HashMap<String,Integer>();
+		for(Entry<String,Integer> e : hashDomainTypes.entrySet()){
+			hashDomainNum.put(e.getKey(), hashLabelNum.get(hashSampledValue.get(e.getKey())));
+		}
+
+        adjacentsList = new ArrayList<ArrayList<Integer>>();	//holds which pixels are adjacents
+
+        //adds the membrane 					may need changes in the future
 		for(int i = 0 ; i < height - 1; i++){
 			for(int j = 0 ; j < width - 1; j++){
 				//right
-				if(matrix[i * height + j] != matrix[i * height + j + 1] && !hasLabel(Math.max(matrix[i * height + j + 1], matrix[i * height + j]), Math.min(matrix[i * height + j + 1], matrix[i * height + j]))){
-				temp.add(Math.max(matrix[i * height + j + 1], matrix[i * height + j]));temp.add(Math.min(matrix[i * height + j + 1], matrix[i * height + j ]));
-				adjacentsList.add(temp);
-				addmembrane(temp.get(0) / 10 * 10, temp.get(1) / 10 * 10);
-				temp.clear();
+				if(matrix[i * width + j] != matrix[i * width + j + 1] && !hasLabel(Math.max(matrix[i * width + j + 1], matrix[i * width + j]), Math.min(matrix[i * width + j + 1], matrix[i * width + j]))){
+			        ArrayList<Integer> temp = new ArrayList<Integer>();
+					temp.add(Math.max(matrix[i * width + j + 1], matrix[i * width + j]));
+					temp.add(Math.min(matrix[i * width + j + 1], matrix[i * width + j]));
+					adjacentsList.add(temp);
+					addmembrane(
+							Math.max(unsignedToBytes(pixels[i * width + j + 1]),unsignedToBytes(pixels[i * width + j])),
+							Math.min(unsignedToBytes(pixels[i * width + j + 1]),unsignedToBytes(pixels[i * width + j]))
+							);
 				}
 				//down
-				if(matrix[i * height + j] != matrix[(i+1) * height + j] && !hasLabel(Math.max(matrix[i * height + j], matrix[(i+1) * height + j]), Math.min(matrix[i * height + j], matrix[(i+1) * height + j]))){
-				temp.add(Math.max(matrix[i * height + j], matrix[(i+1) * height + j]));temp.add(Math.min(matrix[i * height + j], matrix[(i+1) * height + j]));
-				adjacentsList.add(temp);
-				addmembrane(temp.get(0) / 10 * 10, temp.get(1) / 10 * 10);
-				temp.clear();
+				if(matrix[i * width + j] != matrix[(i+1) * width + j] && !hasLabel(Math.max(matrix[i * width + j], matrix[(i+1) * width + j]), Math.min(matrix[i * width + j], matrix[(i+1) * width + j]))){
+			        ArrayList<Integer> temp = new ArrayList<Integer>();
+					temp.add(Math.max(matrix[(i+1) * width + j], matrix[i * width + j]));
+					temp.add(Math.min(matrix[(i+1) * width + j], matrix[i * width + j]));
+					adjacentsList.add(temp);
+					addmembrane(
+							Math.max(unsignedToBytes(pixels[(i+1) * width + j]),unsignedToBytes(pixels[i * width + j])),
+							Math.min(unsignedToBytes(pixels[(i+1) * width + j]),unsignedToBytes(pixels[i * width + j]))
+							);
 				}
-			}	
+			}
 		}
-        
 
-        /*
         //show graph
 		graph graph = new graph();
-		for(Map.Entry<String, Integer> e : hashSampledValue.entrySet()){
-			for(int i = 0 ; i < hashDomainNum.get(e.getValue()) ; i++)  graph.addVertex(e.getKey() + i);
+
+		for (Entry<String, Integer> e : hashDomainNum.entrySet()) {
+			for (int i = 0; i < e.getValue(); i++) {
+				if(!e.getKey().contains("membrane")){
+					graph.addVertex(e.getKey() + i);
+					System.out.println("Vertex " + e.getKey() + i);
+				}
+			}
 		}
-		for(int i = 0 ; i < 1; i++){
-			graph.addEdge("1","2");	
+
+		for(ArrayList<Integer> a : adjacentsList){
+			String edge1 = new String();
+			String edge2 = new String();
+			for(Entry<String, Integer> e : hashSampledValue.entrySet()){
+				if(e.getValue().equals(labelList.get(a.get(0)/10))){
+					System.out.println(e.getKey() + (a.get(0) % 10));
+					edge1 = e.getKey() + (a.get(0) % 10);
+				}
+				if(e.getValue().equals(labelList.get(a.get(1)/10))){
+					System.out.println(e.getKey() + (a.get(1) % 10));
+					edge2 = e.getKey() + (a.get(1) % 10);
+				}
+			}
+			graph.addEdge(edge1,edge2);
 		}
 		graph.visualize();
-	*/
 
-        // this should be deleted
-/*
-        Integer thresEC = labelList.get(0),thresCyt = labelList.get(1), thresNuc = labelList.get(2);						//value which determines the threshold of nucleus and cytosol
-        for(Integer i : labelList) {                            //for each labelList add domain data
-        	if (i == thresEC) {
-        		hashSampledValue.put("EC", thresEC);
-        		hashDomainTypes.put("EC", 3);
-        	} else if (i == thresCyt) {
-        		hashSampledValue.put("Cyt", thresCyt);
-        		hashDomainTypes.put("Cyt", 3);
-        		hashDomainTypes.put("Cyt_EC_membrane", 2);
-        	} else if (i == thresNuc) {
-        		hashSampledValue.put("Nuc", thresNuc);
-        		hashDomainTypes.put("Nuc", 3);
-        		hashDomainTypes.put("Cyt_Nuc_membrane", 2);
-             }
-        }
-*/
         RawSpatialImage ri = new RawSpatialImage(pixels, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
         SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri);                                 //calls sbmlexporter and create sbml document with string s
         sbmlexp.createGeometryElements();
 
 		//save document  obtains the name of Model as well as the document name
 		SaveDialog sd = new SaveDialog("","",".xml");
+		try{
 		sbmlexp.document.getModel().setId(sd.getFileName().substring(0, sd.getFileName().lastIndexOf(".")));
 		IJ.log(sd.getFileName());
 		libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + sd.getFileName());                             //write SBML document to xml filec
- 		IJ.log(s);
+		}catch(NullPointerException e){
+			System.exit(1);
+		}
+		IJ.log(s);
         IJ.log(sbmlexp.document.toSBML());
         IJ.log(labelList.toString());
 	}
@@ -186,27 +211,31 @@ public class Spatial_SBML implements PlugInFilter {
 	}
 
 	public static boolean hasLabel(int dom1, int dom2) {
-		for(ArrayList<Integer> i : adjacentsList) {
-			if (i.get(0) == dom1 && i.get(1) == dom2) {
-				return true;
+		try{
+			for (ArrayList<Integer> i : adjacentsList) {
+				if (i.get(0) == dom1 && i.get(1) == dom2) {
+					return true;
+				}
 			}
+		}catch(IndexOutOfBoundsException e){
+
 		}
 		return false;
 	}
-	
+
 	public static int unsignedToBytes(byte b) {
 	    return b & 0xFF;
 	  }
-	
-	  //adds the membrane domain 
+
+	  //adds the membrane domain
 	public void addmembrane(Integer bignum, Integer smallnum){
 		String big = new String();
 		String small = new String();
 		for(Entry<String,Integer> e : hashSampledValue.entrySet()){
-			if(e.getValue() == bignum){
+			if(e.getValue().equals(bignum)){
 				big = e.getKey();
 			}
-			if(e.getValue() == smallnum){
+			if(e.getValue().equals(smallnum)){
 				small = e.getKey();
 			}
 		}
@@ -219,32 +248,31 @@ public class Spatial_SBML implements PlugInFilter {
 			hashDomainNum.put(buf,++temp);
 		}
 	}
-	
-	public void recurs(int i, int j, int width, int height){
+
+	public void recurs(int i, int j){
 		//check right
-		if(j != width - 1 && pixels[i * height + j + 1]== pixels[i * height + j] && matrix[i * height + j + 1] == 0){
-			matrix[i * height + j + 1] = matrix[i * height + j];
-			recurs(i,j+1,width,height);
+		if(j != width - 1 && pixels[i * width + j + 1] == pixels[i * width + j] && matrix[i * width + j + 1] == 0){
+			matrix[i * width + j + 1] = matrix[i * width + j];
+			recurs(i,j+1);
 		}
 
 		//check left
-		if(j != 0 && pixels[i * height + j - 1] == pixels[i * height + j] && matrix[i * height + j - 1] == 0){
-			matrix[i * height + j - 1] = matrix[i * height + j];
-			recurs(i,j-1,width,height);
+		if(j != 0 && pixels[i * width + j - 1] == pixels[i * width + j] && matrix[i * width + j - 1] == 0){
+			matrix[i * width + j - 1] = matrix[i * width + j];
+			recurs(i,j-1);
 		}
 
 		//check down
-		if(i != height - 1 && pixels[(i+1) * height + j] == pixels[i * height + j] && matrix[(i+1) * height + j] == 0){
-			matrix[(i + 1) * height + j] = matrix[i * height + j];
-			recurs(i+1,j,width,height);
+		if(i != height - 1 && pixels[(i+1) * width + j] == pixels[i * width + j] && matrix[(i+1) * width + j] == 0){
+			matrix[(i + 1) * width + j] = matrix[i * width + j];
+			recurs(i+1,j);
 		}
 
 		//check up
-		if(i != 0 && pixels[(i-1) * height + j ] == pixels[i * height + j] && matrix[(i-1) * height + j] == 0){
-			matrix[(i - 1) * height + j] = matrix[i * height + j];
-			recurs(i-1,j,width,height);
+		if(i != 0 && pixels[(i-1) * width + j ] == pixels[i * width + j] && matrix[(i-1) * width + j] == 0){
+			matrix[(i - 1) * width + j] = matrix[i * width + j];
+			recurs(i-1,j);
 		}
-
 	}
 
 
@@ -263,4 +291,5 @@ public class Spatial_SBML implements PlugInFilter {
 				"This plugin is just a demonstration for SBML and its Spatial Extension.\n"
 						+ "Implemented by Akira Funahashi");
 	}
+
 }

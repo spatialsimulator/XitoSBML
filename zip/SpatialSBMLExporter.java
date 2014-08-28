@@ -208,7 +208,7 @@ public class SpatialSBMLExporter {
 	     ListOf loadj = geometry.getListOfAdjacentDomains();
 	  for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    			//add domains to corresponding domaintypes
 		  DomainType dt = geometry.getDomainType(e.getKey());
-		  if (dt.getSpatialId().matches(".*membrane.*")){
+		  if (dt.getSpatialId().matches(".*membrane")){
 			  for (int i = 0; i < 2; i++) {                           //add info about adjacent domain
 				  String[] domname = dt.getSpatialId().split("_", 0);
 				  AdjacentDomains adj = new AdjacentDomains();                    //adjacent domain only account for membrane cytosol+ extracelluar matrix and cytosol + nucleus
@@ -231,7 +231,7 @@ public class SpatialSBMLExporter {
      for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    			//add domains to corresponding domaintypes
  		DomainType dt = geometry.getDomainType(e.getKey());
 		Domain dom = new Domain();
-		if (dt.getSpatialId().matches(".*membrane.*")){
+		if (dt.getSpatialId().matches(".*membrane")){
 			dom.setSpatialId(dt.getSpatialId());
 			dom.setImplicit(true);
 	        lodom.append(dom);
@@ -248,8 +248,6 @@ public class SpatialSBMLExporter {
 
   public void addDomainTypes() {                        //create domain types, domain, compartment info
     ListOf lodt = geometry.getListOfDomainTypes();
-//    ListOf lodom = geometry.getListOfDomains();
-//    ListOf loadj = geometry.getListOfAdjacentDomains();
 
     for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {       //for each domain types
     	// DomainTypes
@@ -276,7 +274,7 @@ public class SpatialSBMLExporter {
       }
       lodom.append(dom);
 */
-      // Compartment								need changes
+      // Compartment								may need changes for name and id
       Compartment c = model.createCompartment();
       c.setSpatialDimensions(e.getValue());
       c.setConstant(true);                      //set compartment as a constant
