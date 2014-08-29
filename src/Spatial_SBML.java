@@ -11,6 +11,7 @@ import ij.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
@@ -34,8 +35,8 @@ public class Spatial_SBML implements PlugInFilter {
     int height;
     int depth;
     byte[] pixels;
-    ArrayList<Integer> matrix;
-
+    int matrix[];
+    int count = 0;
 	@Override
 	public void run(ImageProcessor ip) {                           //process 2d pixel data
 
@@ -47,11 +48,22 @@ public class Spatial_SBML implements PlugInFilter {
         hashDomainTypes = new HashMap<String, Integer>();
         hashSampledValue = new HashMap<String, Integer>();
         String s = "";
-
+        
+        int cyt = 0;
+        int Nuc = 0;
         for(int i = 0; i < pixels.length; i++) {
         	if (!hasLabel(unsignedToBytes(pixels[i]))) {                                                              //see below
         		labelList.add(new Integer(unsignedToBytes(pixels[i])));
         	}
+        	
+        	if(unsignedToBytes(pixels[i]) == 85){
+        		cyt++;
+        	}
+        	
+        	if(unsignedToBytes(pixels[i]) == 170){
+        		Nuc++;
+        	}
+        	
         	s += unsignedToBytes(pixels[i]) + ",";                                //organize pixel value in a string
         	if (i % width == width -1) {
         		s += "\n";
@@ -61,9 +73,14 @@ public class Spatial_SBML implements PlugInFilter {
         IJ.log(labelList.toString());                           //append labelList to logPanel which is a textpanel in IJ.java
         System.out.println(s);
 
+
         //count number of objects with certain pixel value
-        matrix = new ArrayList<Integer>(height * width);		//identical size of matrix with image
-        matrix[0] = 0;
+        matrix = new int[height*width];		//identical size of matrix with image
+        for(int i = 0 ; i < height ; i++){
+			for(int j = 0 ; j < width ; j++){
+					matrix[i * width + j] = 0;
+			}
+		}
         HashMap<Integer,Integer> num = new HashMap<Integer,Integer>();  //labels the object in a different number
         int label = 0;
         for(int i = 0 ; i < labelList.size() ; i++){
@@ -78,19 +95,12 @@ public class Spatial_SBML implements PlugInFilter {
 					recurs(i,j);
 					label++;
 					num.remove(unsignedToBytes(pixels[i * width + j]));
-					num.put( unsignedToBytes(pixels[i * width + j]),label);
+					num.put(unsignedToBytes(pixels[i * width + j]),label);
 				}
 			}
 		}
 		num.remove(0);
 		num.put(0, 1);		//assumes extracellular is only one
-		System.out.println("matrix");
-		for(int i = 0 ; i < height ; i++){
-			for(int j = 0 ; j < width ; j++){
-				System.out.print(matrix[i * width + j] + ",");
-			}
-			System.out.println();
-		}
 
 		//count number of domains in each domaintype
 		hashLabelNum = new HashMap<Integer,Integer>();
@@ -117,7 +127,7 @@ public class Spatial_SBML implements PlugInFilter {
 			IJ.log("Domaintype name error");
 			System.exit(1); // when domaintype namer has canceled exit
 		}
-
+		
 		hashDomainNum = new HashMap<String,Integer>();
 		for(Entry<String,Integer> e : hashDomainTypes.entrySet()){
 			hashDomainNum.put(e.getKey(), hashLabelNum.get(hashSampledValue.get(e.getKey())));
@@ -154,6 +164,7 @@ public class Spatial_SBML implements PlugInFilter {
 		}
 
         //show graph
+		System.out.println("graph");
 		graph graph = new graph();
 
 		for (Entry<String, Integer> e : hashDomainNum.entrySet()) {
@@ -165,6 +176,10 @@ public class Spatial_SBML implements PlugInFilter {
 			}
 		}
 
+		for(ArrayList<Integer> a : adjacentsList){
+			System.out.println(a.get(0) + " " + a.get(1));
+		}
+		
 		for(ArrayList<Integer> a : adjacentsList){
 			String edge1 = new String();
 			String edge2 = new String();
@@ -250,6 +265,43 @@ public class Spatial_SBML implements PlugInFilter {
 	}
 
 	public void recurs(int i, int j){
+		Stack<Integer> block = new Stack<Integer>();
+		block.push(i);
+		block.push(j);
+		
+		while(!block.isEmpty()){
+			j = block.pop();
+			i = block.pop();
+			if(j != width - 1 && pixels[i * width + j + 1] == pixels[i * width + j] && matrix[i * width + j + 1] == 0){
+				matrix[i * width + j + 1] = matrix[i * width + j];
+				block.push(i);
+				block.push(j+1);
+			}
+
+			//check left
+			if(j != 0 && pixels[i * width + j - 1] == pixels[i * width + j] && matrix[i * width + j - 1] == 0){
+				matrix[i * width + j - 1] = matrix[i * width + j];
+				block.push(i);
+				block.push(j-1);
+			}
+
+			//check down
+			if(i != height - 1 && pixels[(i+1) * width + j] == pixels[i * width + j] && matrix[(i+1) * width + j] == 0){
+				matrix[(i + 1) * width + j] = matrix[i * width + j];
+				block.push(i + 1);
+				block.push(j);
+			}
+
+			//check up
+
+			if(i != 0 && pixels[(i-1) * width + j ] == pixels[i * width + j] && matrix[(i-1) * width + j] == 0){
+				matrix[(i - 1) * width + j] = matrix[i * width + j];
+				block.push(i -1 );
+				block.push(j);
+			}
+		}
+		
+		/*
 		//check right
 		if(j != width - 1 && pixels[i * width + j + 1] == pixels[i * width + j] && matrix[i * width + j + 1] == 0){
 			matrix[i * width + j + 1] = matrix[i * width + j];
@@ -269,10 +321,13 @@ public class Spatial_SBML implements PlugInFilter {
 		}
 
 		//check up
+
 		if(i != 0 && pixels[(i-1) * width + j ] == pixels[i * width + j] && matrix[(i-1) * width + j] == 0){
 			matrix[(i - 1) * width + j] = matrix[i * width + j];
 			recurs(i-1,j);
 		}
+	*/
+		
 	}
 
 
