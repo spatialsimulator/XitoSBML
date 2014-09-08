@@ -1,7 +1,5 @@
 
 
-import ij.plugin.frame.PlugInFrame;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
@@ -18,18 +16,15 @@ import org.jgrapht.graph.ListenableDirectedGraph;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
 
-public class graph extends PlugInFrame{
+public class graph extends JFrame{
    
 	ListenableGraph<String, DefaultEdge> g = new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
     JGraphXAdapter<String, DefaultEdge>  jgxAdapter = new JGraphXAdapter<String, DefaultEdge>(g);
-	JFrame frame = new JFrame();
-    
+
 	graph(){
 		super("Domain Hiearchal Structure");
-		frame.setSize(400,400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setLayout(new GridBagLayout());
+        setLocationRelativeTo(null);
+        setLayout(new GridBagLayout());
 	}
 	
 	public ListenableGraph<String, DefaultEdge> getDirectedGraph(){
@@ -45,15 +40,20 @@ public class graph extends PlugInFrame{
 		g.addEdge(v1, v2);
 	}
 	
+	public void close(){
+		dispose();
+	}
+	
 	public void visualize(){
-		
         mxHierarchicalLayout layout = new mxHierarchicalLayout(jgxAdapter);
-        layout.setIntraCellSpacing(80);
         layout.setDisableEdgeStyle(false);
         layout.getGraph().setCellsLocked(true);
         layout.run(jgxAdapter.getDefaultParent());
-        frame.add(new mxGraphComponent(jgxAdapter),new GridBagConstraints());
-        frame.setVisible(true);
+        mxGraphComponent gc = new mxGraphComponent(jgxAdapter);
+        gc.setDragEnabled(false);
+        add(gc,new GridBagConstraints());
+        pack();
+        setVisible(true);
 	}
 	
 	public static void main(String[] args){
@@ -100,6 +100,7 @@ public class graph extends PlugInFrame{
 				graph.addEdge(edge1,edge2);	
 			}
 	    	graph.visualize();
+	    	graph.close();
 	}
 	
 		

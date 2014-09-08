@@ -37,33 +37,30 @@ public class Spatial_SBML implements PlugInFilter {
     byte[] pixels;
     int matrix[];
     int count = 0;
+    
 	@Override
 	public void run(ImageProcessor ip) {                           //process 2d pixel data
 
+		//check for jgraph
+		if(!checkJgraph()){
+			System.exit(1);
+		}
+		
 		pixels = (byte[])ip.getPixels(); 					//obtain pixels of image
         width = ip.getWidth();                                //obtain width of image
         height = ip.getHeight();                              //obtain height of image
         depth = 1;
+        System.out.println("z " + depth);
         labelList = new ArrayList<Integer>();					//value of pixels of domains
         hashDomainTypes = new HashMap<String, Integer>();
         hashSampledValue = new HashMap<String, Integer>();
         String s = "";
         
-        int cyt = 0;
-        int Nuc = 0;
         for(int i = 0; i < pixels.length; i++) {
         	if (!hasLabel(unsignedToBytes(pixels[i]))) {                                                              //see below
         		labelList.add(new Integer(unsignedToBytes(pixels[i])));
         	}
-        	
-        	if(unsignedToBytes(pixels[i]) == 85){
-        		cyt++;
-        	}
-        	
-        	if(unsignedToBytes(pixels[i]) == 170){
-        		Nuc++;
-        	}
-        	
+        
         	s += unsignedToBytes(pixels[i]) + ",";                                //organize pixel value in a string
         	if (i % width == width -1) {
         		s += "\n";
@@ -81,6 +78,9 @@ public class Spatial_SBML implements PlugInFilter {
 					matrix[i * width + j] = 0;
 			}
 		}
+      
+        System.out.println("Labeling ...");
+        
         HashMap<Integer,Integer> num = new HashMap<Integer,Integer>();  //labels the object in a different number
         int label = 0;
         for(int i = 0 ; i < labelList.size() ; i++){
@@ -99,12 +99,27 @@ public class Spatial_SBML implements PlugInFilter {
 				}
 			}
 		}
+		
 		num.remove(0);
 		num.put(0, 1);		//assumes extracellular is only one
-
+/*
+		for(int i = 0 ; i < height ; i++){
+			for(int j = 0 ; j < width ; j++){
+				if(matrix[i * width + j] == 0 && pixels[i * width + j] == 0){
+					label = num.get(unsignedToBytes(pixels[i * width + j]));
+					matrix[i * width + j] = label;
+					recurs(i,j);
+					label++;
+					num.remove(unsignedToBytes(pixels[i * width + j]));
+					num.put(unsignedToBytes(pixels[i * width + j]),label);
+				}
+			}
+		}
+*/		
 		//count number of domains in each domaintype
+		System.out.println("calculating number of domains ...");
+		
 		hashLabelNum = new HashMap<Integer,Integer>();
-		System.out.println("domain");
 		for(int i = 0 ; i < labelList.size() ; i++){
 			hashLabelNum.put(labelList.get(i), num.get(labelList.get(i)) % 10);
 			Integer temp = num.get(labelList.get(i)) % 10;
@@ -121,20 +136,16 @@ public class Spatial_SBML implements PlugInFilter {
 			catch (InterruptedException e) {
 			}
 		}
-		try {
-			hashDomainTypes.toString();  // check for nullpointers
-		} catch (NullPointerException e) {
-			IJ.log("Domaintype name error");
-			System.exit(1); // when domaintype namer has canceled exit
-		}
+		
+		DomNameCheck();
 		
 		hashDomainNum = new HashMap<String,Integer>();
 		for(Entry<String,Integer> e : hashDomainTypes.entrySet()){
 			hashDomainNum.put(e.getKey(), hashLabelNum.get(hashSampledValue.get(e.getKey())));
 		}
 
+		System.out.println("Adding membranes ...");
         adjacentsList = new ArrayList<ArrayList<Integer>>();	//holds which pixels are adjacents
-
         //adds the membrane 					may need changes in the future
 		for(int i = 0 ; i < height - 1; i++){
 			for(int j = 0 ; j < width - 1; j++){
@@ -164,7 +175,7 @@ public class Spatial_SBML implements PlugInFilter {
 		}
 
         //show graph
-		System.out.println("graph");
+		System.out.println("Displaying hiearchal graph");
 		graph graph = new graph();
 
 		for (Entry<String, Integer> e : hashDomainNum.entrySet()) {
@@ -197,22 +208,25 @@ public class Spatial_SBML implements PlugInFilter {
 		}
 		graph.visualize();
 
+		System.out.println("Creating SBML document ...");
+		
         RawSpatialImage ri = new RawSpatialImage(pixels, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
         SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri);                                 //calls sbmlexporter and create sbml document with string s
         sbmlexp.createGeometryElements();
 
 		//save document  obtains the name of Model as well as the document name
-		SaveDialog sd = new SaveDialog("","",".xml");
+		SaveDialog sd = new SaveDialog("Save SBML Document","","");
 		try{
-		sbmlexp.document.getModel().setId(sd.getFileName().substring(0, sd.getFileName().lastIndexOf(".")));
+		sbmlexp.document.getModel().setId(sd.getFileName());
 		IJ.log(sd.getFileName());
-		libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + sd.getFileName());                             //write SBML document to xml filec
+		libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + sd.getFileName() + ".xml");                             //write SBML document to xml file
 		}catch(NullPointerException e){
-			System.exit(1);
+			System.out.println("SBML document was not saved");
 		}
 		IJ.log(s);
         IJ.log(sbmlexp.document.toSBML());
         IJ.log(labelList.toString());
+        graph.close();
 	}
 
 	//determine if the pixel value is stored in labellist
@@ -226,14 +240,11 @@ public class Spatial_SBML implements PlugInFilter {
 	}
 
 	public static boolean hasLabel(int dom1, int dom2) {
-		try{
-			for (ArrayList<Integer> i : adjacentsList) {
-				if (i.get(0) == dom1 && i.get(1) == dom2) {
-					return true;
-				}
+		if(adjacentsList.isEmpty()) return false;
+		for (ArrayList<Integer> i : adjacentsList) {
+			if (i.get(0) == dom1 && i.get(1) == dom2) {
+				return true;
 			}
-		}catch(IndexOutOfBoundsException e){
-
 		}
 		return false;
 	}
@@ -300,37 +311,32 @@ public class Spatial_SBML implements PlugInFilter {
 				block.push(j);
 			}
 		}
-		
-		/*
-		//check right
-		if(j != width - 1 && pixels[i * width + j + 1] == pixels[i * width + j] && matrix[i * width + j + 1] == 0){
-			matrix[i * width + j + 1] = matrix[i * width + j];
-			recurs(i,j+1);
-		}
 
-		//check left
-		if(j != 0 && pixels[i * width + j - 1] == pixels[i * width + j] && matrix[i * width + j - 1] == 0){
-			matrix[i * width + j - 1] = matrix[i * width + j];
-			recurs(i,j-1);
-		}
-
-		//check down
-		if(i != height - 1 && pixels[(i+1) * width + j] == pixels[i * width + j] && matrix[(i+1) * width + j] == 0){
-			matrix[(i + 1) * width + j] = matrix[i * width + j];
-			recurs(i+1,j);
-		}
-
-		//check up
-
-		if(i != 0 && pixels[(i-1) * width + j ] == pixels[i * width + j] && matrix[(i-1) * width + j] == 0){
-			matrix[(i - 1) * width + j] = matrix[i * width + j];
-			recurs(i-1,j);
-		}
-	*/
-		
 	}
 
+	public void DomNameCheck(){
+		if(hashDomainTypes.containsKey("")){
+			IJ.error("DomainType has no name");
+			System.exit(1);
+		}
+		
+		//check number of domaintype
+		if(hashDomainTypes.size() != labelList.size()){
+			IJ.error("Duplicate DomainType name");
+			System.exit(1);
+		}
+	}
 
+	public boolean checkJgraph(){
+		try {
+			Class.forName("org.jgrapht.ListenableGraph");
+			return true;
+		} catch (ClassNotFoundException e1) {
+			IJ.error("Please Install Jgrapht");
+			return false;
+		}
+	}
+	
 	@Override
 	public int setup(String arg, ImagePlus imp) {                          //return flags specifying capability and needs of filter
 		this.imp = imp;

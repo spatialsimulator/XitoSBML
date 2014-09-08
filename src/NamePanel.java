@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -26,14 +28,12 @@ public class NamePanel extends JFrame implements ActionListener{
 	HashMap<Integer,Integer> hashLabelNum; 
 	DefaultTableModel tableModel;
 	JTable table;
-	JFrame frame;
 	boolean running = false;
 	
 	public NamePanel(){
-		//super("Domain Namer");
-		frame = new JFrame("Domain Namer");
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);	
-		frame.setSize(400, 160);
+		super("Domain Namer");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);	
+		setSize(400, 160);
 	}
 
 	public NamePanel(ArrayList<Integer> labelList, HashMap<Integer,Integer> hashLabelNum, HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValues){
@@ -77,17 +77,17 @@ public class NamePanel extends JFrame implements ActionListener{
 		b1.addActionListener(this);b2.addActionListener(this);
 		
 		//set components 
-		frame.getContentPane().add(table.getTableHeader(),BorderLayout.NORTH);
-		frame.getContentPane().add(keyPanel,BorderLayout.SOUTH);
-		frame.getContentPane().add(table,BorderLayout.CENTER);
-		frame.setVisible(true);
+		getContentPane().add(table.getTableHeader(),BorderLayout.NORTH);
+		getContentPane().add(keyPanel,BorderLayout.SOUTH);
+		getContentPane().add(table,BorderLayout.CENTER);
+		setVisible(true);
 		
 	}
 
 	//sets the datatable to the domaintype and return it
 	public HashMap<String, Integer> getDomainTypes(){	
 		for(int i = 0; i < labelList.size(); i++){
-			if(table.getValueAt(i, 1).toString() == ("Insert Name")){
+			if(table.getValueAt(i, 1).toString().equals("Insert Name")){
 				hashDomainTypes.put("", 3);
 			}else{
 				hashDomainTypes.put( table.getValueAt(i, 1).toString(), 3);	
@@ -100,13 +100,33 @@ public class NamePanel extends JFrame implements ActionListener{
 	//sets the datatable to the sampledvalue and return it
 	public HashMap<String, Integer> getSampledValues(){
 		for(int i = 0; i < labelList.size(); i++){
-			if(table.getValueAt(i, 1).toString() == ("Insert Name")){
+			if(table.getValueAt(i, 1).toString().equals("Insert Name")){
 				hashSampledValues.put("", Integer.parseInt(table.getValueAt(i, 0).toString()));
 			}else{
 				hashSampledValues.put( table.getValueAt(i, 1).toString(), Integer.parseInt(table.getValueAt(i, 0).toString()));
 			}
 		}
 		return hashSampledValues;
+	}
+	
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String input = e.getActionCommand();
+		if(input == "cancel"){
+			setVisible(false);
+			running= false;
+			dispose();
+		}
+		
+		if(input == "OK"){
+			hashDomainTypes = getDomainTypes();			
+			hashSampledValues = getSampledValues();
+			setVisible(false);
+			running= false;
+			dispose();
+		}
 	}
 	
 	public static void main(String args[]) throws InterruptedException{
@@ -141,25 +161,6 @@ public class NamePanel extends JFrame implements ActionListener{
 			System.out.println("main " + en.getKey() + " " + en.getValue());
 		}
 		
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		String input = e.getActionCommand();
-		if(input == "cancel"){
-			frame.setVisible(false);
-			running= false;
-			this.dispose();
-		}
-		
-		if(input == "OK"){
-			hashDomainTypes = getDomainTypes();			
-			hashSampledValues = getSampledValues();
-
-			frame.setVisible(false);
-			running= false;
-			this.dispose();
-		}
 	}
 
 }

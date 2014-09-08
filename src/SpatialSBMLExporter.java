@@ -217,8 +217,10 @@ public class SpatialSBMLExporter {
 				  adj.setDomain2(domname[i] + "0");
 				  loadj.append(adj);
 			  }
+		  }
 	  }
-	  }
+	  
+	  
   }
 
   public static int unsignedToBytes(byte b) {
