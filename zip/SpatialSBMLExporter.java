@@ -212,9 +212,9 @@ public class SpatialSBMLExporter {
 			  for (int i = 0; i < 2; i++) {                           //add info about adjacent domain
 				  String[] domname = dt.getSpatialId().split("_", 0);
 				  AdjacentDomains adj = new AdjacentDomains();                    //adjacent domain only account for membrane cytosol+ extracelluar matrix and cytosol + nucleus
-				  adj.setSpatialId(dt.getSpatialId() + "_" + domname[i] + "0");
-				  adj.setDomain1(dt.getSpatialId() + "0");
-				  adj.setDomain2(domname[i] + "0");
+				  adj.setSpatialId(dt.getSpatialId() + "_" + domname[i]);
+				  adj.setDomain1(dt.getSpatialId());
+				  adj.setDomain2(domname[i]);
 				  loadj.append(adj);
 			  }
 		  }

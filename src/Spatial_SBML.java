@@ -156,8 +156,8 @@ public class Spatial_SBML implements PlugInFilter {
 					temp.add(Math.min(matrix[i * width + j + 1], matrix[i * width + j]));
 					adjacentsList.add(temp);
 					addmembrane(
-							Math.max(unsignedToBytes(pixels[i * width + j + 1]),unsignedToBytes(pixels[i * width + j])),
-							Math.min(unsignedToBytes(pixels[i * width + j + 1]),unsignedToBytes(pixels[i * width + j]))
+							Math.max(matrix[i * width + j + 1], matrix[i * width + j]),
+							Math.min(matrix[i * width + j + 1],matrix[i * width + j])
 							);
 				}
 				//down
@@ -167,8 +167,8 @@ public class Spatial_SBML implements PlugInFilter {
 					temp.add(Math.min(matrix[(i+1) * width + j], matrix[i * width + j]));
 					adjacentsList.add(temp);
 					addmembrane(
-							Math.max(unsignedToBytes(pixels[(i+1) * width + j]),unsignedToBytes(pixels[i * width + j])),
-							Math.min(unsignedToBytes(pixels[(i+1) * width + j]),unsignedToBytes(pixels[i * width + j]))
+							Math.max(matrix[(i + 1) * width + j ], matrix[i * width + j]),
+							Math.min(matrix[(i + 1) * width + j ],matrix[i * width + j])
 							);
 				}
 			}
@@ -258,14 +258,17 @@ public class Spatial_SBML implements PlugInFilter {
 		String big = new String();
 		String small = new String();
 		for(Entry<String,Integer> e : hashSampledValue.entrySet()){
-			if(e.getValue().equals(bignum)){
-				big = e.getKey();
+			if(e.getValue().equals( labelList.get(bignum / 10) )){
+				big = e.getKey() + bignum % 10;
+				System.out.println(bignum + " big " + big);
 			}
-			if(e.getValue().equals(smallnum)){
-				small = e.getKey();
+			if(e.getValue().equals(labelList.get(smallnum / 10))){
+				small = e.getKey() + smallnum % 10;
+				System.out.println(smallnum + " small " + small);
 			}
 		}
 		String buf = big + "_" + small + "_membrane";
+		System.out.println(buf);
 		if(!hashDomainTypes.containsKey(buf)){
 			hashDomainTypes.put(buf,2);
 			hashDomainNum.put(buf,1);
