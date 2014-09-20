@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class RawSpatialImage {		//image data
+public class RawSpatialImage {	
 	byte[] raw;
 	int width;
 	int height;
@@ -12,14 +12,14 @@ public class RawSpatialImage {		//image data
 	HashMap<String, Integer> hashDomainTypes;
 	HashMap<String, Integer> hashSampledValue;
 	HashMap<String,Integer> hashDomainNum;
-	ArrayList<ArrayList<Integer>> adjacentsList;
-	
+	ArrayList<ArrayList<String>> adjacentsList;
+
 	public RawSpatialImage() {
 		super();				//call constructor of super class
 	}
 
-	public RawSpatialImage(byte[] raw, int w, int h, int d, HashMap<String, Integer> hashDomainTypes, HashMap<String, Integer> hashSampledValue, HashMap<String,Integer> hashDomainNum, ArrayList<ArrayList<Integer>> adjacentsList) {
-		this();										//call constructor that is above
+	public RawSpatialImage(byte[] raw, int w, int h, int d, HashMap<String, Integer> hashDomainTypes, HashMap<String, Integer> hashSampledValue, HashMap<String,Integer> hashDomainNum, ArrayList<ArrayList<String>> adjacentsList) {
+		this();
 		this.raw = raw;
 		this.width = w;
 		this.height = h;

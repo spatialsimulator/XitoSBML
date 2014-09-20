@@ -5,6 +5,9 @@
       <compartment id="Cyt" name="Cyt" spatialDimensions="3" constant="true">
         <spatial:compartmentMapping spatial:spatialId="CytCyt" spatial:compartment="Cyt" spatial:domainType="Cyt" spatial:unitSize="1"/>
       </compartment>
+      <compartment id="Nuc_Cyt_membrane" name="Nuc_Cyt_membrane" spatialDimensions="2" constant="true">
+        <spatial:compartmentMapping spatial:spatialId="Nuc_Cyt_membraneNuc_Cyt_membrane" spatial:compartment="Nuc_Cyt_membrane" spatial:domainType="Nuc_Cyt_membrane" spatial:unitSize="1"/>
+      </compartment>
       <compartment id="EC" name="EC" spatialDimensions="3" constant="true">
         <spatial:compartmentMapping spatial:spatialId="ECEC" spatial:compartment="EC" spatial:domainType="EC" spatial:unitSize="1"/>
       </compartment>
@@ -13,9 +16,6 @@
       </compartment>
       <compartment id="Nuc" name="Nuc" spatialDimensions="3" constant="true">
         <spatial:compartmentMapping spatial:spatialId="NucNuc" spatial:compartment="Nuc" spatial:domainType="Nuc" spatial:unitSize="1"/>
-      </compartment>
-      <compartment id="Cyt_Nuc_membrane" name="Cyt_Nuc_membrane" spatialDimensions="2" constant="true">
-        <spatial:compartmentMapping spatial:spatialId="Cyt_Nuc_membraneCyt_Nuc_membrane" spatial:compartment="Cyt_Nuc_membrane" spatial:domainType="Cyt_Nuc_membrane" spatial:unitSize="1"/>
       </compartment>
     </listOfCompartments>
     <spatial:geometry spatial:coordinateSystem="Cartesian">
@@ -35,23 +35,23 @@
       </spatial:listOfCoordinateComponents>
       <spatial:listOfDomainTypes>
         <spatial:domainType spatial:spatialId="Cyt" spatial:spatialDimensions="3"/>
+        <spatial:domainType spatial:spatialId="Nuc_Cyt_membrane" spatial:spatialDimensions="2"/>
         <spatial:domainType spatial:spatialId="EC" spatial:spatialDimensions="3"/>
         <spatial:domainType spatial:spatialId="Cyt_EC_membrane" spatial:spatialDimensions="2"/>
         <spatial:domainType spatial:spatialId="Nuc" spatial:spatialDimensions="3"/>
-        <spatial:domainType spatial:spatialId="Cyt_Nuc_membrane" spatial:spatialDimensions="2"/>
       </spatial:listOfDomainTypes>
       <spatial:listOfDomains>
         <spatial:domain spatial:spatialId="Cyt0" spatial:implicit="false"/>
+        <spatial:domain spatial:spatialId="Nuc_Cyt_membrane0" spatial:implicit="true"/>
         <spatial:domain spatial:spatialId="EC0" spatial:implicit="false"/>
-        <spatial:domain spatial:spatialId="Cyt_EC_membrane" spatial:implicit="true"/>
+        <spatial:domain spatial:spatialId="Cyt_EC_membrane0" spatial:implicit="true"/>
         <spatial:domain spatial:spatialId="Nuc0" spatial:implicit="false"/>
-        <spatial:domain spatial:spatialId="Cyt_Nuc_membrane" spatial:implicit="true"/>
       </spatial:listOfDomains>
       <spatial:listOfAdjacentDomains>
         <spatial:adjacentDomains spatial:spatialId="Cyt_EC_membrane_Cyt0" spatial:domain1="Cyt_EC_membrane0" spatial:domain2="Cyt0"/>
         <spatial:adjacentDomains spatial:spatialId="Cyt_EC_membrane_EC0" spatial:domain1="Cyt_EC_membrane0" spatial:domain2="EC0"/>
-        <spatial:adjacentDomains spatial:spatialId="Cyt_Nuc_membrane_Cyt0" spatial:domain1="Cyt_Nuc_membrane0" spatial:domain2="Cyt0"/>
-        <spatial:adjacentDomains spatial:spatialId="Cyt_Nuc_membrane_Nuc0" spatial:domain1="Cyt_Nuc_membrane0" spatial:domain2="Nuc0"/>
+        <spatial:adjacentDomains spatial:spatialId="Nuc_Cyt_membrane_Nuc0" spatial:domain1="Nuc_Cyt_membrane0" spatial:domain2="Nuc0"/>
+        <spatial:adjacentDomains spatial:spatialId="Nuc_Cyt_membrane_Cyt0" spatial:domain1="Nuc_Cyt_membrane0" spatial:domain2="Cyt0"/>
       </spatial:listOfAdjacentDomains>
       <spatial:listOfGeometryDefinitions>
         <spatial:sampledFieldGeometry spatial:spatialId="mySampledField">

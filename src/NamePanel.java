@@ -5,18 +5,21 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 
 
@@ -29,10 +32,12 @@ public class NamePanel extends JFrame implements ActionListener{
 	DefaultTableModel tableModel;
 	JTable table;
 	boolean running = false;
+	private final String[] domtype = {"Extracellular","Cytosol","Nucleus","Mitochondria","Golgi"}; 
 	
 	public NamePanel(){
-		super("Domain Namer");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);	
+		super("DomainType Namer");
+		//setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);	
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		setSize(400, 160);
 	}
 
@@ -44,28 +49,35 @@ public class NamePanel extends JFrame implements ActionListener{
 		this.hashSampledValues = hashSampledValues;
 		running = true;
 		
+
+		
 		//table
-		String[] columnNames = {"Pixel Value","DomainType","Number of Domains"};
+		final String[] columnNames = {"Pixel Value","Number of Domains","DomainType"};
 		  //set size of table = labelList * 3
 		tableModel = new DefaultTableModel(columnNames,0){
-			public boolean isCellEditable(int row, int column){				//locks the first and third column 
-				if(column == 0 || column == 2){
+			public boolean isCellEditable(int row, int column){				//locks the first and second column 
+				if(column == 0 || column == 1){
 					return false;
 				}else{
 					return true;
 				}
 			}
 		};
+				
 		table = new JTable(tableModel);
 		table.setBackground(new Color(169,169,169));
-		table.setSelectionBackground(new Color(250,250,250,50));
-		table.setShowHorizontalLines(true);
-		table.setShowVerticalLines(true);
 		table.getTableHeader().setReorderingAllowed(false);
 		
-		//add each pixel into the table
+		//add combobox to third column
+		JComboBox cb = new JComboBox(domtype);
+		cb.setBorder(BorderFactory.createEmptyBorder());
+		TableColumnModel tm = table.getColumnModel();
+		TableColumn tc = tm.getColumn(2);
+		tc.setCellEditor(new DefaultCellEditor(cb));
+		
+		//add each pixel, number of domain  into the table
 		for(int i = 0; i < labelList.size(); i++){
-			String[] tabledata = {labelList.get(i).toString(),"Insert Name",hashLabelNum.get(labelList.get(i)).toString()};
+			String[] tabledata = {labelList.get(i).toString(),hashLabelNum.get(labelList.get(i)).toString()};
 			tableModel.addRow(tabledata);
 		}
 		
@@ -87,12 +99,7 @@ public class NamePanel extends JFrame implements ActionListener{
 	//sets the datatable to the domaintype and return it
 	public HashMap<String, Integer> getDomainTypes(){	
 		for(int i = 0; i < labelList.size(); i++){
-			if(table.getValueAt(i, 1).toString().equals("Insert Name")){
-				hashDomainTypes.put("", 3);
-			}else{
-				hashDomainTypes.put( table.getValueAt(i, 1).toString(), 3);	
-			}
-			
+			hashDomainTypes.put( table.getValueAt(i, 2).toString(), 3);	
 		}
 		return hashDomainTypes;
 	}
@@ -100,17 +107,11 @@ public class NamePanel extends JFrame implements ActionListener{
 	//sets the datatable to the sampledvalue and return it
 	public HashMap<String, Integer> getSampledValues(){
 		for(int i = 0; i < labelList.size(); i++){
-			if(table.getValueAt(i, 1).toString().equals("Insert Name")){
-				hashSampledValues.put("", Integer.parseInt(table.getValueAt(i, 0).toString()));
-			}else{
-				hashSampledValues.put( table.getValueAt(i, 1).toString(), Integer.parseInt(table.getValueAt(i, 0).toString()));
-			}
+			hashSampledValues.put( table.getValueAt(i, 2).toString(), Integer.parseInt(table.getValueAt(i, 0).toString()));
 		}
 		return hashSampledValues;
 	}
 	
-
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String input = e.getActionCommand();
@@ -124,7 +125,7 @@ public class NamePanel extends JFrame implements ActionListener{
 			hashDomainTypes = getDomainTypes();			
 			hashSampledValues = getSampledValues();
 			setVisible(false);
-			running= false;
+			running = false;
 			dispose();
 		}
 	}
