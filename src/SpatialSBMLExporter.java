@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.WeakHashMap;
 import java.util.zip.Deflater;
 
 import org.sbml.libsbml.AdjacentDomains;
@@ -93,7 +94,7 @@ public class SpatialSBMLExporter {
       System.err.println("[Fatal Error] Layout Extension Level " + spatialns.getLevel () + " Version " + spatialns.getVersion () + " package version " + spatialns.getPackageVersion () + " is not registered.");
       System.exit(1);
     }
-  //  width = 5; height = 5; depth = 1;
+
   }
 
   public SpatialSBMLExporter(RawSpatialImage ri) {
@@ -109,27 +110,6 @@ public class SpatialSBMLExporter {
   }
 
   public void createGeometryElements() {          //creates the components and geometry layer of SBML
-    // Create compartments
-    /*
-       Compartment c1 = model.createCompartment();
-       reqplugin = (RequiredElementsSBasePlugin)c1.getPlugin("req");
-       reqplugin.setMathOverridden("spatial");
-       reqplugin.setCoreHasAlternateMath(true);
-       Compartment c2 = model.createCompartment();
-       reqplugin = (RequiredElementsSBasePlugin)c2.getPlugin("req");
-       reqplugin.setMathOverridden("spatial");
-       reqplugin.setCoreHasAlternateMath(true);
-       Compartment c3 = model.createCompartment();
-       reqplugin = (RequiredElementsSBasePlugin)c3.getPlugin("req");
-       reqplugin.setMathOverridden("spatial");
-       reqplugin.setCoreHasAlternateMath(true);
-       c1.setId("cytosol");
-       c1.setConstant(true);
-       c2.setId("extracellular");
-       c2.setConstant(true);
-       c3.setId("nucleus");
-       c3.setConstant(true);
-       */
     //
     // Creates a Geometry object via SpatialModelPlugin object.
     //
@@ -161,12 +141,14 @@ public class SpatialSBMLExporter {
     sf.setInterpolationType("linear"); sf.setEncoding("compressed");
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
 
+    
+    // need improvement
     ImageData idata = sf.createImageData();          //create ImageData
-    byte[] compressed = compressRawData(raw);
-    if (compressed != null) {
-      idata.setSamples(byteArrayToIntArray(compressed), compressed.length);     //see below byteArrayToIntArray
-      idata.setDataType("compressed");
-    }
+			byte[] compressed = compressRawData(raw);
+			if (compressed != null) {
+				idata.setSamples(byteArrayToIntArray(compressed),compressed.length); // see below byteArrayToIntArray
+				idata.setDataType("compressed");
+			}
   }
 
   public byte[] compressRawData(byte[] raw) {           //compression of image
@@ -205,7 +187,7 @@ public class SpatialSBMLExporter {
 
   public void addAdjacentDomains() {		//adds membrane domains and adjacents
 	  ListOf loadj = geometry.getListOfAdjacentDomains();
-	  HashMap<String, Integer> hashMembrane = new HashMap<String,Integer>();   
+	  WeakHashMap<String, Integer> hashMembrane = new WeakHashMap<String,Integer>();   
 	  for(ArrayList<String> e : adjacentsList){
 		 String one = e.get(0).substring(0, e.get(0).length() - 1 );
 		 String two = e.get(1).substring(0, e.get(1).length() - 1 );
@@ -224,6 +206,7 @@ public class SpatialSBMLExporter {
 			  loadj.append(adj);
 		  }
 	  }
+	  hashMembrane = null;
   }
 
   public static int unsignedToBytes(byte b) {
@@ -307,6 +290,7 @@ public class SpatialSBMLExporter {
    * @param args
    */
   public static void main(String[] args) {
+	int width  = 5, height = 5, depth = 3;
     HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
     hashDomainTypes.put("EC", 3);
     hashDomainTypes.put("Nuc", 3);
@@ -342,22 +326,29 @@ public class SpatialSBMLExporter {
     
     System.out.print(adjacentsList.toString());
     
-    byte[] raw = {                  //need to refer to spatial_SBML to acquire data
-      // z=0
-
+    /*
+    byte[] raw = { 
          0,1,1,1,0,
          1,1,2,1,1,
          1,2,2,2,1,
          1,1,2,1,1,
          0,1,1,1,0
-      /*
-      0,1,1,1,
-      1,1,2,1,
-      1,2,2,2,
-      1,1,2,1
-*/
     };
-    RawSpatialImage ri = new RawSpatialImage(raw, (int)Math.sqrt((double)raw.length), (int)Math.sqrt((double)raw.length), 1, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);  //why does the length need to be squarerooted?
+    */
+    byte[] len = { 
+	         0,1,1,1,0,
+	         1,1,2,1,1,
+	         1,2,2,2,1,
+	         1,1,2,1,1,
+	         0,1,1,1,0
+	    };		
+    byte[] raw = null;
+    
+    for(int i = 0; i < 3 ; i++){
+    	System.arraycopy(len, 0, raw, i * 25, 25);
+    }
+    
+    RawSpatialImage ri = new RawSpatialImage(raw, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);  //why does the length need to be squarerooted?
     SpatialSBMLExporter ts = new SpatialSBMLExporter(ri);
     ts.createGeometryElements();
     System.out.println(ts.document.getModel().getId());

@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -23,38 +25,43 @@ import javax.swing.table.TableColumnModel;
 
 
 
-public class NamePanel extends JFrame implements ActionListener{
+public class NamePanel extends JFrame implements ActionListener, WindowListener{
 
-	ArrayList<Integer> labelList = new ArrayList<Integer>();
-	HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
-	HashMap<String, Integer> hashSampledValues = new HashMap<String, Integer>();
-	HashMap<Integer,Integer> hashLabelNum; 
-	DefaultTableModel tableModel;
-	JTable table;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private ArrayList<Integer> labelList;
+	private HashMap<String, Integer> hashDomainTypes;
+	private HashMap<String, Integer> hashSampledValues;
+	private DefaultTableModel tableModel;
+	private JTable table;
 	boolean running = false;
 	private final String[] domtype = {"Extracellular","Cytosol","Nucleus","Mitochondria","Golgi"}; 
 	
 	public NamePanel(){
 		super("DomainType Namer");
-		//setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);	
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);	
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		setSize(400, 160);
 	}
 
 	public NamePanel(ArrayList<Integer> labelList, HashMap<Integer,Integer> hashLabelNum, HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValues){
 		this();
 		this.labelList = labelList;
-		this.hashLabelNum = hashLabelNum;
 		this.hashDomainTypes = hashDomainTypes;
 		this.hashSampledValues = hashSampledValues;
 		running = true;
-		
-
 		
 		//table
 		final String[] columnNames = {"Pixel Value","Number of Domains","DomainType"};
 		  //set size of table = labelList * 3
 		tableModel = new DefaultTableModel(columnNames,0){
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public boolean isCellEditable(int row, int column){				//locks the first and second column 
 				if(column == 0 || column == 1){
 					return false;
@@ -97,7 +104,7 @@ public class NamePanel extends JFrame implements ActionListener{
 	}
 
 	//sets the datatable to the domaintype and return it
-	public HashMap<String, Integer> getDomainTypes(){	
+	private HashMap<String, Integer> getDomainTypes(){	
 		for(int i = 0; i < labelList.size(); i++){
 			hashDomainTypes.put( table.getValueAt(i, 2).toString(), 3);	
 		}
@@ -105,7 +112,7 @@ public class NamePanel extends JFrame implements ActionListener{
 	}
 	
 	//sets the datatable to the sampledvalue and return it
-	public HashMap<String, Integer> getSampledValues(){
+	private HashMap<String, Integer> getSampledValues(){
 		for(int i = 0; i < labelList.size(); i++){
 			hashSampledValues.put( table.getValueAt(i, 2).toString(), Integer.parseInt(table.getValueAt(i, 0).toString()));
 		}
@@ -161,6 +168,48 @@ public class NamePanel extends JFrame implements ActionListener{
 		for(Entry<String, Integer> en : SampledValues.entrySet()){
 			System.out.println("main " + en.getKey() + " " + en.getValue());
 		}
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		running = false;
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 
