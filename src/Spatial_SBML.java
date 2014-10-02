@@ -8,6 +8,8 @@ import ij.ImagePlus;
 import ij.WindowManager;
 import ij.io.SaveDialog;
 import ij.plugin.PlugIn;
+import ij3d.Content;
+import ij3d.Image3DUniverse;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +19,8 @@ import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
 import org.sbml.libsbml.libsbml;
+
+import voltex.VoltexGroup;
 
 
 /**
@@ -62,6 +66,11 @@ public class Spatial_SBML implements PlugIn {
         	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
         }
 
+        Image3DUniverse univ = new Image3DUniverse();
+        Content c = univ.addVoltex(imp);
+        univ.show();
+        VoltexGroup voltex = (VoltexGroup)c.getContent();
+        
         System.out.println("pixel size " + pixels.length);
       
         int max = depth * height * width;
