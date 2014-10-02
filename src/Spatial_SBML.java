@@ -8,8 +8,6 @@ import ij.ImagePlus;
 import ij.WindowManager;
 import ij.io.SaveDialog;
 import ij.plugin.PlugIn;
-import ij3d.Content;
-import ij3d.Image3DUniverse;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,13 +18,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.sbml.libsbml.libsbml;
 
-import voltex.VoltexGroup;
 
 /**
  * @author Akira Funahashi
  *
  */
-public class Spatial_SBML extends Image3DUniverse implements PlugIn {
+public class Spatial_SBML implements PlugIn {
 	ImagePlus imp;                                         //contain ImageProcessor 2D image or imagestack
 	static boolean isRunning = false;
 	String title = "Export segmented image to Spatial SBML";
@@ -66,11 +63,7 @@ public class Spatial_SBML extends Image3DUniverse implements PlugIn {
         }
 
         System.out.println("pixel size " + pixels.length);
-
-        Content c = addVoltex(image);
-        VoltexGroup voltex = (VoltexGroup)c.getContent();
-        c.getImage();
-        
+      
         int max = depth * height * width;
         int temps;
 			for (int i = 0 ; i < max ; i++) {
