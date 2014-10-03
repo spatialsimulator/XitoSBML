@@ -70,15 +70,6 @@ public class Spatial_SBML implements PlugIn {
         	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
         }
 
-        Image3DUniverse univ = new Image3DUniverse();
-        univ.show();
-        Content c = univ.addVoltex(image);
-
-        InterpolatedImage img = new InterpolatedImage(image);
-        InterpolatedImage clone = img.cloneImage();
-        
-        System.out.println("interpolated " + clone.getDepth());
-        
         
         int max = depth * height * width;
         int temps;
