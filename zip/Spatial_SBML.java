@@ -7,7 +7,9 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;
 import ij.io.SaveDialog;
+import ij.measure.Calibration;
 import ij.plugin.PlugIn;
+import ij.process.ImageProcessor;
 import ij3d.Content;
 import ij3d.Image3DUniverse;
 
@@ -18,16 +20,19 @@ import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
+import math3d.Point3d;
+
 import org.sbml.libsbml.libsbml;
 
+import vib.InterpolatedImage;
 import voltex.VoltexGroup;
+
 
 /**
  * @author Akira Funahashi
  *
  */
-public class Spatial_SBML extends Image3DUniverse implements PlugIn {
-	ImagePlus imp;                                         //contain ImageProcessor 2D image or imagestack
+public class Spatial_SBML implements PlugIn {
 	static boolean isRunning = false;
 	String title = "Export segmented image to Spatial SBML";
 	ArrayList<Integer> labelList;
@@ -65,11 +70,15 @@ public class Spatial_SBML extends Image3DUniverse implements PlugIn {
         	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
         }
 
-        System.out.println("pixel size " + pixels.length);
+        Image3DUniverse univ = new Image3DUniverse();
+        univ.show();
+        Content c = univ.addVoltex(image);
 
-        Content c = addVoltex(image);
-        VoltexGroup voltex = (VoltexGroup)c.getContent();
-        c.getImage();
+        InterpolatedImage img = new InterpolatedImage(image);
+        InterpolatedImage clone = img.cloneImage();
+        
+        System.out.println("interpolated " + clone.getDepth());
+        
         
         int max = depth * height * width;
         int temps;
@@ -108,7 +117,6 @@ public class Spatial_SBML extends Image3DUniverse implements PlugIn {
 						recurs(i, j, d);
 						num.remove(unsignedToBytes(pixels[d * height *  width + i * width + j]));
 						num.put(unsignedToBytes(pixels[d * height *  width + i * width + j]), ++label);
-						System.out.println("d " + d);
 					}
 				}
 			}
@@ -373,7 +381,7 @@ public class Spatial_SBML extends Image3DUniverse implements PlugIn {
 
 	public boolean checkJgraph(){
 		try {
-			Class.forName("org.jgrapht.*");
+			Class.forName("org.jgrapht.ListenableGraph");
 			return true;
 		} catch (ClassNotFoundException e1) {
 			IJ.error("Please Install Jgrapht");

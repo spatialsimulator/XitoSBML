@@ -7,7 +7,9 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;
 import ij.io.SaveDialog;
+import ij.measure.Calibration;
 import ij.plugin.PlugIn;
+import ij.process.ImageProcessor;
 import ij3d.Content;
 import ij3d.Image3DUniverse;
 
@@ -18,8 +20,11 @@ import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
+import math3d.Point3d;
+
 import org.sbml.libsbml.libsbml;
 
+import vib.InterpolatedImage;
 import voltex.VoltexGroup;
 
 
@@ -28,7 +33,6 @@ import voltex.VoltexGroup;
  *
  */
 public class Spatial_SBML implements PlugIn {
-	ImagePlus imp;                                         //contain ImageProcessor 2D image or imagestack
 	static boolean isRunning = false;
 	String title = "Export segmented image to Spatial SBML";
 	ArrayList<Integer> labelList;
@@ -66,13 +70,7 @@ public class Spatial_SBML implements PlugIn {
         	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
         }
 
-        Image3DUniverse univ = new Image3DUniverse();
-        Content c = univ.addVoltex(imp);
-        univ.show();
-        VoltexGroup voltex = (VoltexGroup)c.getContent();
         
-        System.out.println("pixel size " + pixels.length);
-      
         int max = depth * height * width;
         int temps;
 			for (int i = 0 ; i < max ; i++) {
@@ -110,7 +108,6 @@ public class Spatial_SBML implements PlugIn {
 						recurs(i, j, d);
 						num.remove(unsignedToBytes(pixels[d * height *  width + i * width + j]));
 						num.put(unsignedToBytes(pixels[d * height *  width + i * width + j]), ++label);
-						System.out.println("d " + d);
 					}
 				}
 			}

@@ -17,7 +17,6 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -41,7 +40,7 @@ public class NamePanel extends JFrame implements ActionListener, WindowListener{
 	
 	public NamePanel(){
 		super("DomainType Namer");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);	
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);	
 		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
 		setSize(400, 160);
 	}
@@ -89,15 +88,19 @@ public class NamePanel extends JFrame implements ActionListener, WindowListener{
 		}
 		
 		//button
-		JPanel keyPanel = new JPanel(new GridLayout(1,2));
-		JButton b1 = new JButton("cancel");
+		//JPanel keyPanel = new JPanel(new GridLayout(1,2));
+	//	JButton b1 = new JButton("cancel");
 		JButton b2 = new JButton("OK");
-		keyPanel.add(b1);keyPanel.add(b2);
-		b1.addActionListener(this);b2.addActionListener(this);
+		//keyPanel.add(b1);
+		//keyPanel.add(b2);
+		//b1.addActionListener(this);
+		b2.addActionListener(this);
 		
 		//set components 
 		getContentPane().add(table.getTableHeader(),BorderLayout.NORTH);
-		getContentPane().add(keyPanel,BorderLayout.SOUTH);
+		//getContentPane().add(keyPanel);
+		getContentPane().add(b2,BorderLayout.SOUTH);
+		b2.setBounds(300, 300, 50, 50);
 		getContentPane().add(table,BorderLayout.CENTER);
 		setVisible(true);
 		
