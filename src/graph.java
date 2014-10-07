@@ -18,6 +18,10 @@ import com.mxgraph.swing.mxGraphComponent;
 
 public class graph extends JFrame{
    
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	ListenableGraph<String, DefaultEdge> g = new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
     JGraphXAdapter<String, DefaultEdge>  jgxAdapter = new JGraphXAdapter<String, DefaultEdge>(g);
 
@@ -26,11 +30,6 @@ public class graph extends JFrame{
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
 	}
-	
-	public ListenableGraph<String, DefaultEdge> getDirectedGraph(){
-		return g;
-	}
-	
 	
 	public void addVertex(String name){
 		g.addVertex(name);
@@ -57,7 +56,6 @@ public class graph extends JFrame{
 	}
 	
 	public static void main(String[] args){
-		
 	        graph graph = new graph();
 	        HashMap<String, Integer> hashDomainNum = new HashMap<String,Integer>();
 	        hashDomainNum.put("EC", 1);
