@@ -70,6 +70,7 @@ public class NamePanel extends JFrame implements ActionListener, WindowListener{
 			}
 		};
 				
+		//table setting 
 		table = new JTable(tableModel);
 		table.setBackground(new Color(169,169,169));
 		table.getTableHeader().setReorderingAllowed(false);
@@ -80,7 +81,7 @@ public class NamePanel extends JFrame implements ActionListener, WindowListener{
 		TableColumnModel tm = table.getColumnModel();
 		TableColumn tc = tm.getColumn(2);
 		tc.setCellEditor(new DefaultCellEditor(cb));
-		
+	
 		//add each pixel, number of domain  into the table
 		for(int i = 0; i < labelList.size(); i++){
 			String[] tabledata = {labelList.get(i).toString(),hashLabelNum.get(labelList.get(i)).toString()};

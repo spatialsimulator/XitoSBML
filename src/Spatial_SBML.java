@@ -11,6 +11,7 @@ import ij.measure.Calibration;
 import ij.plugin.PlugIn;
 import ij.process.ImageProcessor;
 import ij3d.Content;
+import ij3d.ContentInstant;
 import ij3d.Image3DUniverse;
 
 import java.util.ArrayList;
@@ -70,7 +71,6 @@ public class Spatial_SBML implements PlugIn {
         	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
         }
 
-        
         int max = depth * height * width;
         int temps;
 			for (int i = 0 ; i < max ; i++) {
@@ -141,8 +141,8 @@ public class Spatial_SBML implements PlugIn {
 
         //displays gui table to name domain types
 
-		NamePanel name = new NamePanel(labelList, hashLabelNum, hashDomainTypes, hashSampledValue);
-		while (name.running) {
+		NamePanel panel = new NamePanel(labelList, hashLabelNum, hashDomainTypes, hashSampledValue);
+		while (panel.running) {
 			try {
 				TimeUnit.SECONDS.sleep(1);
 			} // need a better solution to make this program wait
@@ -230,21 +230,23 @@ public class Spatial_SBML implements PlugIn {
         RawSpatialImage ri = new RawSpatialImage(pixels, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
         SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri);                                 //calls sbmlexporter and create sbml document with string s
         sbmlexp.createGeometryElements();
-
+      
 		//save document  obtains the name of Model as well as the document name
-		SaveDialog sd = new SaveDialog("Save SBML Document","","");
+		SaveDialog sd = new SaveDialog("Save SBML Document",image.getTitle(),".xml");
+		String name = sd.getFileName();
+		sbmlexp.document.getModel().setId(name);
+		IJ.log(name);
 		try{
-		sbmlexp.document.getModel().setId(sd.getFileName());
-		IJ.log(sd.getFileName());
-		libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + sd.getFileName() + ".xml");                             //write SBML document to xml file
+			if(name.contains(".")) libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name);                             //write SBML document to xml file
+			else 					libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name + ".xml"); 
 		}catch(NullPointerException e){
 			System.out.println("SBML document was not saved");
 		}
 //		IJ.log(pixels.toString()); //print matrix
         IJ.log(sbmlexp.document.toSBML());
         IJ.log(labelList.toString());
-        graph.close();
-
+        //univ.close();
+        //graph.close();
 	}
 
 	//determine if the pixel value is stored in labellist
@@ -259,6 +261,7 @@ public class Spatial_SBML implements PlugIn {
 
 	private static boolean hasLabel(int dom1, int dom2) {
 		if(adjacentsPixel.isEmpty()) return false;
+		
 		for (ArrayList<Integer> i : adjacentsPixel) {
 			if (i.get(0) == dom1 && i.get(1) == dom2) {
 				return true;
