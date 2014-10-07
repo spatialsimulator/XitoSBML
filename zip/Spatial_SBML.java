@@ -66,23 +66,19 @@ public class Spatial_SBML implements PlugIn {
         pixels = new byte[width * height * depth];
         System.out.println("w:" + width + " h:"+ height + " d:" + depth);
         // String s = "";
+        
+        //display 3d image with 3d viewer
+        Image3DUniverse univ = new Image3DUniverse();
+        univ.show();
+        Content c = univ.addVoltex(image);
+        
+        
+        
         for(int i = 1 ; i <= depth ; i++){
         	slice = (byte[])image.getStack().getPixels(i); 					//obtain pixels of the first stack image
         	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
         }
 
-
-        Image3DUniverse univ = new Image3DUniverse();
-        univ.show();
-        Content c = univ.addVoltex(image);
-        InterpolatedImage img = new InterpolatedImage(image);
-        InterpolatedImage clone = img.cloneImage();
-        ContentInstant view = c.getCurrent();
-        ImagePlus after = view.exportTransformed();
-
-        System.out.println("interpolated " + clone.getDepth());
-        System.out.println("after " + after.getImageStackSize());
-        
         int max = depth * height * width;
         int temps;
 			for (int i = 0 ; i < max ; i++) {
@@ -246,9 +242,9 @@ public class Spatial_SBML implements PlugIn {
 		//save document  obtains the name of Model as well as the document name
 		SaveDialog sd = new SaveDialog("Save SBML Document",image.getTitle(),".xml");
 		String name = sd.getFileName();
-		sbmlexp.document.getModel().setId(name);
 		IJ.log(name);
 		try{
+			sbmlexp.document.getModel().setId(name);
 			if(name.contains(".")) libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name);                             //write SBML document to xml file
 			else 					libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name + ".xml"); 
 		}catch(NullPointerException e){
