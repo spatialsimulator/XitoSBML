@@ -7,26 +7,18 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;
 import ij.io.SaveDialog;
-import ij.measure.Calibration;
 import ij.plugin.PlugIn;
-import ij.process.ImageProcessor;
 import ij3d.Content;
-import ij3d.ContentInstant;
 import ij3d.Image3DUniverse;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
-import math3d.Point3d;
-
 import org.sbml.libsbml.libsbml;
 
-import vib.InterpolatedImage;
-import voltex.VoltexGroup;
 
 
 /**
@@ -48,108 +40,46 @@ public class Spatial_SBML implements PlugIn {
     int depth;
     byte[] pixels;
     static int matrix[];
-
-	public void run(String args) {                           //process 2d pixel data
+    double voxw;
+    double voxy;
+    double voxz;
+    Image3DUniverse univ;
+    
+	public void run(String args) {   
 		//check for jgraph
 		if(!checkJgraph()){
-			System.exit(1);
+			System.err.println("Need installation of jgraph");
 		}
 
 		ImagePlus image = WindowManager.getCurrentImage();
         width = image.getWidth();                                //obtain width of image
         height = image.getHeight();                              //obtain height of image
         depth = image.getStackSize();								//obtain number of slices
-        labelList = new ArrayList<Integer>();					//value of pixels of domains
+        new mainSpatial().run(args);
+        /*
         hashDomainTypes = new HashMap<String, Integer>();
         hashSampledValue = new HashMap<String, Integer>();
-        byte[] slice;
-        pixels = new byte[width * height * depth];
         System.out.println("w:" + width + " h:"+ height + " d:" + depth);
         // String s = "";
         
+        Interpolate interpolate = new Interpolate(image);	
+        
+        
         //display 3d image with 3d viewer
-        Image3DUniverse univ = new Image3DUniverse();
+        univ = new Image3DUniverse();
         univ.show();
-        Content c = univ.addVoltex(image);
+        univ.addVoltex(interpolate.getInterpolatedImage());
         
-        
-        
-        for(int i = 1 ; i <= depth ; i++){
-        	slice = (byte[])image.getStack().getPixels(i); 					//obtain pixels of the first stack image
-        	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
-        }
-
-        int max = depth * height * width;
-        int temps;
-			for (int i = 0 ; i < max ; i++) {
-				temps = unsignedToBytes(pixels[i]);
-				if (!hasLabel(temps)) {					 // see below
-					labelList.add(new Integer(temps));
-				}
-				/*
-				 * s += temps + ","; //organize pixel value in a string
-				 * if (i % width == width -1) { s += "\n"; }
-				 */
-			}
-        Collections.sort(labelList);                            //sort label list
-        IJ.log(labelList.toString());                           //append labelList to logPanel which is a textpanel in IJ.java
-
-        //count number of objects with certain pixel value
-        matrix = new int[height * width * depth];		//identical size of matrix with image
-
-        System.out.println("Labeling ...");
-
-        HashMap<Integer,Integer> num = new HashMap<Integer,Integer>();  //labels the object in a different number
-        int label = 0;
-        max = labelList.size();
-        for(int i = 0 ; i < max ; i++){
-        	num.put(labelList.get(i), label);
-        	label += 10;
-        }
-
-		for (int d = 0; d < depth; d++) {
-			for (int i = 0; i < height; i++) {
-				for (int j = 0; j < width; j++) {
-					if (matrix[d * height *  width + i * width + j] == 0 && pixels[d * height *  width + i * width + j] != 0) {
-						label = num.get(unsignedToBytes(pixels[d * height *  width + i * width + j]));
-						matrix[d * height *  width + i * width + j] = label;
-						recurs(i, j, d);
-						num.remove(unsignedToBytes(pixels[d * height *  width + i * width + j]));
-						num.put(unsignedToBytes(pixels[d * height *  width + i * width + j]), ++label);
-					}
-				}
-			}
-		}
-		num.remove(0);
-		num.put(0, 1);		//assumes extracellular is only one
-
-/*
-		for(int i = 0 ; i < height ; i++){
-			for(int j = 0 ; j < width ; j++){
-				if(matrix[i * width + j] == 0 && pixels[i * width + j] == 0){
-					label = num.get(unsignedToBytes(pixels[i * width + j]));
-					matrix[i * width + j] = label;
-					recurs(i,j);
-					label++;
-					num.remove(unsignedToBytes(pixels[i * width + j]));
-					num.put(unsignedToBytes(pixels[i * width + j]),label);
-				}
-			}
-		}
-*/
-		//count number of domains in each domaintype
-		System.out.println("calculating number of domains ...");
-		//int temp;
-		hashLabelNum = new HashMap<Integer,Integer>();
-		for(int i = 0 ; i < max ; i++){
-			hashLabelNum.put(labelList.get(i), num.get(labelList.get(i)) % 10);
-			temps = num.get(labelList.get(i)) % 10;
-			System.out.println(labelList.get(i).toString() + " " + temps);
-		}
-
+        imageEdit edit = new imageEdit(image);
+        this.labelList= edit.labelList;
+        this.hashLabelNum = edit.hashLabelNum;
+        this.pixels = edit.pixels;
+        this.matrix = edit.matrix;
+        */
         //displays gui table to name domain types
 
-		NamePanel panel = new NamePanel(labelList, hashLabelNum, hashDomainTypes, hashSampledValue);
+//		NamePanel panel = new NamePanel(labelList, hashLabelNum, hashDomainTypes, hashSampledValue);
+		/*
 		while (panel.running) {
 			try {
 				TimeUnit.SECONDS.sleep(1);
@@ -157,7 +87,9 @@ public class Spatial_SBML implements PlugIn {
 			catch (InterruptedException e) {
 			}
 		}
-
+		*/
+		//gui();
+		
 		hashDomainNum = new HashMap<String,Integer>();
 		for(Entry<String,Integer> e : hashDomainTypes.entrySet()){
 			hashDomainNum.put(e.getKey(), hashLabelNum.get(hashSampledValue.get(e.getKey())));
@@ -257,16 +189,19 @@ public class Spatial_SBML implements PlugIn {
         //graph.close();
 	}
 
-	//determine if the pixel value is stored in labellist
-	private boolean hasLabel(int label) {
-		for(Integer i : labelList) {
-			if (i.equals(label)) {
-				return true;
-			}
+	public synchronized void gui(){
+		System.out.println("gui begin");
+		new NamePanel(labelList, hashLabelNum, hashDomainTypes, hashSampledValue);
+		try{
+			System.out.println("gui wait");
+			wait();
+		}catch(InterruptedException e){
+			
 		}
-		return false;
+		System.out.println("gui end");
+		notifyAll();
 	}
-
+	
 	private static boolean hasLabel(int dom1, int dom2) {
 		if(adjacentsPixel.isEmpty()) return false;
 		
@@ -277,11 +212,6 @@ public class Spatial_SBML implements PlugIn {
 		}
 		return false;
 	}
-
-	private static int unsignedToBytes(byte b) {
-	    return b & 0xFF;
-	  }
-
 
 	private static boolean checkAdjacent(int org, int next){
 		if(matrix[org] != matrix[next] && !hasLabel(Math.max(matrix[next], matrix[org]), Math.min(matrix[next], matrix[org]))){
@@ -317,68 +247,6 @@ public class Spatial_SBML implements PlugIn {
 			int temp = hashDomainNum.get(buf);
 			hashDomainNum.put(buf,++temp);
 		}
-	}
-
-	private void recurs(int i, int j, int d){
-		Stack<Integer> block = new Stack<Integer>();
-		block.push(i);
-		block.push(j);
-		block.push(d);
-
-		while(!block.isEmpty()){
-			d = block.pop();
-			j = block.pop();
-			i = block.pop();
-
-			//check right
-			if(j != width - 1 && pixels[d * height * width + i * width + j + 1] == pixels[d * height * width + i * width + j] && matrix[d * height * width + i * width + j + 1] == 0){
-				matrix[d * height * width + i * width + j + 1] = matrix[d * height * width + i * width + j];
-				block.push(i);
-				block.push(j+1);
-				block.push(d);
-			}
-
-			//check left
-			if(j != 0 && pixels[d * height * width + i * width + j - 1] == pixels[d * height * width + i * width + j] && matrix[d * height * width + i * width + j - 1] == 0){
-				matrix[d * height * width + i * width + j - 1] = matrix[d * height * width + i * width + j];
-				block.push(i);
-				block.push(j-1);
-				block.push(d);
-			}
-
-			//check down
-			if(i != height - 1 && pixels[d * height * width + (i+1) * width + j] == pixels[d * height * width + i * width + j] && matrix[d * height * width + (i+1) * width + j] == 0){
-				matrix[d * height * width + (i + 1) * width + j] = matrix[d * height * width + i * width + j];
-				block.push(i+1);
-				block.push(j);
-				block.push(d);
-			}
-
-			//check up
-			if(i != 0 && pixels[d * height * width + (i-1) * width + j] == pixels[d * height * width + i * width + j] && matrix[d * height * width + (i-1) * width + j] == 0){
-				matrix[d * height * width + (i - 1) * width + j] = matrix[d * height * width + i * width + j];
-				block.push(i-1);
-				block.push(j);
-				block.push(d);
-			}
-			
-			//check above
-			if(d != depth - 1 && pixels[d * height * width + i * width + j] == pixels[(d+1) * height * width + i * width + j] && matrix[(d+1) * height * width + i * width + j] == 0){
-				matrix[(d+1) * height * width + i * width + j] = matrix[d * height * width + i * width + j];
-				block.push(i);
-				block.push(j);
-				block.push(d+1);
-			}
-			
-			//check below
-			if(d != 0 && pixels[d * height * width + i * width + j] == pixels[(d-1) * height * width + i * width + j] && matrix[(d-1) * height * width + i * width + j] == 0){
-				matrix[(d-1) * height * width + i * width + j] = matrix[d * height * width + i * width + j];
-				block.push(i);
-				block.push(j);
-				block.push(d-1);
-			}
-		}
-
 	}
 
 	public boolean checkJgraph(){
