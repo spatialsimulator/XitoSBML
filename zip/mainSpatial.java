@@ -16,25 +16,28 @@ public class mainSpatial implements PlugIn {
 	private HashMap<String, Integer> hashSampledValue;
 	
 	@Override
-	public void run(String arg0) {
-		image = WindowManager.getCurrentImage();
-		Interpolate interpolate = new Interpolate(image);
+	public void run(String arg) {
+		Interpolate interpolate = new Interpolate(WindowManager.getCurrentImage());
 		image = interpolate.getInterpolatedImage();
 		Image3DUniverse univ = new Image3DUniverse();
 		univ.show();
-		univ.addVoltex(image);
-		imageEdit edit = new imageEdit(image); 
+//		univ.addVoltex(image);	
+	//	imageEdit edit = new imageEdit(image); 
+		univ.addVoltex(WindowManager.getCurrentImage());
+		imageEdit edit = new imageEdit(WindowManager.getCurrentImage());
 		gui(edit);
-		edit.createMembrane(hashDomainTypes, hashSampledValue);
-		new hierarchicalStruct(edit);
-		
-        RawSpatialImage ri = new RawSpatialImage(edit.pixels, image.getWidth(), image.getHeight(), image.getStackSize(), hashDomainTypes, hashSampledValue, edit.hashDomainNum, edit.adjacentsList);
-        SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri);                                 //calls sbmlexporter and create sbml document with string s
-        sbmlexp.createGeometryElements();
-  
-        save(sbmlexp);
-        IJ.log(edit.labelList.toString());
-        IJ.log("end main");
+		if (checkHash()) {
+			edit.createMembrane(hashDomainTypes, hashSampledValue);
+			new hierarchicalStruct(edit);
+			RawSpatialImage ri = new RawSpatialImage(edit.pixels,
+					image.getWidth(), image.getHeight(), image.getStackSize(),
+					hashDomainTypes, hashSampledValue, edit.hashDomainNum,
+					edit.adjacentsList);
+			SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri);
+			sbmlexp.createGeometryElements();
+			save(sbmlexp);
+			//IJ.log(edit.pixels.toString());
+		}
 	}
 
 	public void gui(imageEdit edit) {
@@ -44,26 +47,34 @@ public class mainSpatial implements PlugIn {
 		while (hashDomainTypes.isEmpty() && hashSampledValue.isEmpty()) {
 			synchronized (hashDomainTypes) {
 				synchronized (hashSampledValue) {
-					System.out.println("gui inprogress");
+					
 				}
 			}
 		}
 	}
 
+	private boolean checkHash(){
+		if(hashDomainTypes.containsKey("") || hashSampledValue.containsKey("")){
+			IJ.error("Missing DomainType name in the table");
+			return false;
+		}
+			
+		
+		return true;
+	}
+	
 	public void save(SpatialSBMLExporter sbmlexp){
 		SaveDialog sd = new SaveDialog("Save SBML Document",image.getTitle(),".xml");
 		String name = sd.getFileName();
 		IJ.log(name);
 		try{
 			sbmlexp.document.getModel().setId(name);
-			if(name.contains(".")) libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name);                             //write SBML document to xml file
+			if(name.contains(".")) libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name);  
 			else 					libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name + ".xml"); 
 		}catch(NullPointerException e){
 			System.out.println("SBML document was not saved");
 		}
-//		IJ.log(pixels.toString()); //print matrix
         IJ.log(sbmlexp.document.toSBML());
-        
 	}
 	
 }

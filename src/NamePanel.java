@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -25,7 +23,7 @@ import javax.swing.table.TableColumnModel;
 
 
 
-public class NamePanel extends JFrame implements ActionListener, WindowListener, MouseListener{
+public class NamePanel extends JFrame implements ActionListener, MouseListener{
 	/**
 	 * 
 	 */
@@ -37,6 +35,7 @@ public class NamePanel extends JFrame implements ActionListener, WindowListener,
 	private JTable table;
 	boolean running = false;
 	private final String[] domtype = {"Extracellular","Cytosol","Nucleus","Mitochondria","Golgi"}; 
+	private HashMap<Integer, Boolean> appearingDom; 
 	
 	public NamePanel(){
 		super("DomainType Namer");
@@ -53,15 +52,17 @@ public class NamePanel extends JFrame implements ActionListener, WindowListener,
 		running = true;
 
 		//data sets for the table
-//		final String[] columnNames = {"Pixel Value","Number of Domains","DomainType","View"};
-		final String[] columnNames = {"Pixel Value","Number of Domains","DomainType"};
-		//Object[][] data = new Object[labelList.size()][4];
-		Object[][] data = new Object[labelList.size()][3];
+		final String[] columnNames = {"Pixel Value","Number of Domains","DomainType","View"};
+//		final String[] columnNames = {"Pixel Value","Number of Domains","DomainType"};
+		Object[][] data = new Object[labelList.size()][4];
+	//	Object[][] data = new Object[labelList.size()][3];
+		appearingDom = new HashMap<Integer, Boolean>();
 		for(int i = 0 ; i < labelList.size() ; i++){
 			data[i][0]= labelList.get(i).toString();
 			data[i][1] = hashLabelNum.get(labelList.get(i)).toString();
 			data[i][2] = "";
-		//	data[i][3] = true;
+			data[i][3] = true;
+		appearingDom.put(labelList.get(i), true);
 		}
 		
 		//table
@@ -86,8 +87,8 @@ public class NamePanel extends JFrame implements ActionListener, WindowListener,
 					return Integer.class;
 				case 2:
 					return JComboBox.class;
-//				case 3:
-//					return Boolean.class;
+				case 3:
+					return Boolean.class;
 				default :
 					return Boolean.class;
 				}
@@ -187,47 +188,6 @@ public class NamePanel extends JFrame implements ActionListener, WindowListener,
 		
 	}
 
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
-		running = false;
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -251,8 +211,13 @@ public class NamePanel extends JFrame implements ActionListener, WindowListener,
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		JTable table = (JTable)e.getSource();
-		if(table.getSelectedColumn() == 3)
-			System.out.println("mouse pressed " + table.getSelectedRow());
+		if(table.getSelectedColumn() == 3){
+			int temp = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),0));
+			System.out.println(temp);
+			boolean bool = Boolean.valueOf((Boolean) table.getValueAt(table.getSelectedRow(),3));
+			System.out.println(table.getValueAt(table.getSelectedRow(),3));
+			appearingDom.put(temp , !bool);
+		}
 	}
 
 	@Override

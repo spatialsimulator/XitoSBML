@@ -31,6 +31,8 @@ public class imageEdit {
         this.depth = image.getStackSize();								//obtain number of slices
         this.size = width * height * depth;
         
+        System.out.println("width " + width + " height " + height + " depth " + depth);
+        
         copyMat();
         listVal();
         labelMat();
@@ -41,7 +43,7 @@ public class imageEdit {
     	byte[] slice;   
     	pixels = new byte[width * height * depth];
     	for(int i = 1 ; i <= depth ; i++){
-        	slice = (byte[])image.getStack().getPixels(i); 
+        	slice = (byte[])image.getStack().getPixels(i);
         	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
         }
     }
@@ -158,7 +160,6 @@ public class imageEdit {
 
     //count number of domains in each domaintype and store to hashlabelnum
     public void countdomtype(HashMap<Integer,Integer> num){
-    //	int temps;
     	hashLabelNum = new HashMap<Integer,Integer>();
     	for(Integer i : labelList)
 			hashLabelNum.put(i, num.get(i) % 10);
@@ -288,6 +289,19 @@ public class imageEdit {
 	}
 
 
+	public void printPixel() {
+		for (int i = 0; i < depth; i++) {
+			for (int j = 0; j < height; j++) {
+
+				for (int k = 0; k < width; k++) {
+					System.out
+							.print(pixels[i * height * width + k * width + k] & 0xFF);
+				}
+				System.out.println("");
+			}
+			System.out.println("");
+		}
+	}
 
 
 }

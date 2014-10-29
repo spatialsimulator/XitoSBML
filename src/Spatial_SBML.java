@@ -24,16 +24,15 @@ public class Spatial_SBML implements PlugIn {
     int depth;
     
 	public void run(String args) {   
-		//check for jgraph
-		if(!checkJgraph())
-			System.err.println("Need installation of jgraph");
-
 		ImagePlus image = WindowManager.getCurrentImage();
-        width = image.getWidth();                                //obtain width of image
-        height = image.getHeight();                              //obtain height of image
-        depth = image.getStackSize();								//obtain number of slices
-        IJ.log("w: " + width + " h: " + height + " d: " + depth);
-        new mainSpatial().run(args);
+		
+		if (checkJgraph() && checkFormat(image)) {
+			width = image.getWidth(); // obtain width of image
+			height = image.getHeight(); // obtain height of image
+			depth = image.getStackSize(); // obtain number of slices
+			IJ.log("w: " + width + " h: " + height + " d: " + depth);
+			new mainSpatial().run(args);
+		}
 	}
 
 	public boolean checkJgraph(){
@@ -44,6 +43,14 @@ public class Spatial_SBML implements PlugIn {
 			IJ.error("Please Install Jgrapht");
 			return false;
 		}
+	}
+	
+	public boolean checkFormat(ImagePlus image){
+		if(image.getBitDepth() == 8)
+				return true;
+				
+		IJ.error("Image must be 8-bit grayscale");
+		return false;
 	}
 /*
 	@Override

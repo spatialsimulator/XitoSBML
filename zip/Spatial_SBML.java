@@ -6,16 +6,9 @@
 import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;
-import ij.io.SaveDialog;
 import ij.plugin.PlugIn;
-import ij3d.Image3DUniverse;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
-import org.sbml.libsbml.libsbml;
-
 
 
 /**
@@ -26,35 +19,21 @@ public class Spatial_SBML implements PlugIn {
 	static boolean isRunning = false;
 	String title = "Export segmented image to Spatial SBML";
 	ArrayList<Integer> labelList;
-	static ArrayList<ArrayList<Integer>> adjacentsPixel;
-	HashMap<String, Integer> hashDomainTypes;
-	HashMap<String, Integer> hashSampledValue;
-	HashMap<String,Integer> hashDomainNum;
-	HashMap<Integer,Integer> hashLabelNum;
-	ArrayList<ArrayList<String>> adjacentsList;
     int width;
     int height;
     int depth;
-    byte[] pixels;
-    static int matrix[];
-    double voxw;
-    double voxy;
-    double voxz;
-    Image3DUniverse univ;
     
 	public void run(String args) {   
-		//check for jgraph
-		if(!checkJgraph()){
-			System.err.println("Need installation of jgraph");
-		}
-
 		ImagePlus image = WindowManager.getCurrentImage();
-        width = image.getWidth();                                //obtain width of image
-        height = image.getHeight();                              //obtain height of image
-        depth = image.getStackSize();								//obtain number of slices
-        new mainSpatial().run(args);
+		
+		if (checkJgraph() && checkFormat(image)) {
+			width = image.getWidth(); // obtain width of image
+			height = image.getHeight(); // obtain height of image
+			depth = image.getStackSize(); // obtain number of slices
+			IJ.log("w: " + width + " h: " + height + " d: " + depth);
+			new mainSpatial().run(args);
+		}
 	}
-
 
 	public boolean checkJgraph(){
 		try {
@@ -64,7 +43,14 @@ public class Spatial_SBML implements PlugIn {
 			IJ.error("Please Install Jgrapht");
 			return false;
 		}
-
+	}
+	
+	public boolean checkFormat(ImagePlus image){
+		if(image.getBitDepth() == 8)
+				return true;
+				
+		IJ.error("Image must be 8-bit grayscale");
+		return false;
 	}
 /*
 	@Override
