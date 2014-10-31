@@ -115,11 +115,11 @@ public class SpatialSBMLExporter {
     //
     geometry = spatialplugin.getGeometry();     //get geometry of spatial plugin
     geometry.setCoordinateSystem("Cartesian");  //set to Cartesian coordinate
-    addCoordinates();                           //see below
-    addDomainTypes();                           //see below
-    addDomains();                               //see below
-    addAdjacentDomains();                       //see below
-    addGeometryDefinitions();                   //see below
+    addCoordinates();                      
+    addDomainTypes();                         
+    addDomains();                           
+    addAdjacentDomains();                       
+    addGeometryDefinitions();                 
   }
 
   public void addGeometryDefinitions(){
@@ -257,8 +257,6 @@ public class SpatialSBMLExporter {
       cm.setDomainType(e.getKey());
       cm.setUnitSize(1);
     }
-
-
   }
 
   public void addCoordinates() {                                //add coordinates x and y

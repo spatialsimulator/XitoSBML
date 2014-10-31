@@ -14,15 +14,13 @@ public class mainSpatial implements PlugIn {
 	private ImagePlus image;
 	private HashMap<String, Integer> hashDomainTypes;
 	private HashMap<String, Integer> hashSampledValue;
-	
+	private Image3DUniverse univ;
 	@Override
 	public void run(String arg) {
 		Interpolate interpolate = new Interpolate(WindowManager.getCurrentImage());
 		image = interpolate.getInterpolatedImage();
-		Image3DUniverse univ = new Image3DUniverse();
+		univ = new Image3DUniverse();
 		univ.show();
-//		univ.addVoltex(image);	
-	//	imageEdit edit = new imageEdit(image); 
 		univ.addVoltex(WindowManager.getCurrentImage());
 		imageEdit edit = new imageEdit(WindowManager.getCurrentImage());
 		gui(edit);
@@ -43,7 +41,7 @@ public class mainSpatial implements PlugIn {
 	public void gui(imageEdit edit) {
 		hashDomainTypes = new HashMap<String, Integer>();
 		hashSampledValue = new HashMap<String, Integer>();
-		new NamePanel(edit.labelList, edit.hashLabelNum, hashDomainTypes, hashSampledValue);
+		new NamePanel(edit.labelList, edit.hashLabelNum, hashDomainTypes, hashSampledValue,univ);
 		while (hashDomainTypes.isEmpty() && hashSampledValue.isEmpty()) {
 			synchronized (hashDomainTypes) {
 				synchronized (hashSampledValue) {

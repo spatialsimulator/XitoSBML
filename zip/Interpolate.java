@@ -19,9 +19,7 @@ public class Interpolate {
 	private ImageStack altimage;	//output pixel image
 	private byte[] pixels;
 	
-	Interpolate(){
-		
-	}
+	Interpolate(){}
 	
 	Interpolate(ImagePlus image){
 		this.image = image;
@@ -84,15 +82,12 @@ public class Interpolate {
 					xdis = Math.floor(xdis / voxx);
 					ydis = Math.floor(ydis / voxy);
 					zdis = Math.floor(zdis / voxz);
-					matrix[h * width + w] = pixels[(int) (zdis * width * height + ydis * width + xdis)];
-
-					
+					matrix[h * width + w] = pixels[(int) (zdis * width * height + ydis * width + xdis)];	
 				}
 			}
 			altimage.addSlice(new ByteProcessor(width,height,matrix,null));
 		}
 	}
-	
 	
 	public ImagePlus getInterpolatedImage(){
 		return image;

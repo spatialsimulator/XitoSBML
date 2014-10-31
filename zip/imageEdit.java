@@ -288,7 +288,6 @@ public class imageEdit {
 		imageEdit.adjacentsPixel = adjacentsPixel;
 	}
 
-
 	public void printPixel() {
 		for (int i = 0; i < depth; i++) {
 			for (int j = 0; j < height; j++) {

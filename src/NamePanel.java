@@ -1,5 +1,8 @@
 
 
+import ij3d.Content;
+import ij3d.Image3DUniverse;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -7,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -21,6 +26,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.sun.tools.javac.code.Attribute.Array;
+
 
 
 public class NamePanel extends JFrame implements ActionListener, MouseListener{
@@ -33,36 +40,33 @@ public class NamePanel extends JFrame implements ActionListener, MouseListener{
 	private HashMap<String, Integer> hashSampledValues;
 	private DefaultTableModel tableModel;
 	private JTable table;
-	boolean running = false;
 	private final String[] domtype = {"Extracellular","Cytosol","Nucleus","Mitochondria","Golgi"}; 
-	private HashMap<Integer, Boolean> appearingDom; 
+	private HashMap<Integer, Boolean> visibleDom; 
+	private final String[] columnNames = {"Pixel Value","Number of Domains","DomainType","View"};
+	Image3DUniverse univ;
 	
 	public NamePanel(){
 		super("DomainType Namer");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);	
-		//setDefaultCloseOperation(EXIT_ON_CLOSE);	
-		setSize(400, 240);
+		setSize(500, 240);
 	}
 
-	public NamePanel(ArrayList<Integer> labelList, HashMap<Integer,Integer> hashLabelNum, HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValues){
+	public NamePanel(ArrayList<Integer> labelList, HashMap<Integer,Integer> hashLabelNum, HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValues, Image3DUniverse univ){
 		this();
 		this.labelList = labelList;
 		this.hashDomainTypes = hashDomainTypes;
 		this.hashSampledValues = hashSampledValues;
-		running = true;
+		this.univ = univ;
 
 		//data sets for the table
-		final String[] columnNames = {"Pixel Value","Number of Domains","DomainType","View"};
-//		final String[] columnNames = {"Pixel Value","Number of Domains","DomainType"};
 		Object[][] data = new Object[labelList.size()][4];
-	//	Object[][] data = new Object[labelList.size()][3];
-		appearingDom = new HashMap<Integer, Boolean>();
+		visibleDom = new HashMap<Integer, Boolean>();
 		for(int i = 0 ; i < labelList.size() ; i++){
 			data[i][0]= labelList.get(i).toString();
 			data[i][1] = hashLabelNum.get(labelList.get(i)).toString();
 			data[i][2] = "";
 			data[i][3] = true;
-		appearingDom.put(labelList.get(i), true);
+			visibleDom.put(labelList.get(i), true);
 		}
 		
 		//table
@@ -143,30 +147,23 @@ public class NamePanel extends JFrame implements ActionListener, MouseListener{
 	@Override
 	public  void actionPerformed(ActionEvent e) {
 		String input = e.getActionCommand();
-		if(input == "cancel"){
-			setVisible(false);
-//			dispose();
-		}
-		
 		if(input == "OK"){
 			hashDomainTypes = getDomainTypes();			
 			hashSampledValues = getSampledValues();
 			setVisible(false);
-		//		dispose();
 		}
 		dispose();
-	//	running = false;
 	}
 	
-	public static void main(String args[]) throws InterruptedException{
+	public static void main(String args[]){
 		ArrayList<Integer> labelList = new ArrayList<Integer>();
 		labelList.add(new Integer(100));
 		labelList.add(new Integer(200));
 		labelList.add(new Integer(300));
 		labelList.add(new Integer(400));
-		labelList.add(new Integer(200));
-		labelList.add(new Integer(300));
-		labelList.add(new Integer(400));
+		labelList.add(new Integer(500));
+		labelList.add(new Integer(600));
+		labelList.add(new Integer(700));
 		HashMap<Integer,Integer> LabelNum = new HashMap<Integer,Integer>();
 
 		
@@ -175,9 +172,8 @@ public class NamePanel extends JFrame implements ActionListener, MouseListener{
 		}	
 	    HashMap<String, Integer> DomainTypes = new HashMap<String, Integer>();
 	    HashMap<String, Integer> SampledValues = new HashMap<String, Integer>();		
-		new NamePanel(labelList, LabelNum, DomainTypes, SampledValues);
+		new NamePanel(labelList, LabelNum, DomainTypes, SampledValues, new Image3DUniverse());
 		
-		System.out.println("main");
 		for(Entry<String, Integer> en : DomainTypes.entrySet()){
 			System.out.println("main " + en.getKey() + " " + en.getValue());
 		}
@@ -213,10 +209,9 @@ public class NamePanel extends JFrame implements ActionListener, MouseListener{
 		JTable table = (JTable)e.getSource();
 		if(table.getSelectedColumn() == 3){
 			int temp = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),0));
-			System.out.println(temp);
 			boolean bool = Boolean.valueOf((Boolean) table.getValueAt(table.getSelectedRow(),3));
-			System.out.println(table.getValueAt(table.getSelectedRow(),3));
-			appearingDom.put(temp , !bool);
+			visibleDom.put(temp , !bool);
+			resetUniv();
 		}
 	}
 
@@ -226,4 +221,17 @@ public class NamePanel extends JFrame implements ActionListener, MouseListener{
 		
 	}
 
+	private void resetUniv(){
+		Collection<Content> col = univ.getContents();
+		Object[] contents = col.toArray();
+		Content cont = (Content) contents[0];
+		int threshold = 0;
+		for(Entry<Integer, Boolean> e : visibleDom.entrySet())
+			if(e.getValue() == false && threshold < e.getKey())
+				threshold = e.getKey();
+		
+		cont.setThreshold(threshold);
+		univ.fireContentAdded(cont);
+		univ.fireTransformationUpdated();
+	}
 }
