@@ -31,8 +31,6 @@ public class imageEdit {
         this.depth = image.getStackSize();								//obtain number of slices
         this.size = width * height * depth;
         
-        System.out.println("width " + width + " height " + height + " depth " + depth);
-        
         copyMat();
         listVal();
         labelMat();
@@ -293,8 +291,7 @@ public class imageEdit {
 			for (int j = 0; j < height; j++) {
 
 				for (int k = 0; k < width; k++) {
-					System.out
-							.print(pixels[i * height * width + k * width + k] & 0xFF);
+					System.out.print(pixels[i * height * width + k * width + k] & 0xFF);
 				}
 				System.out.println("");
 			}

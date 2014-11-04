@@ -4,7 +4,6 @@ import org.sbml.libsbml.libsbml;
 
 import ij.IJ;
 import ij.ImagePlus;
-import ij.WindowManager;
 import ij.io.SaveDialog;
 import ij.plugin.PlugIn;
 import ij3d.Image3DUniverse;
@@ -12,36 +11,40 @@ import ij3d.Image3DUniverse;
 
 public class mainSpatial implements PlugIn {
 	private ImagePlus image;
+	private ImageExplorer imgexp;
 	private HashMap<String, Integer> hashDomainTypes;
 	private HashMap<String, Integer> hashSampledValue;
 	private Image3DUniverse univ;
+	
 	@Override
 	public void run(String arg) {
-		Interpolate interpolate = new Interpolate(WindowManager.getCurrentImage());
+		gui();
+		CreateImage creIm = new CreateImage(imgexp.getDomFile(),hashSampledValue, imgexp.getFileInfo());
+		
+		Interpolate interpolate = new Interpolate(creIm.getCompoImg());
 		image = interpolate.getInterpolatedImage();
 		univ = new Image3DUniverse();
 		univ.show();
-		univ.addVoltex(WindowManager.getCurrentImage());
-		imageEdit edit = new imageEdit(WindowManager.getCurrentImage());
-		gui(edit);
-		if (checkHash()) {
-			edit.createMembrane(hashDomainTypes, hashSampledValue);
-			new hierarchicalStruct(edit);
-			RawSpatialImage ri = new RawSpatialImage(edit.pixels,
-					image.getWidth(), image.getHeight(), image.getStackSize(),
-					hashDomainTypes, hashSampledValue, edit.hashDomainNum,
-					edit.adjacentsList);
-			SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri);
-			sbmlexp.createGeometryElements();
-			save(sbmlexp);
-			//IJ.log(edit.pixels.toString());
-		}
+		univ.addVoltex(creIm.getCompoImg());
+		
+		imageEdit edit = new imageEdit(image);
+
+		edit.createMembrane(hashDomainTypes, hashSampledValue);
+		new hierarchicalStruct(edit);
+		RawSpatialImage ri = new RawSpatialImage(edit.pixels, image.getWidth(),
+				image.getHeight(), image.getStackSize(), hashDomainTypes,
+				hashSampledValue, edit.hashDomainNum, edit.adjacentsList);
+		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri);
+		sbmlexp.createGeometryElements();
+		save(sbmlexp);
+		// IJ.log(edit.pixels.toString());
+		
 	}
 
-	public void gui(imageEdit edit) {
+	public void gui() {
 		hashDomainTypes = new HashMap<String, Integer>();
-		hashSampledValue = new HashMap<String, Integer>();
-		new NamePanel(edit.labelList, edit.hashLabelNum, hashDomainTypes, hashSampledValue,univ);
+		hashSampledValue = new HashMap<String, Integer> ();
+		imgexp = new ImageExplorer(hashDomainTypes,hashSampledValue);
 		while (hashDomainTypes.isEmpty() && hashSampledValue.isEmpty()) {
 			synchronized (hashDomainTypes) {
 				synchronized (hashSampledValue) {
@@ -49,16 +52,6 @@ public class mainSpatial implements PlugIn {
 				}
 			}
 		}
-	}
-
-	private boolean checkHash(){
-		if(hashDomainTypes.containsKey("") || hashSampledValue.containsKey("")){
-			IJ.error("Missing DomainType name in the table");
-			return false;
-		}
-			
-		
-		return true;
 	}
 	
 	public void save(SpatialSBMLExporter sbmlexp){
