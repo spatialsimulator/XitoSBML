@@ -11,7 +11,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
@@ -26,7 +25,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import com.sun.tools.javac.code.Attribute.Array;
 
 
 
@@ -64,7 +62,6 @@ public class NamePanel extends JFrame implements ActionListener, MouseListener{
 		for(int i = 0 ; i < labelList.size() ; i++){
 			data[i][0]= labelList.get(i).toString();
 			data[i][1] = hashLabelNum.get(labelList.get(i)).toString();
-			data[i][2] = "";
 			data[i][3] = true;
 			visibleDom.put(labelList.get(i), true);
 		}
