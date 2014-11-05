@@ -5,7 +5,6 @@ import ij.io.FileInfo;
 import ij.io.OpenDialog;
 import ij.io.Opener;
 import ij.plugin.FolderOpener;
-import ij3d.Image3DUniverse;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -37,7 +36,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	private HashMap<String, Integer> hashSampledValues;
 	private DefaultTableModel tableModel;
 	private JTable table;
-	private final String[] domtype = {"Nucleus","Mitochondria","Golgi","Cytosol"}; 
+	private final String[] domtype = {"Nucleus","Mitochondria","Golgi","Cytosol"}; 		//in order of priority when making the composed image
 	private final String[] columnNames = {"Domain Type","Image"};
 	private HashMap<String,ImagePlus> hashDomFile;
 	private FolderOpener openImg = new FolderOpener();
@@ -54,17 +53,18 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		this();
 		this.hashDomainTypes = hashDomainTypes;
 		this.hashSampledValues = hashSampledValues;
+		hashDomFile = new HashMap<String, ImagePlus>();
+		
 		//data sets for the table
 		Object[][] data = new Object[domtype.length][2];
 		for(int i = 0 ; i < domtype.length ; i++){
 			data[i][0] = domtype[i];
-			data[i][1] = "";
 		}
 		
 		//table
 		tableModel = new DefaultTableModel(data,columnNames){
 			private static final long serialVersionUID = 1L;
-			public boolean isCellEditable(int row, int column){				//locks the first and second column 
+			public boolean isCellEditable(int row, int column){	
 				if(column == 0)
 					return false;
 				else  							
@@ -108,7 +108,6 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		getContentPane().add(scroll, BorderLayout.CENTER);	
 		setVisible(true);
 		
-		hashDomFile = new HashMap<String, ImagePlus>();
 	}
 
 	//sets the datatable to the domaintype and return it
@@ -124,9 +123,13 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	public HashMap<String, Integer> getSampledValues(){
 		int pixel = 255;
 		int interval = 255 / hashDomFile.size();
-		for(Entry<String, ImagePlus> e : hashDomFile.entrySet()){
-			hashSampledValues.put( e.getKey().toString(), pixel);
-			pixel -= interval;
+		for(String s : domtype){		
+			if(hashDomFile.containsKey(s)){
+				hashSampledValues.put(s, pixel);
+				System.out.println(s + " " + pixel);
+				pixel -= interval;
+				
+			}
 		}
 		hashSampledValues.put("Extracellular", 0);
 		return hashSampledValues;
@@ -163,9 +166,9 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		boolean width = compoImg.getWidth() == img.getWidth();
 		boolean height = compoImg.getHeight() == img.getHeight();
 		boolean depth = compoImg.getStackSize() == img.getStackSize();
-
 		FileInfo imgInfo = img.getFileInfo();
 		boolean voxx, voxy, voxz;
+		
 		try {
 			voxx = compoInfo.pixelWidth == imgInfo.pixelWidth;
 			voxy = compoInfo.pixelHeight == imgInfo.pixelHeight;
@@ -198,15 +201,10 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 			ImagePlus temp = openImg.openFolder(f.getAbsolutePath());
 			if (temp == null)
 				temp = open.openImage(f.getAbsolutePath());
-			if (temp.getType() == 0) {
+			if (temp.getType() == ImagePlus.GRAY8 ) {
 				table.setValueAt(f.getName(), row, column);
 				hashDomFile.put(table.getValueAt(row, 0).toString(), temp);
-			} else if(temp.getType() == 3){
-				Image3DUniverse univ = new Image3DUniverse();
-				univ.show();
-				univ.addVoltex(temp);
-				
-			} else{
+			} else {
 				errMessage();
 			}
 		} catch (Exception e) {

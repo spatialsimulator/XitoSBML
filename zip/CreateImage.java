@@ -62,11 +62,12 @@ public class CreateImage {
         	System.arraycopy(slice, 0, pixels, (i-1) * height * width, height * width);
     	} 
     	
-    	//flip image
-    	for(int i = 0 ; i < width * height * depth ; i++){
-    		pixels[i] = (byte) (pixels[i] == 0 ? -1 : 0); 
-    	}
-    	
+    	//invert image 
+		if (image.isInvertedLut()) {
+			for (int i = 0; i < width * height * depth; i++) {
+				pixels[i] = (byte) (pixels[i] == 0 ? -1 : 0);
+			}
+		}
     	return pixels;
     }
 

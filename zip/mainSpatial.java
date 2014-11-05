@@ -27,9 +27,8 @@ public class mainSpatial implements PlugIn {
 		univ.show();
 		univ.addVoltex(creIm.getCompoImg());
 		
-		imageEdit edit = new imageEdit(image);
+		imageEdit edit = new imageEdit(image, hashDomainTypes, hashSampledValue);
 
-		edit.createMembrane(hashDomainTypes, hashSampledValue);
 		new hierarchicalStruct(edit);
 		RawSpatialImage ri = new RawSpatialImage(edit.pixels, image.getWidth(),
 				image.getHeight(), image.getStackSize(), hashDomainTypes,

@@ -13,6 +13,8 @@ public class imageEdit {
 	ImagePlus image;
 	ArrayList<Integer> labelList;
 	HashMap<Integer,Integer> hashLabelNum;
+    HashMap<String,Integer> hashDomainTypes;
+    HashMap<String,Integer> hashSampledValue;
 	int width;
     int height;
     int depth;
@@ -24,16 +26,19 @@ public class imageEdit {
     	
     }
     
-    imageEdit(ImagePlus image){
+    imageEdit(ImagePlus image,HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValue){
     	this.image = image;    	
         this.width = image.getWidth();                                //obtain width of image
         this.height = image.getHeight();                              //obtain height of image
         this.depth = image.getStackSize();								//obtain number of slices
         this.size = width * height * depth;
+        this.hashDomainTypes = hashDomainTypes;
+        this.hashSampledValue = hashSampledValue;
         
         copyMat();
         listVal();
         labelMat();
+        createMembrane();
     }
     
     //copies the matrix into array pixel
@@ -169,16 +174,13 @@ public class imageEdit {
      */
 
 	HashMap<String,Integer> hashDomainNum;
-    public void createMembrane(HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValue){
-    	countDomain(hashDomainTypes, hashSampledValue);
+    public void createMembrane(){
+    	countDomain();
     	addMembrane();
     }
     
-    HashMap<String,Integer> hashDomainTypes;
-    HashMap<String,Integer> hashSampledValue;
-    public void countDomain(HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValue){
-		this.hashDomainTypes = hashDomainTypes;
-		this.hashSampledValue = hashSampledValue;
+
+    public void countDomain(){
     	hashDomainNum = new HashMap<String,Integer>();
 		for(Entry<String,Integer> e : hashDomainTypes.entrySet())
 			hashDomainNum.put(e.getKey(), hashLabelNum.get(hashSampledValue.get(e.getKey())));
