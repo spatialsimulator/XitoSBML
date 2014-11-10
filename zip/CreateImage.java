@@ -73,6 +73,7 @@ public class CreateImage {
 
     private void cmpImg(ImagePlus img, byte[] imgMat, String name){
     	int max = imgMat.length;
+    	System.out.println(name);
     	byte pixVal = hashSampledValue.get(name).byteValue();
 
     	for(int i = 0 ; i < max ; i++){
@@ -86,7 +87,6 @@ public class CreateImage {
 	   int comp = compoVal & 0xFF;
 	   int pix = pixVal & 0xFF;
 	  
-	   System.out.println(comp + " " + pix);
 	   if(comp < pix)
 		   return true;
 				  

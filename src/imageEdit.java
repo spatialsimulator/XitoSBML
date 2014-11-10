@@ -89,13 +89,11 @@ public class imageEdit {
 						label = num.get(pixels[d * height *  width + i * width + j] & 0xFF);
 						matrix[d * height *  width + i * width + j] = label;
 						recurs(i,j,d);
-						num.remove(pixels[d * height *  width + i * width + j] & 0xFF);
 						num.put(pixels[d * height *  width + i * width + j] & 0xFF, ++label);
 					}
 				}
 			}
 		}
-		num.remove(0);
 		num.put(0, 1);		//assumes extracellular is only one
         countdomtype(num);
     }
@@ -182,8 +180,16 @@ public class imageEdit {
 
     public void countDomain(){
     	hashDomainNum = new HashMap<String,Integer>();
-		for(Entry<String,Integer> e : hashDomainTypes.entrySet())
-			hashDomainNum.put(e.getKey(), hashLabelNum.get(hashSampledValue.get(e.getKey())));
+    	int temp;
+		for(Entry<String,Integer> e : hashDomainTypes.entrySet()){
+			temp = hashSampledValue.get(e.getKey());
+			if(hashLabelNum.containsKey(temp))
+				hashDomainNum.put(e.getKey(), hashLabelNum.get(temp));
+			else
+				hashDomainNum.put(e.getKey(), 0);
+			//hashDomainNum.put(e.getKey(), hashLabelNum.get(hashSampledValue.get(e.getKey())));
+		}
+			
     }
 
     

@@ -86,7 +86,7 @@ public class SpatialSBMLExporter {
     //
     reqplugin = (RequiredElementsSBasePlugin)model.getPlugin("req");  //get required elements plugin
     reqplugin.setMathOverridden("spatial");                           //req set overridden as spatial
-    reqplugin.setCoreHasAlternateMath(true);                          //
+    reqplugin.setCoreHasAlternateMath(true);                          
 
     SBasePlugin basePlugin = (model.getPlugin ("spatial"));
     spatialplugin = (SpatialModelPlugin)basePlugin;                  //get spatial plugin
@@ -180,7 +180,7 @@ public class SpatialSBMLExporter {
   public int[] byteArrayToIntArray(byte[] compressed) {
     int[] intArray = new int[compressed.length];
     for (int i = 0; i < compressed.length; i++) {
-      intArray[i] = compressed[i] & 0xff;       //cast byte to int (0xff = 255)
+      intArray[i] = compressed[i] & 0xff;
     }
     return intArray;
   }

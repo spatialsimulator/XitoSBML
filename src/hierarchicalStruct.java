@@ -21,6 +21,15 @@ public class hierarchicalStruct {
 		this.adjacentsPixel = edit.getAdjacentsPixel();
 		this.labelList = edit.labelList;
 		
+		System.out.println("hashDomainNum");
+		System.out.println(hashDomainNum.toString());
+		System.out.println("hashSampledValue");
+		System.out.println(hashSampledValue.toString());
+		System.out.println("adjacentsPixel");
+		System.out.println(adjacentsPixel.toString());
+		
+		
+		
 		graph graph = new graph();
 		vertex(graph);
 		edge(graph);
@@ -29,6 +38,7 @@ public class hierarchicalStruct {
 	
 	public void vertex(graph graph){
 		for (Entry<String, Integer> e : hashDomainNum.entrySet()) {
+			
 			for (int i = 0; i < e.getValue(); i++) {
 				if(!e.getKey().contains("membrane"))
 					graph.addVertex(e.getKey() + i);
