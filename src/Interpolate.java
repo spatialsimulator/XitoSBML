@@ -34,6 +34,7 @@ public class Interpolate {
 		zaxis = voxz * image.getImageStackSize();
 		copyMat();
 		System.out.println("voxel size " + voxx + " " + voxy + " " + voxz);
+		printMat();
 		
 		if (needInterpolate()) {
 			interpolation();
@@ -54,6 +55,12 @@ public class Interpolate {
         }
     }
 	
+    private void printMat(){
+    	int temp = (height / 2) * width + (width / 2);
+    	for(int i = temp; i < pixels.length ; i+= height*width)
+    		System.out.print((pixels[i] & 0xFF) + " ");
+    }
+    
 	private boolean needInterpolate(){
 		if(voxz > voxx || voxz > voxy)
 			return true;
@@ -85,6 +92,7 @@ public class Interpolate {
 					matrix[h * width + w] = pixels[(int) (zdis * width * height + ydis * width + xdis)];	
 				}
 			}
+			System.out.print((matrix[(height / 2) * width + (width / 2)] & 0xFF) + " ");
 			altimage.addSlice(new ByteProcessor(width,height,matrix,null));
 		}
 	}

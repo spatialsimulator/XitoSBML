@@ -37,7 +37,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	private DefaultTableModel tableModel;
 	private JTable table;
 	private final String[] domtype = {"Nucleus","Mitochondria","Golgi","Cytosol"}; 		//in order of priority when making the composed image
-	private final String[] columnNames = {"Domain Type","Image"};
+	private final String[] columnNames = {"Domain Type","Image","Up","Down"};
 	private HashMap<String,ImagePlus> hashDomFile;
 	private FolderOpener openImg = new FolderOpener();
 	private Opener open = new Opener();
@@ -56,9 +56,11 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		hashDomFile = new HashMap<String, ImagePlus>();
 		
 		//data sets for the table
-		Object[][] data = new Object[domtype.length][2];
+		Object[][] data = new Object[domtype.length][4];
 		for(int i = 0 ; i < domtype.length ; i++){
 			data[i][0] = domtype[i];
+		//	data[i][2] = new JButton("b");
+		//	data[i][3] = new JButton("a");
 		}
 		
 		//table
@@ -81,6 +83,9 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 				case 0:
 				case 1:
 					return String.class;
+				case 2:
+				case 3:
+					return JButton.class;
 				default :
 					return Boolean.class;
 				}
@@ -174,9 +179,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 			voxy = compoInfo.pixelHeight == imgInfo.pixelHeight;
 			voxz = compoInfo.pixelDepth == imgInfo.pixelDepth;
 		} catch (Exception e) {
-			voxx = true;
-			voxy = true;
-			voxz = true;
+			voxx = true;voxy = true;voxz = true;
 		}
 		return width && height && depth && voxx && voxy && voxz;
 	}
@@ -201,7 +204,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 			ImagePlus temp = openImg.openFolder(f.getAbsolutePath());
 			if (temp == null)
 				temp = open.openImage(f.getAbsolutePath());
-			if (temp.getType() == ImagePlus.GRAY8 ) {
+			if (temp.getType() == ImagePlus.GRAY8) {
 				table.setValueAt(f.getName(), row, column);
 				hashDomFile.put(table.getValueAt(row, 0).toString(), temp);
 			} else {

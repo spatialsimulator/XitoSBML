@@ -29,6 +29,7 @@ public class graph extends JFrame{
 		super("Domain Hiearchal Structure");
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
+    	setSize(500, 240);
 	}
 	
 	public void addVertex(String name){
