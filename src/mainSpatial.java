@@ -6,6 +6,7 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.io.SaveDialog;
 import ij.plugin.PlugIn;
+import ij3d.Content;
 import ij3d.Image3DUniverse;
 
 
@@ -25,7 +26,8 @@ public class mainSpatial implements PlugIn {
 		image = interpolate.getInterpolatedImage();
 		univ = new Image3DUniverse();
 		univ.show();
-		univ.addVoltex(creIm.getCompoImg());
+		Content c = univ.addVoltex(creIm.getCompoImg());
+		c.setTransparency(40);
 		
 		imageEdit edit = new imageEdit(image, hashDomainTypes, hashSampledValue);
 
@@ -47,7 +49,12 @@ public class mainSpatial implements PlugIn {
 		while (hashDomainTypes.isEmpty() && hashSampledValue.isEmpty()) {
 			synchronized (hashDomainTypes) {
 				synchronized (hashSampledValue) {
-					
+					try {
+						wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}

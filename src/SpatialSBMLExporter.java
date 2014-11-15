@@ -19,6 +19,7 @@ import org.sbml.libsbml.Geometry;
 import org.sbml.libsbml.ImageData;
 import org.sbml.libsbml.ListOf;
 import org.sbml.libsbml.Model;
+import org.sbml.libsbml.Parameter;
 import org.sbml.libsbml.RequiredElementsSBasePlugin;
 import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLNamespaces;
@@ -28,7 +29,9 @@ import org.sbml.libsbml.SampledFieldGeometry;
 import org.sbml.libsbml.SampledVolume;
 import org.sbml.libsbml.SpatialCompartmentPlugin;
 import org.sbml.libsbml.SpatialModelPlugin;
+import org.sbml.libsbml.SpatialParameterPlugin;
 import org.sbml.libsbml.SpatialPkgNamespaces;
+import org.sbml.libsbml.SpatialSymbolReference;
 import org.sbml.libsbml.libsbml;
 
 /**
@@ -141,8 +144,6 @@ public class SpatialSBMLExporter {
     sf.setInterpolationType("linear"); sf.setEncoding("compressed");
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
 
-    
-    // need improvement
     ImageData idata = sf.createImageData();          //create ImageData
 			byte[] compressed = compressRawData(raw);
 			if (compressed != null) {
@@ -197,7 +198,7 @@ public class SpatialSBMLExporter {
 		 }else{
 			 hashMembrane.put(dt.getSpatialId(), 0);
 		 }
-		 System.out.println(dt.getId());
+		 
 		  for (int i = 0; i < 2; i++) {                           //add info about adjacent domain
 			  AdjacentDomains adj = new AdjacentDomains();                    //adjacent domain only account for membrane cytosol+ extracelluar matrix and cytosol + nucleus
 			  adj.setSpatialId(dt.getSpatialId() + "_" + e.get(i));
@@ -252,7 +253,7 @@ public class SpatialSBMLExporter {
 
       spatialcompplugin = (SpatialCompartmentPlugin)c.getPlugin("spatial");   //create compartment mapping which relates compartment and domain type
       CompartmentMapping cm = spatialcompplugin.getCompartmentMapping();
-      cm.setSpatialId(e.getKey()+c.getId());
+      cm.setSpatialId(e.getKey() + c.getId());
       cm.setCompartment(c.getId());
       cm.setDomainType(e.getKey());
       cm.setUnitSize(1);
@@ -264,26 +265,44 @@ public class SpatialSBMLExporter {
     CoordinateComponent ccx = new CoordinateComponent(spatialns);
     CoordinateComponent ccy = new CoordinateComponent(spatialns);
     CoordinateComponent ccz = new CoordinateComponent(spatialns);
-    ccx.setSpatialId("x"); ccx.setComponentType("cartesianX"); ccx.setIndex(0); ccx.setSbmlUnit("um");    //setIndex, micrometer
+    ccx.setSpatialId("x"); ccx.setComponentType("cartesianX"); ccx.setIndex(0); ccx.setSbmlUnit("um");
     ccy.setSpatialId("y"); ccy.setComponentType("cartesianY"); ccy.setIndex(1); ccy.setSbmlUnit("um");
     ccz.setSpatialId("z"); ccz.setComponentType("cartesianZ"); ccz.setIndex(2); ccz.setSbmlUnit("um");
     setCoordinateBoundary(ccx, "X", 0, width);
     setCoordinateBoundary(ccy, "Y", 0, height);
     setCoordinateBoundary(ccz, "Z", 0, depth);
-    lcc.append(ccx);                                //add coordinate x to listOfCoordinateComponents
-    lcc.append(ccy);                               //add coordinate y to listOfCoordinateComponents
-    lcc.append(ccz);                               //add coordinate z to listOfCoordinateComponents
+    lcc.append(ccx); lcc.append(ccy); lcc.append(ccz);
   }
 
-  public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max) {         //set coordinate boundaries
+  public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max) { 
     if (cc.getBoundaryMin() == null) cc.setBoundaryMin(new BoundaryMin(spatialns));
     if (cc.getBoundaryMax() == null) cc.setBoundaryMax(new BoundaryMax(spatialns));
-    cc.getBoundaryMin().setSpatialId(s+"min");
+    cc.getBoundaryMin().setSpatialId(s + "min");
     cc.getBoundaryMin().setValue(min);
-    cc.getBoundaryMax().setSpatialId(s+"max");
+    cc.getBoundaryMax().setSpatialId(s + "max");
     cc.getBoundaryMax().setValue(max);
   }
-
+  
+  public void addParameter(){
+	 ListOf lcc = geometry.getListOfCoordinateComponents();
+	 Parameter p ;
+	 CoordinateComponent cc;	 
+	for (int i = 0; i < lcc.size(); i++) {
+		cc = (CoordinateComponent) lcc.get(i);
+		p = model.createParameter();
+		p.setId(cc.getSpatialId());
+		p.setValue(0);
+		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
+		SpatialSymbolReference ssr = sp.getSpatialSymbolReference();
+		ssr.setSpatialId(cc.getSpatialId());
+		ssr.setType(cc.getElementName());
+		RequiredElementsSBasePlugin rsb = (RequiredElementsSBasePlugin) p.getPlugin("req");
+		rsb.setCoreHasAlternateMath(false);
+		rsb.setMathOverridden("spatial");
+	}
+  }	
+  
+  
   /**
    * @param args
    */
@@ -322,17 +341,7 @@ public class SpatialSBMLExporter {
     sss.add("Cyt0");
     adjacentsList.add(sss);
     
-    System.out.print(adjacentsList.toString());
-    
-    /*
-    byte[] raw = { 
-         0,1,1,1,0,
-         1,1,2,1,1,
-         1,2,2,2,1,
-         1,1,2,1,1,
-         0,1,1,1,0
-    };
-    */
+
     byte[] len = { 
 	         0,1,1,1,0,
 	         1,1,2,1,1,
@@ -340,16 +349,16 @@ public class SpatialSBMLExporter {
 	         1,1,2,1,1,
 	         0,1,1,1,0
 	    };		
-    byte[] raw = null;
+    byte[] raw = new byte[25*3];
     
     for(int i = 0; i < 3 ; i++){
     	System.arraycopy(len, 0, raw, i * 25, 25);
     }
     
-    RawSpatialImage ri = new RawSpatialImage(raw, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);  //why does the length need to be squarerooted?
+    RawSpatialImage ri = new RawSpatialImage(raw, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
     SpatialSBMLExporter ts = new SpatialSBMLExporter(ri);
     ts.createGeometryElements();
-    System.out.println(ts.document.getModel().getId());
+    ts.addParameter();
     libsbml.writeSBMLToFile(ts.document, "out2.xml");
   }
 

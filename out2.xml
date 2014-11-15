@@ -18,6 +18,17 @@
         <spatial:compartmentMapping spatial:spatialId="NucNuc" spatial:compartment="Nuc" spatial:domainType="Nuc" spatial:unitSize="1"/>
       </compartment>
     </listOfCompartments>
+    <listOfParameters>
+      <parameter id="x" value="0" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+        <spatial:spatialSymbolReference spatial:spatialId="x" spatial:type="coordinateComponent"/>
+      </parameter>
+      <parameter id="y" value="0" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+        <spatial:spatialSymbolReference spatial:spatialId="y" spatial:type="coordinateComponent"/>
+      </parameter>
+      <parameter id="z" value="0" req:mathOverridden="spatial" req:coreHasAlternateMath="false">
+        <spatial:spatialSymbolReference spatial:spatialId="z" spatial:type="coordinateComponent"/>
+      </parameter>
+    </listOfParameters>
     <spatial:geometry spatial:coordinateSystem="Cartesian">
       <spatial:listOfCoordinateComponents>
         <spatial:coordinateComponent spatial:spatialId="x" spatial:componentType="cartesianX" spatial:sbmlUnit="um" spatial:index="0">
@@ -30,7 +41,7 @@
         </spatial:coordinateComponent>
         <spatial:coordinateComponent spatial:spatialId="z" spatial:componentType="cartesianZ" spatial:sbmlUnit="um" spatial:index="2">
           <spatial:boundaryMin spatial:spatialId="Zmin" spatial:value="0"/>
-          <spatial:boundaryMax spatial:spatialId="Zmax" spatial:value="1"/>
+          <spatial:boundaryMax spatial:spatialId="Zmax" spatial:value="3"/>
         </spatial:coordinateComponent>
       </spatial:listOfCoordinateComponents>
       <spatial:listOfDomainTypes>
@@ -60,8 +71,8 @@
             <spatial:sampledVolume spatial:spatialId="EC" spatial:domainType="EC" spatial:sampledValue="0" spatial:minValue="0" spatial:maxValue="0"/>
             <spatial:sampledVolume spatial:spatialId="Nuc" spatial:domainType="Nuc" spatial:sampledValue="1" spatial:minValue="0" spatial:maxValue="0"/>
           </spatial:listOfSampledVolumes>
-          <spatial:sampledField spatial:spatialId="imgtest" spatial:dataType="integer" spatial:interpolationType="linear" spatial:encoding="compressed" spatial:numSamples1="5" spatial:numSamples2="5" spatial:numSamples3="1">
-            <spatial:imageData spatial:dataType="compressed">120 218 99 96 100 100 100 96 100 100 2 82 76 76 96 18 204 103 100 0 0 1 107 0 27 </spatial:imageData>
+          <spatial:sampledField spatial:spatialId="imgtest" spatial:dataType="integer" spatial:interpolationType="linear" spatial:encoding="compressed" spatial:numSamples1="5" spatial:numSamples2="5" spatial:numSamples3="3">
+            <spatial:imageData spatial:dataType="compressed">120 218 99 96 100 100 100 96 100 100 2 82 76 76 96 18 204 103 100 96 32 89 2 0 11 223 0 79 </spatial:imageData>
           </spatial:sampledField>
         </spatial:sampledFieldGeometry>
       </spatial:listOfGeometryDefinitions>
