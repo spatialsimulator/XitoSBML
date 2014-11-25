@@ -29,7 +29,8 @@ public class graph extends JFrame{
 		super("Domain Hiearchal Structure");
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
-    	setSize(500, 240);
+        setResizable(false);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 	
 	public void addVertex(String name){
@@ -51,7 +52,7 @@ public class graph extends JFrame{
         layout.run(jgxAdapter.getDefaultParent());
         mxGraphComponent gc = new mxGraphComponent(jgxAdapter);
         gc.setDragEnabled(false);
-        add(gc,new GridBagConstraints());
+        add(gc, new GridBagConstraints());
         pack();
         setVisible(true);
 	}
@@ -99,7 +100,7 @@ public class graph extends JFrame{
 				graph.addEdge(edge1,edge2);	
 			}
 	    	graph.visualize();
-	    	graph.close();
+	   
 	}
 	
 		

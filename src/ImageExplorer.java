@@ -29,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 
 
@@ -42,8 +43,8 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	private HashMap<String, Integer> hashSampledValues;
 	private DefaultTableModel tableModel;
 	private JTable table;
-	private final String[] domtype = {"Nucleus","Mitochondria","Golgi","Cytosol"}; 		//in order of priority when making the composed image
-	private final String[] columnNames = {"Domain Type","Image","Up","Down"};
+	private final String[] domtype = {"Nucleus","Mitochondria","Golgi","Cytosol"};
+	private final String[] columnNames = {"Domain Type","Image","Add","Up","Down"};
 	private HashMap<String,ImagePlus> hashDomFile;
 	private FolderOpener openImg = new FolderOpener();
 	private Opener open = new Opener();
@@ -55,6 +56,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		super("DomainType Namer");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);	
 		setSize(500, 240);
+		setResizable(false);
 	}
 	
 	public ImageExplorer(HashMap<String, Integer> hashDomainTypes, HashMap<String, Integer> hashSampledValues){
@@ -64,7 +66,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		hashDomFile = new HashMap<String, ImagePlus>();
 		
 		//data sets for the table
-		Object[][] data = new Object[domtype.length][4];
+		Object[][] data = new Object[domtype.length][5];
 		for(int i = 0 ; i < domtype.length ; i++){
 			data[i][0] = domtype[i];
 		}
@@ -72,14 +74,14 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		//table
 		tableModel = new DefaultTableModel(data,columnNames){
 			private static final long serialVersionUID = 1L;
-		/*
+		
 			public boolean isCellEditable(int row, int column){	
-				if(column == 0)
+				if(column == 1)
 					return false;
 				else  							
 					return true;
 			}
-			*/
+		
 		};
 				
 		//table setting 
@@ -92,7 +94,10 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 				case 1:
 					return String.class;
 				case 2:
+//					return JMenu.class;
+					return JButton.class;
 				case 3:
+				case 4:
 					return BasicArrowButton.class;
 				default:
 					return Boolean.class;
@@ -112,26 +117,30 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		//button
-		JButton ok = new JButton("OK");
-		ok.addActionListener(this);
-		JButton plus = new JButton("+");
-		plus.addActionListener(this);
-		JButton minus = new JButton("-");
-		minus.addActionListener(this);
+		JButton ok = new JButton("OK"), plus = new JButton("+"), minus = new JButton("-");
+		ok.addActionListener(this); plus.addActionListener(this); minus.addActionListener(this);
 		JPanel p2 = new JPanel();
 		p2.setLayout(new BoxLayout(p2, BoxLayout.LINE_AXIS));
-		p2.add(plus);
-		p2.add(minus);
-		p2.add(Box.createRigidArea(new Dimension(250, 0)));
-		p2.add(ok);
+		p2.add(plus); p2.add(minus);
+		p2.add(Box.createRigidArea(new Dimension(250, 0))); p2.add(ok);
 		
 		//set components 
 		getContentPane().add(p2, BorderLayout.PAGE_END);
 		getContentPane().add(scroll, BorderLayout.CENTER);	
 
 		//arrow column
-		new ArrowColumn(table, 2 , BasicArrowButton.NORTH);
-		new ArrowColumn(table, 3 , BasicArrowButton.SOUTH);
+		new ArrowColumn(table, 3, BasicArrowButton.NORTH);
+		new ArrowColumn(table, 4, BasicArrowButton.SOUTH);
+		//new MenuColumn(table,2);
+		new ButtonColumn(table, 2);
+		
+		TableColumn column = (TableColumn)table.getColumnModel().getColumn(2);
+		column.setMaxWidth(50);
+		column = (TableColumn)table.getColumnModel().getColumn(3);
+		column.setMaxWidth(50);
+		column = (TableColumn)table.getColumnModel().getColumn(4);
+		column.setMaxWidth(50);
+		
 		
 		setVisible(true);
 	}
@@ -198,33 +207,9 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		new ImageExplorer(hashDomainTypes, hashSampledValues);
 	}
 
-	public void importFile(int column, int row){
-		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());
-		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		chooser.setMultiSelectionEnabled(false);
-		int returnVal = chooser.showOpenDialog(null);
-		if (returnVal != JFileChooser.APPROVE_OPTION)
-			return;
-		File f = chooser.getSelectedFile();
-		OpenDialog.setLastDirectory(f.getParentFile().getAbsolutePath());
-		
-		try {
-			ImagePlus temp = openImg.openFolder(f.getAbsolutePath());
-			if (temp == null)
-				temp = open.openImage(f.getAbsolutePath());
-			if (temp.getType() == ImagePlus.GRAY8) {
-				table.setValueAt(f.getName(), row, column);
-				hashDomFile.put(table.getValueAt(row, 0).toString(), temp);
-			} else {
-				errMessage();
-			}
-		} catch (Exception e) {
-			errMessage();
-		}		
-	}
-	
-	private void errMessage(){
-		new MessageDialog(new Frame(), "Error", "Input Image must be 8-bit grayscale");
+	public void importFile(int column, int row, ImagePlus img){
+		table.setValueAt(img.getTitle(), row, 1);
+		hashDomFile.put(table.getValueAt(row, 0).toString(), img);	
 	}
 	
 	private void addRow(){
@@ -298,12 +283,15 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		JTable table = (JTable) e.getSource();
 		selectedRow = table.getSelectedRow();
 		selectedColumn = table.getSelectedColumn();
-		if(selectedColumn == 1){
-			importFile(1 , selectedRow);
+		if(selectedColumn == 2){
+			ImageDialog id = new ImageDialog();
+			ImagePlus img = id.showDialog();
+			if(img != null)
+				importFile(1, selectedRow, img);
 		}
 		
-		if(selectedColumn == 2 || selectedColumn == 3){
-			moveRow(selectedColumn == 2, selectedRow);
+		if(selectedColumn == 3 || selectedColumn == 4){
+			moveRow(selectedColumn == 3, selectedRow);
 		}
 	}
 	

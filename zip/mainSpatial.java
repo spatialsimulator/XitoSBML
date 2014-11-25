@@ -1,15 +1,36 @@
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
+import org.sbml.libsbml.ListOfParameters;
+import org.sbml.libsbml.ListOfSpecies;
+import org.sbml.libsbml.Model;
+import org.sbml.libsbml.ReqSBasePlugin;
+import org.sbml.libsbml.SBMLDocument;
+import org.sbml.libsbml.SBMLNamespaces;
+import org.sbml.libsbml.SBasePlugin;
+import org.sbml.libsbml.SpatialModelPlugin;
+import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.libsbml;
 
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.SaveDialog;
 import ij.plugin.PlugIn;
+import ij3d.Content;
 import ij3d.Image3DUniverse;
 
 
 public class mainSpatial implements PlugIn {
+	static {
+		System.loadLibrary("sbmlj"); // read system library sbmlj
+	}
+	SBMLDocument document;
+	Model model;
+	SBMLNamespaces sbmlns; // class to store SBML Level, version, namespace
+	SpatialPkgNamespaces spatialns;
+	SpatialModelPlugin spatialplugin;
+	ReqSBasePlugin reqplugin;
 	private ImagePlus image;
 	private ImageExplorer imgexp;
 	private HashMap<String, Integer> hashDomainTypes;
@@ -18,6 +39,7 @@ public class mainSpatial implements PlugIn {
 	
 	@Override
 	public void run(String arg) {
+		createSBMLDoc();
 		gui();
 		CreateImage creIm = new CreateImage(imgexp.getDomFile(),hashSampledValue, imgexp.getFileInfo());
 		
@@ -25,7 +47,8 @@ public class mainSpatial implements PlugIn {
 		image = interpolate.getInterpolatedImage();
 		univ = new Image3DUniverse();
 		univ.show();
-		univ.addVoltex(creIm.getCompoImg());
+		Content c = univ.addVoltex(creIm.getCompoImg());
+		c.setTransparency(0.4f);
 		
 		imageEdit edit = new imageEdit(image, hashDomainTypes, hashSampledValue);
 
@@ -33,13 +56,63 @@ public class mainSpatial implements PlugIn {
 		RawSpatialImage ri = new RawSpatialImage(edit.pixels, image.getWidth(),
 				image.getHeight(), image.getStackSize(), hashDomainTypes,
 				hashSampledValue, edit.hashDomainNum, edit.adjacentsList);
-		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri);
+		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri, document);
 		sbmlexp.createGeometryElements();
+		
+		//add species and parameter here?
+		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Yes",JOptionPane.YES_NO_CANCEL_OPTION);
+		if(reply == JOptionPane.YES_OPTION)
+			addParaAndSpecies();
 		save(sbmlexp);
 		// IJ.log(edit.pixels.toString());
 		
 	}
 
+	public void createSBMLDoc(){
+		sbmlns = new SBMLNamespaces(3, 1); // create SBML name space with level
+											// 3 version 1
+		sbmlns.addPackageNamespace("req", 1); // add required element package
+		sbmlns.addPackageNamespace("spatial", 1); // add spatial processes
+													// package
+		// SBML Document
+		document = new SBMLDocument(sbmlns); // construct document with name
+												// space
+		document.setPackageRequired("req", true); // set req package as required
+		document.setPackageRequired("spatial", true); // set spatial package as
+														// required
+		model = document.createModel(); // create model using the document and
+										// return pointer
+
+		// Create Spatial
+		//
+		// set the SpatialPkgNamespaces for Level 3 Version 1 Spatial Version 1
+		//
+		spatialns = new SpatialPkgNamespaces(3, 1, 1); // create spatial package
+														// name space
+		//
+		// Get a SpatialModelPlugin object plugged in the model object.
+		//
+		// The type of the returned value of SBase::getPlugin() function is
+		// SBasePlugin, and
+		// thus the value needs to be casted for the corresponding derived
+		// class.
+		//
+		reqplugin = (ReqSBasePlugin) model.getPlugin("req"); // get required element plugin
+		//reqplugin.setMathOverridden("spatial"); // req set overridden as spatial
+		//reqplugin.setCoreHasAlternateMath(true);
+
+		SBasePlugin basePlugin = (model.getPlugin("spatial"));
+		spatialplugin = (SpatialModelPlugin) basePlugin; // get spatial plugin
+		if (spatialplugin == null) {
+			IJ.error("[Fatal Error] Layout Extension Level "
+					+ spatialns.getLevel() + " Version "
+					+ spatialns.getVersion() + " package version "
+					+ spatialns.getPackageVersion() + " is not registered.");
+			System.exit(1);
+		}
+
+	}
+	
 	public void gui() {
 		hashDomainTypes = new HashMap<String, Integer>();
 		hashSampledValue = new HashMap<String, Integer> ();
@@ -47,6 +120,19 @@ public class mainSpatial implements PlugIn {
 		while (hashDomainTypes.isEmpty() && hashSampledValue.isEmpty()) {
 			synchronized (hashDomainTypes) {
 				synchronized (hashSampledValue) {
+					
+				}
+			}
+		}
+	}
+	
+	public void addParaAndSpecies(){
+		ListOfParameters lop = model.getListOfParameters();
+		ListOfSpecies los = model.getListOfSpecies();
+		new Adder(model, lop, los);
+		while(lop.size() == 0 || los.size() == 0){
+			synchronized(lop){
+				synchronized(los){
 					
 				}
 			}
