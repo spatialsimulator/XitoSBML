@@ -16,8 +16,8 @@ public class Spatial_SBML implements PlugIn {
 	String title = "Export segmented image to Spatial SBML";
 
 	public void run(String args) {   
-		if (checkJgraph()) 
-			new mainSpatial().run(args);
+		if(checkJgraph()) 
+			new MainSpatial().run(args);
 		
 	}
 

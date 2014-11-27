@@ -3,18 +3,18 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 
-public class hierarchicalStruct {
+public class HierarchicalStruct {
 	HashMap<String, Integer> hashDomainTypes;
 	HashMap<String, Integer> hashSampledValue;
 	HashMap<String, Integer> hashDomainNum;
 	ArrayList<ArrayList<Integer>> adjacentsPixel;
 	ArrayList<Integer> labelList;
 	
-	hierarchicalStruct(){
+	HierarchicalStruct(){
 		
 	}
 	
-	hierarchicalStruct(imageEdit edit){
+	HierarchicalStruct(ImageEdit edit){
 		this.hashDomainTypes = edit.hashDomainTypes;
 		this.hashSampledValue = edit.hashSampledValue;
 		this.hashDomainNum = edit.hashDomainNum;
@@ -30,13 +30,13 @@ public class hierarchicalStruct {
 		
 		
 		
-		graph graph = new graph();
+		Graph graph = new Graph();
 		vertex(graph);
 		edge(graph);
 		graph.visualize();
 	}
 	
-	public void vertex(graph graph){
+	public void vertex(Graph graph){
 		for (Entry<String, Integer> e : hashDomainNum.entrySet()) {
 			
 			for (int i = 0; i < e.getValue(); i++) {
@@ -46,7 +46,7 @@ public class hierarchicalStruct {
 		}
 	}
 	
-	public void edge(graph graph){
+	public void edge(Graph graph){
 		for(ArrayList<Integer> a : adjacentsPixel){
 			String edge1 = new String();
 			String edge2 = new String();

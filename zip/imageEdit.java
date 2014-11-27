@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 /*
  * Label the image and count number of domains
  */
-public class imageEdit {
+public class ImageEdit {
 	ImagePlus image;
 	ArrayList<Integer> labelList;
 	HashMap<Integer,Integer> hashLabelNum;
@@ -22,11 +22,11 @@ public class imageEdit {
     byte[] pixels;
     static int matrix[];	
     
-    imageEdit(){
+    ImageEdit(){
     	
     }
     
-    imageEdit(ImagePlus image,HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValue){
+    ImageEdit(ImagePlus image,HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValue){
     	this.image = image;    	
         this.width = image.getWidth();                                //obtain width of image
         this.height = image.getHeight();                              //obtain height of image
@@ -291,7 +291,7 @@ public class imageEdit {
 	}
 
 	public void setAdjacentsPixel(ArrayList<ArrayList<Integer>> adjacentsPixel) {
-		imageEdit.adjacentsPixel = adjacentsPixel;
+		ImageEdit.adjacentsPixel = adjacentsPixel;
 	}
 
 	public void printPixel() {

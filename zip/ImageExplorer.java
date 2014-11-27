@@ -46,8 +46,6 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	private final String[] domtype = {"Nucleus","Mitochondria","Golgi","Cytosol"};
 	private final String[] columnNames = {"Domain Type","Image","Add","Up","Down"};
 	private HashMap<String,ImagePlus> hashDomFile;
-	private FolderOpener openImg = new FolderOpener();
-	private Opener open = new Opener();
 	private FileInfo compoInfo;
 	private Integer selectedRow = null;
 	private Integer selectedColumn = null;
@@ -158,7 +156,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	public HashMap<String, Integer> getSampledValues(){
 		int pixel = 255;
 		int interval = 255 / hashDomFile.size();
-		for(int i = 0 ; i < table.getColumnCount() ; i++){
+		for(int i = 0 ; i < table.getRowCount() ; i++){
 			String s = (String) table.getValueAt(i, 0);
 			if(hashDomFile.containsKey(s)){
 				hashSampledValues.put(s, pixel);

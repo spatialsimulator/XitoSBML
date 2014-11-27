@@ -1,7 +1,5 @@
 import java.util.HashMap;
 
-import javax.swing.JOptionPane;
-
 import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.ListOfSpecies;
 import org.sbml.libsbml.Model;
@@ -21,7 +19,7 @@ import ij3d.Content;
 import ij3d.Image3DUniverse;
 
 
-public class mainSpatial implements PlugIn {
+public class MainSpatial implements PlugIn {
 	static {
 		System.loadLibrary("sbmlj"); // read system library sbmlj
 	}
@@ -39,7 +37,7 @@ public class mainSpatial implements PlugIn {
 	
 	@Override
 	public void run(String arg) {
-		createSBMLDoc();
+		//createSBMLDoc();
 		gui();
 		CreateImage creIm = new CreateImage(imgexp.getDomFile(),hashSampledValue, imgexp.getFileInfo());
 		
@@ -49,10 +47,11 @@ public class mainSpatial implements PlugIn {
 		univ.show();
 		Content c = univ.addVoltex(creIm.getCompoImg());
 		c.setTransparency(0.4f);
-		
-		imageEdit edit = new imageEdit(image, hashDomainTypes, hashSampledValue);
+	
+		/*
+		ImageEdit edit = new ImageEdit(image, hashDomainTypes, hashSampledValue);
 
-		new hierarchicalStruct(edit);
+		new HierarchicalStruct(edit);
 		RawSpatialImage ri = new RawSpatialImage(edit.pixels, image.getWidth(),
 				image.getHeight(), image.getStackSize(), hashDomainTypes,
 				hashSampledValue, edit.hashDomainNum, edit.adjacentsList);
@@ -65,9 +64,10 @@ public class mainSpatial implements PlugIn {
 			addParaAndSpecies();
 		save(sbmlexp);
 		// IJ.log(edit.pixels.toString());
-		
+		*/
 	}
 
+	
 	public void createSBMLDoc(){
 		sbmlns = new SBMLNamespaces(3, 1); // create SBML name space with level
 											// 3 version 1
