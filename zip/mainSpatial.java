@@ -1,5 +1,7 @@
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.ListOfSpecies;
 import org.sbml.libsbml.Model;
@@ -48,7 +50,7 @@ public class MainSpatial implements PlugIn {
 		Content c = univ.addVoltex(creIm.getCompoImg());
 		c.setTransparency(0.4f);
 	
-		/*
+		
 		ImageEdit edit = new ImageEdit(image, hashDomainTypes, hashSampledValue);
 
 		new HierarchicalStruct(edit);
@@ -64,7 +66,7 @@ public class MainSpatial implements PlugIn {
 			addParaAndSpecies();
 		save(sbmlexp);
 		// IJ.log(edit.pixels.toString());
-		*/
+		
 	}
 
 	

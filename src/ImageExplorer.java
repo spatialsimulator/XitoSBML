@@ -164,6 +164,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 			}
 		}
 		hashSampledValues.put("Extracellular", 0);
+		System.out.println(hashSampledValues.toString());
 		return hashSampledValues;
 	}
 	
