@@ -92,7 +92,6 @@ public class Interpolate {
 					matrix[h * width + w] = pixels[(int) (zdis * width * height + ydis * width + xdis)];	
 				}
 			}
-			System.out.print((matrix[(height / 2) * width + (width / 2)] & 0xFF) + " ");
 			altimage.addSlice(new ByteProcessor(width,height,matrix,null));
 		}
 	}

@@ -21,10 +21,7 @@ public class ImageEdit {
     int size;
     byte[] pixels;
     static int matrix[];	
-    
-    ImageEdit(){
-    	
-    }
+	HashMap<Integer, Integer>  hashPix = new HashMap<Integer,Integer>();
     
     ImageEdit(ImagePlus image,HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValue){
     	this.image = image;    	
@@ -36,6 +33,7 @@ public class ImageEdit {
         this.hashSampledValue = hashSampledValue;
         
         copyMat();
+
         listVal();
         labelMat();
         createMembrane();
@@ -74,7 +72,7 @@ public class ImageEdit {
     }
     
     private void labelMat(){
-    	matrix = new int[size];
+      	matrix = new int[size];
     	HashMap<Integer,Integer> num = new HashMap<Integer,Integer>();  //labels the object with different numbers
         int label = 0;
         for(int i = 0 ; i < labelList.size(); i++){
@@ -88,7 +86,7 @@ public class ImageEdit {
 					if (matrix[d * height *  width + i * width + j] == 0 && pixels[d * height *  width + i * width + j] != 0) {
 						label = num.get(pixels[d * height *  width + i * width + j] & 0xFF);
 						matrix[d * height *  width + i * width + j] = label;
-						recurs(i,j,d);
+						recurs(i,j,d, label);
 						num.put(pixels[d * height *  width + i * width + j] & 0xFF, ++label);
 					}
 				}
@@ -98,7 +96,7 @@ public class ImageEdit {
         countdomtype(num);
     }
     
-    private void recurs(int i , int j, int d){
+    private void recurs(int i , int j, int d, int val){
     	Stack<Integer> block = new Stack<Integer>();
 		block.push(i);
 		block.push(j);
@@ -111,7 +109,7 @@ public class ImageEdit {
 
 			//check right
 			if(j != width - 1 && pixels[d * height * width + i * width + j + 1] == pixels[d * height * width + i * width + j] && matrix[d * height * width + i * width + j + 1] == 0){
-				matrix[d * height * width + i * width + j + 1] = matrix[d * height * width + i * width + j];
+			//	matrix[d * height * width + i * width + j + 1] = matrix[d * height * width + i * width + j];
 				block.push(i);
 				block.push(j+1);
 				block.push(d);
@@ -119,7 +117,7 @@ public class ImageEdit {
 
 			//check left
 			if(j != 0 && pixels[d * height * width + i * width + j - 1] == pixels[d * height * width + i * width + j] && matrix[d * height * width + i * width + j - 1] == 0){
-				matrix[d * height * width + i * width + j - 1] = matrix[d * height * width + i * width + j];
+			//	matrix[d * height * width + i * width + j - 1] = matrix[d * height * width + i * width + j];
 				block.push(i);
 				block.push(j-1);
 				block.push(d);
@@ -127,7 +125,7 @@ public class ImageEdit {
 
 			//check down
 			if(i != height - 1 && pixels[d * height * width + (i+1) * width + j] == pixels[d * height * width + i * width + j] && matrix[d * height * width + (i+1) * width + j] == 0){
-				matrix[d * height * width + (i + 1) * width + j] = matrix[d * height * width + i * width + j];
+			//	matrix[d * height * width + (i + 1) * width + j] = matrix[d * height * width + i * width + j];
 				block.push(i+1);
 				block.push(j);
 				block.push(d);
@@ -135,7 +133,7 @@ public class ImageEdit {
 
 			//check up
 			if(i != 0 && pixels[d * height * width + (i-1) * width + j] == pixels[d * height * width + i * width + j] && matrix[d * height * width + (i-1) * width + j] == 0){
-				matrix[d * height * width + (i - 1) * width + j] = matrix[d * height * width + i * width + j];
+			//	matrix[d * height * width + (i - 1) * width + j] = matrix[d * height * width + i * width + j];
 				block.push(i-1);
 				block.push(j);
 				block.push(d);
@@ -143,7 +141,7 @@ public class ImageEdit {
 			
 			//check above
 			if(d != depth - 1 && pixels[d * height * width + i * width + j] == pixels[(d+1) * height * width + i * width + j] && matrix[(d+1) * height * width + i * width + j] == 0){
-				matrix[(d+1) * height * width + i * width + j] = matrix[d * height * width + i * width + j];
+			//	matrix[(d+1) * height * width + i * width + j] = matrix[d * height * width + i * width + j];
 				block.push(i);
 				block.push(j);
 				block.push(d+1);
@@ -151,11 +149,13 @@ public class ImageEdit {
 			
 			//check below
 			if(d != 0 && pixels[d * height * width + i * width + j] == pixels[(d-1) * height * width + i * width + j] && matrix[(d-1) * height * width + i * width + j] == 0){
-				matrix[(d-1) * height * width + i * width + j] = matrix[d * height * width + i * width + j];
+			//	matrix[(d-1) * height * width + i * width + j] = matrix[d * height * width + i * width + j];
 				block.push(i);
 				block.push(j);
 				block.push(d-1);
 			}
+		
+			matrix[d * height * width + i * width + j] = val;
 		}
     }
 

@@ -42,17 +42,14 @@ public class MainSpatial implements PlugIn {
 		createSBMLDoc();
 		gui();
 		CreateImage creIm = new CreateImage(imgexp.getDomFile(),hashSampledValue, imgexp.getFileInfo());
-		
 		Interpolate interpolate = new Interpolate(creIm.getCompoImg());
-		image = interpolate.getInterpolatedImage();
-		univ = new Image3DUniverse();
-		univ.show();
-		Content c = univ.addVoltex(creIm.getCompoImg());
-		c.setTransparency(0.4f);
-	
+		FillImg fimg = new FillImg();
+		image = fimg.fill(interpolate.getInterpolatedImage());
+		//image = interpolate.getInterpolatedImage();
 		
 		ImageEdit edit = new ImageEdit(image, hashDomainTypes, hashSampledValue);
-
+		visualize(edit.image);
+		
 		new HierarchicalStruct(edit);
 		RawSpatialImage ri = new RawSpatialImage(edit.pixels, image.getWidth(),
 				image.getHeight(), image.getStackSize(), hashDomainTypes,
@@ -61,14 +58,13 @@ public class MainSpatial implements PlugIn {
 		sbmlexp.createGeometryElements();
 		
 		//add species and parameter here?
-		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Yes",JOptionPane.YES_NO_CANCEL_OPTION);
+		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species",JOptionPane.YES_NO_CANCEL_OPTION);
 		if(reply == JOptionPane.YES_OPTION)
 			addParaAndSpecies();
 		save(sbmlexp);
 		// IJ.log(edit.pixels.toString());
 		
 	}
-
 	
 	public void createSBMLDoc(){
 		sbmlns = new SBMLNamespaces(3, 1); // create SBML name space with level
@@ -128,17 +124,27 @@ public class MainSpatial implements PlugIn {
 		}
 	}
 	
+	public void visualize(ImagePlus img){
+		univ = new Image3DUniverse();
+		univ.show();
+		Content c = univ.addVoltex(img);
+		c.setTransparency(0.4f);
+	
+	}
+	
 	public void addParaAndSpecies(){
 		ListOfParameters lop = model.getListOfParameters();
 		ListOfSpecies los = model.getListOfSpecies();
-		new Adder(model, lop, los);
-		while(lop.size() == 0 || los.size() == 0){
+		ParamAndSpecies pas = new ParamAndSpecies(model);
+		System.out.println("param and species begin");
+		while(lop.size() == 0 || los.size() == 0 || !pas.wasExited()){
 			synchronized(lop){
 				synchronized(los){
 					
 				}
 			}
 		}
+		System.out.println("param and species end");
 	}
 	
 	public void save(SpatialSBMLExporter sbmlexp){

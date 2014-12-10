@@ -2,9 +2,6 @@
 import ij.ImagePlus;
 import ij.gui.MessageDialog;
 import ij.io.FileInfo;
-import ij.io.OpenDialog;
-import ij.io.Opener;
-import ij.plugin.FolderOpener;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -22,7 +18,6 @@ import java.util.Map.Entry;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -49,6 +44,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	private FileInfo compoInfo;
 	private Integer selectedRow = null;
 	private Integer selectedColumn = null;
+	private boolean wasCanceled;
 	
 	public ImageExplorer(){
 		super("DomainType Namer");
@@ -204,6 +200,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
 		HashMap<String, Integer> hashSampledValues = new HashMap<String, Integer>();
 		new ImageExplorer(hashDomainTypes, hashSampledValues);
+		
 	}
 
 	public void importFile(int column, int row, ImagePlus img){
@@ -240,6 +237,10 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		return compoInfo;
 	}
 	
+    public boolean wasCanceled() {
+        return wasCanceled;
+    }
+    
 	@Override
 	public  void actionPerformed(ActionEvent e) {
 		String input = e.getActionCommand();
@@ -247,6 +248,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 			hashDomainTypes = getDomainTypes();			
 			hashSampledValues = getSampledValues();
 			setVisible(false);
+			wasCanceled = true;
 			dispose();
 		}
 
