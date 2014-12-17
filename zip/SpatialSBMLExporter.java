@@ -33,7 +33,10 @@ import org.sbml.libsbml.SpatialModelPlugin;
 import org.sbml.libsbml.SpatialParameterPlugin;
 import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.SpatialSymbolReference;
+import org.sbml.libsbml.Unit;
+import org.sbml.libsbml.UnitDefinition;
 import org.sbml.libsbml.libsbml;
+import org.sbml.libsbml.libsbmlConstants;
 
 /**
  *
@@ -43,8 +46,8 @@ import org.sbml.libsbml.libsbml;
  * @author Akira Funahashi
  *
  */
-public class SpatialSBMLExporter {
-  static {
+public class SpatialSBMLExporter implements libsbmlConstants{
+	static {
     System.loadLibrary("sbmlj");                //read system library sbmlj
   }
   SBMLDocument document;
@@ -134,7 +137,6 @@ public class SpatialSBMLExporter {
 
   public void createGeometryElements() {
     // Creates a Geometry object via SpatialModelPlugin object.
-
     geometry = spatialplugin.createGeometry();     //get geometry of spatial plugin
     geometry.setCoordinateSystem("Cartesian");  //set to Cartesian coordinate
     addCoordinates();                      
@@ -142,6 +144,7 @@ public class SpatialSBMLExporter {
     addDomains();                           
     addAdjacentDomains();                       
     addGeometryDefinitions();   
+    addCoordParameter();
   }
 
   public void addGeometryDefinitions(){
@@ -319,12 +322,24 @@ public class SpatialSBMLExporter {
 		ssr.setId(cc.getId());
 		ssr.setSpatialRef("spatial");
 		ReqSBasePlugin rsb = (ReqSBasePlugin) p.getPlugin("req");
-		ChangedMath cm = rsb.createChangedMath();
+		ChangedMath cm = rsb.createChangedMath(); 
+		//cm.setChangedBy(spatialns.getURI());
 		cm.setChangedBy("spatial");
 		cm.setViableWithoutChange(true);
-
 	}
   }	
+  
+  public void addUnitDefinition(){
+	ListOf loud = model.getListOfUnitDefinitions();
+	UnitDefinition ud;
+	Unit u;
+	
+	u = new Unit(sbmlns);
+	ud = new UnitDefinition(sbmlns); ud.setId("substance");
+	u.setKind(UNIT_KIND_ITEM);u.setExponent(1);u.setScale(0);u.setMultiplier(1);
+	ud.addUnit(u);
+	loud.append(ud);
+  }
   
   
   /**
@@ -382,8 +397,8 @@ public class SpatialSBMLExporter {
     RawSpatialImage ri = new RawSpatialImage(raw, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
     SpatialSBMLExporter ts = new SpatialSBMLExporter(ri);
     ts.createGeometryElements();
-    ts.addCoordParameter();
     libsbml.writeSBMLToFile(ts.document, "outttt.xml");
   }
+
 
 }

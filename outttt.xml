@@ -20,19 +20,19 @@
     </listOfCompartments>
     <listOfParameters>
       <parameter id="x" value="0">
-        <listOfChangedMaths xmlns="http://www.sbml.org/sbml/level3/version1/req/version1">
+        <listOfChangedMaths>
           <changedMath changedBy="spatial" viableWithoutChange="true"/>
         </listOfChangedMaths>
         <spatial:spatialSymbolReference spatial:spatialRef="spatial"/>
       </parameter>
       <parameter id="y" value="0">
-        <listOfChangedMaths xmlns="http://www.sbml.org/sbml/level3/version1/req/version1">
+        <listOfChangedMaths>
           <changedMath changedBy="spatial" viableWithoutChange="true"/>
         </listOfChangedMaths>
         <spatial:spatialSymbolReference spatial:spatialRef="spatial"/>
       </parameter>
       <parameter id="z" value="0">
-        <listOfChangedMaths xmlns="http://www.sbml.org/sbml/level3/version1/req/version1">
+        <listOfChangedMaths>
           <changedMath changedBy="spatial" viableWithoutChange="true"/>
         </listOfChangedMaths>
         <spatial:spatialSymbolReference spatial:spatialRef="spatial"/>

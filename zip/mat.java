@@ -3,6 +3,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
+import org.sbml.libsbml.BoundaryCondition;
+
 
 public class mat {
 
@@ -150,17 +152,7 @@ public class mat {
 	};
 	
 	public static void main(String[] args){
-		/*
-		recurs(0,0,0,2);
-		
-		for(int i = 0 ; i < height ; i++){
-			for(int j = 0 ; j < width ; j++){
-				System.out.print(m[i * width  + j]);				
-			}
-		System.out.println();
-		}
-			*/
-		createMask();
+		 BoundaryCondition bcBoundaryCondition = new BoundaryCondition();
 	}
 	
 	static int width = 128;

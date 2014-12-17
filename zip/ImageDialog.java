@@ -45,7 +45,7 @@ public class ImageDialog implements ItemListener{
 			img = fromImage();
 		}
 		System.out.println(img.getTitle());
-		//  fill(img.getProcessor(),-1,0);
+		
 		return img;
 	}
 	

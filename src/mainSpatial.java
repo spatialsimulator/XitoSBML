@@ -129,14 +129,13 @@ public class MainSpatial implements PlugIn {
 		univ.show();
 		Content c = univ.addVoltex(img);
 		c.setTransparency(0.4f);
-	
 	}
 	
 	public void addParaAndSpecies(){
 		ListOfParameters lop = model.getListOfParameters();
 		ListOfSpecies los = model.getListOfSpecies();
 		ParamAndSpecies pas = new ParamAndSpecies(model);
-		System.out.println("param and species begin");
+		
 		while(lop.size() == 0 || los.size() == 0 || !pas.wasExited()){
 			synchronized(lop){
 				synchronized(los){
@@ -144,7 +143,6 @@ public class MainSpatial implements PlugIn {
 				}
 			}
 		}
-		System.out.println("param and species end");
 	}
 	
 	public void save(SpatialSBMLExporter sbmlexp){
@@ -155,6 +153,7 @@ public class MainSpatial implements PlugIn {
 			sbmlexp.document.getModel().setId(name);
 			if(name.contains(".")) libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name);  
 			else 					libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name + ".xml"); 
+			model.setId(name);
 		}catch(NullPointerException e){
 			System.out.println("SBML document was not saved");
 		}

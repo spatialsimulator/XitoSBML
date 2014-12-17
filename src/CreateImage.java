@@ -30,7 +30,7 @@ public class CreateImage {
 		compositeImage();
 		System.out.println("width " + width + " height "+ height + " depth " + depth);
 		replaceMat();
-		compoImg = new ImagePlus("Combined Image", altimage);
+		compoImg = new ImagePlus("Combined_Image", altimage);
 		compoImg.setFileInfo(info);
 	
 		System.out.println("fileinfo " + compoImg.getOriginalFileInfo());

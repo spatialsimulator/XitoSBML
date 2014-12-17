@@ -1,12 +1,12 @@
 
-import ij.IJ;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,23 +24,27 @@ import javax.swing.ListCellRenderer;
 
 import org.sbml.libsbml.AdvectionCoefficient;
 import org.sbml.libsbml.BoundaryCondition;
+import org.sbml.libsbml.ChangedMath;
 import org.sbml.libsbml.CoordinateReference;
 import org.sbml.libsbml.DiffusionCoefficient;
+import org.sbml.libsbml.ListOfChangedMaths;
 import org.sbml.libsbml.ListOfCompartments;
 import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.ListOfSpecies;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
+import org.sbml.libsbml.ReqSBasePlugin;
 import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLReader;
 import org.sbml.libsbml.SpatialParameterPlugin;
+import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.SpatialSpeciesPlugin;
 import org.sbml.libsbml.Species;
-import org.sbml.libsbml.libsbml;
+import org.sbml.libsbml.libsbmlConstants;
 
 
 
-public class Adder extends JFrame implements ItemListener, ActionListener{
+public class Adder extends JFrame implements ItemListener, ActionListener, WindowListener, libsbmlConstants{
 	  static {
 		    System.loadLibrary("sbmlj");                //read system library sbmlj
 		  }
@@ -169,8 +173,8 @@ public class Adder extends JFrame implements ItemListener, ActionListener{
 		case DIFFUSION:
 			DiffusionCoefficient dc = sp.createDiffusionCoefficient();
 			dc.setVariable(species); 
-			addCoordinateReference(dc);
 			dc.setType(diffCombo.getSelectedIndex());
+			addCoordinateReference(dc);
 			break;
 		}
 		model.addParameter(p);
@@ -203,7 +207,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener{
 	
 	private int getIndex(String s){
 		int num = 0;
-		
 		for(int i = 0 ; i < lcoord.length ; i++)
 			if(s.equals(lcoord[i]))
 				num = i;
@@ -273,6 +276,14 @@ public class Adder extends JFrame implements ItemListener, ActionListener{
 		s.setConstant(false);
 		SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) s.getPlugin("spatial");
 		ssp.setIsSpatial(true);
+		ReqSBasePlugin rsb = (ReqSBasePlugin) s.getPlugin("req");
+		ListOfChangedMaths locm =  rsb.getListOfChangedMaths();
+		ChangedMath cm = new ChangedMath(3,1);
+		cm.setId("spatial");
+		cm.setChangedBy( new SpatialPkgNamespaces(3, 1, 1).getURI());
+		cm.setViableWithoutChange(true);
+		locm.append(cm);
+		locm.getNamespaces().clear();
 		model.addSpecies(s);
 	}
 
@@ -298,17 +309,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener{
 		validate();
 		pack();
 	}
-	
-	public void printComponentAdded(){
-		IJ.log("Parameters\n");
-		for(int i = 0 ; i < lop.size() ; i++)
-			IJ.log(lop.get(i).toString());
-		
-		IJ.log("Species\n");
-		for(int i = 0 ; i < los.size() ; i++)
-			IJ.log(los.get(i).toString());
-	}
-	
+
 	public static void main(String[] args){
 		SBMLReader reader = new SBMLReader();
 		SBMLDocument d = reader.readSBML("simple_mem_diffusion.xml");
@@ -345,6 +346,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		Component[] c = mainPanel.getComponents();
 		try{
 			String idText = id.getText().replaceAll(" ", "_"); 				// string starting with an int will not be applied
 			String compartment = (String) domCombo.getSelectedItem();
@@ -383,27 +385,46 @@ public class Adder extends JFrame implements ItemListener, ActionListener{
         }
     }
 
-	enum DIFFUSIONKIND{
-		 DIFFUSIONKIND_UNKNOWN,  /*!< Unknown DiffusionKind */
-		 DIFFUSIONKIND_ISOTROPIC, /*!< isotropic */
-		 DIFFUSIONKIND_ANISOTROPIC, /*!< anisotropic */
-		 DIFFUSIONKIND_TENSOR /*!< tensor */
-		 }
-	
-	enum COORDINATEKIND{
-		COORDINATEKIND_UNKNOWN,
-		COORDINATEKIND_CARTESIANX,
-		COORDINATEKIND_CARTESIANY,
-		COORDINATEKIND_CARTESIANZ
+	@Override
+	public void windowActivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
-	
-	enum BOUNDARYKIND{   
-		BOUNDARYKIND_UNKNOWN,  /*!< Unknown BoundaryConditionKind */
-		BOUNDARYKIND_ROBIN_VALUE_COEFFICIENT, /*!< Robin_valueCoefficient */
-		BOUNDARYKIND_ROBIN_INWARD_NORMAL_GRADIENT_COEFFICIENT, /*!< Robin_inwardNormalGradientCoefficient */
-		BOUNDARYKIND_ROBIN_SUM, /*!< Robin_sum */
-		BOUNDARYKIND_NEUMANN, /*!< Neumann */
-		BOUNDARYKIND_DIRICHLET, /*!< Dirichlet */
+
+	@Override
+	public void windowClosed(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		mainPanel.removeAll();
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowIconified(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowOpened(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

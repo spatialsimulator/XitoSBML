@@ -1,4 +1,3 @@
-import ij.IJ;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -47,6 +46,7 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		setDefaultCloseOperation(EXIT_ON_CLOSE);	
 		setSize(480, 200);
 		setResizable(false);
+
 	}
 	
 	private final String[] header = {"Parameter","Species"};
@@ -122,7 +122,7 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 	}
 	
 	private void updateTable(){
-		int pSize = (int) lop.size();
+		long pSize = lop.size();
 		long sSize = los.size();
 		long listSize = Math.max(pSize, sSize);
 		
@@ -157,7 +157,6 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		String input = e.getActionCommand();
 		
 		if(input.equals("OK")){
-			System.out.println(los.toSBML());
 			wasExited = true;
 			dispose();
 			return;
