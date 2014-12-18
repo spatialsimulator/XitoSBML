@@ -59,7 +59,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	private JPanel mainPanel;
 	private List<String> comboList = new ArrayList<String>(Arrays.asList("Parameter", "Species","advectionCoefficient", "boudaryCondition", "diffusionCoefficient"));
 	private Model model;
-	private ListOfParameters lop; 
 	private ListOfSpecies los;
 	
 	public Adder(){
@@ -72,7 +71,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	public Adder(Model model){
 		this();
 		this.model = model;
-		this.lop = model.getListOfParameters();
 		this.los = model.getListOfSpecies();
 
 		addComp(model.getListOfCompartments());
@@ -85,7 +83,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	public Adder(Model model, ListOfParameters lop, ListOfSpecies los){
 		this();
 		this.model = model;
-		this.lop = lop;
 		this.los = los;
 		addComp(model.getListOfCompartments());
 		typeCombo = createJComboBox("type" ,addingType);
@@ -174,13 +171,14 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 			DiffusionCoefficient dc = sp.createDiffusionCoefficient();
 			dc.setVariable(species); 
 			dc.setType(diffCombo.getSelectedIndex());
-			addCoordinateReference(dc);
+			addDiffCoord(dc);
 			break;
 		}
 		model.addParameter(p);
+		System.out.println(p.toSBML());
 	}
 
-	private void addCoordinateReference(DiffusionCoefficient dc){
+	private void addDiffCoord(DiffusionCoefficient dc){
 		String s;
 		for(int i = 0 ; i < coeff.getComponentCount() ; i++){
 			s = coeff.getComponent(i).getName();
@@ -191,9 +189,25 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 					CoordinateReference cr = new CoordinateReference();
 					int index = getIndex(jcb.getName());
 					cr.setCoordinate(index);
-					dc.addCoordinateReference(cr);
+					addCoordinateReferences(dc.getType(), dc, index);
 				}	
 			}
+		}
+	}
+	
+	private void addCoordinateReferences(int difftype, DiffusionCoefficient dc, int axis){
+		switch (difftype){
+		case SPATIAL_DIFFUSIONKIND_ISOTROPIC: 
+				//no coordinateReference needed
+			break;	
+		case SPATIAL_DIFFUSIONKIND_TENSOR:
+			//2 coordinateReference needed
+			if(dc.isSetCoordinateReference1()) dc.setCoordinateReference2(axis);
+		case SPATIAL_DIFFUSIONKIND_ANISOTROPIC:
+			//1 coordinateReference needed
+			if(!dc.isSetCoordinateReference1()) dc.setCoordinateReference1(axis);
+			break;
+			default: 	
 		}
 	}
 	
@@ -346,7 +360,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		Component[] c = mainPanel.getComponents();
+		
 		try{
 			String idText = id.getText().replaceAll(" ", "_"); 				// string starting with an int will not be applied
 			String compartment = (String) domCombo.getSelectedItem();

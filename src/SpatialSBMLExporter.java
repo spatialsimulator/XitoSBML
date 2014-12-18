@@ -16,9 +16,9 @@ import org.sbml.libsbml.CoordinateComponent;
 import org.sbml.libsbml.Domain;
 import org.sbml.libsbml.DomainType;
 import org.sbml.libsbml.Geometry;
-import org.sbml.libsbml.ImageData;
 import org.sbml.libsbml.ListOf;
 import org.sbml.libsbml.ListOfChangedMaths;
+import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
 import org.sbml.libsbml.ReqSBasePlugin;
@@ -161,18 +161,16 @@ public class SpatialSBMLExporter implements libsbmlConstants{
         losg.append(sv);
       }
     }
-
-    SampledField sf = sfg.createSampledField();     //create SampleField represent number of coordinates in each
-    sf.setId("imgtest"); sf.setDataType("integer");
-    sf.setInterpolationType("linear"); sf.setEncoding("compressed");
+    
+    SampledField sf = geometry.createSampledField();
+    sf.setId("imgtest"); sf.setDataType(SPATIAL_DATAKIND_UINT8);
+    sf.setInterpolationType(SPATIAL_INTERPOLATIONKIND_LINEAR); sf.setCompression(SPATIAL_COMPRESSIONKIND_DEFLATED);
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
 
-    ImageData idata = sf.createImageData();          //create ImageData
-			byte[] compressed = compressRawData(raw);
-			if (compressed != null) {
-				idata.setSamples(byteArrayToIntArray(compressed),compressed.length); // see below byteArrayToIntArray
-				idata.setDataType("compressed");
-			}
+    byte[] compressed = compressRawData(raw);
+    if (compressed != null) {
+    	sf.setSamples(byteArrayToIntArray(compressed),compressed.length); // see below byteArrayToIntArray
+    	}
   }
 
   public byte[] compressRawData(byte[] raw) {           //compression of image
@@ -268,7 +266,7 @@ public class SpatialSBMLExporter implements libsbmlConstants{
     for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {       //for each domain types
     	// DomainTypes
       DomainType dt = new DomainType();
-      dt.setId(e.getKey()); dt.setSpatialDimension(e.getValue());
+      dt.setId(e.getKey()); dt.setSpatialDimensions(e.getValue());
       lodt.append(dt);
       // Compartment								may need changes for name and id
       Compartment c = model.createCompartment();
@@ -314,7 +312,9 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 	 CoordinateComponent cc;	 
 	for (int i = 0; i < lcc.size(); i++) {
 		cc = (CoordinateComponent) lcc.get(i);
-		p = model.createParameter();
+		//p = model.createParameter();
+		ListOfParameters lop = model.getListOfParameters();
+		p = new Parameter(document.getSBMLNamespaces());
 		p.setId(cc.getId());
 		p.setValue(0);
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
@@ -328,6 +328,7 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 		cm.setViableWithoutChange(true);
 		ListOfChangedMaths locm = rsb.getListOfChangedMaths();
 		locm.getNamespaces().clear();
+		lop.append(p);
 	}
   }	
   
