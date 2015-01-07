@@ -46,12 +46,12 @@ public class MainSpatial implements PlugIn {
 		CreateImage creIm = new CreateImage(imgexp.getDomFile(), hashSampledValue, imgexp.getFileInfo());
 		Interpolate interpolate = new Interpolate(creIm.getCompoImg());
 		Fill fimg = new Fill();
-		//image = fimg.fill(interpolate.getInterpolatedImage());
-		//ImageEdit edit = new ImageEdit(image, hashDomainTypes, hashSampledValue);
+		image = fimg.fill(interpolate.getInterpolatedImage());
+		ImageEdit edit = new ImageEdit(image, hashDomainTypes, hashSampledValue);
 		visualize(interpolate.getInterpolatedImage());
 		//visualize(edit.image);
 
-		/*
+		///*
 		new HierarchicalStruct(edit);
 		RawSpatialImage ri = new RawSpatialImage(edit.pixels, image.getWidth(),
 				image.getHeight(), image.getStackSize(), hashDomainTypes,
@@ -65,7 +65,7 @@ public class MainSpatial implements PlugIn {
 			addParaAndSpecies();
 		save(sbmlexp);
 		// IJ.log(edit.pixels.toString());
-		*/
+		//*/
 	}
 	
 	public void createSBMLDoc(){

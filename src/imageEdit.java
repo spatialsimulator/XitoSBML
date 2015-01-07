@@ -96,10 +96,16 @@ public class ImageEdit {
 						recurs(i,j,d, label);
 						num.put(pixels[d * height *  width + i * width + j] & 0xFF, ++label);
 					}
+					if (matrix[d * height *  width + i * width + j] == 0 && pixels[d * height *  width + i * width + j] == 0) {
+						label = num.get(pixels[d * height *  width + i * width + j] & 0xFF) + 1;
+						matrix[d * height *  width + i * width + j] = label;
+						recurs(i,j,d, label);
+						num.put(pixels[d * height *  width + i * width + j] & 0xFF, ++label);
+					}
 				}
 			}
 		}
-		num.put(0, 1);		//assumes extracellular is only one
+		num.put(0, num.get(0) - 1);		//assumes extracellular is only one
         countdomtype(num);
     }
     
