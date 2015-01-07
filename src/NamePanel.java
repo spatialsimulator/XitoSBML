@@ -210,7 +210,6 @@ public class NamePanel extends JFrame implements ActionListener, MouseListener{
 			int temp = Integer.parseInt((String) table.getValueAt(table.getSelectedRow(),0));
 			boolean bool = Boolean.valueOf((Boolean) table.getValueAt(table.getSelectedRow(),3));
 			visibleDom.put(temp , !bool);
-			resetUniv();
 		}
 	}
 
@@ -220,17 +219,4 @@ public class NamePanel extends JFrame implements ActionListener, MouseListener{
 		
 	}
 
-	private void resetUniv(){
-		Collection<Content> col = univ.getContents();
-		Object[] contents = col.toArray();
-		Content cont = (Content) contents[0];
-		int threshold = 0;
-		for(Entry<Integer, Boolean> e : visibleDom.entrySet())
-			if(e.getValue() == false && threshold < e.getKey())
-				threshold = e.getKey();
-		
-		cont.setThreshold(threshold);
-		univ.fireContentAdded(cont);
-		univ.fireTransformationUpdated();
-	}
 }

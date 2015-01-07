@@ -41,15 +41,17 @@ public class MainSpatial implements PlugIn {
 	public void run(String arg) {
 		createSBMLDoc();
 		gui();
-		CreateImage creIm = new CreateImage(imgexp.getDomFile(),hashSampledValue, imgexp.getFileInfo());
+		
+		
+		CreateImage creIm = new CreateImage(imgexp.getDomFile(), hashSampledValue, imgexp.getFileInfo());
 		Interpolate interpolate = new Interpolate(creIm.getCompoImg());
-		FillImg fimg = new FillImg();
-		image = fimg.fill(interpolate.getInterpolatedImage());
-		//image = interpolate.getInterpolatedImage();
-		
-		ImageEdit edit = new ImageEdit(image, hashDomainTypes, hashSampledValue);
-		visualize(edit.image);
-		
+		Fill fimg = new Fill();
+		//image = fimg.fill(interpolate.getInterpolatedImage());
+		//ImageEdit edit = new ImageEdit(image, hashDomainTypes, hashSampledValue);
+		visualize(interpolate.getInterpolatedImage());
+		//visualize(edit.image);
+
+		/*
 		new HierarchicalStruct(edit);
 		RawSpatialImage ri = new RawSpatialImage(edit.pixels, image.getWidth(),
 				image.getHeight(), image.getStackSize(), hashDomainTypes,
@@ -57,13 +59,13 @@ public class MainSpatial implements PlugIn {
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri, document);
 		sbmlexp.createGeometryElements();
 		
-		//add species and parameter here?
-		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species",JOptionPane.YES_NO_CANCEL_OPTION);
+		//add species and parameter here
+		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species", JOptionPane.YES_NO_CANCEL_OPTION);
 		if(reply == JOptionPane.YES_OPTION)
 			addParaAndSpecies();
 		save(sbmlexp);
 		// IJ.log(edit.pixels.toString());
-		
+		*/
 	}
 	
 	public void createSBMLDoc(){

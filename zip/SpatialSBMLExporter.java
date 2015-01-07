@@ -142,14 +142,13 @@ public class SpatialSBMLExporter implements libsbmlConstants{
     addCoordinates();                      
     addDomainTypes();                         
     addDomains();                           
-    addAdjacentDomains();                       
+    addAdjacentDomains();  
     addGeometryDefinitions();   
     addCoordParameter();
   }
 
   public void addGeometryDefinitions(){
     SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();   //create new geometry definition and add to ListOfGeometryDefinitions list
-   // sfg.setSpatialId("mySampledField");                       //inherit from AbstractSpatialNamedSBase
     sfg.setId("mySampledField");
     ListOf losg = sfg.getListOfSampledVolumes();              //get ListOfSampledVolumes
 
@@ -161,7 +160,7 @@ public class SpatialSBMLExporter implements libsbmlConstants{
         losg.append(sv);
       }
     }
-
+    
     SampledField sf = geometry.createSampledField();
     sf.setId("imgtest"); sf.setDataType(SPATIAL_DATAKIND_UINT8);
     sf.setInterpolationType(SPATIAL_INTERPOLATIONKIND_LINEAR); sf.setCompression(SPATIAL_COMPRESSIONKIND_DEFLATED);

@@ -284,6 +284,8 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	
 	private void addSpecies(String id, String compartment, double value){
 		Species s = model.createSpecies();
+		System.out.println(s.getPlugin(0));
+		System.out.println(s.getPlugin(1));
 		s.setId(id); s.setCompartment(compartment); s.setInitialConcentration(value);
 		s.setSubstanceUnits("molecules");  													//need modification
 		s.setHasOnlySubstanceUnits(false);s.setBoundaryCondition(false);
@@ -326,7 +328,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 
 	public static void main(String[] args){
 		SBMLReader reader = new SBMLReader();
-		SBMLDocument d = reader.readSBML("simple_mem_diffusion.xml");
+		SBMLDocument d = reader.readSBML("outttt.xml");
 		new Adder( d.getModel());
 	}
 	
@@ -360,11 +362,11 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		String idText = new String();
+		String compartment = new String();
+		Integer num = new Integer(0);
 		
-		try{
-			String idText = id.getText().replaceAll(" ", "_"); 				// string starting with an int will not be applied
-			String compartment = (String) domCombo.getSelectedItem();
-			Integer num = Integer.parseInt(val.getText());            // need to include integer with exponential
+		if(checkComponent(idText, compartment, num)){
 			if(typeCombo.getSelectedItem().equals("Species"))
 				addSpecies(idText, compartment, num);	
 			else{
@@ -372,12 +374,32 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 			}
 			dispose();
 			return;
-		} catch (NullPointerException ex){
-			JOptionPane.showMessageDialog(this, "Missing Component", "Error", JOptionPane.PLAIN_MESSAGE);	
 		}
+	}	
+
+	private boolean checkComponent(String idText, String compartment, Integer num){
+		idText = id.getText().replaceAll(" ", "_"); 				// string starting with an int will not be applied
+		compartment = (String) domCombo.getSelectedItem();
+		
+		if(domCombo.getSelectedIndex() < 0){
+			errMessage();
+			return false;
+		}
+		
+		try{
+			num = Integer.parseInt(val.getText());            // need to include integer with exponential	
+		}catch(NumberFormatException nfe){
+			errMessage();
+			return false;
+		}
+		
+		return true;
 	}
 	
 	
+	private void errMessage(){
+		JOptionPane.showMessageDialog(this, "Missing Component", "Error", JOptionPane.PLAIN_MESSAGE);	
+	}
 	
 	class ComboBoxRenderer extends JLabel implements ListCellRenderer
     {

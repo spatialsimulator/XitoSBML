@@ -148,7 +148,7 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		SBMLReader reader = new SBMLReader();
-		SBMLDocument d = reader.readSBML("simple_mem_diffusion.xml");
+		SBMLDocument d = reader.readSBML("outttt.xml");
 		new ParamAndSpecies( d.getModel());
 	}
 

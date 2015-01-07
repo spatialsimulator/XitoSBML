@@ -88,7 +88,6 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 				case 1:
 					return String.class;
 				case 2:
-//					return JMenu.class;
 					return JButton.class;
 				case 3:
 				case 4:

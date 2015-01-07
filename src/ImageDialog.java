@@ -35,7 +35,6 @@ public class ImageDialog implements ItemListener{
 		final Choice im = (Choice) gd.getChoices().get(0);
 		im.addItemListener(this);
 		
-		System.out.println("image explorer");
 		gd.showDialog();
 		if(gd.wasCanceled())
 			return null;
