@@ -37,7 +37,7 @@ public class Interpolate {
 		
 		if (needInterpolate()) {
 			nearestNeighbor();
-			//linear();
+			// linear();
 			image.setStack(altimage);
 			info.pixelDepth =  zaxis / altz;
 			image.setFileInfo(info);
@@ -126,7 +126,7 @@ public class Interpolate {
 	}
 	
 	private byte getLinear(double prev, double next, double mu){
-		return (byte) (prev * (1 - mu) + next * mu);
+		return (byte) (mu * (next - prev));
 	}
 	
 	public ImagePlus getInterpolatedImage(){

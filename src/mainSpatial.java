@@ -52,13 +52,14 @@ public class MainSpatial implements PlugIn {
 		//visualize(edit.image);
 
 		///*
-		new HierarchicalStruct(edit);
+		//new HierarchicalStruct(edit);
 		RawSpatialImage ri = new RawSpatialImage(edit.pixels, image.getWidth(),
 				image.getHeight(), image.getStackSize(), hashDomainTypes,
 				hashSampledValue, edit.hashDomainNum, edit.adjacentsList);
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri, document);
 		sbmlexp.createGeometryElements();
-		
+		DomainStruct ds = new DomainStruct();
+		ds.show(model);
 		//add species and parameter here
 		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species", JOptionPane.YES_NO_CANCEL_OPTION);
 		if(reply == JOptionPane.YES_OPTION)

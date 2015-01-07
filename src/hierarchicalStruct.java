@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.sbml.libsbml.Model;
+
 
 public class HierarchicalStruct {
 	HashMap<String, Integer> hashDomainTypes;
@@ -28,17 +30,15 @@ public class HierarchicalStruct {
 		System.out.println("adjacentsPixel");
 		System.out.println(adjacentsPixel.toString());
 		
-		
-		
 		Graph graph = new Graph();
 		vertex(graph);
 		edge(graph);
 		graph.visualize();
 	}
 	
+	
 	public void vertex(Graph graph){
 		for (Entry<String, Integer> e : hashDomainNum.entrySet()) {
-			
 			for (int i = 0; i < e.getValue(); i++) {
 				if(!e.getKey().contains("membrane"))
 					graph.addVertex(e.getKey() + i);
