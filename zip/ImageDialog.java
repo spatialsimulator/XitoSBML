@@ -39,12 +39,9 @@ public class ImageDialog implements ItemListener{
 		if(gd.wasCanceled())
 			return null;
 		
-
 		if(!fromFile) {
 			img = fromImage();
 		}
-		System.out.println(img.getTitle());
-		
 		return img;
 	}
 	

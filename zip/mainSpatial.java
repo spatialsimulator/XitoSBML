@@ -42,31 +42,25 @@ public class MainSpatial implements PlugIn {
 		createSBMLDoc();
 		gui();
 		
-		
+
 		CreateImage creIm = new CreateImage(imgexp.getDomFile(), hashSampledValue, imgexp.getFileInfo());
 		Interpolate interpolate = new Interpolate(creIm.getCompoImg());
 		Fill fimg = new Fill();
 		image = fimg.fill(interpolate.getInterpolatedImage());
 		ImageEdit edit = new ImageEdit(image, hashDomainTypes, hashSampledValue);
-		visualize(interpolate.getInterpolatedImage());
 		//visualize(edit.image);
-
-		///*
-		//new HierarchicalStruct(edit);
-		RawSpatialImage ri = new RawSpatialImage(edit.pixels, image.getWidth(),
-				image.getHeight(), image.getStackSize(), hashDomainTypes,
-				hashSampledValue, edit.hashDomainNum, edit.adjacentsList);
+		RawSpatialImage ri = new RawSpatialImage(edit.pixels, image.getWidth(), image.getHeight(), image.getStackSize(), hashDomainTypes, hashSampledValue, edit.hashDomainNum, edit.adjacentsList);
+		visualize(edit.image, ri);
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri, document);
 		sbmlexp.createGeometryElements();
 		DomainStruct ds = new DomainStruct();
 		ds.show(model);
+
 		//add species and parameter here
 		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species", JOptionPane.YES_NO_CANCEL_OPTION);
 		if(reply == JOptionPane.YES_OPTION)
 			addParaAndSpecies();
 		save(sbmlexp);
-		// IJ.log(edit.pixels.toString());
-		//*/
 	}
 	
 	public void createSBMLDoc(){
@@ -132,6 +126,11 @@ public class MainSpatial implements PlugIn {
 		univ.show();
 		Content c = univ.addVoltex(img);
 		c.setTransparency(0.4f);
+	}
+	
+	public void visualize(ImagePlus img, RawSpatialImage ri){
+		viewer v =new viewer();
+		v.view(img, ri);
 	}
 	
 	public void addParaAndSpecies(){

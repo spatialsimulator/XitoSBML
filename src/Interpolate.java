@@ -19,8 +19,6 @@ public class Interpolate {
 	private ImageStack altimage;	//output pixel image
 	private byte[] pixels;
 	
-	Interpolate(){}
-	
 	Interpolate(ImagePlus image){
 		this.image = image;
 		width = image.getWidth();

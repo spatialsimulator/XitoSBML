@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Stack;
 import java.util.Map.Entry;
 
 /*
@@ -37,7 +36,6 @@ public class ImageEdit {
         copyMat();
 
         listVal();
- //       labelMat();
         invertMat();
         label();
         createMembrane();
@@ -74,106 +72,14 @@ public class ImageEdit {
     	}
     	return false;
     }
-    
-    private void labelMat(){
-      	matrix = new int[size];
-    	HashMap<Integer,Integer> num = new HashMap<Integer,Integer>();  //labels the object with different numbers
-        int label = 0;
-        for(int i = 0 ; i < labelList.size(); i++){
-        	num.put(labelList.get(i), label);
-        	label += 10;
-        }
-        
-		for (int d = 0; d < depth; d++) {
-			for (int i = 0; i < height; i++) {
-				for (int j = 0; j < width; j++) {
-					if (matrix[d * height *  width + i * width + j] == 0 && pixels[d * height *  width + i * width + j] != 0) {
-						label = num.get(pixels[d * height *  width + i * width + j] & 0xFF);
-						matrix[d * height *  width + i * width + j] = label;
-						recurs(i,j,d, label);
-						num.put(pixels[d * height *  width + i * width + j] & 0xFF, ++label);
-					}
-					if (matrix[d * height *  width + i * width + j] == 0 && pixels[d * height *  width + i * width + j] == 0) {
-						label = num.get(pixels[d * height *  width + i * width + j] & 0xFF) + 1;
-						matrix[d * height *  width + i * width + j] = label;
-						recurs(i,j,d, label);
-						num.put(pixels[d * height *  width + i * width + j] & 0xFF, label++);
-					}
-				}
-			}
-		}
-		num.put(0, num.get(0) - 1);		//assumes extracellular is only one
-        countdomtype(num);
-    }
-    
-    private void recurs(int i , int j, int d, int val){
-    	Stack<Integer> block = new Stack<Integer>();
-		block.push(i);
-		block.push(j);
-		block.push(d);
-
-		while(!block.isEmpty()){
-			d = block.pop();
-			j = block.pop();
-			i = block.pop();
-
-			//check right
-			if(j != width - 1 && pixels[d * height * width + i * width + j + 1] == pixels[d * height * width + i * width + j] && matrix[d * height * width + i * width + j + 1] == 0){
-			//	matrix[d * height * width + i * width + j + 1] = matrix[d * height * width + i * width + j];
-				block.push(i);
-				block.push(j+1);
-				block.push(d);
-			}
-
-			//check left
-			if(j != 0 && pixels[d * height * width + i * width + j - 1] == pixels[d * height * width + i * width + j] && matrix[d * height * width + i * width + j - 1] == 0){
-			//	matrix[d * height * width + i * width + j - 1] = matrix[d * height * width + i * width + j];
-				block.push(i);
-				block.push(j-1);
-				block.push(d);
-			}
-
-			//check down
-			if(i != height - 1 && pixels[d * height * width + (i+1) * width + j] == pixels[d * height * width + i * width + j] && matrix[d * height * width + (i+1) * width + j] == 0){
-			//	matrix[d * height * width + (i + 1) * width + j] = matrix[d * height * width + i * width + j];
-				block.push(i+1);
-				block.push(j);
-				block.push(d);
-			}
-
-			//check up
-			if(i != 0 && pixels[d * height * width + (i-1) * width + j] == pixels[d * height * width + i * width + j] && matrix[d * height * width + (i-1) * width + j] == 0){
-			//	matrix[d * height * width + (i - 1) * width + j] = matrix[d * height * width + i * width + j];
-				block.push(i-1);
-				block.push(j);
-				block.push(d);
-			}
-			
-			//check above
-			if(d != depth - 1 && pixels[d * height * width + i * width + j] == pixels[(d+1) * height * width + i * width + j] && matrix[(d+1) * height * width + i * width + j] == 0){
-			//	matrix[(d+1) * height * width + i * width + j] = matrix[d * height * width + i * width + j];
-				block.push(i);
-				block.push(j);
-				block.push(d+1);
-			}
-			
-			//check below
-			if(d != 0 && pixels[d * height * width + i * width + j] == pixels[(d-1) * height * width + i * width + j] && matrix[(d-1) * height * width + i * width + j] == 0){
-			//	matrix[(d-1) * height * width + i * width + j] = matrix[d * height * width + i * width + j];
-				block.push(i);
-				block.push(j);
-				block.push(d-1);
-			}
-		
-			matrix[d * height * width + i * width + j] = val;
-		}
-    }
-
+ 
     //count number of domains in each domaintype and store to hashlabelnum
     public void countdomtype(HashMap<Integer,Integer> num){
     	hashLabelNum = new HashMap<Integer,Integer>();
     	for(Integer i : labelList)
 			hashLabelNum.put(i, num.get(i) % 10);
+  
+    System.out.println(hashLabelNum.toString());
     }
 
     public void domtype(HashMap<Integer,Integer> num){
@@ -219,16 +125,28 @@ public class ImageEdit {
 	private int setLabel(int  w , int h, int d, int pixVal){
 		List<Integer> adjVal = new ArrayList<Integer>();
 		//check left			
-		if(w != 0 && matrix[d * height * width + h * width + w - 1] != 0 && hashPix.get(matrix[d * height * width + h * width + w - 1]) == 0)
+		if(w != 0 && hashPix.get(matrix[d * height * width + h * width + w - 1]).equals(pixVal))
 			adjVal.add(matrix[d * height * width + h * width + w - 1]);
 
+		//check right			
+		if(w != width - 1 && matrix[d * height * width + h * width + w + 1] != 0 && hashPix.get(matrix[d * height * width + h * width + w + 1]).equals(pixVal))
+			adjVal.add(matrix[d * height * width + h * width + w + 1]);
+
 		//check up
-		if(h != 0 && matrix[d * height * width + (h-1) * width + w ] != 0 && hashPix.get(matrix[d * height * width + (h-1) * width + w]) == 0)
+		if(h != 0 && hashPix.get(matrix[d * height * width + (h-1) * width + w]).equals(pixVal))
 			adjVal.add(matrix[d * height * width + (h-1) * width + w]);
 
+		//check down
+		if(h != height - 1 && matrix[d * height * width + (h+1) * width + w ] != 0 && hashPix.get(matrix[d * height * width + (h+1) * width + w]).equals(pixVal))
+			adjVal.add(matrix[d * height * width + (h+1) * width + w]);
+		
 		//check below
-		if(d != 0 && matrix[(d-1) * height * width + h * width + w] != 0 && hashPix.get(matrix[(d-1) * height * width + h * width + w]) == 0)
+		if(d != 0 && hashPix.get(matrix[(d-1) * height * width + h * width + w]).equals(pixVal))
 			adjVal.add(matrix[(d-1) * height * width + h * width + w]);
+
+		//check above
+		if(d != depth - 1 && matrix[(d+1) * height * width + h * width + w ] != 0 && hashPix.get(matrix[(d+1) * height * width + h * width + w]).equals(pixVal))
+			adjVal.add(matrix[(d+1) * height * width + h * width + w]);
 		
 		if(adjVal.isEmpty()){
 			hashPix.put(labelCount, pixVal);
@@ -255,18 +173,30 @@ public class ImageEdit {
 	
 	private int setbackLabel(int  w , int h, int d, int pixVal){
 		List<Integer> adjVal = new ArrayList<Integer>();
-
+		
 		//check left			
-		if(w != 0 && matrix[d * height * width + h * width + w - 1] != 0 && hashPix.get(matrix[d * height * width + h * width + w - 1]) != 0)
+		if(w != 0 && hashPix.get(matrix[d * height * width + h * width + w - 1]).equals(pixVal))
 			adjVal.add(matrix[d * height * width + h * width + w - 1]);
 
+		//check right			
+		if(w != width - 1 && matrix[d * height * width + h * width + w + 1] != 0 && hashPix.get(matrix[d * height * width + h * width + w + 1]).equals(pixVal))
+			adjVal.add(matrix[d * height * width + h * width + w + 1]);
+
 		//check up
-		if(h != 0 && matrix[d * height * width + (h-1) * width + w ] != 0 && hashPix.get(matrix[d * height * width + (h-1) * width + w]) != 0)
+		if(h != 0 && hashPix.get(matrix[d * height * width + (h-1) * width + w]).equals(pixVal))
 			adjVal.add(matrix[d * height * width + (h-1) * width + w]);
 
+		//check down
+		if(h != height - 1 && matrix[d * height * width + (h+1) * width + w ] != 0 && hashPix.get(matrix[d * height * width + (h+1) * width + w]).equals(pixVal))
+			adjVal.add(matrix[d * height * width + (h+1) * width + w]);
+		
 		//check below
-		if(d != 0 && matrix[(d-1) * height * width + h * width + w] != 0 && hashPix.get(matrix[(d-1) * height * width + h * width + w]) != 0)
+		if(d != 0 && hashPix.get(matrix[(d-1) * height * width + h * width + w]).equals(pixVal))
 			adjVal.add(matrix[(d-1) * height * width + h * width + w]);
+
+		//check above
+		if(d != depth - 1 && matrix[(d+1) * height * width + h * width + w ] != 0 && hashPix.get(matrix[(d+1) * height * width + h * width + w]).equals(pixVal))
+			adjVal.add(matrix[(d+1) * height * width + h * width + w]);
 		
 		if(adjVal.isEmpty()){
 			hashPix.put(labelCount, pixVal);
@@ -286,12 +216,12 @@ public class ImageEdit {
 			
 			hashPix.remove(adjVal.get(i));
 			rewriteLabel(d, min, adjVal.get(i));
-		}	
+		}
 			return min;
 		}
 	
 	private void rewriteLabel(int dEnd, int after, int before){
-			for (int d = 0; d <= dEnd; d++) {
+		for (int d = 0; d <= dEnd; d++) {
 				for (int h = 0; h < height; h++) {
 					for (int w = 0; w < width; w++) {
 						if (matrix[d * height * width + h * width + w] == before)
@@ -315,24 +245,10 @@ public class ImageEdit {
     public void countDomain(){
     	hashDomainNum = new HashMap<String,Integer>();
     	Integer temp;
-    	/*
-    	for(Entry<String,Integer> e : hashDomainTypes.entrySet()){
-			temp = hashSampledValue.get(e.getKey());
-			if(hashLabelNum.containsKey(temp))
-				hashDomainNum.put(e.getKey(), hashLabelNum.get(temp));
-			else
-				hashDomainNum.put(e.getKey(), 0);
-		}
-		*/
-	//	/*
-
     	for(Entry<String,Integer> e : hashDomainTypes.entrySet()){
 			temp = hashSampledValue.get(e.getKey());
 			hashDomainNum.put(e.getKey(), Collections.frequency(hashPix.values(), temp));
 		}
-//		*/
-    	System.out.println("hashPix " + hashPix.toString());
-    	System.out.println("domnum " + hashDomainNum.toString());
     }
 
     
@@ -349,8 +265,6 @@ public class ImageEdit {
 					// right
 					if (checkAdjacent(d * height * width + i * width + j, d * height * width + i * width + j + 1)) {
 						ArrayList<Integer> temp = new ArrayList<Integer>(2);
-						//lower = Math.min(matrix[d * height * width + i * width + j + 1], matrix[d * height * width + i * width + j]);
-						//higher = Math.max(matrix[d * height * width + i * width + j + 1], matrix[d * height * width + i * width + j]);
 						lower = getLowerLabel(matrix[d * height * width + i * width + j + 1], matrix[d * height * width + i * width + j]);
 						higher = getHigherLabel(matrix[d * height * width + i * width + j + 1], matrix[d * height * width + i * width + j]);
 						temp.add(higher);temp.add(lower);
@@ -361,8 +275,6 @@ public class ImageEdit {
 					// down
 					if (checkAdjacent(d * height * width + i * width + j, d * height * width + (i + 1) * width + j)) {
 						ArrayList<Integer> temp = new ArrayList<Integer>(2);
-					//	lower = Math.min(matrix[d * height * width + (i + 1) * width + j], matrix[d * height * width + i * width + j]);
-					//	higher = Math.max(matrix[d * height * width + (i + 1) * width + j], matrix[d * height * width + i * width + j]);
 						lower = getLowerLabel(matrix[d * height * width + (i + 1) * width + j], matrix[d * height * width + i * width + j]);
 						higher = getHigherLabel(matrix[d * height * width + (i + 1) * width + j], matrix[d * height * width + i * width + j]);
 						temp.add(higher);temp.add(lower);
@@ -373,8 +285,6 @@ public class ImageEdit {
 					//above
 					if ( d != depth -1 && checkAdjacent(d * height * width + i * width + j, (d + 1) * height * width + i * width + j)) {
 						ArrayList<Integer> temp = new ArrayList<Integer>(2);
-					//	lower = Math.min(matrix[(d + 1) * height * width + i * width + j], matrix[d * height * width + i * width + j]);
-					//	higher = Math.max(matrix[(d + 1) * height * width + i * width + j], matrix[d * height * width + i * width + j]);
 						lower = getLowerLabel(matrix[(d + 1) * height * width + i * width + j], matrix[d * height * width + i * width + j]);
 						higher = getHigherLabel(matrix[(d + 1) * height * width + i * width + j], matrix[d * height * width + i * width + j]);
 						temp.add(higher);temp.add(lower);
@@ -415,7 +325,7 @@ public class ImageEdit {
 	}
     
 	private boolean checkAdjacent(int org, int next){
-		if(matrix[org] != matrix[next] && !hasLabel(Math.max(matrix[next], matrix[org]), Math.min(matrix[next], matrix[org]))){
+		if(matrix[org] != matrix[next] && !hasLabel(getHigherLabel(matrix[next], matrix[org]), getLowerLabel(matrix[next], matrix[org]))){
 			return true;
 		} else {
 			return false;
@@ -424,31 +334,6 @@ public class ImageEdit {
 
 	public void addmem(Integer bignum, Integer smallnum){
 		String big = null,small = null;
-/*
-		for(Entry<String,Integer> e : hashSampledValue.entrySet()){
-			if(e.getValue().equals( labelList.get(bignum / 10) )){
-				big = e.getKey();
-			}
-			if(e.getValue().equals(labelList.get(smallnum / 10))){
-				small = e.getKey();
-			}
-		}
-		String buf = big + "_" + small + "_membrane";
-
-		ArrayList<String> adjacentDom = new ArrayList<String>();
-		adjacentDom.add(big + bignum % 10);
-		adjacentDom.add(small + smallnum % 10);
-		adjacentsList.add(adjacentDom);
-
-		if(!hashDomainTypes.containsKey(buf)){
-			hashDomainTypes.put(buf,2);
-			hashDomainNum.put(buf,1);
-		}else{
-			int temp = hashDomainNum.get(buf);
-			hashDomainNum.put(buf,++temp);
-		}
-	*/
-
 		for(Entry<String,Integer> e : hashSampledValue.entrySet()){
 			if(e.getValue().equals( hashPix.get(bignum) )){
 				big = e.getKey();

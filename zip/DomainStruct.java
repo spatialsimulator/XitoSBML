@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
 
 import org.sbml.libsbml.AdjacentDomains;
 import org.sbml.libsbml.Domain;
@@ -49,7 +46,7 @@ public class DomainStruct {
 	AdjacentDomains ad;
 		for(int i = 0; i < load.size(); i++){
 			ad = (AdjacentDomains) load.get(i);
-			graph.addEdge(ad.getDomain1(),ad.getDomain2());
+			graph.addEdge(ad.getDomain2(), ad.getDomain1());
 		}
 	}
 	

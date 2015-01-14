@@ -18,7 +18,6 @@ public class Spatial_SBML implements PlugIn {
 	public void run(String args) {   
 		if(checkJgraph()) 
 			new MainSpatial().run(args);
-		
 	}
 
 	public boolean checkJgraph(){

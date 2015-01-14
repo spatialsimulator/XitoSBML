@@ -17,7 +17,6 @@ import org.sbml.libsbml.Domain;
 import org.sbml.libsbml.DomainType;
 import org.sbml.libsbml.Geometry;
 import org.sbml.libsbml.ListOf;
-import org.sbml.libsbml.ListOfChangedMaths;
 import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
@@ -151,7 +150,7 @@ public class SpatialSBMLExporter implements libsbmlConstants{
     SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();   //create new geometry definition and add to ListOfGeometryDefinitions list
     sfg.setId("mySampledField");
     ListOf losg = sfg.getListOfSampledVolumes();              //get ListOfSampledVolumes
-
+    
     for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
       if (e.getValue() == 3) {                                      //if dimensions is 3
         SampledVolume sv = new SampledVolume();
@@ -160,7 +159,6 @@ public class SpatialSBMLExporter implements libsbmlConstants{
         losg.append(sv);
       }
     }
-    
     SampledField sf = geometry.createSampledField();
     sf.setId("imgtest"); sf.setDataType(SPATIAL_DATAKIND_UINT8);
     sf.setInterpolationType(SPATIAL_INTERPOLATIONKIND_LINEAR); sf.setCompression(SPATIAL_COMPRESSIONKIND_DEFLATED);
@@ -236,7 +234,6 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 
   public void addDomains() {
      ListOf lodom = geometry.getListOfDomains();
-     
      for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    			//add domains to corresponding domaintypes
  		DomainType dt = geometry.getDomainType(e.getKey());
 		Domain dom = new Domain();
@@ -317,6 +314,7 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 		p.setId(cc.getId());
 		p.setValue(0);
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
+		
 		SpatialSymbolReference ssr = sp.createSpatialSymbolReference();
 		ssr.setId(cc.getId());
 		ssr.setSpatialRef("spatial");
@@ -325,8 +323,6 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 		//cm.setChangedBy(spatialns.getURI());
 		cm.setChangedBy("spatial");
 		cm.setViableWithoutChange(true);
-		ListOfChangedMaths locm = rsb.getListOfChangedMaths();
-		locm.getNamespaces().clear();
 		lop.append(p);
 	}
   }	
@@ -341,6 +337,7 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 	u.setKind(UNIT_KIND_ITEM);u.setExponent(1);u.setScale(0);u.setMultiplier(1);
 	ud.addUnit(u);
 	loud.append(ud);
+	
   }
   
   
