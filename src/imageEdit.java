@@ -84,7 +84,7 @@ public class ImageEdit {
 
     public void domtype(HashMap<Integer,Integer> num){
     	hashLabelNum = new HashMap<Integer,Integer>();
-    	for(Entry e : num.entrySet()){
+    	for(Entry<Integer, Integer> e : num.entrySet()){
     		if(!hashLabelNum.containsKey(e.getValue()))
     			hashLabelNum.put((Integer) e.getValue(), Collections.frequency(num.values(), e.getValue()));
     	}
@@ -361,7 +361,7 @@ public class ImageEdit {
 	private String getIndexLabel(int label){
 		Integer count = 0;
 		
-		for(Entry e : hashPix.entrySet()){
+		for(Entry<Integer, Integer> e : hashPix.entrySet()){
 			if(e.getKey().equals(label))
 				break;
 			if(e.getValue().equals(hashPix.get(label)))
