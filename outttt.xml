@@ -31,12 +31,6 @@
         </req:listOfChangedMaths>
         <spatial:spatialSymbolReference spatial:spatialRef="spatial"/>
       </parameter>
-      <parameter id="z" value="0">
-        <req:listOfChangedMaths>
-          <req:changedMath req:changedBy="spatial" req:viableWithoutChange="true"/>
-        </req:listOfChangedMaths>
-        <spatial:spatialSymbolReference spatial:spatialRef="spatial"/>
-      </parameter>
     </listOfParameters>
     <spatial:geometry>
       <spatial:listOfCoordinateComponents>
@@ -47,10 +41,6 @@
         <spatial:coordinateComponent spatial:id="y" spatial:type="cartesianY" spatial:unit="um">
           <spatial:boundaryMin spatial:id="Ymin" spatial:value="0"/>
           <spatial:boundaryMax spatial:id="Ymax" spatial:value="5"/>
-        </spatial:coordinateComponent>
-        <spatial:coordinateComponent spatial:id="z" spatial:type="cartesianZ" spatial:unit="um">
-          <spatial:boundaryMin spatial:id="Zmin" spatial:value="0"/>
-          <spatial:boundaryMax spatial:id="Zmax" spatial:value="3"/>
         </spatial:coordinateComponent>
       </spatial:listOfCoordinateComponents>
       <spatial:listOfDomainTypes>
@@ -83,7 +73,7 @@
         </spatial:sampledFieldGeometry>
       </spatial:listOfGeometryDefinitions>
       <spatial:listOfSampledFields>
-        <spatial:sampledField spatial:id="imgtest" spatial:dataType="uint8" spatial:numSamples1="5" spatial:numSamples2="5" spatial:numSamples3="3" spatial:interpolationType="linear" spatial:compression="deflated" spatial:samplesLength="28">120 218 99 96 100 100 100 96 100 100 2 82 76 76 96 18 204 103 100 96 32 89 2 0 11 223 0 79 </spatial:sampledField>
+        <spatial:sampledField spatial:id="imgtest" spatial:dataType="uint8" spatial:numSamples1="5" spatial:numSamples2="5" spatial:numSamples3="1" spatial:interpolationType="nearestNeighbor" spatial:compression="deflated" spatial:samplesLength="25">120 218 99 96 100 100 100 96 100 100 2 82 76 76 96 18 204 103 100 0 0 1 107 0 27 </spatial:sampledField>
       </spatial:listOfSampledFields>
     </spatial:geometry>
   </model>

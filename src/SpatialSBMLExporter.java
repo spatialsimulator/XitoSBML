@@ -161,7 +161,7 @@ public class SpatialSBMLExporter implements libsbmlConstants{
     }
     SampledField sf = geometry.createSampledField();
     sf.setId("imgtest"); sf.setDataType(SPATIAL_DATAKIND_UINT8);
-    sf.setInterpolationType(SPATIAL_INTERPOLATIONKIND_LINEAR); sf.setCompression(SPATIAL_COMPRESSIONKIND_DEFLATED);
+    sf.setInterpolationType(SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR); sf.setCompression(SPATIAL_COMPRESSIONKIND_DEFLATED);
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
 
     byte[] compressed = compressRawData(raw);
@@ -290,7 +290,9 @@ public class SpatialSBMLExporter implements libsbmlConstants{
     setCoordinateBoundary(ccx, "X", 0, width);
     setCoordinateBoundary(ccy, "Y", 0, height);
     setCoordinateBoundary(ccz, "Z", 0, depth);
-    lcc.append(ccx); lcc.append(ccy); lcc.append(ccz);
+    lcc.append(ccx);
+    lcc.append(ccy); 
+    if(depth !=1) lcc.append(ccz);
   }
 
   public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max) { 
@@ -308,7 +310,6 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 	 CoordinateComponent cc;	 
 	for (int i = 0; i < lcc.size(); i++) {
 		cc = (CoordinateComponent) lcc.get(i);
-		//p = model.createParameter();
 		ListOfParameters lop = model.getListOfParameters();
 		p = new Parameter(document.getSBMLNamespaces());
 		p.setId(cc.getId());
@@ -320,7 +321,6 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 		ssr.setSpatialRef("spatial");
 		ReqSBasePlugin rsb = (ReqSBasePlugin) p.getPlugin("req");
 		ChangedMath cm = rsb.createChangedMath(); 
-		//cm.setChangedBy(spatialns.getURI());
 		cm.setChangedBy("spatial");
 		cm.setViableWithoutChange(true);
 		lop.append(p);
@@ -345,7 +345,7 @@ public class SpatialSBMLExporter implements libsbmlConstants{
    * @param args
    */
   public static void main(String[] args) {
-	int width  = 5, height = 5, depth = 3;
+	int width  = 5, height = 5, depth = 1;
     HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
     hashDomainTypes.put("EC", 3);
     hashDomainTypes.put("Nuc", 3);
@@ -387,13 +387,9 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 	         1,1,2,1,1,
 	         0,1,1,1,0
 	    };		
-    byte[] raw = new byte[25*3];
+  
     
-    for(int i = 0; i < 3 ; i++){
-    	System.arraycopy(len, 0, raw, i * 25, 25);
-    }
-    
-    RawSpatialImage ri = new RawSpatialImage(raw, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
+    RawSpatialImage ri = new RawSpatialImage(len, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
     SpatialSBMLExporter ts = new SpatialSBMLExporter(ri);
     ts.createGeometryElements();
     libsbml.writeSBMLToFile(ts.document, "outttt.xml");

@@ -39,28 +39,38 @@ public class MainSpatial implements PlugIn {
 	
 	@Override
 	public void run(String arg) {
+		Runtime runtime = Runtime.getRuntime();
+		Long start = runtime.freeMemory();		
+		//	long start = System.currentTimeMillis();
 		createSBMLDoc();
+//		long end = System.currentTimeMillis();
+	//	long time = end - start;
 		gui();
 		
-
+//		start = System.currentTimeMillis();
 		CreateImage creIm = new CreateImage(imgexp.getDomFile(), hashSampledValue, imgexp.getFileInfo());
 		Interpolate interpolate = new Interpolate(creIm.getCompoImg());
 		Fill fimg = new Fill();
 		image = fimg.fill(interpolate.getInterpolatedImage());
 		ImageEdit edit = new ImageEdit(image, hashDomainTypes, hashSampledValue);
-		//visualize(edit.image);
+
+		visualize(edit.image);
 		RawSpatialImage ri = new RawSpatialImage(edit.pixels, image.getWidth(), image.getHeight(), image.getStackSize(), hashDomainTypes, hashSampledValue, edit.hashDomainNum, edit.adjacentsList);
-		visualize(edit.image, ri);
+		//visualize(edit.image, ri);
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(ri, document);
 		sbmlexp.createGeometryElements();
 		DomainStruct ds = new DomainStruct();
 		ds.show(model);
-
+		//end = System.currentTimeMillis();
+		//time += end - start;
 		//add species and parameter here
 		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species", JOptionPane.YES_NO_CANCEL_OPTION);
 		if(reply == JOptionPane.YES_OPTION)
 			addParaAndSpecies();
+		
 		save(sbmlexp);
+		//IJ.log(String.valueOf(time));
+		Long end = runtime.freeMemory();
 	}
 	
 	public void createSBMLDoc(){
@@ -129,7 +139,7 @@ public class MainSpatial implements PlugIn {
 	}
 	
 	public void visualize(ImagePlus img, RawSpatialImage ri){
-		viewer v =new viewer();
+		viewer v = new viewer();
 		v.view(img, ri);
 	}
 	

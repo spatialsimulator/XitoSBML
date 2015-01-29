@@ -161,7 +161,7 @@ public class SpatialSBMLExporter implements libsbmlConstants{
     }
     SampledField sf = geometry.createSampledField();
     sf.setId("imgtest"); sf.setDataType(SPATIAL_DATAKIND_UINT8);
-    sf.setInterpolationType(SPATIAL_INTERPOLATIONKIND_LINEAR); sf.setCompression(SPATIAL_COMPRESSIONKIND_DEFLATED);
+    sf.setInterpolationType(SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR); sf.setCompression(SPATIAL_COMPRESSIONKIND_DEFLATED);
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
 
     byte[] compressed = compressRawData(raw);

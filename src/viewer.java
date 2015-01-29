@@ -7,6 +7,7 @@ import javax.vecmath.Color3f;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
+import ij3d.Content;
 import ij3d.Image3DUniverse;
 
 
@@ -35,7 +36,8 @@ public class viewer {
 	void setImages(){
 		int i = 0;
 		for(Entry<String, ImagePlus> e : hashImg.entrySet()){
-			univ.addMesh(e.getValue(), colors.get(i++), e.getKey(), 0, new boolean[] {true,true,true}, 2);
+			Content c = univ.addMesh(e.getValue(), colors.get(i++), e.getKey(), 0, new boolean[] {true,true,true}, 3);
+			c.setShaded(false);
 		}
 		univ.show();
 	}
