@@ -32,15 +32,31 @@ public class ImageEdit {
         this.size = width * height * depth;
         this.hashDomainTypes = hashDomainTypes;
         this.hashSampledValue = hashSampledValue;
-        
         copyMat();
-
         listVal();
         invertMat();
         label();
         createMembrane();
     }
     
+    ImageEdit(SpatialImage spImg){
+    	this.image = spImg.getImage();    	
+        this.width = spImg.width;                                //obtain width of image
+        this.height = spImg.height;                              //obtain height of image
+        this.depth = spImg.depth;								//obtain number of slices
+        this.size = width * height * depth;
+        this.hashDomainTypes = spImg.hashDomainTypes;
+        this.hashSampledValue = spImg.hashSampledValue;
+        this.pixels = spImg.raw;
+
+        listVal();
+        invertMat();
+        label();
+        createMembrane();
+        spImg.sethashDomainNum(hashDomainNum);
+        spImg.setadjacentsList(adjacentsList);
+    }
+
     //copies the matrix into array pixel
     private void copyMat(){
     	byte[] slice;   
@@ -57,12 +73,11 @@ public class ImageEdit {
     	labelList = new ArrayList<Integer>();
     	for (int i = 0 ; i < size ; i++) {
 			temp = pixels[i] & 0xFF;  			//convert byte to int
-			if (!hasLabel(temp)) {					 // see below
+			if (!hasLabel(temp)) {	
 				labelList.add(new Integer(temp));
 			}
 		}
     	Collections.sort(labelList);
-    	//IJ.log(labelList.toString());
     }
     
     private boolean hasLabel(int label){
@@ -79,7 +94,7 @@ public class ImageEdit {
     	for(Integer i : labelList)
 			hashLabelNum.put(i, num.get(i) % 10);
   
-    System.out.println(hashLabelNum.toString());
+    	System.out.println(hashLabelNum.toString());
     }
 
     public void domtype(HashMap<Integer,Integer> num){
@@ -254,6 +269,7 @@ public class ImageEdit {
     
     private ArrayList<ArrayList<Integer>> adjacentsPixel;
     ArrayList<ArrayList<String>> adjacentsList;
+    
     public void addMembrane(){
     	adjacentsPixel = new ArrayList<ArrayList<Integer>>();
         adjacentsList = new ArrayList<ArrayList<String>>();
@@ -375,18 +391,5 @@ public class ImageEdit {
 	public ArrayList<ArrayList<Integer>> getAdjacentsPixel() {
 		return adjacentsPixel;
 	}
-
-	public void printPixel() {
-		for (int i = 0; i < depth; i++) {
-			for (int j = 0; j < height; j++) {
-				for (int k = 0; k < width; k++) {
-					System.out.print(pixels[i * height * width + k * width + k] & 0xFF);
-				}
-				System.out.println("");
-			}
-			System.out.println("");
-		}
-	}
-
 
 }

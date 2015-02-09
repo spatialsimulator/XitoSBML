@@ -49,8 +49,11 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	public ImageExplorer(){
 		super("DomainType Namer");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);	
-		setSize(500, 240);
 		setResizable(false);
+		setBounds(100,100,500,240);
+		setLocationByPlatform(true);
+		//setAlwaysOnTop(true);
+		setLocationRelativeTo(null);
 	}
 	
 	public ImageExplorer(HashMap<String, Integer> hashDomainTypes, HashMap<String, Integer> hashSampledValues){
@@ -68,7 +71,6 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		//table
 		tableModel = new DefaultTableModel(data,columnNames){
 			private static final long serialVersionUID = 1L;
-		
 			public boolean isCellEditable(int row, int column){	
 				if(column == 1)
 					return false;
@@ -124,7 +126,6 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		//arrow column
 		new ArrowColumn(table, 3, BasicArrowButton.NORTH);
 		new ArrowColumn(table, 4, BasicArrowButton.SOUTH);
-		//new MenuColumn(table,2);
 		new ButtonColumn(table, 2);
 		
 		TableColumn column = (TableColumn)table.getColumnModel().getColumn(2);
@@ -133,8 +134,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		column.setMaxWidth(50);
 		column = (TableColumn)table.getColumnModel().getColumn(4);
 		column.setMaxWidth(50);
-		
-		
+			
 		setVisible(true);
 	}
 
@@ -195,7 +195,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		return width && height && depth && voxx && voxy && voxz;
 	}
 	
-	public static void main(String args[]){	
+	public static void main(String[] args){	
 		HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
 		HashMap<String, Integer> hashSampledValues = new HashMap<String, Integer>();
 		new ImageExplorer(hashDomainTypes, hashSampledValues);

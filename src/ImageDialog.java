@@ -26,7 +26,8 @@ public class ImageDialog implements ItemListener{
 	
 	public ImagePlus showDialog(){
 		gd = new GenericDialog("Add Image");
-		
+		gd.setResizable(true);
+		gd.pack();
 		String[] source = {"From Image","From File"}; 
 		gd.addChoice("Image Source:", source, null);
 		addImageChoice();
@@ -57,8 +58,9 @@ public class ImageDialog implements ItemListener{
 		Vector<String> windows = new Vector<String>();
 
 		if(numimage == 0){
-			String[] s = {"NoImage"};
+			String[] s = {"No Image"};
 			gd.addChoice("Image:", s, "NaN");
+			
 			return;
 		}else{
 			for(int i = 1 ; i <= numimage ; i++){
@@ -74,36 +76,7 @@ public class ImageDialog implements ItemListener{
 		String name = images[0];
 		gd.addChoice("Image", images, name);
 	}
-	
-
-	void fill(ImageProcessor ip, int foreground, int background) {
-		int width = ip.getWidth();
-		int height = ip.getHeight();
-		FloodFiller ff = new FloodFiller(ip);
-		ip.setColor(127);
-		for (int y = 0; y < height; y++) {
-			if (ip.getPixel(0, y) == background)
-				ff.fill(0, y);
-			if (ip.getPixel(width - 1, y) == background)
-				ff.fill(width - 1, y);
-		}
-		for (int x = 0; x < width; x++) {
-			if (ip.getPixel(x, 0) == background)
-				ff.fill(x, 0);
-			if (ip.getPixel(x, height - 1) == background)
-				ff.fill(x, height - 1);
-		}
-		byte[] pixels = (byte[]) ip.getPixels();
-		int n = width * height;
-		for (int i = 0; i < n; i++) {
-			if (pixels[i] == 127)
-				pixels[i] = (byte) background;
-			else
-				pixels[i] = (byte) foreground;
-		}
-	}
-	
-	
+		
 	private FolderOpener openImg = new FolderOpener();
 	private Opener open = new Opener();
 	
@@ -113,24 +86,24 @@ public class ImageDialog implements ItemListener{
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setMultiSelectionEnabled(false);
 		int returnVal = chooser.showOpenDialog(null);
+		
 		if (returnVal != JFileChooser.APPROVE_OPTION)
 			return null;
 		File f = chooser.getSelectedFile();
 		OpenDialog.setLastDirectory(f.getParentFile().getAbsolutePath());
-		ImagePlus temp = null;
+		ImagePlus inImg = null;
 		
 		try {
-			temp = openImg.openFolder(f.getAbsolutePath());
-			if (temp == null)
-				temp = open.openImage(f.getAbsolutePath());
-			
+			inImg = openImg.openFolder(f.getAbsolutePath());
+			if (inImg == null)
+				inImg = open.openImage(f.getAbsolutePath());	
 		} catch (Exception e) {
 			errMessage();
 		}
-		if(checkImage(temp)){
-			addImageName(temp.getTitle());
-			temp.getTitle();
-			return temp;	
+		if(checkImage(inImg)){
+			addImageName(inImg.getTitle());
+			inImg.getTitle();
+			return inImg;	
 		}else 
 			return null;
 	}
@@ -141,6 +114,7 @@ public class ImageDialog implements ItemListener{
 		c.removeAll();
 		c.add(title);
 		gd.validate();
+		gd.pack();
 	}
 	
 	private void errMessage(){

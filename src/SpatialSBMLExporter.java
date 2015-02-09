@@ -105,35 +105,23 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 	  spatialns = new SpatialPkgNamespaces(3, 1, 1); 
   }
 
-  public SpatialSBMLExporter(RawSpatialImage ri) {
+  public SpatialSBMLExporter(SpatialImage spImg, SBMLDocument document) {
 	    this();
-	    this.hashDomainTypes = ri.hashDomainTypes;
-	    this.hashSampledValue = ri.hashSampledValue;
-	    this.hashDomainNum = ri.hashDomainNum;
-	    this.raw = ri.raw;
-	    this.width = ri.width;
-	    this.height = ri.height;
-	    this.depth = ri.depth;
-	    this.adjacentsList = ri.adjacentsList;
+	    this.hashDomainTypes = spImg.hashDomainTypes;
+	    this.hashSampledValue = spImg.hashSampledValue;
+	    this.hashDomainNum = spImg.hashDomainNum;
+	    this.raw = spImg.raw;
+	    this.width = spImg.width;
+	    this.height = spImg.height;
+	    this.depth = spImg.depth;
+	    this.adjacentsList = spImg.adjacentsList;
+	    this.document = document;
+	    model = document.getModel();
+	    spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
+
 	  }
-  
-  
-  public SpatialSBMLExporter(RawSpatialImage ri, SBMLDocument document) {
-    this();
-    this.hashDomainTypes = ri.hashDomainTypes;
-    this.hashSampledValue = ri.hashSampledValue;
-    this.hashDomainNum = ri.hashDomainNum;
-    this.raw = ri.raw;
-    this.width = ri.width;
-    this.height = ri.height;
-    this.depth = ri.depth;
-    this.adjacentsList = ri.adjacentsList;
-    this.document = document;
-    model = document.getModel();
-    spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
 
-  }
-
+  
   public void createGeometryElements() {
     // Creates a Geometry object via SpatialModelPlugin object.
     geometry = spatialplugin.createGeometry();     //get geometry of spatial plugin
@@ -341,9 +329,6 @@ public class SpatialSBMLExporter implements libsbmlConstants{
   }
   
   
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
 	int width  = 5, height = 5, depth = 1;
     HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
@@ -389,10 +374,10 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 	    };		
   
     
-    RawSpatialImage ri = new RawSpatialImage(len, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
-    SpatialSBMLExporter ts = new SpatialSBMLExporter(ri);
-    ts.createGeometryElements();
-    libsbml.writeSBMLToFile(ts.document, "outttt.xml");
+   // RawSpatialImage ri = new RawSpatialImage(len, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
+   // SpatialSBMLExporter ts = new SpatialSBMLExporter(ri);
+   // ts.createGeometryElements();
+   // libsbml.writeSBMLToFile(ts.document, "outttt.xml");
   }
 
 

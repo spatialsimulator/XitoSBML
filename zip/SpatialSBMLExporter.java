@@ -105,35 +105,23 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 	  spatialns = new SpatialPkgNamespaces(3, 1, 1); 
   }
 
-  public SpatialSBMLExporter(RawSpatialImage ri) {
+  public SpatialSBMLExporter(SpatialImage spImg, SBMLDocument document) {
 	    this();
-	    this.hashDomainTypes = ri.hashDomainTypes;
-	    this.hashSampledValue = ri.hashSampledValue;
-	    this.hashDomainNum = ri.hashDomainNum;
-	    this.raw = ri.raw;
-	    this.width = ri.width;
-	    this.height = ri.height;
-	    this.depth = ri.depth;
-	    this.adjacentsList = ri.adjacentsList;
+	    this.hashDomainTypes = spImg.hashDomainTypes;
+	    this.hashSampledValue = spImg.hashSampledValue;
+	    this.hashDomainNum = spImg.hashDomainNum;
+	    this.raw = spImg.raw;
+	    this.width = spImg.width;
+	    this.height = spImg.height;
+	    this.depth = spImg.depth;
+	    this.adjacentsList = spImg.adjacentsList;
+	    this.document = document;
+	    model = document.getModel();
+	    spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
+
 	  }
-  
-  
-  public SpatialSBMLExporter(RawSpatialImage ri, SBMLDocument document) {
-    this();
-    this.hashDomainTypes = ri.hashDomainTypes;
-    this.hashSampledValue = ri.hashSampledValue;
-    this.hashDomainNum = ri.hashDomainNum;
-    this.raw = ri.raw;
-    this.width = ri.width;
-    this.height = ri.height;
-    this.depth = ri.depth;
-    this.adjacentsList = ri.adjacentsList;
-    this.document = document;
-    model = document.getModel();
-    spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
 
-  }
-
+  
   public void createGeometryElements() {
     // Creates a Geometry object via SpatialModelPlugin object.
     geometry = spatialplugin.createGeometry();     //get geometry of spatial plugin
@@ -290,7 +278,9 @@ public class SpatialSBMLExporter implements libsbmlConstants{
     setCoordinateBoundary(ccx, "X", 0, width);
     setCoordinateBoundary(ccy, "Y", 0, height);
     setCoordinateBoundary(ccz, "Z", 0, depth);
-    lcc.append(ccx); lcc.append(ccy); lcc.append(ccz);
+    lcc.append(ccx);
+    lcc.append(ccy); 
+    if(depth !=1) lcc.append(ccz);
   }
 
   public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max) { 
@@ -308,7 +298,6 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 	 CoordinateComponent cc;	 
 	for (int i = 0; i < lcc.size(); i++) {
 		cc = (CoordinateComponent) lcc.get(i);
-		//p = model.createParameter();
 		ListOfParameters lop = model.getListOfParameters();
 		p = new Parameter(document.getSBMLNamespaces());
 		p.setId(cc.getId());
@@ -320,7 +309,6 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 		ssr.setSpatialRef("spatial");
 		ReqSBasePlugin rsb = (ReqSBasePlugin) p.getPlugin("req");
 		ChangedMath cm = rsb.createChangedMath(); 
-		//cm.setChangedBy(spatialns.getURI());
 		cm.setChangedBy("spatial");
 		cm.setViableWithoutChange(true);
 		lop.append(p);
@@ -341,11 +329,8 @@ public class SpatialSBMLExporter implements libsbmlConstants{
   }
   
   
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
-	int width  = 5, height = 5, depth = 3;
+	int width  = 5, height = 5, depth = 1;
     HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
     hashDomainTypes.put("EC", 3);
     hashDomainTypes.put("Nuc", 3);
@@ -387,16 +372,12 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 	         1,1,2,1,1,
 	         0,1,1,1,0
 	    };		
-    byte[] raw = new byte[25*3];
+  
     
-    for(int i = 0; i < 3 ; i++){
-    	System.arraycopy(len, 0, raw, i * 25, 25);
-    }
-    
-    RawSpatialImage ri = new RawSpatialImage(raw, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
-    SpatialSBMLExporter ts = new SpatialSBMLExporter(ri);
-    ts.createGeometryElements();
-    libsbml.writeSBMLToFile(ts.document, "outttt.xml");
+   // RawSpatialImage ri = new RawSpatialImage(len, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
+   // SpatialSBMLExporter ts = new SpatialSBMLExporter(ri);
+   // ts.createGeometryElements();
+   // libsbml.writeSBMLToFile(ts.document, "outttt.xml");
   }
 
 

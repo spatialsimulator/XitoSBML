@@ -34,7 +34,7 @@ public class DomainStruct {
 		edge(graph);
 		graph.visualize();
 	}
-	public void vertex(Graph graph){
+	public void vertex(Graph graph){ 
 		Domain dom;
 			for (int i = 0; i < lod.size(); i++) {
 				dom = lod.get(i);

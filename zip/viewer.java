@@ -13,7 +13,7 @@ import ij3d.Image3DUniverse;
 
 public class viewer {
 	Image3DUniverse univ;
-	Vector<Color3f> colors = new Vector<Color3f>();
+	private Vector<Color3f> colors = new Vector<Color3f>();
 	int width;
 	int height;
 	int depth;
@@ -21,15 +21,15 @@ public class viewer {
 	HashMap<String, ImagePlus> hashImg = new HashMap<String, ImagePlus>();
 	byte[] rawMat;
 	
-	void view(ImagePlus img, RawSpatialImage ri ){
+	void view(SpatialImage spImg ){
 		univ = new Image3DUniverse();
-		this.width = ri.width;
-		this.height = ri.height;
-		this.depth = ri.depth;
-		this.hashDoms = ri.hashSampledValue;
-		this.rawMat = ri.raw;
+		this.width = spImg.width;
+		this.height = spImg.height;
+		this.depth = spImg.depth;
+		this.hashDoms = spImg.hashSampledValue;
+		this.rawMat = spImg.raw;
 		separateImg();
-		setColors(width*height*depth);
+		setColors(hashImg.size());
 		setImages();
 	}
 	
@@ -43,7 +43,7 @@ public class viewer {
 	}
 	
 	void setColors(int size){
-		for(int i = 0 ; i < size; i++){
+		for(int i = 0 ; i <= size; i++){
 			switch(i){
 				case 0:
 					colors.add(new Color3f(1f,0,0));
@@ -77,7 +77,6 @@ public class viewer {
 			ImagePlus tempimg = new ImagePlus();
 			tempimg.setStack(createLabelImage(e.getValue()));
 			hashImg.put(e.getKey(), tempimg);
-			
 		}
 	}
 

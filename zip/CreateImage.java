@@ -17,10 +17,6 @@ public class CreateImage {
 	private int depth ;
 	private ImageStack altimage;
 	
-	public CreateImage() {
-
-	}
-
 	public CreateImage(HashMap<String, ImagePlus> hashDomFile, HashMap<String, Integer> hashSampledValue, FileInfo info) {
 		this.hashSampledValue = hashSampledValue;
 		this.hashDomFile = hashDomFile;
@@ -52,7 +48,6 @@ public class CreateImage {
 	}
 
     private byte[] getMat(ImagePlus image){
-
     	byte[] slice = null;   
     	byte[] pixels = new byte[width * height * depth];
     	ImageStack stack = image.getStack();
@@ -64,18 +59,14 @@ public class CreateImage {
     	
     	//invert image 
 		if (image.isInvertedLut()) {
-			for (int i = 0; i < width * height * depth; i++) {
-				pixels[i] = (byte) (pixels[i] == 0 ? -1 : 0);
-			}
+			image.getProcessor().invertLut();
 		}
     	return pixels;
     }
 
     private void cmpImg(ImagePlus img, byte[] imgMat, String name){
     	int max = imgMat.length;
-    	System.out.println(name);
     	byte pixVal = hashSampledValue.get(name).byteValue();
-
     	for(int i = 0 ; i < max ; i++){
     		if(imgMat[i] != 0 && (compoMat[i] == 0 || checkVal(compoMat[i],pixVal))){
     			compoMat[i] = pixVal;

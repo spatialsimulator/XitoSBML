@@ -9,7 +9,6 @@ public class Interpolate {
 	private double voxx;			
 	private double voxy;
 	private double voxz;
-	//axis of whole axis
 	private double zaxis;
 	private int width;
 	private int height;
@@ -42,6 +41,32 @@ public class Interpolate {
 			System.out.println("interpolated voxel size " + voxx + " " + voxy + " " + info.pixelDepth);
 		}
 		image.updateImage();
+	}
+	
+	Interpolate(SpatialImage spImg){
+			this.image = spImg.getImage();
+			width = spImg.width;
+			height = spImg.height;
+			depth = spImg.depth;
+			FileInfo info = image.getOriginalFileInfo();
+
+			voxx = info.pixelWidth;
+			voxy = info.pixelHeight;
+			voxz = info.pixelDepth;
+			zaxis = voxz * image.getImageStackSize();
+			this.pixels = spImg.raw;
+			System.out.println("voxel size " + voxx + " " + voxy + " " + voxz);
+			
+			if (needInterpolate()) {
+				nearestNeighbor();
+				// linear();
+				image.setStack(altimage);
+				info.pixelDepth =  zaxis / altz;
+				image.setFileInfo(info);
+				System.out.println("interpolated voxel size " + voxx + " " + voxy + " " + info.pixelDepth);
+			}
+			image.updateImage();
+		
 	}
 	
     private void copyMat(){
@@ -93,7 +118,7 @@ public class Interpolate {
 		System.out.println("interpolated stack size " + altz);
 		altimage = new ImageStack(width, height);
 		byte matrix[];
-		double x1, y1, z1 = 0,x2, y2, z2 = 0;
+		double x1, y1, z1 = 0, z2 = 0;
 		double xc, yc, zc;
 		double halfx = voxx /2, halfy = voxy /2,halfz = voxx /2;
 		

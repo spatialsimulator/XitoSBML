@@ -45,6 +45,27 @@ public class Fill {
 		return image;
 	}
 
+	ImagePlus fill(SpatialImage spImg){
+		this.width = spImg.width;
+		this.height = spImg.height;
+		this.depth = spImg.depth;
+		this.image = spImg.getImage();
+		this.pixels = spImg.raw;
+		invertMat();
+		label();
+		if(checkHole()){
+			while(checkHole()){	
+				fillHole();
+				hashPix.clear();
+				label();
+			}
+			setStack();
+			image.setStack(altimage);
+			image.updateImage();
+		}
+		return image;
+	}
+	
 	private void setStack(){
 		altimage = new ImageStack(width, height);
 		for(int d = 0 ; d < depth ; d++){
@@ -108,7 +129,7 @@ public class Fill {
 		}
 	 }
 	
-	 int labelCount;
+	private int labelCount;
 	public void label(){
 		hashPix.put(1, (byte)0);
 		labelCount = 2;
@@ -152,7 +173,6 @@ public class Fill {
 				fill(e.getKey());
 			}		
 		}
-
 	}
 	
 	public void fill(int index){
@@ -264,7 +284,7 @@ public class Fill {
 			hashPix.remove(adjVal.get(i));
 		}
 			return min;
-		}
+	}
 
 	
 	private int setbackLabel(int  w , int h, int d, byte pixVal){
