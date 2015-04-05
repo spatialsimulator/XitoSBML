@@ -16,7 +16,7 @@ import org.jgrapht.graph.ListenableDirectedGraph;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
 
-public class graph extends JFrame{
+public class Graph extends JFrame{
    
 	/**
 	 * 
@@ -25,10 +25,12 @@ public class graph extends JFrame{
 	ListenableGraph<String, DefaultEdge> g = new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
     JGraphXAdapter<String, DefaultEdge>  jgxAdapter = new JGraphXAdapter<String, DefaultEdge>(g);
 
-	graph(){
+	Graph(){
 		super("Domain Hiearchal Structure");
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
+        setResizable(false);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 	
 	public void addVertex(String name){
@@ -50,13 +52,13 @@ public class graph extends JFrame{
         layout.run(jgxAdapter.getDefaultParent());
         mxGraphComponent gc = new mxGraphComponent(jgxAdapter);
         gc.setDragEnabled(false);
-        add(gc,new GridBagConstraints());
+        add(gc, new GridBagConstraints());
         pack();
         setVisible(true);
 	}
 	
 	public static void main(String[] args){
-	        graph graph = new graph();
+	        Graph graph = new Graph();
 	        HashMap<String, Integer> hashDomainNum = new HashMap<String,Integer>();
 	        hashDomainNum.put("EC", 1);
 	        hashDomainNum.put("Cyt", 1);
@@ -98,7 +100,7 @@ public class graph extends JFrame{
 				graph.addEdge(edge1,edge2);	
 			}
 	    	graph.visualize();
-	    	graph.close();
+	   
 	}
 	
 		
