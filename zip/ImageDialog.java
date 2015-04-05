@@ -14,8 +14,6 @@ import ij.gui.MessageDialog;
 import ij.io.OpenDialog;
 import ij.io.Opener;
 import ij.plugin.FolderOpener;
-import ij.process.FloodFiller;
-import ij.process.ImageProcessor;
 
 
 public class ImageDialog implements ItemListener{

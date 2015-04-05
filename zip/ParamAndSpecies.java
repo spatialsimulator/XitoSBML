@@ -25,9 +25,9 @@ import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLReader;
 
 
-public class ParamAndSpecies extends JFrame implements ActionListener, FocusListener, WindowListener{
+public class ParamAndSpecies extends JFrame implements ActionListener, FocusListener{
 	  static {
-		    System.loadLibrary("sbmlj");
+		//    System.loadLibrary("sbmlj");
 		  }
 	/**
 	 * 
@@ -43,9 +43,11 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 	
 	public ParamAndSpecies(){
 		super("Parameter and Species Table");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);	
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);	
 		setSize(480, 200);
 		setResizable(false);
+		setLocationByPlatform(true);
+		setLocationRelativeTo(null);
 
 	}
 	
@@ -181,48 +183,6 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 
 	@Override
 	public void focusLost(FocusEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowActivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosed(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosing(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		wasExited = true;
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowOpened(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}

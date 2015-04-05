@@ -23,7 +23,7 @@ import ij3d.Image3DUniverse;
 
 public class MainSpatial implements PlugIn {
 	static {
-		System.loadLibrary("sbmlj"); // read system library sbmlj
+		//System.loadLibrary("sbmlj"); // read system library sbmlj
 	}
 	SBMLDocument document;
 	Model model;
@@ -50,10 +50,8 @@ public class MainSpatial implements PlugIn {
 
 		//visualize(edit.image);
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg, document);
-		visualize(spImg);
+		//visualize(spImg);
 		sbmlexp.createGeometryElements();
-		DomainStruct ds = new DomainStruct();
-		ds.show(model);
 
 		//add species and parameter here
 		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species", JOptionPane.YES_NO_CANCEL_OPTION);
@@ -61,6 +59,7 @@ public class MainSpatial implements PlugIn {
 			addParaAndSpecies();
 		
 		save(sbmlexp);
+		
 	}
 	
 	public void createSBMLDoc(){
@@ -151,11 +150,12 @@ public class MainSpatial implements PlugIn {
 		SaveDialog sd = new SaveDialog("Save SBML Document",image.getTitle(),".xml");
 		String name = sd.getFileName();
 		IJ.log(name);
+		
 		try{
 			sbmlexp.document.getModel().setId(name);
 			if(name.contains(".")) libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name);  
 			else 					libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name + ".xml"); 
-			model.setId(name);
+			
 		}catch(NullPointerException e){
 			System.out.println("SBML document was not saved");
 		}

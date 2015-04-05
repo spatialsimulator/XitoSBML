@@ -52,7 +52,6 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		setResizable(false);
 		setBounds(100,100,500,240);
 		setLocationByPlatform(true);
-		//setAlwaysOnTop(true);
 		setLocationRelativeTo(null);
 	}
 	
@@ -165,6 +164,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	
 	private boolean checkAllImages() {
 		Iterator<String> domNames = hashDomFile.keySet().iterator();
+		if(!domNames.hasNext()) System.exit(0);
 		ImagePlus compoImg = hashDomFile.get(domNames.next());
 		compoInfo = compoImg.getFileInfo();
 		ImagePlus temp;
@@ -186,13 +186,24 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		boolean voxx, voxy, voxz;
 		
 		try {
-			voxx = compoInfo.pixelWidth == imgInfo.pixelWidth;
-			voxy = compoInfo.pixelHeight == imgInfo.pixelHeight;
-			voxz = compoInfo.pixelDepth == imgInfo.pixelDepth;
-		} catch (Exception e) {
+			voxx = cmpsize(compoInfo.pixelWidth, imgInfo.pixelWidth);
+			voxy = cmpsize(compoInfo.pixelHeight, imgInfo.pixelHeight);
+			voxz = cmpsize(compoInfo.pixelDepth, imgInfo.pixelDepth);
+		} catch (NullPointerException e) {
 			voxx = true;voxy = true;voxz = true;
 		}
+		System.out.println(voxx + " " + voxy +" " + voxz);
+		
 		return width && height && depth && voxx && voxy && voxz;
+	}
+	
+	private boolean cmpsize(double org, double in){
+		double num = org - in;
+		
+		if(Math.abs(num) < 0.01)
+			return true;
+			
+		return false;
 	}
 	
 	public static void main(String[] args){	

@@ -12,7 +12,7 @@ import org.sbml.libsbml.SpatialModelPlugin;
 
 public class DomainStruct {
 	static {
-	    System.loadLibrary("sbmlj");                //read system library sbmlj
+	  //  System.loadLibrary("sbmlj");                //read system library sbmlj
 	  }
 	Model model;
 	ListOfDomains lod;

@@ -46,7 +46,7 @@ import org.sbml.libsbml.libsbmlConstants;
 
 public class Adder extends JFrame implements ItemListener, ActionListener, WindowListener, libsbmlConstants{
 	  static {
-		    System.loadLibrary("sbmlj");                //read system library sbmlj
+		 //   System.loadLibrary("sbmlj");                //read system library sbmlj
 		  }
 	/**
 	 * 
@@ -66,6 +66,8 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);	
 		setSize(400, 120);
 		setResizable(false);
+		setLocationByPlatform(true);
+		setLocationRelativeTo(null);
 	}
 	
 	public Adder(Model model){
@@ -100,14 +102,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		return box;
 	}
 
-	
-/*
- 	private void addDom(){
-		for(int i = 0 ; i < table.getColumnCount() ; i++)
-			
-	}
- */
-	
 	private void addComp(ListOfCompartments loc){
 		String[] s = new String[(int) loc.size()];
 		for(int i = 0 ; i < loc.size() ; i++)
@@ -232,7 +226,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	JComboBox coordCombo, speciesCombo, boundCombo, conditionCombo, diffCombo;
 	String[] lcoord = {"UNKNOWN","CARTESIANX","CARTESIANY","CARTESIANZ"};
 	String[] lbound = {"Xmax","Xmin","Ymax","Ymin","Zmax","Zmin"};
-	String[] lboundcondition = {"UNKNOWN", "ROBIN_VALUE_COEFFICIENT","ROBIN_INWARD_NORMAL_GRADIENT_COEFFICIENT","ROBIN_SUM","NEUMANN","DIRICHLET"};
+	String[] lboundcondition = {"UNKNOWN",/* "ROBIN_VALUE_COEFFICIENT","ROBIN_INWARD_NORMAL_GRADIENT_COEFFICIENT","ROBIN_SUM",*/"NEUMANN","DIRICHLET"};
 	String[] ldiffusion = {"UNKNOWN", "ISOTROPIC","ANISOTROPIC","TENSOR"};
 
 	private void addCoeffPart(int index){
@@ -272,6 +266,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		getContentPane().add(mainPanel, BorderLayout.CENTER);
 		validate();
 		pack();
+		setLocationRelativeTo(null);
 	}
 	
 	private void addCoordCheckbox(JPanel panel){	
@@ -284,8 +279,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	
 	private void addSpecies(String id, String compartment, double value){
 		Species s = model.createSpecies();
-		System.out.println(s.getPlugin(0));
-		System.out.println(s.getPlugin(1));
 		s.setId(id); s.setCompartment(compartment); s.setInitialConcentration(value);
 		s.setSubstanceUnits("molecules");  													//need modification
 		s.setHasOnlySubstanceUnits(false);s.setBoundaryCondition(false);
@@ -313,6 +306,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		getContentPane().add(mainPanel,BorderLayout.CENTER);
 		validate();
 		pack();
+		setLocationRelativeTo(null);
 	}
 	
 	JButton ok;	

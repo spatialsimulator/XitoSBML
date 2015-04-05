@@ -194,10 +194,16 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 
   public void addAdjacentDomains() {		//adds membrane domains and adjacents
 	  ListOf loadj = geometry.getListOfAdjacentDomains();
+	  ListOf lod = geometry.getListOfDomains();
 	  WeakHashMap<String, Integer> hashMembrane = new WeakHashMap<String,Integer>();   
 	  for(ArrayList<String> e : adjacentsList){
-		 String one = e.get(0).substring(0, e.get(0).length() - 1 );
-		 String two = e.get(1).substring(0, e.get(1).length() - 1 );
+		 //String one = e.get(0).substring(0, e.get(0).length() - 1 );
+		 //String two = e.get(1).substring(0, e.get(1).length() - 1 );
+		 String one = e.get(0).substring(0, e.get(0).length());
+		 one = one.replaceAll("[0-9]","");
+		 String two = e.get(1).substring(0, e.get(1).length());
+		 two = two.replaceAll("[0-9]","");
+		 System.out.println(one);
 		 DomainType dt = geometry.getDomainType(one + "_" + two + "_membrane");
 		 if(hashMembrane.containsKey(dt.getId())){
 			 hashMembrane.put(dt.getId(), hashMembrane.get(dt.getId()) + 1);
@@ -206,7 +212,7 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 		 }
 		 
 		  for (int i = 0; i < 2; i++) {                           //add info about adjacent domain
-			  AdjacentDomains adj = new AdjacentDomains();                    //adjacent domain only account for membrane cytosol+ extracelluar matrix and cytosol + nucleus
+			  AdjacentDomains adj = new AdjacentDomains();
 			  adj.setId(dt.getId() + "_" + e.get(i));
 			  adj.setDomain1(dt.getId() + hashMembrane.get(dt.getId()));
 			  adj.setDomain2(e.get(i));

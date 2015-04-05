@@ -1,8 +1,5 @@
 
-/**
- *
- */
-//imageJ package
+
 import ij.IJ;
 import ij.plugin.PlugIn;
 
@@ -15,9 +12,20 @@ public class Spatial_SBML implements PlugIn {
 	static boolean isRunning = false;
 	String title = "Export segmented image to Spatial SBML";
 
+	static {
+		try{
+			System.loadLibrary("sbmlj");
+		}catch(Exception e){
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+	
 	public void run(String args) {   
-		if(checkJgraph()) 
+		//if(checkJgraph() && check3Dviewer()) 
 			new MainSpatial().run(args);
+	
+		
 	}
 
 	public boolean checkJgraph(){
@@ -30,7 +38,15 @@ public class Spatial_SBML implements PlugIn {
 		}
 	}
 	
-
+	public boolean check3Dviewer(){
+		String version = ij3d.Install_J3D.getJava3DVersion();
+        System.out.println("version = " + version);
+        if(version != null && Float.parseFloat(version) >= 1.5)
+                return true;
+        IJ.error("Please Update 3D Viewer");
+        return false;
+	}
+	
 /*
 	@Override
 	public int setup(String arg, ImagePlus imp) {                          //return flags specifying capability and needs of filter
