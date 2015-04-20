@@ -48,6 +48,8 @@ public class ImageDialog implements ItemListener{
 		fromFile = false;
 		Vector<Choice> v = gd.getChoices();
 		img = WindowManager.getImage(v.get(1).getSelectedItem());
+		if(!checkImage(img))
+			return null;
 		return img;
 	}
 	
@@ -57,14 +59,13 @@ public class ImageDialog implements ItemListener{
 
 		if(numimage == 0){
 			String[] s = {"No Image"};
-			gd.addChoice("Image:", s, "NaN");
-			
+			gd.addChoice("Image:", s, "NaN");	
 			return;
 		}else{
 			for(int i = 1 ; i <= numimage ; i++){
 				int id = WindowManager.getNthImageID(i);
 				ImagePlus ip = WindowManager.getImage(id);	
-				if(checkImage(ip))
+			//	if(checkImage(ip))
 					windows.add(ip.getTitle());
 			}
 		}

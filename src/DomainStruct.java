@@ -29,24 +29,24 @@ public class DomainStruct {
 		this.lod = g.getListOfDomains();
 		this.load = g.getListOfAdjacentDomains();
 		
-		Graph graph = new Graph();
-		vertex(graph);
-		edge(graph);
-		graph.visualize();
+		GraphStruct GraphStruct = new GraphStruct();
+		vertex(GraphStruct);
+		edge(GraphStruct);
+		GraphStruct.visualize();
 	}
-	public void vertex(Graph graph){ 
+	public void vertex(GraphStruct GraphStruct){ 
 		Domain dom;
 			for (int i = 0; i < lod.size(); i++) {
 				dom = lod.get(i);
-				graph.addVertex(dom.getId());
+				GraphStruct.addVertex(dom.getId());
 			}
 	}
 	
-	public void edge(Graph graph){
+	public void edge(GraphStruct GraphStruct){
 	AdjacentDomains ad;
 		for(int i = 0; i < load.size(); i++){
 			ad = (AdjacentDomains) load.get(i);
-			graph.addEdge(ad.getDomain2(), ad.getDomain1());
+			GraphStruct.addEdge(ad.getDomain2(), ad.getDomain1());
 		}
 	}
 	

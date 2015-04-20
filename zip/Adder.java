@@ -45,9 +45,6 @@ import org.sbml.libsbml.libsbmlConstants;
 
 
 public class Adder extends JFrame implements ItemListener, ActionListener, WindowListener, libsbmlConstants{
-	  static {
-		 //   System.loadLibrary("sbmlj");                //read system library sbmlj
-		  }
 	/**
 	 * 
 	 */

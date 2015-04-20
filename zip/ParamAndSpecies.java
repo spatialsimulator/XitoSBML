@@ -23,12 +23,10 @@ import org.sbml.libsbml.ListOfSpecies;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLReader;
+import org.sbml.libsbml.Species;
 
 
 public class ParamAndSpecies extends JFrame implements ActionListener, FocusListener{
-	  static {
-		//    System.loadLibrary("sbmlj");
-		  }
 	/**
 	 * 
 	 */

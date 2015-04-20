@@ -22,9 +22,7 @@ import ij3d.Image3DUniverse;
 
 
 public class MainSpatial implements PlugIn {
-	static {
-		//System.loadLibrary("sbmlj"); // read system library sbmlj
-	}
+
 	SBMLDocument document;
 	Model model;
 	SBMLNamespaces sbmlns; // class to store SBML Level, version, namespace
@@ -48,9 +46,8 @@ public class MainSpatial implements PlugIn {
 		image = fimg.fill(spImg);
 		ImageEdit edit = new ImageEdit(spImg);
 
-		//visualize(edit.image);
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg, document);
-		//visualize(spImg);
+		visualize(spImg);
 		sbmlexp.createGeometryElements();
 
 		//add species and parameter here
@@ -63,19 +60,15 @@ public class MainSpatial implements PlugIn {
 	}
 	
 	public void createSBMLDoc(){
-		sbmlns = new SBMLNamespaces(3, 1); // create SBML name space with level
-											// 3 version 1
+		sbmlns = new SBMLNamespaces(3, 1); // create SBML name space with level 3 version 1
 		sbmlns.addPackageNamespace("req", 1); // add required element package
-		sbmlns.addPackageNamespace("spatial", 1); // add spatial processes
-													// package
+		sbmlns.addPackageNamespace("spatial", 1); // add spatial processes package
 		// SBML Document
-		document = new SBMLDocument(sbmlns); // construct document with name
-												// space
+		document = new SBMLDocument(sbmlns); // construct document with namespace
 		document.setPackageRequired("req", true); // set req package as required
 		document.setPackageRequired("spatial", true); // set spatial package as
 														// required
-		model = document.createModel(); // create model using the document and
-										// return pointer
+		model = document.createModel(); // create model using the document and return pointer
 
 		// Create Spatial
 		//
@@ -154,8 +147,7 @@ public class MainSpatial implements PlugIn {
 		try{
 			sbmlexp.document.getModel().setId(name);
 			if(name.contains(".")) libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name);  
-			else 					libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name + ".xml"); 
-			
+			else 					libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name + ".xml"); 			
 		}catch(NullPointerException e){
 			System.out.println("SBML document was not saved");
 		}

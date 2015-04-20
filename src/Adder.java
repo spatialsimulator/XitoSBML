@@ -45,12 +45,17 @@ import org.sbml.libsbml.libsbmlConstants;
 
 
 public class Adder extends JFrame implements ItemListener, ActionListener, WindowListener, libsbmlConstants{
-	  static {
-		 //   System.loadLibrary("sbmlj");                //read system library sbmlj
-		  }
 	/**
 	 * 
 	 */
+	static {
+		try{
+			System.loadLibrary("sbmlj");
+		}catch(Exception e){
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
 	private static final long serialVersionUID = 1L;
 	private final String[] addingType = {"Parameter", "Species"};
 	private final String[] parameterType = {"advectionCoefficient", "boudaryCondition", "diffusionCoefficient"}; 
@@ -118,14 +123,14 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		return species;	
 	}
 	
-	private JTextField id;
+	private JTextField idField;
 	private JTextField val;
 	private void addTextField(){
 		JLabel idlab = new JLabel("id:");
-		id = new JTextField(15);
+		idField = new JTextField(15);
 		JLabel vallab = new JLabel("value:");
 		val = new JTextField(3);
-		mainPanel.add(idlab); mainPanel.add(id);
+		mainPanel.add(idlab); mainPanel.add(idField);
 		mainPanel.add(vallab); mainPanel.add(val);
 	}
 	
@@ -279,6 +284,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	
 	private void addSpecies(String id, String compartment, double value){
 		Species s = model.createSpecies();
+		System.out.println(id);
 		s.setId(id); s.setCompartment(compartment); s.setInitialConcentration(value);
 		s.setSubstanceUnits("molecules");  													//need modification
 		s.setHasOnlySubstanceUnits(false);s.setBoundaryCondition(false);
@@ -356,11 +362,16 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		String idText = new String();
-		String compartment = new String();
-		Integer num = new Integer(0);
-		
-		if(checkComponent(idText, compartment, num)){
+		String idText = idField.getText().replaceAll(" ", "_"); 	
+		String compartment = (String) domCombo.getSelectedItem();
+		Integer num;
+		try{
+			num = Integer.parseInt(val.getText());            // need to include integer with exponential	
+		}catch(NumberFormatException nfe){
+			errMessage();
+			return;
+		}
+		if(checkComponent(idText, compartment)){
 			if(typeCombo.getSelectedItem().equals("Species"))
 				addSpecies(idText, compartment, num);	
 			else{
@@ -371,22 +382,11 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		}
 	}	
 
-	private boolean checkComponent(String idText, String compartment, Integer num){
-		idText = id.getText().replaceAll(" ", "_"); 				// string starting with an int will not be applied
-		compartment = (String) domCombo.getSelectedItem();
-		
+	private boolean checkComponent(String idText, String compartment){
 		if(domCombo.getSelectedIndex() < 0){
 			errMessage();
 			return false;
 		}
-		
-		try{
-			num = Integer.parseInt(val.getText());            // need to include integer with exponential	
-		}catch(NumberFormatException nfe){
-			errMessage();
-			return false;
-		}
-		
 		return true;
 	}
 	

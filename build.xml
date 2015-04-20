@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="Shift_JIS" ?>
 <project name="SBMLPlugin_" default="" basedir=".">
   <description>
     SBMLPlugin_ build file
@@ -8,20 +9,21 @@
 
   <property name="pluginsDir"  location="$basedir/../../IJ/plugins/" />
 
-  <property name="user.name" value="Patrick Pirrotte" />
+  <property name="user.name" value="Kaito Ii" />
   <target name="main" depends="compress" description="Main target">
     <echo>
       Building the .jar file.
     </echo>
   </target>
   <target name="compress" depends="" description="generate the distribution">
-    <jar jarfile="SBMLPlugin_.jar">
+    <jar jarfile="SBMLPlugin.jar">
       <fileset dir="." includes="plugins.config" />
       <fileset dir="${build}" includes="**/*.*" />
       <manifest>
         <attribute name="Built-By" value="${user.name}"/>
       </manifest>
     </jar>
-    <copy file="SBMLPlugin_.jar" toDir="${pluginsDir}" />
+    <copy file="SBMLPlugin.jar" toDir="${pluginsDir}" />
+    <copy file="SBMLPlugin.jar" toDir="/Applications/Fiji.app/plugins" />
   </target>
 </project>

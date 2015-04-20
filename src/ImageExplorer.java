@@ -164,7 +164,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	
 	private boolean checkAllImages() {
 		Iterator<String> domNames = hashDomFile.keySet().iterator();
-		if(!domNames.hasNext()) System.exit(0);
+		if(!domNames.hasNext()) return false;
 		ImagePlus compoImg = hashDomFile.get(domNames.next());
 		compoInfo = compoImg.getFileInfo();
 		ImagePlus temp;
@@ -254,13 +254,6 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	@Override
 	public  void actionPerformed(ActionEvent e) {
 		String input = e.getActionCommand();
-		if(input == "OK" && checkAllImages()){
-			hashDomainTypes = getDomainTypes();			
-			hashSampledValues = getSampledValues();
-			setVisible(false);
-			wasCanceled = true;
-			dispose();
-		}
 
 		if(input == "+")
 			addRow();
@@ -268,6 +261,17 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		if(input == "-")
 			delRow();
 	
+
+		if(input == "OK" && !hashDomFile.isEmpty() &&checkAllImages()){
+			hashDomainTypes = getDomainTypes();			
+			hashSampledValues = getSampledValues();
+			setVisible(false);
+			wasCanceled = true;
+			dispose();
+		}else{
+			new MessageDialog(new Frame(), "Error", "No Image");
+		}
+		
 	}
 	
 	@Override
@@ -311,5 +315,4 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		// TODO Auto-generated method stub
 		
 	}
-
 }
