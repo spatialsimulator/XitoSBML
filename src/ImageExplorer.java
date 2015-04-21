@@ -125,7 +125,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		//arrow column
 		new ArrowColumn(table, 3, BasicArrowButton.NORTH);
 		new ArrowColumn(table, 4, BasicArrowButton.SOUTH);
-		new ButtonColumn(table, 2);
+		new AddingColumn(table, 2);
 		
 		TableColumn column = (TableColumn)table.getColumnModel().getColumn(2);
 		column.setMaxWidth(50);

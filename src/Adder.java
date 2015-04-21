@@ -44,7 +44,7 @@ import org.sbml.libsbml.libsbmlConstants;
 
 
 
-public class Adder extends JFrame implements ItemListener, ActionListener, WindowListener, libsbmlConstants{
+public class Adder extends JFrame implements ItemListener, ActionListener, WindowListener{
 	/**
 	 * 
 	 */
@@ -196,13 +196,13 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	
 	private void addCoordinateReferences(int difftype, DiffusionCoefficient dc, int axis){
 		switch (difftype){
-		case SPATIAL_DIFFUSIONKIND_ISOTROPIC: 
+		case libsbmlConstants.SPATIAL_DIFFUSIONKIND_ISOTROPIC: 
 				//no coordinateReference needed
 			break;	
-		case SPATIAL_DIFFUSIONKIND_TENSOR:
+		case libsbmlConstants.SPATIAL_DIFFUSIONKIND_TENSOR:
 			//2 coordinateReference needed
 			if(dc.isSetCoordinateReference1()) dc.setCoordinateReference2(axis);
-		case SPATIAL_DIFFUSIONKIND_ANISOTROPIC:
+		case libsbmlConstants.SPATIAL_DIFFUSIONKIND_ANISOTROPIC:
 			//1 coordinateReference needed
 			if(!dc.isSetCoordinateReference1()) dc.setCoordinateReference1(axis);
 			break;

@@ -6,8 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -23,8 +21,6 @@ import org.sbml.libsbml.ListOfSpecies;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLReader;
-import org.sbml.libsbml.Species;
-
 
 public class ParamAndSpecies extends JFrame implements ActionListener, FocusListener{
 	/**
@@ -130,10 +126,10 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 			tableModel.addRow(new Object[]{"",""});
 		
 		for(int i = 0 ; i < table.getRowCount() ; i++){
-			if (i < pSize)table.setValueAt(lop.get(i).getId(), i, PARAMETER);
+			if (i < pSize) table.setValueAt(lop.get(i).getId(), i, PARAMETER);
 			else table.setValueAt("", i, PARAMETER);
 			
-			if (i < sSize)table.setValueAt(los.get(i).getId(), i, SPECIES);
+			if (i < sSize) table.setValueAt(los.get(i).getId(), i, SPECIES);
 			else table.setValueAt("", i, SPECIES);
 		}
 			

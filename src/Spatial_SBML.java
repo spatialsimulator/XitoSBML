@@ -30,7 +30,7 @@ public class Spatial_SBML implements PlugIn {
 
 	public boolean checkJgraph(){
 		try {
-			Class.forName("org.jgrapht.ListenableGraph");
+			Class.forName("org.jgrapht");
 			return true;
 		} catch (ClassNotFoundException e1) {
 			IJ.error("Please Install Jgrapht");
