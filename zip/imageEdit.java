@@ -391,5 +391,14 @@ public class ImageEdit {
 	public ArrayList<ArrayList<Integer>> getAdjacentsPixel() {
 		return adjacentsPixel;
 	}
+	
+	public void checkImageBorder(){
+		isOnBorder();
+	}
+
+	public boolean isOnBorder(){
+		//if()
+		return false;
+	}
 
 }

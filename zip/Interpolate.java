@@ -113,45 +113,6 @@ public class Interpolate {
 		}
 	}
 	
-	private void linear(){
-		altz = (int) (zaxis / voxx);
-		System.out.println("interpolated stack size " + altz);
-		altimage = new ImageStack(width, height);
-		byte matrix[];
-		double x1, y1, z1 = 0, z2 = 0;
-		double xc, yc, zc;
-		double halfx = voxx /2, halfy = voxy /2,halfz = voxx /2;
-		
-		for(int d = 0 ; d < altz ; d++){
-			matrix = new byte[width * height];
-			System.out.println(d);
-			for(int h = 0 ; h < height ; h++){
-				for(int w = 0 ; w < width ; w++){
-					
-					// get center
-					xc = w * voxx + halfx;	 
-					yc = h * voxy + halfy;
-					zc = d * voxx + halfz;
-					
-					//apply to nearest original pixel
-					x1 = Math.floor(xc / voxx);
-					y1 = Math.floor(yc / voxy);
-					z1 = Math.floor(zc / voxz);
-					z2 = Math.ceil(zc / voxz);
-					
-					matrix[h * width + w] = getLinear((double) pixels[(int) (z1 * width * height + y1 * width + x1)], (double) pixels[(int) (z2 * width * height + y1 * width + x1)], (zc - z1)/(z2 - z1));
-					
-				}
-			}
-			System.out.println(z1 + " " + z2);
-			altimage.addSlice(new ByteProcessor(width,height,matrix,null));
-		}
-	}
-	
-	private byte getLinear(double prev, double next, double mu){
-		return (byte) (mu * (next - prev));
-	}
-	
 	public ImagePlus getInterpolatedImage(){
 		return image;
 	}

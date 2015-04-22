@@ -1,11 +1,20 @@
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
 import java.util.zip.Deflater;
+
+import javax.vecmath.Point3f;
 
 import org.sbml.libsbml.AdjacentDomains;
 import org.sbml.libsbml.Boundary;
@@ -17,9 +26,10 @@ import org.sbml.libsbml.Domain;
 import org.sbml.libsbml.DomainType;
 import org.sbml.libsbml.Geometry;
 import org.sbml.libsbml.ListOf;
-import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
+import org.sbml.libsbml.ParametricGeometry;
+import org.sbml.libsbml.ParametricObject;
 import org.sbml.libsbml.ReqSBasePlugin;
 import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLNamespaces;
@@ -31,11 +41,13 @@ import org.sbml.libsbml.SpatialCompartmentPlugin;
 import org.sbml.libsbml.SpatialModelPlugin;
 import org.sbml.libsbml.SpatialParameterPlugin;
 import org.sbml.libsbml.SpatialPkgNamespaces;
+import org.sbml.libsbml.SpatialPoints;
 import org.sbml.libsbml.SpatialSymbolReference;
 import org.sbml.libsbml.Unit;
 import org.sbml.libsbml.UnitDefinition;
-import org.sbml.libsbml.libsbml;
 import org.sbml.libsbml.libsbmlConstants;
+
+import sun.misc.FloatingDecimal;
 
 /**
  *
@@ -45,10 +57,8 @@ import org.sbml.libsbml.libsbmlConstants;
  * @author Akira Funahashi
  *
  */
-public class SpatialSBMLExporter implements libsbmlConstants{
-	static {
-    System.loadLibrary("sbmlj");                //read system library sbmlj
-  }
+public class SpatialSBMLExporter{
+
   SBMLDocument document;
   Model model;
   SBMLNamespaces sbmlns;                       //class to store SBML Level, version, namespace
@@ -71,10 +81,10 @@ public class SpatialSBMLExporter implements libsbmlConstants{
   public SpatialSBMLExporter() {                    //builds the framework of SBML document
 
 	sbmlns = new SBMLNamespaces(3,1);           //create SBML name space with level 3 version 1
-    sbmlns.addPackageNamespace("req", 1);   //add required element package
-    sbmlns.addPackageNamespace("spatial", 1);  //add spatial processes package
+    sbmlns.addPackageNamespace("req", 1);
+    sbmlns.addPackageNamespace("spatial", 1);
     // SBML Document
-    document = new SBMLDocument(sbmlns);              //construct document with name space
+    document = new SBMLDocument(sbmlns); 
     document.setPackageRequired("req", true);        //set req package as required
     document.setPackageRequired("spatial", true);    //set spatial package as required
     model = document.createModel();  //create model using the document and return pointer
@@ -92,9 +102,6 @@ public class SpatialSBMLExporter implements libsbmlConstants{
     // thus the value needs to be casted for the corresponding derived class.
     //
     reqplugin = (ReqSBasePlugin)model.getPlugin("req");  //get required elements plugin
-    //reqplugin.setMathOverridden("spatial");                           //req set overridden as spatial
-    //reqplugin.setCoreHasAlternateMath(true);                          
-
     SBasePlugin basePlugin = (model.getPlugin ("spatial"));
     spatialplugin = (SpatialModelPlugin)basePlugin;                  //get spatial plugin
     if (spatialplugin == null) {
@@ -118,7 +125,6 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 	    this.document = document;
 	    model = document.getModel();
 	    spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
-
 	  }
 
   
@@ -137,25 +143,23 @@ public class SpatialSBMLExporter implements libsbmlConstants{
   public void addGeometryDefinitions(){
     SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();   //create new geometry definition and add to ListOfGeometryDefinitions list
     sfg.setId("mySampledField");
-    ListOf losg = sfg.getListOfSampledVolumes();              //get ListOfSampledVolumes
-    
+    sfg.setIsActive(true);
     for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
       if (e.getValue() == 3) {                                      //if dimensions is 3
-        SampledVolume sv = new SampledVolume();
+    	SampledVolume sv = sfg.createSampledVolume();
         sv.setId(e.getKey()); sv.setDomainType(e.getKey());
         sv.setSampledValue( hashSampledValue.get(e.getKey())); sv.setMinValue(0); sv.setMaxValue(0);
-        losg.append(sv);
       }
     }
     SampledField sf = geometry.createSampledField();
-    sf.setId("imgtest"); sf.setDataType(SPATIAL_DATAKIND_UINT8);
-    sf.setInterpolationType(SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR); sf.setCompression(SPATIAL_COMPRESSIONKIND_DEFLATED);
+    sf.setId("imgtest"); sf.setDataType(libsbmlConstants.SPATIAL_DATAKIND_UINT8);
+    sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR); sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
 
     byte[] compressed = compressRawData(raw);
     if (compressed != null) {
     	sf.setSamples(byteArrayToIntArray(compressed),compressed.length); // see below byteArrayToIntArray
-    	}
+    }
   }
 
   public byte[] compressRawData(byte[] raw) {           //compression of image
@@ -193,17 +197,12 @@ public class SpatialSBMLExporter implements libsbmlConstants{
   }
 
   public void addAdjacentDomains() {		//adds membrane domains and adjacents
-	  ListOf loadj = geometry.getListOfAdjacentDomains();
-	  ListOf lod = geometry.getListOfDomains();
 	  WeakHashMap<String, Integer> hashMembrane = new WeakHashMap<String,Integer>();   
 	  for(ArrayList<String> e : adjacentsList){
-		 //String one = e.get(0).substring(0, e.get(0).length() - 1 );
-		 //String two = e.get(1).substring(0, e.get(1).length() - 1 );
 		 String one = e.get(0).substring(0, e.get(0).length());
 		 one = one.replaceAll("[0-9]","");
 		 String two = e.get(1).substring(0, e.get(1).length());
 		 two = two.replaceAll("[0-9]","");
-		 System.out.println(one);
 		 DomainType dt = geometry.getDomainType(one + "_" + two + "_membrane");
 		 if(hashMembrane.containsKey(dt.getId())){
 			 hashMembrane.put(dt.getId(), hashMembrane.get(dt.getId()) + 1);
@@ -212,14 +211,12 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 		 }
 		 
 		  for (int i = 0; i < 2; i++) {                           //add info about adjacent domain
-			  AdjacentDomains adj = new AdjacentDomains();
+			  AdjacentDomains adj = geometry.createAdjacentDomains();
 			  adj.setId(dt.getId() + "_" + e.get(i));
 			  adj.setDomain1(dt.getId() + hashMembrane.get(dt.getId()));
 			  adj.setDomain2(e.get(i));
-			  loadj.append(adj);
 		  }
 	  }
-	  hashMembrane = null;
   }
 
   public static int unsignedToBytes(byte b) {
@@ -251,13 +248,10 @@ public class SpatialSBMLExporter implements libsbmlConstants{
   }
 
   public void addDomainTypes() {                        //create domain types, domain, compartment info
-    ListOf lodt = geometry.getListOfDomainTypes();
-
-    for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {       //for each domain types
+    for (Entry<String, Integer> e : hashDomainTypes.entrySet()) { 
     	// DomainTypes
-      DomainType dt = new DomainType();
+    	DomainType dt = geometry.createDomainType();
       dt.setId(e.getKey()); dt.setSpatialDimensions(e.getValue());
-      lodt.append(dt);
       // Compartment								may need changes for name and id
       Compartment c = model.createCompartment();
       c.setSpatialDimensions(e.getValue());
@@ -267,36 +261,33 @@ public class SpatialSBMLExporter implements libsbmlConstants{
       spatialcompplugin = (SpatialCompartmentPlugin)c.getPlugin("spatial");   //create compartment mapping which relates compartment and domain type
       CompartmentMapping cm = spatialcompplugin.createCompartmentMapping();
       cm.setId(e.getKey() + c.getId());
-     // cm.setCompartment(c.getId());
       cm.setDomainType(e.getKey());
       cm.setUnitSize(1);
     }
   }
 
   public void addCoordinates() {                                //add coordinates x and y
-    ListOf lcc = geometry.getListOfCoordinateComponents();
-    CoordinateComponent ccx = new CoordinateComponent(spatialns);
-    CoordinateComponent ccy = new CoordinateComponent(spatialns);
-    CoordinateComponent ccz = new CoordinateComponent(spatialns);
+    CoordinateComponent ccx = geometry.createCoordinateComponent();
     ccx.setId("x"); ccx.setType("cartesianX"); ccx.setUnit("um");
-    ccy.setId("y"); ccy.setType("cartesianY"); ccy.setUnit("um");
-    ccz.setId("z"); ccz.setType("cartesianZ"); ccz.setUnit("um");
     setCoordinateBoundary(ccx, "X", 0, width);
+    CoordinateComponent ccy = geometry.createCoordinateComponent();
+    ccy.setId("y"); ccy.setType("cartesianY"); ccy.setUnit("um");
     setCoordinateBoundary(ccy, "Y", 0, height);
-    setCoordinateBoundary(ccz, "Z", 0, depth);
-    lcc.append(ccx);
-    lcc.append(ccy); 
-    if(depth !=1) lcc.append(ccz);
+		//if (depth != 1) {
+			CoordinateComponent ccz = geometry.createCoordinateComponent();
+			ccz.setId("z");
+			ccz.setType("cartesianZ");
+			ccz.setUnit("um");
+			setCoordinateBoundary(ccz, "Z", 0, depth);
+		//} 
   }
 
   public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max) { 
-    if (cc.getBoundaryMin() == null) cc.setBoundaryMin(new Boundary(spatialns));
-    if (cc.getBoundaryMax() == null) cc.setBoundaryMax(new Boundary(spatialns));
-    cc.getBoundaryMin().setId(s + "min");
-    cc.getBoundaryMin().setValue(min);
-    cc.getBoundaryMax().setId(s + "max");
-    cc.getBoundaryMax().setValue(max);
-  }
+	  Boundary bmin = cc.createBoundaryMin();
+	  bmin.setId(s + "min"); bmin.setValue(min);
+	  Boundary bmax = cc.createBoundaryMax();
+	  bmax.setId(s + "max"); bmax.setValue(max);
+	}
   
   public void addCoordParameter(){
 	 ListOf lcc = geometry.getListOfCoordinateComponents();
@@ -304,12 +295,10 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 	 CoordinateComponent cc;	 
 	for (int i = 0; i < lcc.size(); i++) {
 		cc = (CoordinateComponent) lcc.get(i);
-		ListOfParameters lop = model.getListOfParameters();
-		p = new Parameter(document.getSBMLNamespaces());
+		p = model.createParameter();
 		p.setId(cc.getId());
 		p.setValue(0);
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-		
 		SpatialSymbolReference ssr = sp.createSpatialSymbolReference();
 		ssr.setId(cc.getId());
 		ssr.setSpatialRef("spatial");
@@ -317,74 +306,68 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 		ChangedMath cm = rsb.createChangedMath(); 
 		cm.setChangedBy("spatial");
 		cm.setViableWithoutChange(true);
-		lop.append(p);
 	}
   }	
   
   public void addUnitDefinition(){
-	ListOf loud = model.getListOfUnitDefinitions();
-	UnitDefinition ud;
-	Unit u;
-	
-	u = new Unit(sbmlns);
-	ud = new UnitDefinition(sbmlns); ud.setId("substance");
-	u.setKind(UNIT_KIND_ITEM);u.setExponent(1);u.setScale(0);u.setMultiplier(1);
+	Unit u = model.createUnit();
+	u.setKind(libsbmlConstants.UNIT_KIND_ITEM);u.setExponent(1);u.setScale(0);u.setMultiplier(1);
+	UnitDefinition ud = model.createUnitDefinition(); ud.setId("substance");
 	ud.addUnit(u);
-	loud.append(ud);
-	
   }
   
+  public void createParametric(HashMap<String, List<Point3f>> hashVertices) {
+	    // Creates a Geometry object via SpatialModelPlugin object.
+	    geometry = spatialplugin.createGeometry();     //get geometry of spatial plugin
+	    geometry.setCoordinateSystem("Cartesian");  //set to Cartesian coordinate
+	    addCoordinates();                      
+	    addDomainTypes();                         
+	    addDomains();                           
+	    addAdjacentDomains();  
+	    addParaGeoDefinitions(hashVertices);    
+	    addCoordParameter();
+	  }
   
-  public static void main(String[] args) {
-	int width  = 5, height = 5, depth = 1;
-    HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
-    hashDomainTypes.put("EC", 3);
-    hashDomainTypes.put("Nuc", 3);
-    hashDomainTypes.put("Cyt", 3);
-    hashDomainTypes.put("Cyt_EC_membrane", 2);
-    hashDomainTypes.put("Nuc_Cyt_membrane", 2);
-    HashMap<String, Integer> hashSampledValue = new HashMap<String, Integer>();
-    hashSampledValue.put("EC", 0);
-    hashSampledValue.put("Nuc", 1);
-    hashSampledValue.put("Cyt", 2);
-    HashMap<String,Integer> hashDomainNum = new HashMap<String,Integer>();
-    hashDomainNum.put("EC", 1);
-    hashDomainNum.put("Nuc", 1);
-    hashDomainNum.put("Cyt", 1);
-    hashDomainNum.put("Cyt_EC_membrane", 1);
-    hashDomainNum.put("Nuc_Cyt_membrane", 1);
-    ArrayList<ArrayList<Integer>> adjacentPixel = new ArrayList<ArrayList<Integer>>();
-    ArrayList<Integer> temp = new ArrayList<Integer>();
-    temp.add(0,1);
-    adjacentPixel.add(temp);
-    temp = new ArrayList<Integer>();
-    adjacentPixel.add(temp);
-    
-    ArrayList<ArrayList<String>> adjacentsList = new ArrayList<ArrayList<String>>();
-    ArrayList<String> sss = new ArrayList<String>();
-    sss.add("Cyt0");
-    sss.add("EC0");
-    adjacentsList.add(sss);
-    sss = new ArrayList<String>();
-    sss.add("Nuc0");
-    sss.add("Cyt0");
-    adjacentsList.add(sss);
-    
-
-    byte[] len = { 
-	         0,1,1,1,0,
-	         1,1,2,1,1,
-	         1,2,2,2,1,
-	         1,1,2,1,1,
-	         0,1,1,1,0
-	    };		
-  
-    
-   // RawSpatialImage ri = new RawSpatialImage(len, width, height, depth, hashDomainTypes, hashSampledValue, hashDomainNum, adjacentsList);
-   // SpatialSBMLExporter ts = new SpatialSBMLExporter(ri);
-   // ts.createGeometryElements();
-   // libsbml.writeSBMLToFile(ts.document, "outttt.xml");
-  }
-
-
+	public void addParaGeoDefinitions(HashMap<String, List<Point3f>> hashVertices) {
+		ParametricGeometry pg = geometry.createParametricGeometry();
+		pg.setIsActive(true);
+		pg.setId("test");
+		for (Entry<String, List<Point3f>> e : hashVertices.entrySet()) {
+			List<Point3f> list = e.getValue();
+			SpatialPoints sp = pg.createSpatialPoints();
+			sp.setId("");
+			sp.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
+			sp.setArrayDataLength(list.size());
+			System.out.println(list.size());
+/*			
+			File file = new File("Vertices");
+			
+			PrintWriter pw = null;
+			try {
+				pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+			} catch (IOException e1) {
+				
+				e1.printStackTrace();
+			}
+	*/		
+			for (int i = 0; i < list.size(); i++) {
+				Point3f point = list.get(i);
+				double[] vertex = new double[3];
+				vertex[0] = new FloatingDecimal(point.x).doubleValue();
+				vertex[1] = new FloatingDecimal(point.y).doubleValue();
+				vertex[2] = new FloatingDecimal(point.z).doubleValue();
+				//pw.println(vertex[0] + " " + vertex[1] + " " + vertex[2]);
+				sp.setArrayData(vertex, i+1);
+			}
+			//pw.close();
+			ParametricObject po = pg.createParametricObject();
+			po.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
+			po.setDataType(libsbmlConstants.SPATIAL_DATAKIND_FLOAT);
+			po.setPolygonType(libsbmlConstants.SPATIAL_POLYGONKIND_TRIANGLE);
+			po.setDomainType(e.getKey());
+			po.setId(e.getKey() + "_polygon");		
+			//po.setPointIndex(arg0, arg1);
+			//po.setPointIndexLength(depth);
+		}
+	}
 }

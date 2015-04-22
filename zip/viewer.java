@@ -1,17 +1,22 @@
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Vector;
 
 import javax.vecmath.Color3f;
+import javax.vecmath.Point3f;
 
+import customnode.CustomMesh;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
 import ij3d.Content;
+import ij3d.ContentNode;
 import ij3d.Image3DUniverse;
+import isosurface.MeshGroup;
 
 
-public class viewer {
+public class Viewer {
 	Image3DUniverse univ;
 	private Vector<Color3f> colors = new Vector<Color3f>();
 	int width;
@@ -20,6 +25,7 @@ public class viewer {
 	HashMap<String, Integer> hashDoms;
 	HashMap<String, ImagePlus> hashImg = new HashMap<String, ImagePlus>();
 	byte[] rawMat;
+	HashMap<String, List<Point3f>> hashVertices = new HashMap<String, List<Point3f>>();
 	
 	void view(SpatialImage spImg ){
 		univ = new Image3DUniverse();
@@ -36,9 +42,17 @@ public class viewer {
 	void setImages(){
 		int i = 0;
 		for(Entry<String, ImagePlus> e : hashImg.entrySet()){
-			Content c = univ.addMesh(e.getValue(), colors.get(i++), e.getKey(), 0, new boolean[] {true,true,true}, 3);
+			Content c = univ.addMesh(e.getValue(), colors.get(i++), e.getKey(), 0, new boolean[] {true,true,true}, 1);
 			c.setShaded(false);
+			ContentNode node = c.getContent();
+			//各メッシュの頂点を取ってくる、メッシュは三角形を形成するので、
+			if(node instanceof MeshGroup){
+				 CustomMesh cm  = ((MeshGroup)node).getMesh();
+				 List<Point3f> vertices = cm.getMesh();
+				 hashVertices.put(c.getName(), vertices);
+			}
 		}
+		univ.getSelected();
 		univ.show();
 	}
 	
@@ -101,5 +115,9 @@ public class viewer {
 			imstack.addSlice(new ByteProcessor(width,height,matrix,null));
 		}
 		return imstack;
+	}
+	
+	HashMap<String, List<Point3f>> gethashVertices(){
+		return hashVertices;
 	}
 }

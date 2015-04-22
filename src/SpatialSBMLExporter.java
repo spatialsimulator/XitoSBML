@@ -1,11 +1,20 @@
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.WeakHashMap;
 import java.util.zip.Deflater;
+
+import javax.vecmath.Point3f;
 
 import org.sbml.libsbml.AdjacentDomains;
 import org.sbml.libsbml.Boundary;
@@ -19,6 +28,8 @@ import org.sbml.libsbml.Geometry;
 import org.sbml.libsbml.ListOf;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
+import org.sbml.libsbml.ParametricGeometry;
+import org.sbml.libsbml.ParametricObject;
 import org.sbml.libsbml.ReqSBasePlugin;
 import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLNamespaces;
@@ -30,10 +41,13 @@ import org.sbml.libsbml.SpatialCompartmentPlugin;
 import org.sbml.libsbml.SpatialModelPlugin;
 import org.sbml.libsbml.SpatialParameterPlugin;
 import org.sbml.libsbml.SpatialPkgNamespaces;
+import org.sbml.libsbml.SpatialPoints;
 import org.sbml.libsbml.SpatialSymbolReference;
 import org.sbml.libsbml.Unit;
 import org.sbml.libsbml.UnitDefinition;
 import org.sbml.libsbml.libsbmlConstants;
+
+import sun.misc.FloatingDecimal;
 
 /**
  *
@@ -43,7 +57,7 @@ import org.sbml.libsbml.libsbmlConstants;
  * @author Akira Funahashi
  *
  */
-public class SpatialSBMLExporter implements libsbmlConstants{
+public class SpatialSBMLExporter{
 
   SBMLDocument document;
   Model model;
@@ -129,7 +143,7 @@ public class SpatialSBMLExporter implements libsbmlConstants{
   public void addGeometryDefinitions(){
     SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();   //create new geometry definition and add to ListOfGeometryDefinitions list
     sfg.setId("mySampledField");
- 
+    sfg.setIsActive(true);
     for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
       if (e.getValue() == 3) {                                      //if dimensions is 3
     	SampledVolume sv = sfg.createSampledVolume();
@@ -138,8 +152,8 @@ public class SpatialSBMLExporter implements libsbmlConstants{
       }
     }
     SampledField sf = geometry.createSampledField();
-    sf.setId("imgtest"); sf.setDataType(SPATIAL_DATAKIND_UINT8);
-    sf.setInterpolationType(SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR); sf.setCompression(SPATIAL_COMPRESSIONKIND_DEFLATED);
+    sf.setId("imgtest"); sf.setDataType(libsbmlConstants.SPATIAL_DATAKIND_UINT8);
+    sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR); sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
 
     byte[] compressed = compressRawData(raw);
@@ -259,13 +273,13 @@ public class SpatialSBMLExporter implements libsbmlConstants{
     CoordinateComponent ccy = geometry.createCoordinateComponent();
     ccy.setId("y"); ccy.setType("cartesianY"); ccy.setUnit("um");
     setCoordinateBoundary(ccy, "Y", 0, height);
-		if (depth != 1) {
+		//if (depth != 1) {
 			CoordinateComponent ccz = geometry.createCoordinateComponent();
 			ccz.setId("z");
 			ccz.setType("cartesianZ");
 			ccz.setUnit("um");
 			setCoordinateBoundary(ccz, "Z", 0, depth);
-		} 
+		//} 
   }
 
   public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max) { 
@@ -285,7 +299,6 @@ public class SpatialSBMLExporter implements libsbmlConstants{
 		p.setId(cc.getId());
 		p.setValue(0);
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-		
 		SpatialSymbolReference ssr = sp.createSpatialSymbolReference();
 		ssr.setId(cc.getId());
 		ssr.setSpatialRef("spatial");
@@ -298,8 +311,63 @@ public class SpatialSBMLExporter implements libsbmlConstants{
   
   public void addUnitDefinition(){
 	Unit u = model.createUnit();
-	u.setKind(UNIT_KIND_ITEM);u.setExponent(1);u.setScale(0);u.setMultiplier(1);
+	u.setKind(libsbmlConstants.UNIT_KIND_ITEM);u.setExponent(1);u.setScale(0);u.setMultiplier(1);
 	UnitDefinition ud = model.createUnitDefinition(); ud.setId("substance");
 	ud.addUnit(u);
   }
+  
+  public void createParametric(HashMap<String, List<Point3f>> hashVertices) {
+	    // Creates a Geometry object via SpatialModelPlugin object.
+	    geometry = spatialplugin.createGeometry();     //get geometry of spatial plugin
+	    geometry.setCoordinateSystem("Cartesian");  //set to Cartesian coordinate
+	    addCoordinates();                      
+	    addDomainTypes();                         
+	    addDomains();                           
+	    addAdjacentDomains();  
+	    addParaGeoDefinitions(hashVertices);    
+	    addCoordParameter();
+	  }
+  
+	public void addParaGeoDefinitions(HashMap<String, List<Point3f>> hashVertices) {
+		ParametricGeometry pg = geometry.createParametricGeometry();
+		pg.setIsActive(true);
+		pg.setId("test");
+		for (Entry<String, List<Point3f>> e : hashVertices.entrySet()) {
+			List<Point3f> list = e.getValue();
+			SpatialPoints sp = pg.createSpatialPoints();
+			sp.setId("");
+			sp.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
+			sp.setArrayDataLength(list.size());
+			System.out.println(list.size());
+/*			
+			File file = new File("Vertices");
+			
+			PrintWriter pw = null;
+			try {
+				pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+			} catch (IOException e1) {
+				
+				e1.printStackTrace();
+			}
+	*/		
+			ParametricObject po = pg.createParametricObject();
+			po.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
+			po.setDataType(libsbmlConstants.SPATIAL_DATAKIND_FLOAT);
+			po.setPolygonType(libsbmlConstants.SPATIAL_POLYGONKIND_TRIANGLE);
+			po.setDomainType(e.getKey());
+			po.setId(e.getKey() + "_polygon");
+			po.setPointIndexLength(list.size());
+			for (int i = 0; i < list.size(); i++) {
+				Point3f point = list.get(i);
+				double[] vertex = new double[3];
+				vertex[0] = new FloatingDecimal(point.x).doubleValue();
+				vertex[1] = new FloatingDecimal(point.y).doubleValue();
+				vertex[2] = new FloatingDecimal(point.z).doubleValue();
+				//pw.println(vertex[0] + " " + vertex[1] + " " + vertex[2]);
+				sp.setArrayData(vertex, i+1);
+				//po.setPointIndex(vertex,i);
+			}
+			//pw.close();
+					}
+	}
 }
