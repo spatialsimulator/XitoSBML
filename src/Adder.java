@@ -27,7 +27,6 @@ import org.sbml.libsbml.BoundaryCondition;
 import org.sbml.libsbml.ChangedMath;
 import org.sbml.libsbml.CoordinateReference;
 import org.sbml.libsbml.DiffusionCoefficient;
-import org.sbml.libsbml.ListOfChangedMaths;
 import org.sbml.libsbml.ListOfCompartments;
 import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.ListOfSpecies;
@@ -39,7 +38,6 @@ import org.sbml.libsbml.SBMLReader;
 import org.sbml.libsbml.SpatialParameterPlugin;
 import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.SpatialSpeciesPlugin;
-import org.sbml.libsbml.SpatialSymbolReference;
 import org.sbml.libsbml.Species;
 import org.sbml.libsbml.libsbmlConstants;
 

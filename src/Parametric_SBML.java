@@ -21,7 +21,7 @@ public class Parametric_SBML implements PlugIn{
 
 	public boolean check3Dviewer(){
 		String version = ij3d.Install_J3D.getJava3DVersion();
-        System.out.println("version = " + version);
+        System.out.println("3D Viewer version = " + version);
         if(version != null && Float.parseFloat(version) >= 1.5)
                 return true;
         IJ.error("Please Update 3D Viewer");

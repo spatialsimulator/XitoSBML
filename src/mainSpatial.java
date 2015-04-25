@@ -1,18 +1,11 @@
 import ij.IJ;
-import ij.ImageJ;
 import ij.ImagePlus;
 import ij.io.SaveDialog;
 import ij.plugin.PlugIn;
 import ij3d.Content;
 import ij3d.Image3DUniverse;
-import ij3d.ImageWindow3D;
-
-import java.awt.Frame;
 import java.util.HashMap;
-import java.util.Iterator;
-
 import javax.swing.JOptionPane;
-
 import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.ListOfSpecies;
 import org.sbml.libsbml.Model;
@@ -70,10 +63,9 @@ public class MainSpatial implements PlugIn {
 		// SBML Document
 		document = new SBMLDocument(sbmlns); // construct document with namespace
 		document.setPackageRequired("req", true); // set req package as required
-		document.setPackageRequired("spatial", true); // set spatial package as
-														// required
+		document.setPackageRequired("spatial", true); // set spatial package as required
 		model = document.createModel(); // create model using the document and return pointer
-		model.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
+		document.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
 				+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
 		
 		// Create Spatial

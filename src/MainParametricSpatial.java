@@ -16,13 +16,11 @@ import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.libsbml;
 
 import ij.IJ;
-import ij.ImageJ;
 import ij.ImagePlus;
 import ij.io.SaveDialog;
 import ij.plugin.PlugIn;
 import ij3d.Content;
 import ij3d.Image3DUniverse;
-import ij3d.ImageWindow3D;
 
 
 public class MainParametricSpatial implements PlugIn{

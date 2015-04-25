@@ -1,6 +1,4 @@
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
@@ -10,12 +8,8 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
-public abstract class ButtonColumn extends AbstractCellEditor implements TableCellRenderer,
-		TableCellEditor{
+public abstract class ButtonColumn extends AbstractCellEditor implements TableCellRenderer, TableCellEditor{
 
-	/**
- * 
- */
 	private static final long serialVersionUID = 1L;
 
 	JTable table;
@@ -40,14 +34,12 @@ public abstract class ButtonColumn extends AbstractCellEditor implements TableCe
 	
 	@Override
 	public Object getCellEditorValue() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value,
 			boolean isSelected, int hasFocus, int row) {
-		// TODO Auto-generated method stub
 		return editButton;
 	}
 
@@ -65,7 +57,6 @@ public abstract class ButtonColumn extends AbstractCellEditor implements TableCe
 			renderButton.setForeground(table.getForeground());
 			renderButton.setBackground(UIManager.getColor("Button.background"));
 		}
-		// renderButton.setText("up");
 		return renderButton;
 	}
 

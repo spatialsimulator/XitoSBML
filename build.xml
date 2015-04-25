@@ -14,14 +14,14 @@
     </echo>
   </target>
   <target name="compress" depends="" description="generate the distribution">
-    <jar jarfile="SBMLPlugin.jar">
-      <fileset dir="." includes="plugins.config" />
-      <fileset dir="${build}" includes="**/*.*" />
+    <jar jarfile="Spatial_SBML.jar">
+      <fileset dir="${basedir}" includes="plugins.config" />
+      <fileset dir="${build}" includes="*.class" />
       <manifest>
         <attribute name="Built-By" value="${user.name}"/>
       </manifest>
     </jar>
-    <copy file="SBMLPlugin.jar" toDir="${pluginsDir}" />
-    <copy file="SBMLPlugin.jar" toDir="/Applications/Fiji.app/plugins" overwrite="true"/>
+    <copy file="Spatial_SBML.jar" toDir="${pluginsDir}"/>
+    <copy file="Spatial_SBML.jar" toDir="/Applications/Fiji.app/plugins" overwrite="true"/>
   </target>
 </project>
