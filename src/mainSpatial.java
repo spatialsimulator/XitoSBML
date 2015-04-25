@@ -1,4 +1,15 @@
+import ij.IJ;
+import ij.ImageJ;
+import ij.ImagePlus;
+import ij.io.SaveDialog;
+import ij.plugin.PlugIn;
+import ij3d.Content;
+import ij3d.Image3DUniverse;
+import ij3d.ImageWindow3D;
+
+import java.awt.Frame;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
@@ -12,13 +23,6 @@ import org.sbml.libsbml.SBasePlugin;
 import org.sbml.libsbml.SpatialModelPlugin;
 import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.libsbml;
-
-import ij.IJ;
-import ij.ImagePlus;
-import ij.io.SaveDialog;
-import ij.plugin.PlugIn;
-import ij3d.Content;
-import ij3d.Image3DUniverse;
 
 
 public class MainSpatial implements PlugIn {
@@ -44,18 +48,19 @@ public class MainSpatial implements PlugIn {
 		new Interpolate(spImg);
 		image = new Fill().fill(spImg);
 		ImageEdit edit = new ImageEdit(spImg);
-		edit.checkImageBorder();
+		//edit.checkImageBorder();
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg, document);
 		visualize(spImg);
-		//sbmlexp.createGeometryElements();
-		sbmlexp.createParametric(viewer.gethashVertices());
+		sbmlexp.createGeometryElements();
+		
 		//add species and parameter here
 		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species", JOptionPane.YES_NO_CANCEL_OPTION);
 		if(reply == JOptionPane.YES_OPTION)
 			addParaAndSpecies();
-		
+
 		save(sbmlexp);
 		
+		new DomainStruct().show(model);	
 	}
 	
 	public void createSBMLDoc(){
@@ -68,7 +73,9 @@ public class MainSpatial implements PlugIn {
 		document.setPackageRequired("spatial", true); // set spatial package as
 														// required
 		model = document.createModel(); // create model using the document and return pointer
-
+		model.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
+				+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
+		
 		// Create Spatial
 		//
 		// set the SpatialPkgNamespaces for Level 3 Version 1 Spatial Version 1
@@ -83,9 +90,7 @@ public class MainSpatial implements PlugIn {
 		// thus the value needs to be casted for the corresponding derived
 		// class.
 		//
-		reqplugin = (ReqSBasePlugin) model.getPlugin("req"); // get required element plugin
-		//reqplugin.setMathOverridden("spatial"); // req set overridden as spatial
-		//reqplugin.setCoreHasAlternateMath(true);
+		//reqplugin = (ReqSBasePlugin) model.getPlugin("req"); // get required element plugin
 
 		SBasePlugin basePlugin = (model.getPlugin("spatial"));
 		spatialplugin = (SpatialModelPlugin) basePlugin; // get spatial plugin

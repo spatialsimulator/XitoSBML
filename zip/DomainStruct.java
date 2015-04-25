@@ -18,10 +18,6 @@ public class DomainStruct {
 	ListOfDomains lod;
 	ListOfAdjacentDomains load;
 	
-	DomainStruct(){
-		
-	}
-	
 	public void show(Model model){
 		this.model = model;
 		SpatialModelPlugin spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");

@@ -4,6 +4,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 
 import customnode.CustomMesh;
@@ -26,6 +27,7 @@ public class Viewer {
 	HashMap<String, ImagePlus> hashImg = new HashMap<String, ImagePlus>();
 	byte[] rawMat;
 	HashMap<String, List<Point3f>> hashVertices = new HashMap<String, List<Point3f>>();
+	HashMap<String, Point3d> hashBound = new HashMap<String, Point3d>();
 	
 	void view(SpatialImage spImg ){
 		univ = new Image3DUniverse();
@@ -51,9 +53,36 @@ public class Viewer {
 				 List<Point3f> vertices = cm.getMesh();
 				 hashVertices.put(c.getName(), vertices);
 			}
+			//get min max coordinates
+			Point3d p = new Point3d();
+			c.getContent().getMax(p);
+			setMaxBound(p);
+			p = new Point3d();
+			c.getContent().getMin(p);
+			setMinBound(p);
 		}
 		univ.getSelected();
 		univ.show();
+	}
+	
+	void setMaxBound(Point3d p){
+		if(!hashBound.containsKey("max")) hashBound.put("max", p);
+		else{
+			Point3d tempMax = hashBound.get("max");
+			if(tempMax.x < p.x) tempMax.x = p.x;
+			if(tempMax.y < p.y) tempMax.y = p.y;
+			if(tempMax.z < p.z) tempMax.z = p.z;
+		}
+	}
+	
+	void setMinBound(Point3d p){
+		if(!hashBound.containsKey("min")) hashBound.put("min", p);
+		else{
+			Point3d tempMin = hashBound.get("min");
+			if(tempMin.x > p.x) tempMin.x = p.x;
+			if(tempMin.y > p.y) tempMin.y = p.y;
+			if(tempMin.z > p.z) tempMin.z = p.z;
+		}
 	}
 	
 	void setColors(int size){
@@ -119,5 +148,9 @@ public class Viewer {
 	
 	HashMap<String, List<Point3f>> gethashVertices(){
 		return hashVertices;
+	}
+
+	HashMap<String, Point3d> gethashBound(){
+		return hashBound;
 	}
 }

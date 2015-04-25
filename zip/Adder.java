@@ -291,7 +291,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		s.setConstant(false);
 		SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) s.getPlugin("spatial");
 		ssp.setIsSpatial(true);
-		ReqSBasePlugin rsb = (ReqSBasePlugin) s.getPlugin("req");
+		/*ReqSBasePlugin rsb = (ReqSBasePlugin) s.getPlugin("req");
 		ListOfChangedMaths locm =  rsb.getListOfChangedMaths();
 		ChangedMath cm = new ChangedMath(3,1);
 		cm.setId("spatial");
@@ -299,6 +299,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		cm.setViableWithoutChange(true);
 		locm.append(cm);
 		locm.getNamespaces().clear();
+		*/
 		model.addSpecies(s);
 	}
 

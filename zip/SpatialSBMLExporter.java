@@ -1,4 +1,6 @@
 
+import ij.IJ;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -8,13 +10,18 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.zip.Deflater;
 
 import javax.vecmath.Point3f;
+import javax.vecmath.Point3d;
+
 
 import org.sbml.libsbml.AdjacentDomains;
 import org.sbml.libsbml.Boundary;
@@ -64,7 +71,7 @@ public class SpatialSBMLExporter{
   SBMLNamespaces sbmlns;                       //class to store SBML Level, version, namespace
   SpatialPkgNamespaces spatialns;
   SpatialModelPlugin spatialplugin;
-  ReqSBasePlugin reqplugin;
+  //ReqSBasePlugin reqplugin;
   SpatialCompartmentPlugin spatialcompplugin;
   Geometry geometry;
   HashMap<String, Integer> hashDomainTypes;     //store domain type with corresponding dimension
@@ -81,11 +88,11 @@ public class SpatialSBMLExporter{
   public SpatialSBMLExporter() {                    //builds the framework of SBML document
 
 	sbmlns = new SBMLNamespaces(3,1);           //create SBML name space with level 3 version 1
-    sbmlns.addPackageNamespace("req", 1);
+    //sbmlns.addPackageNamespace("req", 1);
     sbmlns.addPackageNamespace("spatial", 1);
     // SBML Document
     document = new SBMLDocument(sbmlns); 
-    document.setPackageRequired("req", true);        //set req package as required
+    //document.setPackageRequired("req", true);        //set req package as required
     document.setPackageRequired("spatial", true);    //set spatial package as required
     model = document.createModel();  //create model using the document and return pointer
 
@@ -101,7 +108,7 @@ public class SpatialSBMLExporter{
     // The type of the returned value of SBase::getPlugin() function is SBasePlugin, and
     // thus the value needs to be casted for the corresponding derived class.
     //
-    reqplugin = (ReqSBasePlugin)model.getPlugin("req");  //get required elements plugin
+    //reqplugin = (ReqSBasePlugin)model.getPlugin("req");  //get required elements plugin
     SBasePlugin basePlugin = (model.getPlugin ("spatial"));
     spatialplugin = (SpatialModelPlugin)basePlugin;                  //get spatial plugin
     if (spatialplugin == null) {
@@ -266,21 +273,26 @@ public class SpatialSBMLExporter{
     }
   }
 
-  public void addCoordinates() {                                //add coordinates x and y
-    CoordinateComponent ccx = geometry.createCoordinateComponent();
-    ccx.setId("x"); ccx.setType("cartesianX"); ccx.setUnit("um");
-    setCoordinateBoundary(ccx, "X", 0, width);
-    CoordinateComponent ccy = geometry.createCoordinateComponent();
-    ccy.setId("y"); ccy.setType("cartesianY"); ccy.setUnit("um");
-    setCoordinateBoundary(ccy, "Y", 0, height);
-		//if (depth != 1) {
+	public void addCoordinates() { 
+		CoordinateComponent ccx = geometry.createCoordinateComponent();
+		ccx.setId("x");
+		ccx.setType("cartesianX");
+		ccx.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_X);
+		ccx.setUnit("um");
+		setCoordinateBoundary(ccx, "x", 0, width);
+		CoordinateComponent ccy = geometry.createCoordinateComponent();
+		ccy.setId("y");
+		ccy.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Y);
+		ccy.setUnit("um");
+		setCoordinateBoundary(ccy, "y", 0, height);
+		if (depth != 1) {
 			CoordinateComponent ccz = geometry.createCoordinateComponent();
 			ccz.setId("z");
-			ccz.setType("cartesianZ");
+			ccz.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Z);
 			ccz.setUnit("um");
-			setCoordinateBoundary(ccz, "Z", 0, depth);
-		//} 
-  }
+			setCoordinateBoundary(ccz, "z", 0, depth);
+		}
+	}
 
   public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max) { 
 	  Boundary bmin = cc.createBoundaryMin();
@@ -302,10 +314,10 @@ public class SpatialSBMLExporter{
 		SpatialSymbolReference ssr = sp.createSpatialSymbolReference();
 		ssr.setId(cc.getId());
 		ssr.setSpatialRef("spatial");
-		ReqSBasePlugin rsb = (ReqSBasePlugin) p.getPlugin("req");
+		/*ReqSBasePlugin rsb = (ReqSBasePlugin) p.getPlugin("req");
 		ChangedMath cm = rsb.createChangedMath(); 
 		cm.setChangedBy("spatial");
-		cm.setViableWithoutChange(true);
+		cm.setViableWithoutChange(true);*/
 	}
   }	
   
@@ -316,58 +328,79 @@ public class SpatialSBMLExporter{
 	ud.addUnit(u);
   }
   
-  public void createParametric(HashMap<String, List<Point3f>> hashVertices) {
-	    // Creates a Geometry object via SpatialModelPlugin object.
-	    geometry = spatialplugin.createGeometry();     //get geometry of spatial plugin
-	    geometry.setCoordinateSystem("Cartesian");  //set to Cartesian coordinate
-	    addCoordinates();                      
+  public void createParametric(HashMap<String, List<Point3f>> hashVertices, HashMap<String, Point3d> hashBound) {
+	    geometry = spatialplugin.createGeometry();
+	    geometry.setCoordinateSystem("Cartesian");
+	    addCoordinates(hashBound);                        
 	    addDomainTypes();                         
 	    addDomains();                           
 	    addAdjacentDomains();  
-	    addParaGeoDefinitions(hashVertices);    
+	    addParaGeoDefinitions(hashVertices, hashBound);    
 	    addCoordParameter();
 	  }
   
-	public void addParaGeoDefinitions(HashMap<String, List<Point3f>> hashVertices) {
+	public void addParaGeoDefinitions(HashMap<String, List<Point3f>> hashVertices, HashMap<String, Point3d> hashBound) {
 		ParametricGeometry pg = geometry.createParametricGeometry();
 		pg.setIsActive(true);
-		pg.setId("test");
+		pg.setId("ParametricGeometry");
+		
 		for (Entry<String, List<Point3f>> e : hashVertices.entrySet()) {
 			List<Point3f> list = e.getValue();
+			ArrayList<Point3f> uniquePointSet = new ArrayList<Point3f>(new LinkedHashSet<Point3f>(list));
 			SpatialPoints sp = pg.createSpatialPoints();
-			sp.setId("");
+			sp.setId(e.getKey() + "_vertices");
 			sp.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
-			sp.setArrayDataLength(list.size());
-			System.out.println(list.size());
-/*			
-			File file = new File("Vertices");
+			addUniqueVertices(sp, uniquePointSet);
 			
-			PrintWriter pw = null;
-			try {
-				pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
-			} catch (IOException e1) {
-				
-				e1.printStackTrace();
-			}
-	*/		
-			for (int i = 0; i < list.size(); i++) {
-				Point3f point = list.get(i);
-				double[] vertex = new double[3];
-				vertex[0] = new FloatingDecimal(point.x).doubleValue();
-				vertex[1] = new FloatingDecimal(point.y).doubleValue();
-				vertex[2] = new FloatingDecimal(point.z).doubleValue();
-				//pw.println(vertex[0] + " " + vertex[1] + " " + vertex[2]);
-				sp.setArrayData(vertex, i+1);
-			}
-			//pw.close();
 			ParametricObject po = pg.createParametricObject();
 			po.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
 			po.setDataType(libsbmlConstants.SPATIAL_DATAKIND_FLOAT);
 			po.setPolygonType(libsbmlConstants.SPATIAL_POLYGONKIND_TRIANGLE);
 			po.setDomainType(e.getKey());
-			po.setId(e.getKey() + "_polygon");		
-			//po.setPointIndex(arg0, arg1);
-			//po.setPointIndexLength(depth);
-		}
+			po.setId(e.getKey() + "_polygon");
+			setPointIndex(po, list, uniquePointSet);	
+		}	
+	}
+
+	public void addUniqueVertices(SpatialPoints sp, ArrayList<Point3f> uniquePointSet){
+		Iterator<Point3f> pIt = uniquePointSet.iterator();
+		int count = 0;
+		double[] d = new double[uniquePointSet.size() *3];
+		
+		while(pIt.hasNext()){
+			Point3f point = pIt.next();
+			d[count++] = new FloatingDecimal(point.x).doubleValue();
+			d[count++] = new FloatingDecimal(point.y).doubleValue();
+			d[count++] = new FloatingDecimal(point.z).doubleValue();
+		}	
+		sp.setArrayData(d, uniquePointSet.size());
+	}
+	
+	public void setPointIndex(ParametricObject po, List<Point3f> list, ArrayList<Point3f> uniquePointSet) {
+		int size = list.size();
+		int[] points = new int[list.size()];
+		
+		for(int i = 0 ; i < list.size() ; i++)
+			points[i] = uniquePointSet.indexOf(list.get(i));
+		
+		po.setPointIndex(points, size);
+	}
+	
+	public void addCoordinates(HashMap<String, Point3d> hashBound) { 
+		CoordinateComponent ccx = geometry.createCoordinateComponent();
+		ccx.setId("x");
+		ccx.setType("cartesianX");
+		ccx.setUnit("um");
+		setCoordinateBoundary(ccx, "X", hashBound.get("min").x, hashBound.get("max").x);
+		CoordinateComponent ccy = geometry.createCoordinateComponent();
+		ccy.setId("y");
+		ccy.setType("cartesianY");
+		ccy.setUnit("um");
+		setCoordinateBoundary(ccy, "Y", hashBound.get("min").y, hashBound.get("max").y);
+		CoordinateComponent ccz = geometry.createCoordinateComponent();
+		ccz.setId("z");
+		ccz.setType("cartesianZ");
+		ccz.setUnit("um");
+		setCoordinateBoundary(ccz, "Z", hashBound.get("min").z, hashBound.get("max").z);
 	}
 }

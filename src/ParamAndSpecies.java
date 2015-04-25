@@ -26,6 +26,16 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 	/**
 	 * 
 	 */
+	
+	static {
+		try{
+			System.loadLibrary("sbmlj");
+		}catch(Exception e){
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+	
 	private static final long serialVersionUID = 1L;
 	private Model model;
 	private ListOfParameters lop; 
@@ -42,7 +52,6 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		setResizable(false);
 		setLocationByPlatform(true);
 		setLocationRelativeTo(null);
-
 	}
 	
 	private final String[] header = {"Parameter","Species"};
@@ -59,7 +68,6 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 			public boolean isCellEditable(int row, int column){	
 					return false;
 			}
-		
 		};
 				
 		//table setting 
@@ -132,8 +140,6 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 			if (i < sSize) table.setValueAt(los.get(i).getId(), i, SPECIES);
 			else table.setValueAt("", i, SPECIES);
 		}
-			
-
 		validate();
 	}
 	
@@ -142,7 +148,6 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		SBMLReader reader = new SBMLReader();
 		SBMLDocument d = reader.readSBML("outttt.xml");
 		new ParamAndSpecies( d.getModel());
@@ -154,6 +159,7 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		
 		if(input.equals("OK")){
 			wasExited = true;
+			System.out.println(model.toSBML());
 			dispose();
 			return;
 		}

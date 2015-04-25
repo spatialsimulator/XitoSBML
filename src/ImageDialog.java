@@ -48,8 +48,7 @@ public class ImageDialog implements ItemListener{
 		fromFile = false;
 		Vector<Choice> v = gd.getChoices();
 		img = WindowManager.getImage(v.get(1).getSelectedItem());
-		if(!checkImage(img))
-			return null;
+		if(!checkImage(img))	return null;
 		return img;
 	}
 	
@@ -132,12 +131,6 @@ public class ImageDialog implements ItemListener{
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		Choice c = (Choice) e.getSource();
-		int idx = c.getSelectedIndex();
-		/*
-		String name;
-		if (idx > 0)	
-			name = c.getSelectedItem();
-		*/
 		if(c.getSelectedItem().equals("From File"))
 			img = fromFile();
 		if(c.getSelectedItem().equals("From Image"))

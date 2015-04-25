@@ -39,6 +39,7 @@ import org.sbml.libsbml.SBMLReader;
 import org.sbml.libsbml.SpatialParameterPlugin;
 import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.SpatialSpeciesPlugin;
+import org.sbml.libsbml.SpatialSymbolReference;
 import org.sbml.libsbml.Species;
 import org.sbml.libsbml.libsbmlConstants;
 
@@ -231,7 +232,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	JComboBox coordCombo, speciesCombo, boundCombo, conditionCombo, diffCombo;
 	String[] lcoord = {"UNKNOWN","CARTESIANX","CARTESIANY","CARTESIANZ"};
 	String[] lbound = {"Xmax","Xmin","Ymax","Ymin","Zmax","Zmin"};
-	String[] lboundcondition = {"UNKNOWN",/* "ROBIN_VALUE_COEFFICIENT","ROBIN_INWARD_NORMAL_GRADIENT_COEFFICIENT","ROBIN_SUM",*/"NEUMANN","DIRICHLET"};
+	String[] lboundcondition = {"UNKNOWN","ROBIN_VALUE_COEFFICIENT","ROBIN_INWARD_NORMAL_GRADIENT_COEFFICIENT","ROBIN_SUM","NEUMANN","DIRICHLET"};
 	String[] ldiffusion = {"UNKNOWN", "ISOTROPIC","ANISOTROPIC","TENSOR"};
 
 	private void addCoeffPart(int index){
@@ -284,22 +285,18 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	
 	private void addSpecies(String id, String compartment, double value){
 		Species s = model.createSpecies();
-		System.out.println(id);
 		s.setId(id); s.setCompartment(compartment); s.setInitialConcentration(value);
 		s.setSubstanceUnits("molecules");  													//need modification
 		s.setHasOnlySubstanceUnits(false);s.setBoundaryCondition(false);
 		s.setConstant(false);
 		SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) s.getPlugin("spatial");
 		ssp.setIsSpatial(true);
-		ReqSBasePlugin rsb = (ReqSBasePlugin) s.getPlugin("req");
-		ListOfChangedMaths locm =  rsb.getListOfChangedMaths();
-		ChangedMath cm = new ChangedMath(3,1);
+		
+		ReqSBasePlugin rsb = (ReqSBasePlugin) s.getPlugin("req");		
+		ChangedMath cm = rsb.createChangedMath();
 		cm.setId("spatial");
 		cm.setChangedBy( new SpatialPkgNamespaces(3, 1, 1).getURI());
 		cm.setViableWithoutChange(true);
-		locm.append(cm);
-		locm.getNamespaces().clear();
-		model.addSpecies(s);
 	}
 
 	private void addSpeciesMode(){
@@ -371,6 +368,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 			errMessage();
 			return;
 		}
+		
 		if(checkComponent(idText, compartment)){
 			if(typeCombo.getSelectedItem().equals("Species"))
 				addSpecies(idText, compartment, num);	
@@ -378,7 +376,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 				addParameter(idText, num, comboList.indexOf(paramCombo.getSelectedItem()));
 			}
 			dispose();
-			return;
 		}
 	}	
 
@@ -431,6 +428,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	public void windowClosing(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 		mainPanel.removeAll();
+		return;
 	}
 
 	@Override
