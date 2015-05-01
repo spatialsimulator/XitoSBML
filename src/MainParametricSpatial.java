@@ -1,4 +1,8 @@
 import java.awt.Frame;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -70,6 +74,7 @@ public class MainParametricSpatial implements PlugIn{
 		if(reply == JOptionPane.YES_OPTION)
 			addParaAndSpecies();
 
+		sbmlexp.addCoordParameter();
 		save(sbmlexp);
 		//SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg, document);
 	
@@ -145,7 +150,7 @@ public class MainParametricSpatial implements PlugIn{
 		ListOfSpecies los = model.getListOfSpecies();
 		ParamAndSpecies pas = new ParamAndSpecies(model);
 		
-		while(lop.size() == 0 || los.size() == 0 || !pas.wasExited()){
+		while(lop.size() == 0 || los.size() == 0){
 			synchronized(lop){
 				synchronized(los){
 					
@@ -166,11 +171,36 @@ public class MainParametricSpatial implements PlugIn{
 		}catch(NullPointerException e){
 			System.out.println("SBML document was not saved");
 		}
+		setAnnotation();
         IJ.log(sbmlexp.document.toSBML());
 	}
 	
 	void getUniv(){
 	
+	}
+	
+	private void setAnnotation(){
+		String id = "";
+		try {
+			id = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			
+		}
+		
+		String annot = "This " + model.getId() + " model is created";
+		
+		if(!id.equals(""))
+			annot = annot.concat(" by " + id.substring(0, id.indexOf(".")));
+		
+		
+		Calendar date = new GregorianCalendar();
+		annot = annot.concat(" in " + date.getTime());
+		
+		document.setAnnotation(annot);
+		
+		model.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
+				+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
+
 	}
 	
 }

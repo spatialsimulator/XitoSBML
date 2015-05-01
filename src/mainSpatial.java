@@ -4,8 +4,15 @@ import ij.io.SaveDialog;
 import ij.plugin.PlugIn;
 import ij3d.Content;
 import ij3d.Image3DUniverse;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+
 import javax.swing.JOptionPane;
+
 import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.ListOfSpecies;
 import org.sbml.libsbml.Model;
@@ -51,6 +58,7 @@ public class MainSpatial implements PlugIn {
 		if(reply == JOptionPane.YES_OPTION)
 			addParaAndSpecies();
 
+		sbmlexp.addCoordParameter();
 		save(sbmlexp);
 		
 		new DomainStruct().show(model);	
@@ -65,9 +73,7 @@ public class MainSpatial implements PlugIn {
 		document.setPackageRequired("req", true); // set req package as required
 		document.setPackageRequired("spatial", true); // set spatial package as required
 		model = document.createModel(); // create model using the document and return pointer
-		document.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
-				+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
-		
+				
 		// Create Spatial
 		//
 		// set the SpatialPkgNamespaces for Level 3 Version 1 Spatial Version 1
@@ -126,7 +132,7 @@ public class MainSpatial implements PlugIn {
 		ListOfSpecies los = model.getListOfSpecies();
 		ParamAndSpecies pas = new ParamAndSpecies(model);
 		
-		while(lop.size() == 0 || los.size() == 0 || !pas.wasExited()){
+		while(lop.size() == 0 || los.size() == 0){
 			synchronized(lop){
 				synchronized(los){
 					
@@ -136,7 +142,7 @@ public class MainSpatial implements PlugIn {
 	}
 	
 	public void save(SpatialSBMLExporter sbmlexp){
-		SaveDialog sd = new SaveDialog("Save SBML Document",image.getTitle(),".xml");
+		SaveDialog sd = new SaveDialog("Save SBML Document", image.getTitle(), ".xml");
 		String name = sd.getFileName();
 		IJ.log(name);
 		
@@ -147,7 +153,34 @@ public class MainSpatial implements PlugIn {
 		}catch(NullPointerException e){
 			System.out.println("SBML document was not saved");
 		}
+		
+		setAnnotation();
         IJ.log(sbmlexp.document.toSBML());
 	}
 	
+	private void setAnnotation(){
+		String id = "";
+		try {
+			id = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			
+		}
+		
+		String annot = "This " + model.getId() + " model is created";
+		
+		if(!id.equals(""))
+			annot = annot.concat(" by " + id.substring(0, id.indexOf(".")));
+		
+		
+		Calendar date = new GregorianCalendar();
+		annot = annot.concat(" in " + date.getTime());
+		
+		document.setAnnotation(annot);
+		
+		model.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
+				+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
+
+	}
 }
+	
+

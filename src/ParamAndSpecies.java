@@ -1,7 +1,10 @@
 
+import ij.gui.MessageDialog;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -43,7 +46,6 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 	private final int initRow = 1;
 	private DefaultTableModel tableModel;
 	private JTable table;
-	private boolean wasExited = false;
 	
 	public ParamAndSpecies(){
 		super("Parameter and Species Table");
@@ -143,26 +145,16 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		validate();
 	}
 	
-	public boolean wasExited(){
-		return wasExited;
-	}
-	
+
 	public static void main(String[] args) {
 		SBMLReader reader = new SBMLReader();
-		SBMLDocument d = reader.readSBML("outttt.xml");
+		SBMLDocument d = reader.readSBML("mem_diff.xml");
 		new ParamAndSpecies( d.getModel());
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String input = e.getActionCommand();
-		
-		if(input.equals("OK")){
-			wasExited = true;
-			System.out.println(model.toSBML());
-			dispose();
-			return;
-		}
 		
 		if(input.contentEquals("+")){
 			new Adder(model);
@@ -174,6 +166,16 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 			if( (row >= 0 || column >= 0) && table.getValueAt(row, column) != null)
 				removeCell(row, column);
 		}
+		
+		if(input.equals("OK")){ 
+			if(los.size() > 0 && lop.size() > 0){
+				dispose();
+				return;
+			}else {
+				new MessageDialog(new Frame(), "Error", "Must be at least one parameter and species");
+			}
+		}
+			
 	}
 
 	@Override

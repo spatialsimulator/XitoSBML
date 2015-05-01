@@ -153,4 +153,9 @@ public class Viewer {
 	HashMap<String, Point3d> gethashBound(){
 		return hashBound;
 	}
+	
+	public static void main(String[] args){
+		Image3DUniverse univ = new Image3DUniverse();
+		univ.show();
+	}
 }

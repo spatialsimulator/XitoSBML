@@ -75,9 +75,6 @@ public class SpatialSBMLExporter{
   int matrix[];
   int width, height, depth;
 
-  /**
-   *
-   */
   public SpatialSBMLExporter() {                    //builds the framework of SBML document
 
 	sbmlns = new SBMLNamespaces(3,1);           //create SBML name space with level 3 version 1
@@ -137,7 +134,6 @@ public class SpatialSBMLExporter{
     addDomains();                           
     addAdjacentDomains();  
     addGeometryDefinitions();   
-    addCoordParameter();
   }
 
   public void addGeometryDefinitions(){
@@ -298,7 +294,7 @@ public class SpatialSBMLExporter{
   
   public void addCoordParameter(){
 	 ListOf lcc = geometry.getListOfCoordinateComponents();
-	 Parameter p ;
+	 Parameter p;
 	 CoordinateComponent cc;	 
 	for (int i = 0; i < lcc.size(); i++) {
 		cc = (CoordinateComponent) lcc.get(i);
@@ -331,7 +327,6 @@ public class SpatialSBMLExporter{
 	    addDomains();                           
 	    addAdjacentDomains();  
 	    addParaGeoDefinitions(hashVertices, hashBound);    
-	    addCoordParameter();
 	  }
   
 	public void addParaGeoDefinitions(HashMap<String, List<Point3f>> hashVertices, HashMap<String, Point3d> hashBound) {
