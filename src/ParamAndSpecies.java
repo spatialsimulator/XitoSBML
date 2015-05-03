@@ -26,10 +26,7 @@ import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLReader;
 
 public class ParamAndSpecies extends JFrame implements ActionListener, FocusListener{
-	/**
-	 * 
-	 */
-	
+
 	static {
 		try{
 			System.loadLibrary("sbmlj");
@@ -172,7 +169,7 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 				dispose();
 				return;
 			}else {
-				new MessageDialog(new Frame(), "Error", "Must be at least one parameter and species");
+				new MessageDialog(new Frame(), "Error", "Must add at least one parameter and species");
 			}
 		}
 			
