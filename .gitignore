@@ -1,0 +1,15 @@
+#list of files to ignore in git
+*.xml
+!build.xml
+ij.jar
+images/
+macros/
+org/
+plug/
+plugins/
+bin/ij/
+src/ij/
+zip/
+META-INF/
+.DS_STORE
+
