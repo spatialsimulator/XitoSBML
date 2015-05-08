@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="Shift_JIS" ?>
-<project name="SBMLPlugin" default="" basedir=".">
-  <description>
+<project name="SBMLPlugin" default="main" basedir=".">
+	<description>
     SBMLPlugin build file
   </description>
-  <property name="src" location="src" />
-  <property name="build" location="bin" />
-  <property name="dist"  location="dist" />
-  <property name="pluginsDir"  location="${basedir}/plugins" />
-  <property name="user.name" value="Kaito Ii" />
-  <target name="main" depends="compress" description="Main target">
-    <echo>
+	<property name="src" location="src" />
+	<property name="build" location="bin" />
+	<property name="dist" location="dist" />
+	<property name="FijiDir" location="/Applications/Fiji.app" />
+	<property name="pluginsDir" location="${basedir}/plugins" />
+	<property name="destDir" location="${FijiDir}/plugins" />
+	<property name="user.name" value="Kaito Ii" />
+	<property name="patch.file" value="${basedir}/info.patch" />
+	<property name="org.file" value="${FijiDir}/Contents/info.plist" />
+	<target name="main" depends="compress" description="Main target">
+		<echo>
       Building the .jar file.
     </echo>
-  </target>
-  <target name="compress" depends="" description="generate the distribution">
-    <jar jarfile="Spatial_SBML.jar">
-      <fileset dir="${basedir}" includes="plugins.config" />
-      <fileset dir="${build}" includes="*.class" />
-      <manifest>
-        <attribute name="Built-By" value="${user.name}"/>
-      </manifest>
-    </jar>
-    <copy file="Spatial_SBML.jar" toDir="${basedir}/plug"/>
-  	<copy file="Spatial_SBML.jar" toDir="${pluginsDir}"/>
-    <copy file="Spatial_SBML.jar" toDir="/Applications/Fiji.app/plugins" overwrite="true"/>
-  </target>
+	</target>
+	<target name="compress" depends="" description="generate the distribution">
+		<jar jarfile="Spatial_SBML.jar">
+			<fileset dir="${basedir}" includes="plugins.config" />
+			<fileset dir="${build}" includes="*.class" />
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+		<copy file="Spatial_SBML.jar" toDir="${pluginsDir}" />
+		<copy file="Spatial_SBML.jar" toDir="${destDir}" overwrite="true" />
+	</target>
+	<target name="patch" depends="" description="patch to info.plist">
+		<patch patchfile="${patch.file}" originalfile="${org.file}" />
+	</target>
 </project>

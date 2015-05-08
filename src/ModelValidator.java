@@ -220,13 +220,13 @@ public class ModelValidator {
 	void printError(SBase s, String part){
 		String id = s.getId();
 		if(id.equals("")) id = s.getParentSBMLObject().getId();
-		System.err.println("missing required" +  part + "in " + id + " at line: " + s.getLine());
+		System.err.println("missing required " +  part + "in " +  s.getClass() + " " + id + " at line: " + s.getLine());
 		errorFlag = true;
 	}
 	
 	public static void main(String[] args) {
 		SBMLReader reader = new SBMLReader();
-		SBMLDocument d = reader.readSBML("analytic_3d.xml");
+		SBMLDocument d = reader.readSBML("sampledfield_3d.xml");
 		ModelValidator mv = new ModelValidator(d.getModel());
 		mv.checkValidation();
 		

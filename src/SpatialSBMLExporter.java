@@ -138,9 +138,7 @@ public class SpatialSBMLExporter{
 
   public void addGeometryDefinitions(){
     SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();   //create new geometry definition and add to ListOfGeometryDefinitions list
-    sfg.setId("mySampledField");
-    sfg.setIsActive(true);
-    sfg.setSampledField("imgtest");
+    sfg.setId("mySampledField"); sfg.setIsActive(true); sfg.setSampledField("imgtest");
     for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
       if (e.getValue() == 3) {                                      //if dimensions is 3
     	SampledVolume sv = sfg.createSampledVolume();
@@ -152,7 +150,7 @@ public class SpatialSBMLExporter{
     sf.setId("imgtest"); sf.setDataType(libsbmlConstants.SPATIAL_DATAKIND_UINT8);
     sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR); sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
-
+    
     byte[] compressed = compressRawData(raw);
     if (compressed != null) {
     	sf.setSamples(byteArrayToIntArray(compressed),compressed.length); // see below byteArrayToIntArray
