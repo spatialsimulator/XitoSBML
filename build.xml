@@ -12,10 +12,10 @@
 	<property name="user.name" value="Kaito Ii" />
 	<property name="patch.file" value="${basedir}/info.patch" />
 	<property name="org.file" value="${FijiDir}/Contents/info.plist" />
+	<property name="sbmllib" value="/usr/local/lib" />
+	<property name="sbmljar" value="/usr/local/share/java" />
 	<target name="main" depends="compress" description="Main target">
-		<echo>
-      Building the .jar file.
-    </echo>
+	<echo> Building the .jar file.</echo>
 	</target>
 	<target name="compress" depends="" description="generate the distribution">
 		<jar jarfile="Spatial_SBML.jar">
@@ -25,10 +25,10 @@
 				<attribute name="Built-By" value="${user.name}" />
 			</manifest>
 		</jar>
-		<!copy file="Spatial_SBML.jar" toDir="${pluginsDir}" />
 		<copy file="Spatial_SBML.jar" toDir="${destDir}" overwrite="true" />
 	</target>
 	<target name="patch" depends="" description="patch to info.plist">
+		<echo>Editing Info.plist.</echo>
 		<patch patchfile="${patch.file}" originalfile="${org.file}" />
 	</target>
 </project>
