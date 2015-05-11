@@ -8,7 +8,7 @@ import ij.plugin.PlugIn;
  * @author Akira Funahashi
  *
  */
-public class Spatial_SBML implements PlugIn {
+public class Spatial_Img_SBML implements PlugIn {
 	static boolean isRunning = false;
 	String title = "Export segmented image to Spatial SBML";
 
@@ -58,7 +58,7 @@ public class Spatial_SBML implements PlugIn {
 	
 	public void run(String args) {   
 		if(checkJgraph() && check3Dviewer()) 
-			new MainSpatial().run(args);	
+			new MainImgSpatial().run(args);	
 	}
 
 	public boolean checkJgraph(){

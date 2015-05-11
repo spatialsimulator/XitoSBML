@@ -1,5 +1,4 @@
 
-import ij.IJ;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

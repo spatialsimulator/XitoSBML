@@ -66,19 +66,15 @@ public class Interpolate {
 		
 		if (needInterpolate()) {
 			nearestNeighbor();
-			//image.setStack(altimage);
 			nImg.setStack(altimage);
-			info.pixelDepth =  zaxis / altz;
-			System.out.println("hogehoge " + info.nImages);
-			//image.setFileInfo(info);
 			nImg.setFileInfo(info);
-			//image.updateImage();
+			nImg.getFileInfo().pixelDepth =  zaxis / altz;
 			nImg.updateImage();
 			System.out.println("interpolated voxel size " + voxx + " " + voxy + " " + info.pixelDepth);
-			System.out.println("hogehoge " + nImg.getImageStackSize());
+		}else{
+			nImg = (ImagePlus) imagePlus.clone();
 		}
-		
-		//imagePlus.setImage(image);
+
 		return nImg;
 	}
 	
@@ -99,7 +95,6 @@ public class Interpolate {
 		
 		if (needInterpolate()) {
 			nearestNeighbor();
-			// linear();
 			image.resetStack();
 			image.setStack(altimage);
 			info.pixelDepth =  zaxis / altz;
@@ -167,7 +162,6 @@ public class Interpolate {
 		for(Entry<String, ImagePlus> e : hashdomFile.entrySet()){
 			ImagePlus i = interpolate(e.getValue());
 			hashdomFile.put(e.getKey(), i);
-			System.out.println("hash "  +i.getStackSize());
 			//hashdomFile.put(e.getKey(), interpolate(e.getValue()));
 			
 		}

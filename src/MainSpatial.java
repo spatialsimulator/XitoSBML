@@ -1,9 +1,6 @@
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.SaveDialog;
-import ij.plugin.PlugIn;
-import ij3d.Content;
-import ij3d.Image3DUniverse;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -12,7 +9,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import javax.swing.JOptionPane;
 
 import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.ListOfSpecies;
@@ -26,11 +22,11 @@ import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.libsbml;
 
 
-public class MainSpatial implements PlugIn {
+public abstract class MainSpatial{
 
 	SBMLDocument document;
 	Model model;
-	SBMLNamespaces sbmlns; // class to store SBML Level, version, namespace
+	SBMLNamespaces sbmlns; 
 	SpatialPkgNamespaces spatialns;
 	SpatialModelPlugin spatialplugin;
 	ReqSBasePlugin reqplugin;
@@ -40,25 +36,7 @@ public class MainSpatial implements PlugIn {
 	Viewer viewer;
 	SpatialImage spImg;
 	
-	@Override
-	public void run(String arg) {
-		createSBMLDoc();
-		gui();
-		computeImg();
-		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg, document);
-		visualize(spImg);
-		sbmlexp.createGeometryElements();
-		
-		//add species and parameter here
-		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species", JOptionPane.YES_NO_CANCEL_OPTION);
-		if(reply == JOptionPane.YES_OPTION)
-			addParaAndSpecies();
 
-		sbmlexp.addCoordParameter();
-		save(sbmlexp);
-		
-		new DomainStruct().show(model);	
-	}
 	
 	public void createSBMLDoc(){
 		sbmlns = new SBMLNamespaces(3, 1); // create SBML name space with level 3 version 1

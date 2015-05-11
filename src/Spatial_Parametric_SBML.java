@@ -2,7 +2,7 @@ import ij.IJ;
 import ij.plugin.PlugIn;
 
 
-public class Parametric_SBML implements PlugIn{
+public class Spatial_Parametric_SBML implements PlugIn{
 
 	static {
 		try{

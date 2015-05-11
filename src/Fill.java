@@ -76,8 +76,9 @@ public class Fill {
 	}
 	
 	 private void copyMat(){
-	    	byte[] slice;   
+	    	byte[] slice;
 	    	pixels = new byte[width * height * depth];
+	    	System.out.println(pixels.length);
 	    	for(int i = 1 ; i <= depth ; i++){
 	        	slice = (byte[]) image.getStack().getPixels(i);
 	        	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
