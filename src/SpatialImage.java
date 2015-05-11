@@ -15,10 +15,7 @@ public class SpatialImage {
 	HashMap<String, Integer> hashSampledValue;
 	HashMap<String,Integer> hashDomainNum;
 	ArrayList<ArrayList<String>> adjacentsList;
-
-	public SpatialImage(){
-		
-	}
+	String title;
 	
 	public SpatialImage(HashMap<String, Integer> hashSampledValue, HashMap<String, Integer> hashDomainTypes, ImagePlus img){
 		this.width = img.getWidth();
@@ -27,11 +24,10 @@ public class SpatialImage {
 		this.img = img;
 		this.hashSampledValue = hashSampledValue;
 		this.hashDomainTypes = hashDomainTypes;
-		getRawImage();
-	}
+		setRawImage();
+	}	
 	
-	
-	public void getRawImage(){
+	public void setRawImage(){
 		byte[] slice = null;   
 		raw = new byte[width * height * depth];
     	ImageStack stack = img.getStack();
@@ -45,6 +41,8 @@ public class SpatialImage {
 	
 	public void setImage(ImagePlus image){
 		this.img = image;
+		System.out.println(image.getStackSize());
+		setRawImage();
 	}
 
 	public ImagePlus getImage(){
@@ -59,4 +57,12 @@ public class SpatialImage {
 		this.adjacentsList = adjacentsList;
 	}
 
+	private boolean checkBorder(){
+	
+		return true;
+	}
+	
+	private void addPeripheral(){
+		
+	}
 }

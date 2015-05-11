@@ -10,6 +10,7 @@ import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
@@ -33,22 +34,17 @@ public class MainSpatial implements PlugIn {
 	SpatialPkgNamespaces spatialns;
 	SpatialModelPlugin spatialplugin;
 	ReqSBasePlugin reqplugin;
-	private ImagePlus image;
 	private ImageExplorer imgexp;
 	private HashMap<String, Integer> hashDomainTypes;
 	private HashMap<String, Integer> hashSampledValue;
-	private Image3DUniverse univ;
 	Viewer viewer;
+	SpatialImage spImg;
+	
 	@Override
 	public void run(String arg) {
 		createSBMLDoc();
 		gui();
-		CreateImage creIm = new CreateImage(imgexp.getDomFile(), hashSampledValue, imgexp.getFileInfo());
-		SpatialImage spImg = new SpatialImage(hashSampledValue, hashDomainTypes, creIm.getCompoImg());
-		new Interpolate(spImg);
-		image = new Fill().fill(spImg);
-		ImageEdit edit = new ImageEdit(spImg);
-		//edit.checkImageBorder();
+		computeImg();
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg, document);
 		visualize(spImg);
 		sbmlexp.createGeometryElements();
@@ -115,11 +111,19 @@ public class MainSpatial implements PlugIn {
 		}
 	}
 	
-	public void visualize(ImagePlus img){
-		univ = new Image3DUniverse();
-		univ.show();
-		Content c = univ.addVoltex(img);
-		c.setTransparency(0.4f);
+	public void computeImg(){
+		Interpolate interpolate = new Interpolate();
+		HashMap<String, ImagePlus> hashDomFile = imgexp.getDomFile();
+		interpolate.interpolate(hashDomFile);
+		Fill fill = new Fill();
+		//fill each images
+		for(Entry<String, ImagePlus> e : hashDomFile.entrySet())
+			hashDomFile.put(e.getKey(), fill.fill(e.getValue()));
+		
+		CreateImage creIm = new CreateImage(imgexp.getDomFile(), hashSampledValue);
+		spImg = new SpatialImage(hashSampledValue, hashDomainTypes, creIm.getCompoImg());
+		spImg.setImage(fill.fill(spImg));
+		new ImageEdit(spImg);
 	}
 	
 	public void visualize (SpatialImage spImg){
@@ -130,7 +134,7 @@ public class MainSpatial implements PlugIn {
 	public void addParaAndSpecies(){
 		ListOfParameters lop = model.getListOfParameters();
 		ListOfSpecies los = model.getListOfSpecies();
-		ParamAndSpecies pas = new ParamAndSpecies(model);
+		new ParamAndSpecies(model);
 		
 		while(lop.size() == 0 || los.size() == 0){
 			synchronized(lop){
@@ -142,7 +146,7 @@ public class MainSpatial implements PlugIn {
 	}
 	
 	public void save(SpatialSBMLExporter sbmlexp){
-		SaveDialog sd = new SaveDialog("Save SBML Document", image.getTitle(), ".xml");
+		SaveDialog sd = new SaveDialog("Save SBML Document", spImg.title, ".xml");
 		String name = sd.getFileName();
 		IJ.log(name);
 		

@@ -1,6 +1,5 @@
 import ij.ImagePlus;
 import ij.ImageStack;
-import ij.io.FileInfo;
 import ij.process.ByteProcessor;
 
 import java.util.HashMap;
@@ -9,7 +8,6 @@ import java.util.Iterator;
 public class CreateImage {
 	private HashMap<String, ImagePlus> hashDomFile;
 	private HashMap<String, Integer> hashSampledValue;
-	HashMap<String, ImagePlus> hashImg;
 	private ImagePlus compoImg;
 	private byte[] compoMat;
 	private int width;
@@ -17,21 +15,23 @@ public class CreateImage {
 	private int depth ;
 	private ImageStack altimage;
 	
-	public CreateImage(HashMap<String, ImagePlus> hashDomFile, HashMap<String, Integer> hashSampledValue, FileInfo info) {
+
+	public CreateImage(HashMap<String, ImagePlus> hashDomFile, HashMap<String, Integer> hashSampledValue) {
 		this.hashSampledValue = hashSampledValue;
 		this.hashDomFile = hashDomFile;
-		width = info.width;
-		height = info.height;
-		depth = info.nImages;
+		ImagePlus img = hashDomFile.values().iterator().next();
+		width = img.getWidth();
+		height = img.getHeight();
+		depth = img.getStackSize();
 		compositeImage();
 		System.out.println("width " + width + " height "+ height + " depth " + depth);
 		replaceMat();
 		compoImg = new ImagePlus("Combined_Image", altimage);
-		compoImg.setFileInfo(info);
+		compoImg.setFileInfo(img.getFileInfo());
 	
 		System.out.println("fileinfo " + compoImg.getOriginalFileInfo());
 	}
-
+	
 	private void compositeImage(){
 		Iterator<String> domNames = hashDomFile.keySet().iterator();
 		compoMat = new byte[width*height*depth];

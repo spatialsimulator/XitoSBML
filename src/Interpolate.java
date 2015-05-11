@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileInfo;
@@ -18,29 +21,8 @@ public class Interpolate {
 	private ImageStack altimage;	//output pixel image
 	private byte[] pixels;
 	
-	Interpolate(ImagePlus image){
-		this.image = image;
-		width = image.getWidth();
-		height = image.getHeight();
-		depth = image.getStackSize();
-		FileInfo info = image.getOriginalFileInfo();
+	public Interpolate() {
 
-		voxx = info.pixelWidth;
-		voxy = info.pixelHeight;
-		voxz = info.pixelDepth;
-		zaxis = voxz * image.getImageStackSize();
-		copyMat();
-		System.out.println("voxel size " + voxx + " " + voxy + " " + voxz);
-		
-		if (needInterpolate()) {
-			nearestNeighbor();
-			// linear();
-			image.setStack(altimage);
-			info.pixelDepth =  zaxis / altz;
-			image.setFileInfo(info);
-			System.out.println("interpolated voxel size " + voxx + " " + voxy + " " + info.pixelDepth);
-		}
-		image.updateImage();
 	}
 	
 	Interpolate(SpatialImage spImg){
@@ -59,15 +41,76 @@ public class Interpolate {
 			
 			if (needInterpolate()) {
 				nearestNeighbor();
-				// linear();
 				image.setStack(altimage);
 				info.pixelDepth =  zaxis / altz;
 				image.setFileInfo(info);
+				image.updateImage();
 				System.out.println("interpolated voxel size " + voxx + " " + voxy + " " + info.pixelDepth);
 			}
-			image.updateImage();
-		
+			
 	}
+	
+	public ImagePlus interpolate(ImagePlus imagePlus){
+		this.image = imagePlus;
+		width = imagePlus.getWidth();
+		height = imagePlus.getHeight();
+		depth = imagePlus.getImageStackSize();
+		FileInfo info = image.getOriginalFileInfo();
+		ImagePlus nImg = new ImagePlus();
+		voxx = info.pixelWidth;
+		voxy = info.pixelHeight;
+		voxz = info.pixelDepth;
+		zaxis = voxz * image.getImageStackSize();
+		copyMat();
+		System.out.println("voxel size " + voxx + " " + voxy + " " + voxz);
+		
+		if (needInterpolate()) {
+			nearestNeighbor();
+			//image.setStack(altimage);
+			nImg.setStack(altimage);
+			info.pixelDepth =  zaxis / altz;
+			System.out.println("hogehoge " + info.nImages);
+			//image.setFileInfo(info);
+			nImg.setFileInfo(info);
+			//image.updateImage();
+			nImg.updateImage();
+			System.out.println("interpolated voxel size " + voxx + " " + voxy + " " + info.pixelDepth);
+			System.out.println("hogehoge " + nImg.getImageStackSize());
+		}
+		
+		//imagePlus.setImage(image);
+		return nImg;
+	}
+	
+
+	public SpatialImage interpolate(SpatialImage spImg){
+		this.image = spImg.getImage();
+		width = spImg.width;
+		height = spImg.height;
+		depth = spImg.depth;
+		FileInfo info = image.getOriginalFileInfo();
+
+		voxx = info.pixelWidth;
+		voxy = info.pixelHeight;
+		voxz = info.pixelDepth;
+		zaxis = voxz * image.getImageStackSize();
+		this.pixels = spImg.raw;
+		System.out.println("voxel size " + voxx + " " + voxy + " " + voxz);
+		
+		if (needInterpolate()) {
+			nearestNeighbor();
+			// linear();
+			image.resetStack();
+			image.setStack(altimage);
+			info.pixelDepth =  zaxis / altz;
+			image.setFileInfo(info);
+			System.out.println("interpolated voxel size " + voxx + " " + voxy + " " + info.pixelDepth);
+		}
+		image.updateImage();
+		spImg.setImage(image);
+		return spImg;
+	}
+	
 	
     private void copyMat(){
     	byte[] slice;   
@@ -116,4 +159,18 @@ public class Interpolate {
 	public ImagePlus getInterpolatedImage(){
 		return image;
 	}
+
+	/**
+	 * @param hashdomFile
+	 */
+	public void interpolate(HashMap<String, ImagePlus> hashdomFile) {
+		for(Entry<String, ImagePlus> e : hashdomFile.entrySet()){
+			ImagePlus i = interpolate(e.getValue());
+			hashdomFile.put(e.getKey(), i);
+			System.out.println("hash "  +i.getStackSize());
+			//hashdomFile.put(e.getKey(), interpolate(e.getValue()));
+			
+		}
+	}
+	
 }

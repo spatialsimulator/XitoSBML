@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
@@ -40,6 +41,7 @@ public class MainParametricSpatial implements PlugIn{
 	private HashMap<String, Integer> hashDomainTypes;
 	private HashMap<String, Integer> hashSampledValue;
 	Viewer viewer;
+	SpatialImage spImg;
 	
 	@Override
 	public void run(String arg) {
@@ -58,12 +60,7 @@ public class MainParametricSpatial implements PlugIn{
 		*/
 		createSBMLDoc();
 		gui();
-		CreateImage creIm = new CreateImage(imgexp.getDomFile(), hashSampledValue, imgexp.getFileInfo());
-		SpatialImage spImg = new SpatialImage(hashSampledValue, hashDomainTypes, creIm.getCompoImg());
-		new Interpolate(spImg);
-		image = new Fill().fill(spImg);
-		ImageEdit edit = new ImageEdit(spImg);
-		//edit.checkImageBorder();
+		computeImg();
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg, document);
 		visualize(spImg);
 
@@ -131,6 +128,21 @@ public class MainParametricSpatial implements PlugIn{
 				}
 			}
 		}
+	}
+	
+	public void computeImg(){
+		Interpolate interpolate = new Interpolate();
+		HashMap<String, ImagePlus> hashDomFile = imgexp.getDomFile();
+		interpolate.interpolate(hashDomFile);
+		Fill fill = new Fill();
+		//fill each images
+		for(Entry<String, ImagePlus> e : hashDomFile.entrySet())
+			hashDomFile.put(e.getKey(), fill.fill(e.getValue()));
+		
+		CreateImage creIm = new CreateImage(imgexp.getDomFile(), hashSampledValue);
+		spImg = new SpatialImage(hashSampledValue, hashDomainTypes, creIm.getCompoImg());
+		spImg.setImage(fill.fill(spImg));
+		new ImageEdit(spImg);
 	}
 	
 	public void visualize(ImagePlus img){
