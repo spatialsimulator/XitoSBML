@@ -13,11 +13,11 @@ Please install the following before using Spatial SBML Plugin.
 + [ImageJ 3D Viewer](http://3dviewer.neurofly.de/ "ImageJ 3D Viewer") version 1.5 or higher
 + [Apache Ant](http://ant.apache.org/ "Apache Ant")
 
-###How to install apache-ant using macports###
+####How to install apache-ant using macports####
 
     % sudo port install apache-ant
 
-### Build Spatial SBML Plugin ###
+#### Build Spatial SBML Plugin ####
     % git clone https://funa@fun.bio.keio.ac.jp:8443/git/Spatial_SBML_Plugin.git
     % ant main
 

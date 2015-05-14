@@ -31,4 +31,12 @@
 		<echo>Editing Info.plist.</echo>
 		<patch patchfile="${patch.file}" originalfile="${org.file}" />
 	</target>
+	<target name="sbmllibrary" depends="" description="add sbml library to fiji">
+		<echo>Copying libsbmlj.jar</echo>
+		<copy file="${sbmljar}/libsbmlj.jar" toDir="${destDir}" overwrite="true" />
+		<echo>Copying libsbml.5.11.4.dylib</echo>
+		<copy file="${sbmllib}/libsbml.5.11.4.dylib" toDir="${FijiDir}" overwrite="true" />
+		<echo>Copying libsbmlj.jnilib</echo>
+		<copy file="${sbmllib}/libsbmlj.jnilib" toDir="${FijiDir}" overwrite="true" />
+	</target>
 </project>
