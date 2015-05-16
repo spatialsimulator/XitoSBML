@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="Shift_JIS" ?>
 <project name="SBMLPlugin" default="main" basedir=".">
-	<description>
+  <description>
     SBMLPlugin build file
   </description>
-	<property name="src" location="src" />
-	<property name="build" location="bin" />
-	<property name="dist" location="dist" />
-	<property name="FijiDir" location="/Applications/Fiji.app" />
-	<property name="pluginsDir" location="${basedir}/plugins" />
-	<property name="destDir" location="${FijiDir}/plugins" />
-	<property name="user.name" value="Kaito Ii" />
-	<property name="patch.file" value="${basedir}/info.patch" />
-	<property name="org.file" value="${FijiDir}/Contents/info.plist" />
-	<property name="sbmllib" value="/usr/local/lib" />
-	<property name="sbmljar" value="/usr/local/share/java" />
-	<target name="main" depends="compress" description="Main target">
-	<echo> Building the .jar file.</echo>
-	</target>
-	<target name="compress" depends="" description="generate the distribution">
-		<jar jarfile="Spatial_SBML.jar">
-			<fileset dir="${basedir}" includes="plugins.config" />
-			<fileset dir="${build}" includes="*.class" />
-			<manifest>
-				<attribute name="Built-By" value="${user.name}" />
-			</manifest>
-		</jar>
-		<copy file="Spatial_SBML.jar" toDir="${destDir}" overwrite="true" />
-	</target>
-	<target name="patch" depends="" description="patch to info.plist">
-		<echo>Editing Info.plist.</echo>
-		<patch patchfile="${patch.file}" originalfile="${org.file}" />
-	</target>
-	<target name="sbmllibrary" depends="" description="add sbml library to fiji">
-		<echo>Copying libsbmlj.jar</echo>
-		<copy file="${sbmljar}/libsbmlj.jar" toDir="${destDir}" overwrite="true" />
-		<echo>Copying libsbml.5.11.4.dylib</echo>
-		<copy file="${sbmllib}/libsbml.5.11.4.dylib" toDir="${FijiDir}" overwrite="true" />
-		<echo>Copying libsbmlj.jnilib</echo>
-		<copy file="${sbmllib}/libsbmlj.jnilib" toDir="${FijiDir}" overwrite="true" />
-	</target>
+  <property name="src" location="src" />
+  <property name="build" location="bin" />
+  <property name="dist" location="dist" />
+  <property name="FijiDir" location="/Applications/Fiji.app" />
+  <property name="pluginsDir" location="${basedir}/plugins" />
+  <property name="destDir" location="${FijiDir}/plugins" />
+  <property name="utilDir" location="${basedir}/util" />
+  <property name="user.name" value="Kaito Ii" />
+  <property name="patch.file" value="${utilDir}/info.patch" />
+  <property name="org.file" value="${FijiDir}/Contents/info.plist" />
+  <property name="sbmllib" value="/usr/local/lib" />
+  <property name="sbmljar" value="/usr/local/share/java" />
+  <target name="main" depends="compress" description="Main target">
+    <echo> Building the .jar file.</echo>
+  </target>
+  <target name="compress" depends="" description="generate the distribution">
+    <jar jarfile="Spatial_SBML.jar">
+      <fileset dir="${basedir}" includes="plugins.config" />
+      <fileset dir="${build}" includes="*.class" />
+      <manifest>
+        <attribute name="Built-By" value="${user.name}" />
+      </manifest>
+    </jar>
+    <copy file="Spatial_SBML.jar" toDir="${destDir}" overwrite="true" />
+  </target>
+  <target name="patch" depends="" description="patch to info.plist">
+    <echo>Editing Info.plist.</echo>
+    <patch patchfile="${patch.file}" originalfile="${org.file}" />
+  </target>
+  <target name="install" depends="" description="install libsbml library">
+    <echo>Installing libsbml library</echo>
+    <exec executable="/bin/sh">
+      <arg value="${utilDir}/sbmlDownload.sh"/>
+    </exec>
+  </target>
 </project>
