@@ -1,11 +1,8 @@
 
 
-import java.awt.Component;
-import java.util.Properties;
 
+import sbmlplugin.MainImgSpatial;
 import ij.IJ;
-import ij.ImageJ;
-import ij.Prefs;
 import ij.plugin.PlugIn;
 
 

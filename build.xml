@@ -21,7 +21,7 @@
   <target name="compress" depends="" description="generate the distribution">
     <jar jarfile="Spatial_SBML.jar">
       <fileset dir="${basedir}" includes="plugins.config" />
-      <fileset dir="${build}" includes="*.class" />
+      <fileset dir="${build}" includes="**/**.class" />
       <manifest>
         <attribute name="Built-By" value="${user.name}" />
       </manifest>
