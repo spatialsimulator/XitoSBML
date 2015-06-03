@@ -13,4 +13,5 @@ src/ij/
 zip/
 META-INF/
 .DS_STORE
-
+TAGS
+util/*.py
