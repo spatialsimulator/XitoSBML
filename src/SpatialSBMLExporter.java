@@ -390,4 +390,6 @@ public class SpatialSBMLExporter{
 		ccz.setUnit("um");
 		setCoordinateBoundary(ccz, "Z", hashBound.get("min").z, hashBound.get("max").z);
 	}
+	
+
 }

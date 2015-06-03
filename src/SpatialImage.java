@@ -1,5 +1,7 @@
+import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.process.ByteProcessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +27,12 @@ public class SpatialImage {
 		this.hashSampledValue = hashSampledValue;
 		this.hashDomainTypes = hashDomainTypes;
 		setRawImage();
+		IJ.log( "If domain exist on the border, Image arrays may be modified\n");
+		
+		fixBorder();
+		boolean hasSafeBorder = isBorderSafe(); 	//depth = 0 or top/bottom slice does not have object
+		updateImg(hasSafeBorder);
+		
 	}	
 	
 	public void setRawImage(){
@@ -57,12 +65,62 @@ public class SpatialImage {
 		this.adjacentsList = adjacentsList;
 	}
 
-	private boolean checkBorder(){
+
+	private void fixBorder() {
+		int init = 0, end = depth;
+		
+		for (int d = init; d < end; d++) {
+			for (int h = 0; h < height; h++) {
+				for (int w = 0; w < width; w++) {
+					if (h == 0 || h == height - 1 || w == 0 || w == width - 1) {
+						raw[d * height * width + h * width + w] = 0;
+					}
+				}
+			}
+
+		}
+	}
+
+	private boolean isBorderSafe(){
+		boolean safez = true;
+		if(depth != 1)	safez = checkTopBottom();
+		return safez;
+	}
 	
+	private boolean checkTopBottom(){
+		int bottomSlice = (depth - 1) * width * height;
+		
+		for(int h = 0 ; h < height ; h++){
+			for(int w = 0 ; w < width ; w++){
+				if(raw[bottomSlice + width * h + w] != 0 || raw[width * h + w] != 0)
+					return false;
+			}
+		}
+		
 		return true;
 	}
 	
-	private void addPeripheral(){
+	private void updateImg(boolean hasSafeBorder){
+		ImageStack altStack = new ImageStack(width, height);
 		
+		if(!hasSafeBorder) addBlackSlice(altStack);
+		
+		for(int i = 1 ; i <= depth ; i++){
+			byte[] slice = new byte[height * width];
+			System.out.println(altStack.getSize());
+			System.arraycopy(raw, (i-1) * height * width, slice, 0, height * width);
+			altStack.addSlice(new ByteProcessor(width,height,slice,null));
+    	} 
+		if(!hasSafeBorder) addBlackSlice(altStack);
+		
+		img.setStack(altStack);
+		img.updateImage();
+		if(!hasSafeBorder) depth +=2;
+		if(!hasSafeBorder) setRawImage();
+	}
+	
+	private void addBlackSlice(ImageStack is){
+		byte[] blackSlice = new byte[width * height];
+		is.addSlice(new ByteProcessor(width,height,blackSlice,null));
 	}
 }

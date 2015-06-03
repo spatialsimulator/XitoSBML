@@ -162,8 +162,6 @@ public class Interpolate {
 		for(Entry<String, ImagePlus> e : hashdomFile.entrySet()){
 			ImagePlus i = interpolate(e.getValue());
 			hashdomFile.put(e.getKey(), i);
-			//hashdomFile.put(e.getKey(), interpolate(e.getValue()));
-			
 		}
 	}
 	

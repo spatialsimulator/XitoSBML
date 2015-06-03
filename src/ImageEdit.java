@@ -387,9 +387,4 @@ public class ImageEdit {
 		return count.toString();
 	}
 	
-	
-	public ArrayList<ArrayList<Integer>> getAdjacentsPixel() {
-		return adjacentsPixel;
-	}
-
 }

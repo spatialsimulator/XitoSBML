@@ -76,7 +76,6 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 				else  							
 					return true;
 			}
-		
 		};
 				
 		//table setting 
@@ -210,7 +209,6 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
 		HashMap<String, Integer> hashSampledValues = new HashMap<String, Integer>();
 		new ImageExplorer(hashDomainTypes, hashSampledValues);
-		
 	}
 
 	public void importFile(int column, int row, ImagePlus img){
