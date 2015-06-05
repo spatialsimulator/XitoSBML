@@ -324,7 +324,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 
 	public static void main(String[] args){
 		SBMLReader reader = new SBMLReader();
-		SBMLDocument d = reader.readSBML("outttt.xml");
+		SBMLDocument d = reader.readSBML("mem_diff.xml");
 		new Adder( d.getModel());
 	}
 	
@@ -357,7 +357,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		String idText = idField.getText().replaceAll(" ", "_"); 	
 		String compartment = (String) domCombo.getSelectedItem();
 		Integer num;
