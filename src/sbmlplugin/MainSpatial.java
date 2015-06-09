@@ -121,9 +121,9 @@ public abstract class MainSpatial{
 	public void addParaAndSpecies(){
 		ListOfParameters lop = model.getListOfParameters();
 		ListOfSpecies los = model.getListOfSpecies();
-		new ParamAndSpecies(model);
+		ParamAndSpecies ps = new ParamAndSpecies(model);
 		
-		while(lop.size() == 0 || los.size() == 0){
+		while(lop.size() == 0 || los.size() == 0 || !ps.hasExited()){
 			synchronized(lop){
 				synchronized(los){
 					

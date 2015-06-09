@@ -61,6 +61,7 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		this.model = model;
 		this.lop = model.getListOfParameters();
 		this.los = model.getListOfSpecies();
+		
 		Object[][] data = new Object[initRow][header.length];
 		tableModel = new DefaultTableModel(data, header){
 			private static final long serialVersionUID = 1L;
@@ -143,13 +144,18 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		validate();
 	}
 	
+	private boolean hasExited = false;
+	public boolean hasExited(){
+		return hasExited;
+	}
 
+	
 	public static void main(String[] args) {
 		SBMLReader reader = new SBMLReader();
 		SBMLDocument d = reader.readSBML("mem_diff.xml");
 		new ParamAndSpecies( d.getModel());
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String input = e.getActionCommand();
@@ -167,6 +173,7 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		
 		if(input.equals("OK")){ 
 			if(los.size() > 0 && lop.size() > 0){
+				hasExited = true;
 				dispose();
 				return;
 			}else {

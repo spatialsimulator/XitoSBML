@@ -49,9 +49,9 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	 * 
 	 */
 	static {
-		try{
+		try {
 			System.loadLibrary("sbmlj");
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -65,6 +65,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	private List<String> comboList = new ArrayList<String>(Arrays.asList("Parameter", "Species","advectionCoefficient", "boudaryCondition", "diffusionCoefficient"));
 	private Model model;
 	private ListOfSpecies los;
+	private int state;
 	
 	public Adder(){
 		super("Adder");
@@ -146,7 +147,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	}
 	
 	private void addParameter(String id, double value, int index){
-		//ListOfParameters lop;
 		String species = (String) speciesCombo.getSelectedItem();
 		Parameter p = model.createParameter();
 		p.setId(id); 	
@@ -173,7 +173,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 			addDiffCoord(dc);
 			break;
 		}
-		model.addParameter(p);
+		//model.addParameter(p);
 		System.out.println(p.toSBML());
 	}
 
@@ -296,6 +296,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		cm.setId("spatial");
 		cm.setChangedBy( new SpatialPkgNamespaces(3, 1, 1).getURI());
 		cm.setViableWithoutChange(true);
+		System.out.println(s.toSBML());
 	}
 
 	private void addSpeciesMode(){
@@ -335,10 +336,11 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	private final int DIFFUSION = 4;
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		// TODO Auto-generated method stub
+
 		if(e.getStateChange() == ItemEvent.SELECTED ){
-			int index = comboList.indexOf(e.getItem()); 
-			switch (index) {
+			state = comboList.indexOf(e.getItem());
+			
+			switch (state) {
 			case PARAMETER:
 				addparameterMode();
 				break;
@@ -349,7 +351,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 			case ADVECTION:
 			case BOUNDARY:
 			case DIFFUSION:
-				addCoeffPart(index);
+				addCoeffPart(state);
 				break;
 			}
 		}
@@ -359,7 +361,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	public void actionPerformed(ActionEvent e) {
 		String idText = idField.getText().replaceAll(" ", "_"); 	
 		String compartment = (String) domCombo.getSelectedItem();
-		Integer num;
+		Integer num = null;
 		try{
 			num = Integer.parseInt(val.getText());            // need to include integer with exponential	
 		}catch(NumberFormatException nfe){
@@ -367,7 +369,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 			return;
 		}
 		
-		if(checkComponent(idText, compartment)){
+		if(checkComponent(idText, compartment, num)){
 			if(typeCombo.getSelectedItem().equals("Species"))
 				addSpecies(idText, compartment, num);	
 			else{
@@ -377,11 +379,29 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		}
 	}	
 
-	private boolean checkComponent(String idText, String compartment){
-		if(domCombo.getSelectedIndex() < 0){
+	private boolean checkComponent(String idText, String compartment, Integer num){
+		boolean hasError = false;
+		switch (state) {
+		case SPECIES:
+		case DIFFUSION:
+			if (compartment == null)
+				hasError = true;
+		case ADVECTION:
+		case BOUNDARY:
+			if (domCombo.getSelectedIndex() < 0)
+				hasError = true;
+			if (idText == null)
+				hasError = true;
+			 if(speciesCombo.getSelectedIndex() < 0)
+					hasError = true;
+			 break;
+		}
+
+		if(hasError){
 			errMessage();
 			return false;
 		}
+		
 		return true;
 	}
 	
