@@ -22,11 +22,10 @@ Please install the following before using Spatial SBML Plugin.
     % ant main
 
 *When using the program for the first time execute below as well
+It modifies info.plist and adds library.
 
     % ant patch
-
-    % cp /path/to/libsbmlj.jnilib /path/to/libsbml.5.11.4.dylib /Applications/Fiji.app
-    % cp /path/to/libsbmlj.jar /Applications/Fiji.app/plugin
+    % ant mv
 
 How to Use
 -------------------

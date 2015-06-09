@@ -13,10 +13,9 @@
   <property name="user.name" value="Kaito Ii" />
   <property name="patch.file" value="${utilDir}/info.patch" />
   <property name="org.file" value="${FijiDir}/Contents/info.plist" />
-  <property name="sbmllib" value="/usr/local/lib" />
+  <property name="sbmllib" value="${basedir}/lib" />
 	 <property name="dylib" value="libsbml.5.11.4.dylib" />
 	 <property name="jnilib" value="libsbmlj.jnilib" />
-	<property name="java" value="/usr/local/share/java/" />
 	<property name="sbmljar" value="libsbmlj.jar" />
   <target name="main" depends="compress" description="Main target">
     <echo> Building the .jar file.</echo>
@@ -33,7 +32,7 @@
   </target>
 	<target name="mv" depends="" description="move library">
 	    <echo>Moving sbml library</echo>
-		<copy file="${java}/${sbmljar}" toDir="${destDir}" overwrite="true" />
+		<copy file="${sbmllib}/${sbmljar}" toDir="${destDir}" overwrite="true" />
 		<copy file="${sbmllib}/${dylib}" toDir="${FijiDir}" overwrite="true" />
 		<copy file="${sbmllib}/${jnilib}" toDir="${FijiDir}" overwrite="true" />
 	  </target>
