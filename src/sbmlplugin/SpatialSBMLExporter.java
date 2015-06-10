@@ -145,7 +145,8 @@ public class SpatialSBMLExporter{
       if (e.getValue() == 3) {                                      //if dimensions is 3
     	SampledVolume sv = sfg.createSampledVolume();
         sv.setId(e.getKey()); sv.setDomainType(e.getKey());
-        sv.setSampledValue( hashSampledValue.get(e.getKey())); sv.setMinValue(0); sv.setMaxValue(0);
+        sv.setSampledValue( hashSampledValue.get(e.getKey()));
+        // sv.setMinValue(0); sv.setMaxValue(0); 		may need changes 
       }
     }
     SampledField sf = geometry.createSampledField();

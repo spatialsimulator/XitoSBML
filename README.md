@@ -21,12 +21,14 @@ Please install the following before using Spatial SBML Plugin.
     % git clone https://funa@fun.bio.keio.ac.jp:8443/git/Spatial_SBML_Plugin.git
     % ant main
 
+
+
 *When using the program for the first time execute below as well
-It modifies info.plist and adds library.
 
     % ant patch
     % ant mv
 
+It will modify info.plist and add library.
 How to Use
 -------------------
 
