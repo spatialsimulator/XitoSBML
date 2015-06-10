@@ -45,8 +45,6 @@ public abstract class MainSpatial{
 	Viewer viewer;
 	SpatialImage spImg;
 	
-
-	
 	public void createSBMLDoc(){
 		sbmlns = new SBMLNamespaces(3, 1); // create SBML name space with level 3 version 1
 		sbmlns.addPackageNamespace("req", 1); // add required element package
@@ -106,7 +104,7 @@ public abstract class MainSpatial{
 		//fill each images
 		for(Entry<String, ImagePlus> e : hashDomFile.entrySet())
 			hashDomFile.put(e.getKey(), fill.fill(e.getValue()));
-		
+			
 		CreateImage creIm = new CreateImage(imgexp.getDomFile(), hashSampledValue);
 		spImg = new SpatialImage(hashSampledValue, hashDomainTypes, creIm.getCompoImg());
 		spImg.setImage(fill.fill(spImg));
