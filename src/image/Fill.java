@@ -19,7 +19,7 @@ public class Fill {
 	private int lheight;
 	private int ldepth;
 	private int[] mask;
-	private HashMap<Integer, Byte> hashPix = new HashMap<Integer, Byte>();
+	private HashMap<Integer, Byte> hashPix = new HashMap<Integer, Byte>();		// label number, pixel value
 	private byte[] pixels;
 	private int[] invert;
 	private ImageStack altimage;
@@ -33,11 +33,11 @@ public class Fill {
 		copyMat();
 		invertMat();
 		label();
-		if(checkHole()){
-			while(checkHole()){	
+		if (checkHole()) {
+			while (checkHole()) {
 				fillHole();
 				hashPix.clear();
-			label();
+				label();
 			}
 			setStack();
 			image.setStack(altimage);
@@ -132,6 +132,7 @@ public class Fill {
 	 }
 	
 	private int labelCount;
+	
 	public void label(){
 		hashPix.put(1, (byte)0);
 		labelCount = 2;
