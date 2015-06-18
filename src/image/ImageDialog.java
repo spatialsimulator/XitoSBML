@@ -45,6 +45,7 @@ public class ImageDialog implements ItemListener{
 		return img;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private ImagePlus fromImage(){
 		fromFile = false;
 		Vector<Choice> v = gd.getChoices();
@@ -114,6 +115,7 @@ public class ImageDialog implements ItemListener{
 		return chooser.getSelectedFile();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void addImageName(String title){
 		Vector<Choice> vc = gd.getChoices();
 		Choice c = vc.get(1);

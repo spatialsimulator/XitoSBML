@@ -1,4 +1,13 @@
 package visual;
+import ij.ImagePlus;
+import ij.ImageStack;
+import ij.process.ByteProcessor;
+import ij3d.Content;
+import ij3d.ContentNode;
+import ij3d.Image3DUniverse;
+import image.SpatialImage;
+import isosurface.MeshGroup;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -9,14 +18,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 
 import customnode.CustomMesh;
-import ij.ImagePlus;
-import ij.ImageStack;
-import ij.process.ByteProcessor;
-import ij3d.Content;
-import ij3d.ContentNode;
-import ij3d.Image3DUniverse;
-import image.SpatialImage;
-import isosurface.MeshGroup;
 
 
 public class Viewer {
@@ -48,15 +49,23 @@ public class Viewer {
 		for(Entry<String, ImagePlus> e : hashImg.entrySet()){
 			Content c = univ.addMesh(e.getValue(), colors.get(i++), e.getKey(), 0, new boolean[] {true,true,true}, 1);
 			c.setShaded(false);
-			
+		}
+		univ.getSelected();
+		univ.show();
+	}
+	
+	public void findPoints() {
+		for (Entry<String, ImagePlus> e : hashImg.entrySet()) {
+			Content c = univ.getContent(e.getKey());
 			ContentNode node = c.getContent();
-			//各メッシュの頂点を取ってくる、メッシュは三角形を形成する
-			if(node instanceof MeshGroup){
-				 CustomMesh cm  = ((MeshGroup)node).getMesh();
-				 List<Point3f> vertices = cm.getMesh();
-				 hashVertices.put(c.getName(), vertices);
+			// 各メッシュの頂点を取ってくる、メッシュは三角形を形成する
+			if (node instanceof MeshGroup) {
+				CustomMesh cm = ((MeshGroup) node).getMesh();
+				@SuppressWarnings("unchecked")
+				List<Point3f> vertices = cm.getMesh();
+				hashVertices.put(c.getName(), vertices);
 			}
-			//get min max coordinates
+			// get min max coordinates
 			Point3d p = new Point3d();
 			c.getContent().getMax(p);
 			setMaxBound(p);
@@ -64,10 +73,7 @@ public class Viewer {
 			c.getContent().getMin(p);
 			setMinBound(p);
 		}
-		univ.getSelected();
-		univ.show();
 	}
-	
 	void setMaxBound(Point3d p){
 		if(!hashBound.containsKey("max")) hashBound.put("max", p);
 		else{

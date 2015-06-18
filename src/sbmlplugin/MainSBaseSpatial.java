@@ -1,19 +1,16 @@
 package sbmlplugin;
 
+import ij.IJ;
+import ij.io.OpenDialog;
+import ij.plugin.PlugIn;
+
 import java.io.File;
 
 import javax.swing.JFileChooser;
 
-import org.sbml.libsbml.Model;
 import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLNamespaces;
 import org.sbml.libsbml.SBMLReader;
-import org.sbml.libsbml.libsbml;
-
-import ij.IJ;
-import ij.io.OpenDialog;
-import ij.io.SaveDialog;
-import ij.plugin.PlugIn;
 
 /**
  * Spatial SBML Plugin for ImageJ
