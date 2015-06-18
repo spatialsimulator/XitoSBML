@@ -1,18 +1,15 @@
 
 
 
-import sbmlplugin.MainImgSpatial;
 import ij.IJ;
-import ij.plugin.PlugIn;
+import sbmlplugin.MainImgSpatial;
 
 
 /**
  * @author Akira Funahashi
  *
  */
-public class Spatial_Img_SBML implements PlugIn {
-	static boolean isRunning = false;
-	String title = "Export segmented image to Spatial SBML";
+public class Spatial_Img_SBML extends Spatial_SBML {
 
 	static {
 
@@ -61,31 +58,6 @@ public class Spatial_Img_SBML implements PlugIn {
 	public void run(String args) {   
 		if(checkJgraph() && check3Dviewer()) 
 			new MainImgSpatial().run(args);	
-	}
-
-	public boolean checkJgraph(){
-		try {
-			Class.forName("org.jgrapht.ListenableGraph");
-			return true;
-		} catch (ClassNotFoundException e1) {
-			IJ.error("Please Install Jgrapht");
-			return false;
-		}
-	}
-	
-	public boolean check3Dviewer(){
-		String version = ij3d.Install_J3D.getJava3DVersion();
-        System.out.println("3D Viewer version = " + version);
-        if(version != null && Float.parseFloat(version) >= 1.5)
-                return true;
-        IJ.error("Please Update 3D Viewer");
-        return false;
-	}
-	
-	public void showAbout() {
-		IJ.showMessage("Spatial SBML Exporter",
-				"This plugin is just a demonstration for SBML and its Spatial Extension.\n"
-						+ "Implemented by Akira Funahashi");
 	}
 
 }

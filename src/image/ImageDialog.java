@@ -80,15 +80,9 @@ public class ImageDialog implements ItemListener{
 	private Opener open = new Opener();
 	
 	public ImagePlus fromFile(){
-		fromFile = true;
-		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());
-		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		chooser.setMultiSelectionEnabled(false);
-		int returnVal = chooser.showOpenDialog(null);
+		File f = getFile();
+		if(f == null) return null;
 		
-		if (returnVal != JFileChooser.APPROVE_OPTION)
-			return null;
-		File f = chooser.getSelectedFile();
 		OpenDialog.setLastDirectory(f.getParentFile().getAbsolutePath());
 		ImagePlus inImg = null;
 		
@@ -107,6 +101,19 @@ public class ImageDialog implements ItemListener{
 			return null;
 	}
 
+	private File getFile(){
+		fromFile = true;
+		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());
+		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		chooser.setMultiSelectionEnabled(false);
+		int returnVal = chooser.showOpenDialog(null);
+		
+		if (returnVal != JFileChooser.APPROVE_OPTION)
+			return null;
+		
+		return chooser.getSelectedFile();
+	}
+	
 	private void addImageName(String title){
 		Vector<Choice> vc = gd.getChoices();
 		Choice c = vc.get(1);

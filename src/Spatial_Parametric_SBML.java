@@ -1,13 +1,9 @@
 
-import sbmlplugin.MainParametricSpatial;
 import ij.IJ;
-import ij.plugin.PlugIn;
+import sbmlplugin.MainParametricSpatial;
 
 
-public class Spatial_Parametric_SBML implements PlugIn{
-
-	static boolean isRunning = false;
-	String title = "Export segmented image to Spatial SBML";
+public class Spatial_Parametric_SBML extends Spatial_SBML{
 
 	static {
 
@@ -56,14 +52,5 @@ public class Spatial_Parametric_SBML implements PlugIn{
 	public void run(String args) {
 		if(check3Dviewer()) 
 			new MainParametricSpatial().run(args);	
-	}
-
-	public boolean check3Dviewer(){
-		String version = ij3d.Install_J3D.getJava3DVersion();
-        System.out.println("3D Viewer version = " + version);
-        if(version != null && Float.parseFloat(version) >= 1.5)
-                return true;
-        IJ.error("Please Update 3D Viewer");
-        return false;
 	}
 }
