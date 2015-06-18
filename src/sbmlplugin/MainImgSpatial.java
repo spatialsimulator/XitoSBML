@@ -1,7 +1,5 @@
 package sbmlplugin;
 
-import ij.plugin.PlugIn;
-
 import javax.swing.JOptionPane;
 
 import visual.DomainStruct;
@@ -13,7 +11,7 @@ import visual.DomainStruct;
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: May 12, 2015
  */
-public class MainImgSpatial extends MainSpatial implements PlugIn{
+public class MainImgSpatial extends MainSpatial {
 
 	@Override
 	public void run(String arg) {
@@ -30,8 +28,7 @@ public class MainImgSpatial extends MainSpatial implements PlugIn{
 			addParaAndSpecies();
 
 		sbmlexp.addCoordParameter();
-		save(sbmlexp);
-		
+		save();
 		new DomainStruct().show(model);	
 	}
 }

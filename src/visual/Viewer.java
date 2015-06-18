@@ -48,8 +48,9 @@ public class Viewer {
 		for(Entry<String, ImagePlus> e : hashImg.entrySet()){
 			Content c = univ.addMesh(e.getValue(), colors.get(i++), e.getKey(), 0, new boolean[] {true,true,true}, 1);
 			c.setShaded(false);
+			
 			ContentNode node = c.getContent();
-			//各メッシュの頂点を取ってくる、メッシュは三角形を形成するので、
+			//各メッシュの頂点を取ってくる、メッシュは三角形を形成する
 			if(node instanceof MeshGroup){
 				 CustomMesh cm  = ((MeshGroup)node).getMesh();
 				 List<Point3f> vertices = cm.getMesh();

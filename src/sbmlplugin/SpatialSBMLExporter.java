@@ -77,6 +77,7 @@ public class SpatialSBMLExporter{
   int matrix[];
   int width, height, depth;
 
+  @Deprecated
   public SpatialSBMLExporter() {                    //builds the framework of SBML document
 
 	sbmlns = new SBMLNamespaces(3,1);           //create SBML name space with level 3 version 1
@@ -107,12 +108,9 @@ public class SpatialSBMLExporter{
       System.err.println("[Fatal Error] Layout Extension Level " + spatialns.getLevel () + " Version " + spatialns.getVersion () + " package version " + spatialns.getPackageVersion () + " is not registered.");
       System.exit(1);
     }
-
-	  spatialns = new SpatialPkgNamespaces(3, 1, 1); 
   }
 
   public SpatialSBMLExporter(SpatialImage spImg, SBMLDocument document) {
-	    this();
 	    this.hashDomainTypes = spImg.getHashDomainTypes();
 	    this.hashSampledValue = spImg.getHashSampledValue();
 	    this.hashDomainNum = spImg.getHashDomainNum();
@@ -146,7 +144,7 @@ public class SpatialSBMLExporter{
     	SampledVolume sv = sfg.createSampledVolume();
         sv.setId(e.getKey()); sv.setDomainType(e.getKey());
         sv.setSampledValue( hashSampledValue.get(e.getKey()));
-        // sv.setMinValue(0); sv.setMaxValue(0); 		may need changes 
+        // sv.setMinValue(0); sv.setMaxValue(0); 					may need changes 
       }
     }
     SampledField sf = geometry.createSampledField();

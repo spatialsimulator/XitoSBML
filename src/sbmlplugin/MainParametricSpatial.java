@@ -1,10 +1,8 @@
 package sbmlplugin;
-import ij.plugin.PlugIn;
-
 import javax.swing.JOptionPane;
 
 
-public class MainParametricSpatial extends MainSpatial implements PlugIn{
+public class MainParametricSpatial extends MainSpatial{
 	
 	@Override
 	public void run(String arg) {
@@ -35,7 +33,6 @@ public class MainParametricSpatial extends MainSpatial implements PlugIn{
 			addParaAndSpecies();
 
 		sbmlexp.addCoordParameter();
-		save(sbmlexp);
-		//SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg, document);
+		save();
 	}
 }

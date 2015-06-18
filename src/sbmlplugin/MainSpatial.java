@@ -3,6 +3,7 @@ import gui.ParamAndSpecies;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.SaveDialog;
+import ij.plugin.PlugIn;
 import image.CreateImage;
 import image.Fill;
 import image.ImageBorder;
@@ -32,7 +33,7 @@ import org.sbml.libsbml.libsbml;
 import visual.Viewer;
 
 
-public abstract class MainSpatial{
+public abstract class MainSpatial implements PlugIn{
 
 	protected SBMLDocument document;
 	protected Model model;
@@ -46,8 +47,9 @@ public abstract class MainSpatial{
 	protected Viewer viewer;
 	protected SpatialImage spImg;
 	
+
 	
-	public void createSBMLDoc(){
+	protected void createSBMLDoc(){
 		sbmlns = new SBMLNamespaces(3, 1); // create SBML name space with level 3 version 1
 		sbmlns.addPackageNamespace("req", 1); // add required element package
 		sbmlns.addPackageNamespace("spatial", 1); // add spatial processes package
@@ -85,7 +87,7 @@ public abstract class MainSpatial{
 
 	}
 	
-	public void gui() {
+	protected void gui() {
 		hashDomainTypes = new HashMap<String, Integer>();
 		hashSampledValue = new HashMap<String, Integer> ();
 		imgexp = new ImageExplorer(hashDomainTypes,hashSampledValue);
@@ -98,7 +100,7 @@ public abstract class MainSpatial{
 		}
 	}
 	
-	public void computeImg(){
+	protected void computeImg(){
 		Interpolate interpolate = new Interpolate();
 		HashMap<String, ImagePlus> hashDomFile = imgexp.getDomFile();
 		interpolate.interpolate(hashDomFile);
@@ -118,17 +120,17 @@ public abstract class MainSpatial{
 		new ImageEdit(spImg);
 	}
 	
-	public void visualize (SpatialImage spImg){
+	protected void visualize (SpatialImage spImg){
 		viewer = new Viewer();
 		viewer.view(spImg);
 	}
 	
-	public void addParaAndSpecies(){
+	protected void addParaAndSpecies(){
 		ListOfParameters lop = model.getListOfParameters();
 		ListOfSpecies los = model.getListOfSpecies();
-		new ParamAndSpecies(model);
+		ParamAndSpecies pas = new ParamAndSpecies(model);
 		
-		while(lop.size() == 0 || los.size() == 0){
+		while(lop.size() == 0 || los.size() == 0 || !pas.hasExited()){
 			synchronized(lop){
 				synchronized(los){
 					
@@ -137,26 +139,25 @@ public abstract class MainSpatial{
 		}
 	}
 	
-	public void save(SpatialSBMLExporter sbmlexp){
-		SaveDialog sd = new SaveDialog("Save SBML Document", spImg.title, ".xml");
+	protected void save(){
+		SaveDialog sd = new SaveDialog("Save SBML Document", model.getId(), ".xml");
 		String name = sd.getFileName();
 		IJ.log(name);
 		
 		setAnnotation();
 		
 		try{
-			sbmlexp.document.getModel().setId(name);
-			if(name.contains(".xml"))	libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name);  
-			else 	   					libsbml.writeSBMLToFile(sbmlexp.document, sd.getDirectory() + "/" + name + ".xml"); 			
+			if(name.contains(".xml"))	libsbml.writeSBMLToFile(document, sd.getDirectory() + "/" + name);  
+			else 	   					libsbml.writeSBMLToFile(document, sd.getDirectory() + "/" + name + ".xml"); 			
 		}catch(NullPointerException e){
 			System.out.println("SBML document was not saved");
 		}
 		
 
-        IJ.log(sbmlexp.document.toSBML());
+        IJ.log(document.toSBML());
 	}
 	
-	private void setAnnotation(){
+	protected void setAnnotation(){
 		String id = "";
 		try {
 			id = InetAddress.getLocalHost().getHostName();
