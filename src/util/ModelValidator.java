@@ -47,7 +47,7 @@ public class ModelValidator {
 	Model model;
 	Boolean errorFlag = false;
 	SpatialModelPlugin spatialplugin;
-	ModelValidator(Model model){
+	public ModelValidator(Model model){
 		this.model = model;
 		checkModelVersion();
 	}
@@ -61,7 +61,7 @@ public class ModelValidator {
 			System.err.println("model is not spatial");
 	}
 	
-	void checkValidation(){
+	public void checkValidation(){
 		checkModel(model);
 		checkSpecies(model.getListOfSpecies());
 		checkParameter(model.getListOfParameters());
@@ -85,7 +85,6 @@ public class ModelValidator {
 			checkRequired(s);
 			SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) s.getPlugin("spatial");
 			ssp.hasRequiredElements();
-			/*spatialsymbol*/
 		}
 	}
 	
