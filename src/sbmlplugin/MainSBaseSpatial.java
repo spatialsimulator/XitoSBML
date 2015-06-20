@@ -15,6 +15,7 @@ import org.sbml.libsbml.SBMLReader;
 import org.sbml.libsbml.SpatialExtension;
 
 import util.ModelValidator;
+import util.PluginInfo;
 
 /**
  * Spatial SBML Plugin for ImageJ
@@ -24,12 +25,6 @@ import util.ModelValidator;
  */
 public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	
-	final int LEVEL2 =  2;
-	final int LEVEL = 3;
-	final int VERSION = 1;
-	final int VERSION4 = 4;
-	boolean isLevelCompatible;
-
 	/* (non-Javadoc)
 	 * @see ij.plugin.PlugIn#run(java.lang.String)
 	 */
@@ -62,8 +57,8 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	}
 	
 	private void checkLevelAndVersion(){
-		if(model.getLevel() == LEVEL2)			 			//level 2		change to latest level 2 version
-			document.setLevelAndVersion(LEVEL2, VERSION4);
+		if(model.getLevel() == PluginInfo.LOWERSBMLLEVEL)			 			//level 2		change to latest level 2 version
+			document.setLevelAndVersion(PluginInfo.LOWERSBMLLEVEL, PluginInfo.LOWERSBMLVERSION);
 		else{}												//level 3		if new verison comes up check
 
 	}

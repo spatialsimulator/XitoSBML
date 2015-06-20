@@ -47,13 +47,15 @@ public class ModelValidator {
 	Model model;
 	Boolean errorFlag = false;
 	SpatialModelPlugin spatialplugin;
+	long level;
 	public ModelValidator(Model model){
 		this.model = model;
+		level =  model.getLevel();
 		checkModelVersion();
 	}
 	
 	void checkModelVersion(){
-		if(model.getVersion() != 1  ||  model.getLevel() != 3) 
+		if(model.getVersion() != PluginInfo.SBMLLEVEL  ||  model.getLevel() != PluginInfo.SBMLVERSION) 
 			System.err.println("model is not level 3 version 1");
 		
 		spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
@@ -62,6 +64,7 @@ public class ModelValidator {
 	}
 	
 	public void checkValidation(){
+		if(level < PluginInfo.SBMLLEVEL) return;
 		checkModel(model);
 		checkSpecies(model.getListOfSpecies());
 		checkParameter(model.getListOfParameters());
