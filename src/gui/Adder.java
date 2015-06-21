@@ -361,9 +361,9 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	public void actionPerformed(ActionEvent e) {
 		String idText = idField.getText().replaceAll(" ", "_"); 	
 		String compartment = (String) domCombo.getSelectedItem();
-		Integer num = null;
+		Double num = null;
 		try{
-			num = Integer.parseInt(val.getText());            // need to include integer with exponential	
+			num = Double.parseDouble(val.getText());
 		}catch(NumberFormatException nfe){
 			errMessage();
 			return;
@@ -378,8 +378,8 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 			dispose();
 		}
 	}	
-
-	private boolean checkComponent(String idText, String compartment, Integer num){
+	
+	private boolean checkComponent(String idText, String compartment, Double num) {
 		boolean hasError = false;
 		switch (state) {
 		case SPECIES:
@@ -392,19 +392,18 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 				hasError = true;
 			if (idText == null)
 				hasError = true;
-			 if(speciesCombo.getSelectedIndex() < 0)
-					hasError = true;
-			 break;
+			if (speciesCombo.getSelectedIndex() < 0)
+				hasError = true;
+			break;
 		}
 
-		if(hasError){
+		if (hasError) {
 			errMessage();
 			return false;
 		}
-		
+
 		return true;
 	}
-	
 	
 	private void errMessage(){
 		JOptionPane.showMessageDialog(this, "Missing Component", "Error", JOptionPane.PLAIN_MESSAGE);	
@@ -415,15 +414,13 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		private static final long serialVersionUID = 1L;
 		private String title;
 
-        public ComboBoxRenderer(String title)
-        {
+        public ComboBoxRenderer(String title){
             this.title = title;
         }
 
         @Override
         public Component getListCellRendererComponent(JList list, Object value,
-                int index, boolean isSelected, boolean hasFocus)
-        {
+                int index, boolean isSelected, boolean hasFocus){
             if (index == -1 && value == null) setText(title);
             else setText(value.toString());
             return this;

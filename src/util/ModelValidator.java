@@ -47,24 +47,32 @@ public class ModelValidator {
 	Model model;
 	Boolean errorFlag = false;
 	SpatialModelPlugin spatialplugin;
-	long level;
+	
 	public ModelValidator(Model model){
 		this.model = model;
-		level =  model.getLevel();
 		checkModelVersion();
+		checkValidation();
 	}
 	
 	void checkModelVersion(){
 		if(model.getVersion() != PluginInfo.SBMLLEVEL  ||  model.getLevel() != PluginInfo.SBMLVERSION) 
 			System.err.println("model is not level 3 version 1");
+	}
+	
+	void checkExtension(){
+		SBMLDocument document = model.getSBMLDocument();
 		
-		spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
-		if(spatialplugin == null)
-			System.err.println("model is not spatial");
+		if(!document.getPackageRequired("spatial")){
+			System.err.println("model missing extension spatial");
+		}
+
+		if(!document.getPackageRequired("req")){
+			System.err.println("model missing extension req");
+		}
+		
 	}
 	
 	public void checkValidation(){
-		if(level < PluginInfo.SBMLLEVEL) return;
 		checkModel(model);
 		checkSpecies(model.getListOfSpecies());
 		checkParameter(model.getListOfParameters());

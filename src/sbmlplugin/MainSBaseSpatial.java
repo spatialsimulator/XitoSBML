@@ -39,7 +39,9 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		addParaAndSpecies();
 		save();
 		ModelValidator  mv = new ModelValidator(model);
+		
 		mv.checkValidation();
+		showDomainStructure();
 		IJ.log(document.toSBML());
 	}
 
@@ -59,7 +61,7 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	private void checkLevelAndVersion(){
 		if(model.getLevel() == PluginInfo.LOWERSBMLLEVEL)			 			//level 2		change to latest level 2 version
 			document.setLevelAndVersion(PluginInfo.LOWERSBMLLEVEL, PluginInfo.LOWERSBMLVERSION);
-		else{}												//level 3		if new verison comes up check
+		else{}																	//level 3		if new verison comes up check
 
 	}
 	
@@ -77,13 +79,12 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 			sbmlns.addPackageNamespace("req", 1);
 		}
 		
+		// add extension if necessary
 		if(!model.isPackageEnabled("spatial"))
 			model.enablePackage(SpatialExtension.getXmlnsL3V1V1(), "spatial", true);
 
 		if(!model.isPackageEnabled("req"))
-			model.enablePackage(ReqExtension.getXmlnsL3V1V1(), "req", true);
-		
-		
+			model.enablePackage(ReqExtension.getXmlnsL3V1V1(), "req", true);	
 	}
 
 }

@@ -30,6 +30,7 @@ import org.sbml.libsbml.SpatialModelPlugin;
 import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.libsbml;
 
+import visual.DomainStruct;
 import visual.Viewer;
 
 
@@ -137,6 +138,10 @@ public abstract class MainSpatial implements PlugIn{
 				}
 			}
 		}
+	}
+	
+	protected void showDomainStructure(){
+		new DomainStruct().show(model);	
 	}
 	
 	protected void save(){

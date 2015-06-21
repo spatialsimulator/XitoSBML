@@ -2,8 +2,6 @@ package sbmlplugin;
 
 import javax.swing.JOptionPane;
 
-import visual.DomainStruct;
-
 
 /**
  * Spatial SBML Plugin for ImageJ
@@ -29,6 +27,6 @@ public class MainImgSpatial extends MainSpatial {
 
 		sbmlexp.addCoordParameter();
 		save();
-		new DomainStruct().show(model);	
+		showDomainStructure();
 	}
 }
