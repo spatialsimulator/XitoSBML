@@ -201,10 +201,10 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 			break;	
 		case libsbmlConstants.SPATIAL_DIFFUSIONKIND_TENSOR:
 			//2 coordinateReference needed
-			if(dc.isSetCoordinateReference1()) dc.setCoordinateReference2(axis);
+			dc.setCoordinateReference2(axis);
 		case libsbmlConstants.SPATIAL_DIFFUSIONKIND_ANISOTROPIC:
 			//1 coordinateReference needed
-			if(!dc.isSetCoordinateReference1()) dc.setCoordinateReference1(axis);
+			dc.setCoordinateReference1(axis);
 			break;
 			default: 	
 		}

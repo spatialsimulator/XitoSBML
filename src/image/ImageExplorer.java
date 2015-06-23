@@ -47,7 +47,6 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	private FileInfo compoInfo;
 	private Integer selectedRow = null;
 	private Integer selectedColumn = null;
-	private boolean wasCanceled;
 	
 	public ImageExplorer(){
 		super("DomainType Namer");
@@ -71,7 +70,8 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		}
 		
 		//table
-		tableModel = new DefaultTableModel(data,columnNames){
+			tableModel = new MyTableModel(data, columnNames);
+		/*tableModel = new DefaultTableModel(data,columnNames){
 			private static final long serialVersionUID = 1L;
 			public boolean isCellEditable(int row, int column){	
 				if(column == 1)
@@ -79,10 +79,11 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 				else  							
 					return true;
 			}
-		};
+		};*/
 				
 		//table setting 
-		table = new JTable(tableModel){
+		table = new JTable(tableModel);
+		/*{
 			private static final long serialVersionUID = 1L;
 			@Override
 			public Class<?> getColumnClass(int Column){
@@ -99,7 +100,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 					return Boolean.class;
 				}
 			}
-		};
+		};*/
 		table.setBackground(new Color(169,169,169));
 		table.getTableHeader().setReorderingAllowed(false);
 
@@ -226,7 +227,7 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 	private void delRow(){
 		if(selectedRow != null){
 			tableModel.removeRow(selectedRow);
-			selectedRow = null;
+			//selectedRow = null;
 		}	
 	}
 	
@@ -248,10 +249,6 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		return compoInfo;
 	}
 	
-    public boolean wasCanceled() {
-        return wasCanceled;
-    }
-    
 	@Override
 	public  void actionPerformed(ActionEvent e) {
 		String input = e.getActionCommand();
@@ -259,15 +256,14 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		if(input == "+")
 			addRow();
 		
-		if(input == "-")
+		else if(input == "-")
 			delRow();
 	
-
-		if(input == "OK" && !hashDomFile.isEmpty() &&checkAllImages()){
+		else if(input == "OK" && !hashDomFile.isEmpty() && checkAllImages()){
 			hashDomainTypes = getDomainTypes();			
 			hashSampledValues = getSampledValues();
 			setVisible(false);
-			wasCanceled = true;
+
 			dispose();
 		}else{
 			new MessageDialog(new Frame(), "Error", "No Image");
@@ -295,7 +291,6 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
 		JTable table = (JTable) e.getSource();
 		selectedRow = table.getSelectedRow();
 		selectedColumn = table.getSelectedColumn();
@@ -316,4 +311,36 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@SuppressWarnings("serial")
+	public class MyTableModel extends DefaultTableModel{
+		
+		public MyTableModel(Object[][] data, String[] colName){
+			super(data,colName);
+		}
+		
+		@Override
+		public boolean isCellEditable(int row, int column){	
+			if(column == 1)
+				return false;
+			else  							
+				return true;
+		}
+		
+		@Override
+		public Class<?> getColumnClass(int Column){
+			switch (Column) {
+			case 0:
+			case 1:
+				return String.class;
+			case 2:
+				return JButton.class;
+			case 3:
+			case 4:
+				return BasicArrowButton.class;
+			default:
+				return Boolean.class;
+			}
+	}
+}
 }
