@@ -29,6 +29,7 @@
       </manifest>
     </jar>
     <copy file="Spatial_SBML.jar" toDir="${destDir}" overwrite="true" />
+    <copy file="Spatial_SBML.jar" toDir="${basedir}/plugins" overwrite="true" />
   </target>
 	<target name="mv" depends="" description="move library">
 	    <echo>Moving sbml library</echo>
