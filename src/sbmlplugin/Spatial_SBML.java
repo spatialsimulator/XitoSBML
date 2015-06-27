@@ -1,5 +1,5 @@
 package sbmlplugin;
-import sbmlplugin.util.PluginInfo;
+import sbmlplugin.util.PluginConstants;
 import ij.IJ;
 import ij.plugin.PlugIn;
 
@@ -33,7 +33,7 @@ public abstract class Spatial_SBML implements PlugIn {
 	public boolean check3Dviewer(){
 		String version = ij3d.Install_J3D.getJava3DVersion();
         System.out.println("3D Viewer version = " + version);
-        if(version != null && Float.parseFloat(version) >= PluginInfo.VIEWERVERSION)
+        if(version != null && Float.parseFloat(version) >= PluginConstants.VIEWERVERSION)
                 return true;
         IJ.error("Please Update 3D Viewer");
         return false;

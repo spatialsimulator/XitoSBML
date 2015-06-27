@@ -6,7 +6,7 @@ package sbmlplugin.util;
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 20, 2015
  */
-public class PluginInfo {
+public class PluginConstants {
 	public static final double VIEWERVERSION = 1.5;
 	public static final int SBMLLEVEL = 3;
 	public static final int SBMLVERSION = 1;

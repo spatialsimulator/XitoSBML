@@ -2,7 +2,6 @@ package sbmlplugin.visual;
 
 import java.util.ArrayList;
 
-import org.sbml.libsbml.AnalyticGeometry;
 import org.sbml.libsbml.CoordinateComponent;
 import org.sbml.libsbml.DomainType;
 import org.sbml.libsbml.Geometry;
@@ -11,8 +10,6 @@ import org.sbml.libsbml.ListOfCoordinateComponents;
 import org.sbml.libsbml.ListOfDomainTypes;
 import org.sbml.libsbml.ListOfGeometryDefinitions;
 import org.sbml.libsbml.Model;
-import org.sbml.libsbml.ParametricGeometry;
-import org.sbml.libsbml.SampledFieldGeometry;
 import org.sbml.libsbml.SpatialModelPlugin;
 import org.sbml.libsbml.libsbmlConstants;
 
@@ -55,12 +52,14 @@ public class GeometryDatas {
 	}
 	
 	protected SpatialImage getSpImgFromGeo(GeometryDefinition gd){
-		if(gd instanceof SampledFieldGeometry){
+		if(gd.isSetIsActive() && !gd.getIsActive()) return null;			//if isactive set and is false
+		
+		if(gd.isSampledFieldGeometry()){
 			SampledFieldGeometryData sfgd = new SampledFieldGeometryData(gd, geometry);
 			return sfgd.getSpatialImage();
-		}else if(gd instanceof AnalyticGeometry){
+		}else if(gd.isAnalyticGeometry()){
 			
-		}else if(gd instanceof ParametricGeometry){
+		}else if(gd.isParametricGeometry()){
 			
 		}else{
 			System.err.println("Not able to obtain geometry \n"

@@ -17,7 +17,7 @@ import org.sbml.libsbml.SBMLReader;
 import org.sbml.libsbml.SpatialExtension;
 
 import sbmlplugin.image.SpatialImage;
-import sbmlplugin.util.PluginInfo;
+import sbmlplugin.util.PluginConstants;
 import sbmlplugin.visual.GeometryDatas;
 import sbmlplugin.visual.Viewer;
 
@@ -72,8 +72,8 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	}
 	
 	private void checkLevelAndVersion(){
-		if(model.getLevel() == PluginInfo.LOWERSBMLLEVEL)			 			//level 2		change to latest level 2 version
-			document.setLevelAndVersion(PluginInfo.LOWERSBMLLEVEL, PluginInfo.LOWERSBMLVERSION);
+		if(model.getLevel() == PluginConstants.LOWERSBMLLEVEL)			 			//level 2		change to latest level 2 version
+			document.setLevelAndVersion(PluginConstants.LOWERSBMLLEVEL, PluginConstants.LOWERSBMLVERSION);
 		else{}																	//level 3		if new verison comes up check
 
 	}

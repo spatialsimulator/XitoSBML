@@ -55,7 +55,7 @@ public class ModelValidator {
 	}
 	
 	void checkModelVersion(){
-		if(model.getVersion() != PluginInfo.SBMLLEVEL  ||  model.getLevel() != PluginInfo.SBMLVERSION) 
+		if(model.getVersion() != PluginConstants.SBMLLEVEL  ||  model.getLevel() != PluginConstants.SBMLVERSION) 
 			System.err.println("model is not level 3 version 1");
 	}
 	
