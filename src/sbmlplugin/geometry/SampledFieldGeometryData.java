@@ -1,6 +1,5 @@
-package sbmlplugin.visual;
+package sbmlplugin.geometry;
 
-import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
 
@@ -27,8 +26,6 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	private int width;
 	private int height;
 	private int depth;
-	private byte raw[];
-	private ImagePlus img = new ImagePlus();
 	/**
 	 * @param gd
 	 * @param g

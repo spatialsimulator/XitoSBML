@@ -11,6 +11,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.sbml.libsbml.Geometry;
 import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.ListOfSpecies;
 import org.sbml.libsbml.Model;
@@ -141,7 +142,9 @@ public abstract class MainSpatial implements PlugIn{
 	}
 	
 	protected void showDomainStructure(){
-		new DomainStruct().show(model);	
+		spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial");
+		Geometry g = spatialplugin.getGeometry();
+		new DomainStruct().show(g);	
 	}
 	
 	protected void save(){

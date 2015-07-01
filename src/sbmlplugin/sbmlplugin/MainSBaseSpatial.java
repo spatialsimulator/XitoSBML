@@ -1,6 +1,5 @@
 package sbmlplugin.sbmlplugin;
 
-import ij.IJ;
 import ij.io.OpenDialog;
 import ij.plugin.PlugIn;
 
@@ -16,9 +15,9 @@ import org.sbml.libsbml.SBMLNamespaces;
 import org.sbml.libsbml.SBMLReader;
 import org.sbml.libsbml.SpatialExtension;
 
+import sbmlplugin.geometry.GeometryDatas;
 import sbmlplugin.image.SpatialImage;
 import sbmlplugin.util.PluginConstants;
-import sbmlplugin.visual.GeometryDatas;
 import sbmlplugin.visual.Viewer;
 
 /**
@@ -47,7 +46,6 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		showDomainStructure();
 		GeometryDatas gData = new GeometryDatas(model);
 		visualize(gData.getSpImgList());
-		IJ.log(document.toSBML());
 	}
 
 	protected void visualize(ArrayList<SpatialImage> spImgList){

@@ -1,4 +1,6 @@
-package sbmlplugin.visual;
+package sbmlplugin.geometry;
+
+import ij.ImagePlus;
 
 import java.util.HashMap;
 
@@ -16,6 +18,8 @@ import sbmlplugin.image.SpatialImage;
 public abstract class ImageGeometryData extends AbstractData {
 	protected Geometry g;
 	protected  HashMap<String, Integer> hashSampledValue = new HashMap<String,Integer>();
+	protected ImagePlus img = new ImagePlus();
+	protected byte raw[];
 	
 	ImageGeometryData(GeometryDefinition gd, Geometry g) {
 		super(gd);

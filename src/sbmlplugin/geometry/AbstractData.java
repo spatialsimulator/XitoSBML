@@ -1,4 +1,4 @@
-package sbmlplugin.visual;
+package sbmlplugin.geometry;
 
 import org.sbml.libsbml.GeometryDefinition;
 

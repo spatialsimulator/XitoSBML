@@ -1,6 +1,8 @@
-package sbmlplugin.visual;
+package sbmlplugin.geometry;
 
 import java.util.ArrayList;
+
+import javax.vecmath.Point3f;
 
 import org.sbml.libsbml.CoordinateComponent;
 import org.sbml.libsbml.DomainType;
@@ -25,9 +27,9 @@ public class GeometryDatas {
 	protected Model model;
 	protected SpatialModelPlugin spatialplugin;
 	protected Geometry geometry;
-	protected double xmin, xmax;
-	protected double ymin, ymax;
-	protected double zmin, zmax;
+	protected Point3f minCoord = new Point3f();
+	protected Point3f maxCoord = new Point3f();
+	protected Point3f dispCoord = new Point3f();		//displacement from original coordinates to modified coordinate
 	protected int dimension;
 	protected ArrayList<String> domList = new ArrayList<String>();
 	private ArrayList<SpatialImage> spImgList = new ArrayList<SpatialImage>();
@@ -63,7 +65,7 @@ public class GeometryDatas {
 			
 		}else{
 			System.err.println("Not able to obtain geometry \n"
-					+ "This plugin is only able to visualize AnalyticGeometry, ParametricGeometry, SampledField Geometry, ");
+					+ "This plugin is only able to visualize AnalyticGeometry, ParametricGeometry, SampledFieldGeometry, ");
 			return null;
 		}
 		return null;
@@ -76,38 +78,41 @@ public class GeometryDatas {
 			CoordinateComponent cc = locc.get(i);
 			switch (cc.getType()){
 			case libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_X:
-				xmin = cc.getBoundaryMin().getValue(); xmax = cc.getBoundaryMax().getValue();
+				minCoord.setX((float) cc.getBoundaryMin().getValue()); maxCoord.setX((float) cc.getBoundaryMax().getValue());
 				break;
 			case libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Y:
-				ymin = cc.getBoundaryMin().getValue(); zmax = cc.getBoundaryMax().getValue();
+				minCoord.setY((float) cc.getBoundaryMin().getValue()); maxCoord.setY((float) cc.getBoundaryMax().getValue());
 				break;
 			case libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Z:
-				zmin = cc.getBoundaryMin().getValue(); zmax = cc.getBoundaryMax().getValue();
+				minCoord.setZ((float) cc.getBoundaryMin().getValue()); maxCoord.setZ((float) cc.getBoundaryMax().getValue());
 				break;
 			}
 		}
+		
 		adjustAxis();
 	}
 	
 	protected void adjustAxis(){
 		switch(dimension){
 		case 3:
-			if(zmin < 0){
-				zmax -= zmin;
-				zmin = 0;
+			if(minCoord.getZ() < 0){
+				dispCoord.setZ(-1 * minCoord.getZ());
+				maxCoord.setZ(maxCoord.getZ() - minCoord.getZ());
+				minCoord.setZ(0);
 			}
 		case 2:
-			if(xmin < 0){
-				xmax -= xmin;
-				xmin = 0;
+			if(minCoord.getX() < 0){
+				dispCoord.setX(-1 * minCoord.getX());
+				maxCoord.setX(maxCoord.getX() - minCoord.getX());
+				minCoord.setX(0);
 			}
 			
-			if(ymin < 0){
-				ymax -= ymin;
-				ymin = 0;
+			if(minCoord.getY() < 0){
+				dispCoord.setY(-1 * minCoord.getY());
+				maxCoord.setY(maxCoord.getY() - minCoord.getY());
+				minCoord.setY(0);
 			}
 		}
-		
 	}
 	
 	protected void getDomainTypes(){
