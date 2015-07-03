@@ -60,7 +60,8 @@ public class GeometryDatas {
 			SampledFieldGeometryData sfgd = new SampledFieldGeometryData(gd, geometry);
 			return sfgd.getSpatialImage();
 		}else if(gd.isAnalyticGeometry()){
-			
+			AnalyticGeometryData agd = new AnalyticGeometryData(gd, geometry, minCoord, maxCoord, dispCoord);
+			return agd.getSpatialImage();
 		}else if(gd.isParametricGeometry()){
 			
 		}else{

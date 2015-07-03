@@ -1,7 +1,5 @@
 package sbmlplugin.sbmlplugin;
 
-
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,8 +11,8 @@ import java.util.Map.Entry;
 import java.util.WeakHashMap;
 import java.util.zip.Deflater;
 
-import javax.vecmath.Point3f;
 import javax.vecmath.Point3d;
+import javax.vecmath.Point3f;
 
 import org.sbml.libsbml.AdjacentDomains;
 import org.sbml.libsbml.Boundary;
@@ -43,8 +41,6 @@ import org.sbml.libsbml.SpatialParameterPlugin;
 import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.SpatialPoints;
 import org.sbml.libsbml.SpatialSymbolReference;
-import org.sbml.libsbml.Unit;
-import org.sbml.libsbml.UnitDefinition;
 import org.sbml.libsbml.libsbmlConstants;
 
 import sbmlplugin.image.SpatialImage;
@@ -258,11 +254,13 @@ public class SpatialSBMLExporter{
 			CompartmentMapping cm = spatialcompplugin.createCompartmentMapping();
 			cm.setId(e.getKey() + c.getId());
 			cm.setDomainType(e.getKey());
+			//TODO find unit
 			cm.setUnitSize(1);
 		}
   }
 
 	public void addCoordinates() { 
+		//TODO find unit
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
 		ccx.setId("x");
 		ccx.setType("cartesianX");
@@ -310,12 +308,7 @@ public class SpatialSBMLExporter{
 	}
   }	
   
-  public void addUnitDefinition(){
-	Unit u = model.createUnit();
-	u.setKind(libsbmlConstants.UNIT_KIND_ITEM);u.setExponent(1);u.setScale(0);u.setMultiplier(1);
-	UnitDefinition ud = model.createUnitDefinition(); ud.setId("substance");
-	ud.addUnit(u);
-  }
+
   
   public void createParametric(HashMap<String, List<Point3f>> hashVertices, HashMap<String, Point3d> hashBound) {
 	    geometry = spatialplugin.createGeometry();

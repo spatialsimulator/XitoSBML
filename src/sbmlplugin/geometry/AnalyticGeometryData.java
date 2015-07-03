@@ -1,5 +1,6 @@
 package sbmlplugin.geometry;
 
+import ij.IJ;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
 
@@ -92,6 +93,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	
 	private void setVolumeToArray(ArrayList<AnalyticVolume> orderedList){
 		int size = (int) orderedList.size();
+
 		for(int d = 0 ; d < depth ; d++){
 			for(int h = 0 ; d < height ; h++){
 				for(int w = 0 ; d < width ; w++){
@@ -100,8 +102,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 						if(resolveDomain(av.getMath(), w,h,d) == 1){
 							raw[d * width * height + h * width + w] = (byte) (hashSampledValue.get(av.getDomainType()) & 0xFF);
 							continue;
-						}
-							
+						}	
 					}	
 				}	
 			}	
@@ -212,6 +213,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 				}
 			}
 		}
+		IJ.log(orderedList.toString());
 		return orderedList;
 	}
 	
@@ -236,7 +238,6 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	 */
 	@Override
 	SpatialImage getSpatialImage() {
-		// TODO Auto-generated method stub
 		return  new SpatialImage(hashSampledValue, img);
 	}
 
