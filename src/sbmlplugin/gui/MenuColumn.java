@@ -12,13 +12,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 
+@SuppressWarnings("serial")
 public class MenuColumn extends AbstractCellEditor implements
 		TableCellRenderer, TableCellEditor, ActionListener {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	JTable table;
 	JComboBox editButton;
@@ -39,47 +35,43 @@ public class MenuColumn extends AbstractCellEditor implements
 		columnModel.getColumn(column).setCellEditor(this);
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
 
+	}
+	
 	@Override
 	public Object getCellEditorValue() {
-		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value,
 			boolean isSelected, int hasFocus, int row) {
-		// TODO Auto-generated method stub
 		return editButton;
 	}
 
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {
-		// TODO Auto-generated method stub
 
-		 if (hasFocus)
-         {
+		 if (hasFocus) {
              renderButton.setForeground(table.getForeground());
              renderButton.setBackground(UIManager.getColor("Button.background"));
-         }
-         else if (isSelected)
-         {
+         } else if (isSelected) {
              renderButton.setForeground(table.getSelectionForeground());
               renderButton.setBackground(table.getSelectionBackground());
-         }
-         else
-         {
+         } else {
              renderButton.setForeground(table.getForeground());
              renderButton.setBackground(UIManager.getColor("Button.background"));
          }
-		 //renderButton.setText("up");
 		return renderButton;
 	}
+
+
+
 
 }

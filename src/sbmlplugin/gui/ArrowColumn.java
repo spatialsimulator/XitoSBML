@@ -4,11 +4,8 @@ import javax.swing.JTable;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 
+@SuppressWarnings({ "serial" })
 public class ArrowColumn extends ButtonColumn{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	JTable table;
 	BasicArrowButton editButton;

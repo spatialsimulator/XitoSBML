@@ -2,11 +2,8 @@ package sbmlplugin.gui;
 import javax.swing.JButton;
 import javax.swing.JTable;
 
+@SuppressWarnings("serial")
 public class AddingColumn extends ButtonColumn {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	JTable table;
 	JButton editButton;

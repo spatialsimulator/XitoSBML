@@ -9,9 +9,8 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
+@SuppressWarnings("serial")
 public abstract class ButtonColumn extends AbstractCellEditor implements TableCellRenderer, TableCellEditor{
-
-	private static final long serialVersionUID = 1L;
 
 	JTable table;
 	int column;

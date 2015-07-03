@@ -44,6 +44,7 @@ import org.sbml.libsbml.libsbmlConstants;
 
 
 
+@SuppressWarnings("serial")
 public class Adder extends JFrame implements ItemListener, ActionListener, WindowListener{
 	/**
 	 * 
@@ -56,7 +57,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 			System.exit(1);
 		}
 	}
-	private static final long serialVersionUID = 1L;
 	private final String[] addingType = {"Parameter", "Species"};
 	private final String[] parameterType = {"advectionCoefficient", "boudaryCondition", "diffusionCoefficient"}; 
 	private JComboBox typeCombo;
@@ -429,44 +429,37 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 
 	@Override
 	public void windowActivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowClosed(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowClosing(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		mainPanel.removeAll();
 		return;
 	}
 
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 	

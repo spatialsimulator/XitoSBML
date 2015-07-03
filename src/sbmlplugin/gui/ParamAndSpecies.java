@@ -26,6 +26,7 @@ import org.sbml.libsbml.Model;
 import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLReader;
 
+@SuppressWarnings("serial")
 public class ParamAndSpecies extends JFrame implements ActionListener, FocusListener{
 
 	static {
@@ -37,7 +38,6 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		}
 	}
 	
-	private static final long serialVersionUID = 1L;
 	private Model model;
 	private ListOfParameters lop; 
 	private ListOfSpecies los;
@@ -190,7 +190,6 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 
 	@Override
 	public void focusLost(FocusEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
