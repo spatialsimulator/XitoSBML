@@ -8,6 +8,7 @@ public class MainParametricSpatial extends MainSpatial{
 	public void run(String arg) {
 		/*
 		Frame[] f =ImageJ.getFrames();
+		
 		Frame frame = null;
 		for(int i = 0 ; i < f.length ; i++){
 			if(f[i].getTitle().equals("ImageJ 3D Viewer")) frame = f[i];

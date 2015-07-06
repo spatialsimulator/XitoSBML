@@ -170,7 +170,7 @@ public abstract class MainSpatial implements PlugIn{
 		try {
 			id = InetAddress.getLocalHost().getHostName();
 		} catch (UnknownHostException e) {
-			
+			System.out.println("Unknown host");
 		}
 		
 		String annot = "This " + model.getId() + " model is created";

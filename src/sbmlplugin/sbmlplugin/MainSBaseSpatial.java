@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.sbml.libsbml.ReqExtension;
 import org.sbml.libsbml.SBMLDocument;
@@ -36,7 +37,7 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		document = getDocment();
 		if(document == null || document.getModel() == null) return;
 		model = document.getModel();
-		checkLevelAndVersion();
+		if(checkLevelAndVersion()) return;
 		checkExtension();
 		
 		addParaAndSpecies();
@@ -60,6 +61,7 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setMultiSelectionEnabled(false);
+		chooser.setFileFilter(new FileNameExtensionFilter("SBML File(*.xml)","xml"));
 		int returnVal = chooser.showOpenDialog(null);
 		
 		if (returnVal != JFileChooser.APPROVE_OPTION)
@@ -69,15 +71,18 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		return reader.readSBMLFromFile(f.getAbsolutePath());
 	}
 	
-	private void checkLevelAndVersion(){
-		if(model.getLevel() == PluginConstants.LOWERSBMLLEVEL)			 			//level 2		change to latest level 2 version
-			document.setLevelAndVersion(PluginConstants.LOWERSBMLLEVEL, PluginConstants.LOWERSBMLVERSION);
-		else{}																	//level 3		if new verison comes up check
-
+	private boolean checkLevelAndVersion(){
+		if(model.getLevel() == PluginConstants.LOWERSBMLLEVEL){
+			System.err.println("Model must be level 3 to use this plugin");
+			return false;
+		}
+		
+		//add check if new verison comes up check
+		return true;
 	}
 	
 	private void checkExtension(){
-		if(model.getLevel() == 2) return ;
+		//if(model.getLevel() == 2) return;
 		
 		SBMLNamespaces sbmlns = document.getSBMLNamespaces();
 		if(!document.getPackageRequired("spatial")){			//check spatial

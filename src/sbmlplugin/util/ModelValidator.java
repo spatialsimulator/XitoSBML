@@ -1,4 +1,5 @@
 package sbmlplugin.util;
+
 import org.sbml.libsbml.AdvectionCoefficient;
 import org.sbml.libsbml.AnalyticGeometry;
 import org.sbml.libsbml.BoundaryCondition;
@@ -51,15 +52,16 @@ public class ModelValidator {
 	public ModelValidator(Model model){
 		this.model = model;
 		checkModelVersion();
+		checkExtension();
 		checkValidation();
 	}
 	
-	void checkModelVersion(){
+	private void checkModelVersion(){
 		if(model.getVersion() != PluginConstants.SBMLLEVEL  ||  model.getLevel() != PluginConstants.SBMLVERSION) 
 			System.err.println("model is not level 3 version 1");
 	}
 	
-	void checkExtension(){
+	private void checkExtension(){
 		SBMLDocument document = model.getSBMLDocument();
 		
 		if(!document.getPackageRequired("spatial")){
@@ -72,7 +74,7 @@ public class ModelValidator {
 		
 	}
 	
-	public void checkValidation(){
+	private void checkValidation(){
 		checkModel(model);
 		checkSpecies(model.getListOfSpecies());
 		checkParameter(model.getListOfParameters());
@@ -84,12 +86,12 @@ public class ModelValidator {
 			System.out.println( model.getId() + " Model is valid");
 	}
 	
-	void checkModel(Model model){
+	private void checkModel(Model model){
 		System.out.println("Checking model");
 		checkRequired(model);
 	}
 	
-	void checkSpecies(ListOfSpecies los){
+	private void checkSpecies(ListOfSpecies los){
 		System.out.println("Checking species");
 		for(int i = 0 ; i < los.size() ; i++){
 			Species s = los.get(i);
@@ -100,7 +102,7 @@ public class ModelValidator {
 	}
 	
 	
-	void checkParameter(ListOfParameters lop){
+	private void checkParameter(ListOfParameters lop){
 		System.out.println("Checking parameter");
 		for(int i = 0 ; i < lop.size() ; i++){
 			Parameter p = lop.get(i);
@@ -111,7 +113,7 @@ public class ModelValidator {
 		}	
 	}
 	
-	void checkSpatialParameter(SpatialParameterPlugin sp){
+	private void checkSpatialParameter(SpatialParameterPlugin sp){
 		if(sp.isSetAdvectionCoefficient()){
 			AdvectionCoefficient ac = sp.getAdvectionCoefficient();
 			checkRequired(ac);
@@ -129,7 +131,7 @@ public class ModelValidator {
 		}
 	}
 	
-	void checkCompartment(ListOfCompartments loc){
+	private void checkCompartment(ListOfCompartments loc){
 		System.out.println("Checking compartment");
 		for(int i = 0 ; i < loc.size() ; i++){
 			Compartment c = loc.get(i);
@@ -139,12 +141,12 @@ public class ModelValidator {
 		}
 	}
 	
-	void checkSpatialCompartment(SpatialCompartmentPlugin scp){
+	private void checkSpatialCompartment(SpatialCompartmentPlugin scp){
 		if(scp.isSetCompartmentMapping()) checkRequired(scp.getCompartmentMapping());
 		else System.err.println("missing compartment mapping in " + scp.getParentSBMLObject().getId() + " at line:" + scp.getLine());
 	}
 	
-	void checkReaction(ListOfReactions lor){
+	private void checkReaction(ListOfReactions lor){
 		System.out.println("Checking reaction");
 		for(int i = 0; i < lor.size() ; i++){
 			Reaction r = lor.get(i);
@@ -157,10 +159,9 @@ public class ModelValidator {
 		}
 	}
 		
-	void checkGeometry(){
+	private void checkGeometry(){
 		System.out.println("Checking geometry");
 		Geometry geometry = spatialplugin.getGeometry();
-		geometry.setCoordinateSystem("cartesian");
 		checkRequired(geometry);
 		checkCoordinateComponents(geometry.getListOfCoordinateComponents());
 		checkDomainType(geometry.getListOfDomainTypes());
@@ -170,11 +171,11 @@ public class ModelValidator {
 		checkSampledField(geometry.getListOfSampledFields());
 	}
 	
-	void checkSampledField(ListOfSampledFields losf){
+	private void checkSampledField(ListOfSampledFields losf){
 		checkList(losf);
 	}
 	
-	void checkGeometryDefinitions(ListOfGeometryDefinitions logd){
+	private void checkGeometryDefinitions(ListOfGeometryDefinitions logd){
 		for(int i = 0 ; i < logd.size() ; i++){
 			GeometryDefinition gd = logd.get(i);
 			checkRequired(gd);
@@ -192,19 +193,19 @@ public class ModelValidator {
 		}
 	}
 	
-	void checkAdjacentDomains(ListOfAdjacentDomains load){
+	private void checkAdjacentDomains(ListOfAdjacentDomains load){
 		checkList(load);
 	}
 	
-	void checkDomains(ListOfDomains lod){
+	private void checkDomains(ListOfDomains lod){
 		checkList(lod);
 	}
 	
-	void checkDomainType(ListOfDomainTypes lodt){
+	private void checkDomainType(ListOfDomainTypes lodt){
 		checkList(lodt);
 	}
 	
-	void checkCoordinateComponents(ListOfCoordinateComponents locc){
+	private void checkCoordinateComponents(ListOfCoordinateComponents locc){
 		checkRequired(locc);
 		for(int i = 0 ; i < locc.size() ; i++){
 			CoordinateComponent cc = locc.get(i);
@@ -214,7 +215,7 @@ public class ModelValidator {
 		}
 	}
 	
-	void checkRequired(SBase s){
+	private void checkRequired(SBase s){
 		if(!s.hasRequiredAttributes()){
 			printError(s, "attribute ");
 		}
@@ -223,12 +224,12 @@ public class ModelValidator {
 		}
 	}
 	
-	void checkList(ListOf lo){
+	private void checkList(ListOf lo){
 		for(int i = 0 ; i < lo.size() ; i++)
 			checkRequired(lo.get(i));
 	}
 	
-	void printError(SBase s, String part){
+	private void printError(SBase s, String part){
 		String id = s.getId();
 		if(id.equals("")) id = s.getParentSBMLObject().getId();
 		System.err.println("missing required " +  part + "in " +  s.getClass() + " " + id + " at line: " + s.getLine());
@@ -237,7 +238,7 @@ public class ModelValidator {
 	
 	public static void main(String[] args) {
 		SBMLReader reader = new SBMLReader();
-		SBMLDocument d = reader.readSBML("sampledfield_3d.xml");
+		SBMLDocument d = reader.readSBML("spatial_example1.xml");
 		ModelValidator mv = new ModelValidator(d.getModel());
 		mv.checkValidation();
 		
