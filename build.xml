@@ -1,50 +1,51 @@
 <?xml version="1.0" encoding="Shift_JIS" ?>
 <project name="SBMLPlugin" default="main" basedir=".">
-  <description>
+	<description>
     SBMLPlugin build file
   </description>
-  <property name="src" location="src" />
-  <property name="build" location="bin" />
-  <property name="dist" location="dist" />
-  <property name="FijiDir" location="/Applications/Fiji.app" />
-  <property name="pluginsDir" location="${basedir}/plugins" />
-  <property name="destDir" location="${FijiDir}/plugins" />
-  <property name="utilDir" location="${basedir}/util" />
-  <property name="user.name" value="Kaito Ii" />
-  <property name="patch.file" value="${utilDir}/info.patch" />
-  <property name="org.file" value="${FijiDir}/Contents/info.plist" />
-  <property name="sbmllib" value="${basedir}/lib" />
-	 <property name="dylib" value="libsbml.5.11.4.dylib" />
-	 <property name="jnilib" value="libsbmlj.jnilib" />
+	<property name="src" location="src" />
+	<property name="build" location="bin" />
+	<property name="FijiDir" location="/Applications/Fiji.app" />
+	<property name="pluginsDir" location="${basedir}/plugins" />
+	<property name="destDir" location="${FijiDir}/plugins" />
+	<property name="utilDir" location="${basedir}/util" />
+	<property name="user.name" value="Kaito Ii" />
+	<property name="org.file" value="${FijiDir}/Contents/info.plist" />
+	<property name="sbmllib" value="${basedir}/lib" />
+	<property name="dylib" value="libsbml.5.11.4.dylib" />
+	<property name="jnilib" value="libsbmlj.jnilib" />
 	<property name="sbmljar" value="libsbmlj.jar" />
-  <target name="main" depends="compress" description="Main target">
-    <echo> Building the .jar file.</echo>
-  </target>
-  <target name="compress" depends="" description="generate the distribution">
-    <jar jarfile="Spatial_SBML.jar">
-      <fileset dir="${basedir}" includes="plugins.config" />
-      <fileset dir="${build}" includes="**/**.class" />
-      <manifest>
-        <attribute name="Built-By" value="${user.name}" />
-      </manifest>
-    </jar>
-    <copy file="Spatial_SBML.jar" toDir="${destDir}" overwrite="true" />
-    <copy file="Spatial_SBML.jar" toDir="${basedir}/plugins" overwrite="true" />
-  </target>
+	
+	<target name="main" depends="compress" description="Main target">
+		<echo> Building the .jar file.</echo>
+	</target>
+	<target name="compress" depends="" description="generate the distribution">
+		<jar jarfile="Spatial_SBML.jar">
+			<fileset dir="${basedir}" includes="plugins.config" />
+			<fileset dir="${build}" includes="**/**.class" />
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+		<copy file="Spatial_SBML.jar" toDir="${destDir}" overwrite="true" />
+		<copy file="Spatial_SBML.jar" toDir="${basedir}/plugins" overwrite="true" />
+	</target>
 	<target name="mv" depends="" description="move library">
-	    <echo>Moving sbml library</echo>
+		<echo>Moving sbml library</echo>
 		<copy file="${sbmllib}/${sbmljar}" toDir="${destDir}" overwrite="true" />
 		<copy file="${sbmllib}/${dylib}" toDir="${FijiDir}" overwrite="true" />
 		<copy file="${sbmllib}/${jnilib}" toDir="${FijiDir}" overwrite="true" />
-	  </target>
-  <target name="patch" depends="" description="patch to info.plist">
-    <echo>Editing Info.plist.</echo>
-    <patch patchfile="${patch.file}" originalfile="${org.file}" />
-  </target>
-  <target name="install" depends="" description="install libsbml library">
-    <echo>Installing libsbml library</echo>
-    <exec executable="/bin/sh">
-      <arg value="${utilDir}/sbmlDownload.sh"/>
-    </exec>
-  </target>
+		<echo>Moving xml-wise library</echo>
+		<copy file="${sbmllib}/${sbmljar}" toDir="${destDir}" overwrite="true" />
+	</target>
+	<target name="plist" depends="" description="edit to info.plist">
+		<echo>Editing Info.plist.</echo>
+    <java classname="PlistEditor" classpath="${basedir}/bin/sbmlplugin/util/" />
+	</target>
+	<target name="install" depends="" description="install libsbml library">
+		<echo>Installing libsbml library</echo>
+		<exec executable="/bin/sh">
+			<arg value="${utilDir}/sbmlDownload.sh"/>
+		</exec>
+	</target>
 </project>
