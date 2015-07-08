@@ -1,7 +1,11 @@
 package sbmlplugin.util;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 
+import xmlwise.Plist;
 import xmlwise.XmlElement;
 import xmlwise.XmlParseException;
 import xmlwise.Xmlwise;
@@ -34,7 +38,6 @@ public class PlistEditor {
 	public void modify() throws XmlParseException{
 		XmlElement topNode = docNode.get(0);
 		XmlElement element = topNode.getUnique("dict");
-		
 		for(int i = 0 ; i < element.size() ; i++){
 			XmlElement el = element.get(i);
 			if(el.getValue().equals("JVMOptions")){
@@ -43,7 +46,6 @@ public class PlistEditor {
 				break;
 			}
 		}
-
 	}
 	
 	private XmlElement resolveOption(XmlElement element){
@@ -54,13 +56,21 @@ public class PlistEditor {
 		else return new XmlElement("string", s + " " + option + "=" + path);
 	}
 	
+	public void save() throws IOException, XmlParseException{
+		File file  = new File(path + "/Contents/" + fileName);
+		//Plist.storeObject(Plist.fromXml(docNode.toXml()), file);
+		Plist.storeObject(Plist.objectFromXmlElement(docNode), file);
+	}
+	
 	public static void main(String[] args){
 		try {
 			PlistEditor edit = new PlistEditor();
 			edit.modify();
+			edit.save();
 		} catch (Exception e) {
 			System.err.println("Error while editing info.plist in Fiji");
 			e.printStackTrace();
 		}		
+		
 	}
 }

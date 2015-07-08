@@ -15,7 +15,7 @@
 	<property name="dylib" value="libsbml.5.11.4.dylib" />
 	<property name="jnilib" value="libsbmlj.jnilib" />
 	<property name="sbmljar" value="libsbmlj.jar" />
-	
+
 	<target name="main" depends="compress" description="Main target">
 		<echo> Building the .jar file.</echo>
 	</target>
@@ -40,12 +40,17 @@
 	</target>
 	<target name="plist" depends="" description="edit to info.plist">
 		<echo>Editing Info.plist.</echo>
-    <java classname="PlistEditor" classpath="${basedir}/bin/sbmlplugin/util/" />
+		<java classname="sbmlplugin.util.PlistEditor">
+			<classpath>
+				<pathelement path="${basedir}/bin" />
+				<pathelement path="${basedir}/lib/xmlwise-1.2.11.jar" />
+			</classpath>
+		</java>
 	</target>
 	<target name="install" depends="" description="install libsbml library">
 		<echo>Installing libsbml library</echo>
 		<exec executable="/bin/sh">
-			<arg value="${utilDir}/sbmlDownload.sh"/>
+			<arg value="${utilDir}/sbmlDownload.sh" />
 		</exec>
 	</target>
 </project>
