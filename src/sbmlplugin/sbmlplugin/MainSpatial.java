@@ -107,19 +107,21 @@ public abstract class MainSpatial implements PlugIn{
 		HashMap<String, ImagePlus> hashDomFile = imgexp.getDomFile();
 		interpolate.interpolate(hashDomFile);
 		Fill fill = new Fill();
-		//fill each images
+
 		for(Entry<String, ImagePlus> e : hashDomFile.entrySet())
 			hashDomFile.put(e.getKey(), fill.fill(e.getValue()));
 		
 		CreateImage creIm = new CreateImage(imgexp.getDomFile(), hashSampledValue);
 		spImg = new SpatialImage(hashSampledValue, hashDomainTypes, creIm.getCompoImg());
+		//showStep(spImg);
 		ImagePlus img = fill.fill(spImg);
 		spImg.setImage(img);
-		
+		//showStep(spImg);
 		ImageBorder imgBorder = new ImageBorder(spImg);
 		spImg.updateImage(imgBorder.getStackImage());
-		
+		//showStep(spImg);
 		new ImageEdit(spImg);
+		//showStep(spImg);
 	}
 	
 	protected void visualize (SpatialImage spImg){
@@ -132,7 +134,7 @@ public abstract class MainSpatial implements PlugIn{
 		ListOfSpecies los = model.getListOfSpecies();
 		ParamAndSpecies pas = new ParamAndSpecies(model);
 		
-		while(lop.size() == 0 || los.size() == 0 || !pas.hasExited()){
+		while(lop.size() == 0 || los.size() == 0 || pas.isRunning()){
 			synchronized(lop){
 				synchronized(los){
 					
@@ -187,6 +189,10 @@ public abstract class MainSpatial implements PlugIn{
 		model.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
 				+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
 
+	}
+	
+	protected void showStep(SpatialImage spImg){
+		visualize(spImg);
 	}
 }
 	

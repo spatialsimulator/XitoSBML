@@ -144,9 +144,9 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		validate();
 	}
 	
-	private boolean hasExited = false;
-	public boolean hasExited(){
-		return hasExited;
+	private boolean isRunning = true;
+	public boolean isRunning(){
+		return isRunning;
 	}
 
 	
@@ -173,7 +173,7 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		
 		if(input.equals("OK")){ 
 			if(los.size() > 0 && lop.size() > 0){
-				hasExited = true;
+				isRunning = false;
 				dispose();
 				return;
 			}else {

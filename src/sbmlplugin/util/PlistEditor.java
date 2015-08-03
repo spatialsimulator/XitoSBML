@@ -2,8 +2,8 @@ package sbmlplugin.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
+
+import org.w3c.dom.Document;
 
 import xmlwise.Plist;
 import xmlwise.XmlElement;
@@ -60,6 +60,7 @@ public class PlistEditor {
 		File file  = new File(path + "/Contents/" + fileName);
 		//Plist.storeObject(Plist.fromXml(docNode.toXml()), file);
 		Plist.storeObject(Plist.objectFromXmlElement(docNode), file);
+		
 	}
 	
 	public static void main(String[] args){
