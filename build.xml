@@ -8,6 +8,7 @@
 	<property name="FijiDir" location="/Applications/Fiji.app" />
 	<property name="pluginsDir" location="${basedir}/plugins" />
 	<property name="destDir" location="${FijiDir}/plugins" />
+	<property name="jarDir" location="${FijiDir}/jars" />
 	<property name="utilDir" location="${basedir}/util" />
 	<property name="user.name" value="Kaito Ii" />
 	<property name="org.file" value="${FijiDir}/Contents/info.plist" />
@@ -35,8 +36,10 @@
 		<copy file="${sbmllib}/${sbmljar}" toDir="${destDir}" overwrite="true" />
 		<copy file="${sbmllib}/${dylib}" toDir="${FijiDir}" overwrite="true" />
 		<copy file="${sbmllib}/${jnilib}" toDir="${FijiDir}" overwrite="true" />
-		<echo>Moving xml-wise library</echo>
-		<copy file="${sbmllib}/${sbmljar}" toDir="${destDir}" overwrite="true" />
+		<echo>Moving jgraph library</echo>
+		<copy toDir="${jarDir}" overwrite="true" >
+			<fileset dir="${sbmllib}" includes="jgraph*.jar"/>
+			</copy>
 	</target>
 	<target name="plist" depends="" description="edit to info.plist">
 		<echo>Editing Info.plist.</echo>
@@ -47,10 +50,5 @@
 			</classpath>
 		</java>
 	</target>
-	<target name="install" depends="" description="install libsbml library">
-		<echo>Installing libsbml library</echo>
-		<exec executable="/bin/sh">
-			<arg value="${utilDir}/sbmlDownload.sh" />
-		</exec>
-	</target>
+
 </project>

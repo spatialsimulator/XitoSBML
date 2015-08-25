@@ -125,8 +125,8 @@ public abstract class MainSpatial implements PlugIn{
 	}
 	
 	protected void visualize (SpatialImage spImg){
-		//viewer = new Viewer();
-		//viewer.view(spImg);
+		viewer = new Viewer();
+		viewer.view(spImg);
 	}
 	
 	protected void addParaAndSpecies(){
