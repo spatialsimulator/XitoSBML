@@ -13,8 +13,7 @@ import javax.swing.table.TableColumnModel;
 
 
 @SuppressWarnings("serial")
-public class MenuColumn extends AbstractCellEditor implements
-		TableCellRenderer, TableCellEditor, ActionListener {
+public class MenuColumn extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener {
 
 	JTable table;
 	JComboBox editButton;

@@ -43,7 +43,6 @@ public class ImageBorder {
 				}
 			}
 		}
-		
 	}
 
 	private boolean isBorderSafe(){

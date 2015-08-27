@@ -31,6 +31,7 @@ import sbmlplugin.image.ImageEdit;
 import sbmlplugin.image.ImageExplorer;
 import sbmlplugin.image.Interpolate;
 import sbmlplugin.image.SpatialImage;
+import sbmlplugin.image.SplitDomains;
 import sbmlplugin.visual.DomainStruct;
 import sbmlplugin.visual.Viewer;
 
@@ -119,14 +120,17 @@ public abstract class MainSpatial implements PlugIn{
 		//showStep(spImg);
 		ImageBorder imgBorder = new ImageBorder(spImg);
 		spImg.updateImage(imgBorder.getStackImage());
+		SplitDomains split = new SplitDomains(spImg);
+		spImg.updateImage(split.getStackImage());
+		
 		//showStep(spImg);
 		new ImageEdit(spImg);
 		//showStep(spImg);
 	}
 	
 	protected void visualize (SpatialImage spImg){
-		viewer = new Viewer();
-		viewer.view(spImg);
+		//viewer = new Viewer();
+		//viewer.view(spImg);
 	}
 	
 	protected void addParaAndSpecies(){

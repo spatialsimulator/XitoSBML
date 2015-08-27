@@ -184,7 +184,7 @@ public class ImageEdit {
 			hashPix.remove(adjVal.get(i));
 		}
 			return min;
-		}
+	}
 
 	
 	private int setbackLabel(int  w , int h, int d, int pixVal){
