@@ -8,7 +8,7 @@ import ij.io.FileInfo;
 import ij.process.ByteProcessor;
 
 
-public class Interpolate {
+public class Interpolater {
 	//original voxel size
 	private double voxx;			
 	private double voxy;
@@ -22,11 +22,11 @@ public class Interpolate {
 	private ImageStack altimage;	//output pixel image
 	private byte[] pixels;
 	
-	public Interpolate() {
+	public Interpolater() {
 
 	}
 	
-	Interpolate(SpatialImage spImg){
+	Interpolater(SpatialImage spImg){
 			this.image = spImg.getImage();
 			width = spImg.getWidth();
 			height = spImg.getHeight();

@@ -25,11 +25,11 @@ import org.sbml.libsbml.libsbml;
 
 import sbmlplugin.gui.ParamAndSpecies;
 import sbmlplugin.image.CreateImage;
-import sbmlplugin.image.Fill;
+import sbmlplugin.image.Filler;
 import sbmlplugin.image.ImageBorder;
 import sbmlplugin.image.ImageEdit;
 import sbmlplugin.image.ImageExplorer;
-import sbmlplugin.image.Interpolate;
+import sbmlplugin.image.Interpolater;
 import sbmlplugin.image.SpatialImage;
 import sbmlplugin.visual.DomainStruct;
 import sbmlplugin.visual.Viewer;
@@ -45,7 +45,7 @@ public abstract class MainSpatial implements PlugIn{
 	protected ReqSBasePlugin reqplugin;
 	private ImageExplorer imgexp;
 	private HashMap<String, Integer> hashDomainTypes;
-	private HashMap<String, Integer> hashSampledValue;
+	protected HashMap<String, Integer> hashSampledValue;
 	protected Viewer viewer;
 	protected SpatialImage spImg;
 	
@@ -103,10 +103,10 @@ public abstract class MainSpatial implements PlugIn{
 	}
 	
 	protected void computeImg(){
-		Interpolate interpolate = new Interpolate();
+		Interpolater interpolater = new Interpolater();
 		HashMap<String, ImagePlus> hashDomFile = imgexp.getDomFile();
-		interpolate.interpolate(hashDomFile);
-		Fill fill = new Fill();
+		interpolater.interpolate(hashDomFile);
+		Filler fill = new Filler();
 
 		for(Entry<String, ImagePlus> e : hashDomFile.entrySet())
 			hashDomFile.put(e.getKey(), fill.fill(e.getValue()));
@@ -160,11 +160,12 @@ public abstract class MainSpatial implements PlugIn{
 		try{
 			if(name.contains(".xml"))	libsbml.writeSBMLToFile(document, sd.getDirectory() + "/" + name);  
 			else 	   					libsbml.writeSBMLToFile(document, sd.getDirectory() + "/" + name + ".xml"); 			
+			spImg.saveAsImage(sd.getDirectory(), name);
 		}catch(NullPointerException e){
 			System.out.println("SBML document was not saved");
 		}
 		
-
+		
         IJ.log(document.toSBML());
 	}
 	

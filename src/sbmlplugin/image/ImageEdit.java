@@ -88,16 +88,7 @@ public class ImageEdit {
     	}
     	return false;
     }
- 
-    //count number of domains in each domaintype and store to hashlabelnum
-    public void countdomtype(HashMap<Integer,Integer> num){
-    	hashLabelNum = new HashMap<Integer,Integer>();
-    	for(Integer i : labelList)
-			hashLabelNum.put(i, num.get(i) % 10);
-  
-    	System.out.println(hashLabelNum.toString());
-    }
-
+    
     public void domtype(HashMap<Integer,Integer> num){
     	hashLabelNum = new HashMap<Integer,Integer>();
     	for(Entry<Integer, Integer> e : num.entrySet()){
@@ -284,7 +275,7 @@ public class ImageEdit {
 						ArrayList<Integer> temp = new ArrayList<Integer>(2);
 						lower = getLowerLabel(matrix[d * height * width + i * width + j + 1], matrix[d * height * width + i * width + j]);
 						higher = getHigherLabel(matrix[d * height * width + i * width + j + 1], matrix[d * height * width + i * width + j]);
-						temp.add(higher);temp.add(lower);
+						temp.add(higher); temp.add(lower);
 						adjacentsPixel.add(temp);
 						addmem(higher,lower);
 					}
@@ -294,7 +285,7 @@ public class ImageEdit {
 						ArrayList<Integer> temp = new ArrayList<Integer>(2);
 						lower = getLowerLabel(matrix[d * height * width + (i + 1) * width + j], matrix[d * height * width + i * width + j]);
 						higher = getHigherLabel(matrix[d * height * width + (i + 1) * width + j], matrix[d * height * width + i * width + j]);
-						temp.add(higher);temp.add(lower);
+						temp.add(higher); temp.add(lower);
 						adjacentsPixel.add(temp);
 						addmem(higher,lower);
 					}
@@ -304,7 +295,7 @@ public class ImageEdit {
 						ArrayList<Integer> temp = new ArrayList<Integer>(2);
 						lower = getLowerLabel(matrix[(d + 1) * height * width + i * width + j], matrix[d * height * width + i * width + j]);
 						higher = getHigherLabel(matrix[(d + 1) * height * width + i * width + j], matrix[d * height * width + i * width + j]);
-						temp.add(higher);temp.add(lower);
+						temp.add(higher); temp.add(lower);
 						adjacentsPixel.add(temp);
 						addmem(higher,lower);	
 					}

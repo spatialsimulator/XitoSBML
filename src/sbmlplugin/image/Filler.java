@@ -1,6 +1,7 @@
 package sbmlplugin.image;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.io.FileSaver;
 import ij.process.ByteProcessor;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 
-public class Fill {
+public class Filler {
 	private ImagePlus image;
 	private int width;
 	private int height;
@@ -22,7 +23,6 @@ public class Fill {
 	private HashMap<Integer, Byte> hashPix = new HashMap<Integer, Byte>();		// label number, pixel value
 	private byte[] pixels;
 	private int[] invert;
-	private ImageStack altimage;
 	
 	public ImagePlus fill(ImagePlus image){
 		this.width = image.getWidth();
@@ -39,8 +39,8 @@ public class Fill {
 				hashPix.clear();
 				label();
 			}
-			setStack();
-			image.setStack(altimage);
+			ImageStack stack = createStack();
+			image.setStack(stack);
 			image.updateImage();
 		}
 		return image;
@@ -60,20 +60,25 @@ public class Fill {
 				hashPix.clear();
 				label();
 			}
-			setStack();
-			image.setStack(altimage);
+			ImageStack stack = createStack();
+			image.setStack(stack);
 			image.updateImage();
 		}
+		
+		image.show();
+		FileSaver fs = new FileSaver(image);
+		fs.saveAsTiffStack("/Users/ii/Desktop/test.tiff"); 
 		return image;
 	}
 	
-	private void setStack(){
-		altimage = new ImageStack(width, height);
+	private ImageStack createStack(){
+		ImageStack altimage = new ImageStack(width, height);
 		for(int d = 0 ; d < depth ; d++){
 			byte matrix[] = new byte[width * height];
 			System.arraycopy(pixels, d * height * width, matrix, 0, matrix.length);
 			altimage.addSlice(new ByteProcessor(width,height,matrix,null));
 		}
+		return altimage;
 	}
 	
 	 private void copyMat(){

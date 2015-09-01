@@ -232,8 +232,7 @@ public class SpatialSBMLExporter{
 					lodom.append(dom);
 				}
 			}
-     }
-     
+     }   
   }
 
   public void addDomainTypes() {                        //create domain types, domain, compartment info

@@ -1,6 +1,7 @@
 package sbmlplugin.image;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.io.FileSaver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -120,8 +121,18 @@ public class SpatialImage {
 		this.hashDomainTypes =  hashDomainTypes;
 	}
 	
-	public HashMap<String, Integer> getHashDomainNum() {
+	public void createHashDomainTypes() {
+		hashDomainTypes = new HashMap<String, Integer>();
+		for (String s : hashSampledValue.keySet()) {
+			if (s.contains("membrane"))
+				hashDomainTypes.put(s, 2);
+			else
+				hashDomainTypes.put(s, 3);
 
+		}
+	}
+	
+	public HashMap<String, Integer> getHashDomainNum() {
 		return hashDomainNum;
 	}
 	
@@ -137,5 +148,10 @@ public class SpatialImage {
 		this.adjacentsList = adjacentsList;
 	}
 
+	public void saveAsImage(String path, String name){
+		FileSaver fs = new FileSaver(img);
+		name = name.substring(0, name.indexOf('.'));
+		fs.saveAsTiffStack(path + "/" + name + ".tiff");
+	}
 
 }

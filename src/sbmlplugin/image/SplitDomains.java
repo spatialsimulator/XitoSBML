@@ -5,7 +5,9 @@ import ij.process.ByteProcessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Spatial SBML Plugin for ImageJ
@@ -21,6 +23,7 @@ public class SplitDomains {
 	private ImageStack altStack;
 	private byte cytVal;
 	private byte delTarget;
+	private Set<Integer> adjacentToTargetSet = new HashSet<Integer>();
 	
 	public SplitDomains(SpatialImage spImg, String targetDomain){
 		this.width = spImg.getWidth();
@@ -43,7 +46,7 @@ public class SplitDomains {
 			for (int h = 0; h < height; h++) {
 				for (int w = 0; w < width; w++) {
 					if(	delTarget == (raw[d * height * width + h * width + w])){
-						checkAdjacents(w,h,d, raw[d * height * width + h * width + w]);
+						checkAdjacents(w,h,d, delTarget);
 					}
 				}
 			}
@@ -67,7 +70,7 @@ public class SplitDomains {
 			adjVal.add(raw[d * height * width + (h - 1) * width + w]);
 
 		// check down
-		if (h != height - 1 && raw[d * height * width + (h + 1) * width + w] != cytVal && raw[d * height * width + (h - 1) * width + w] != pixVal)
+		if (h != height - 1 && raw[d * height * width + (h + 1) * width + w] != cytVal && raw[d * height * width + (h + 1) * width + w] != pixVal)
 			adjVal.add(raw[d * height * width + (h + 1) * width + w]);
 
 		// check below
@@ -82,8 +85,15 @@ public class SplitDomains {
 		if (adjVal.isEmpty())
 			return;
 		
-		else
+		else{
+			listToSet(adjVal);
 			raw[d * height * width + h * width + w] = cytVal;
+		}
+	}
+	
+	private void listToSet(List<Byte> adjVal){
+		for(Byte b : adjVal)
+			adjacentToTargetSet.add(b & 0xFF);	
 	}
 	
 	private void createNewStack(){
@@ -98,5 +108,9 @@ public class SplitDomains {
 	
 	public ImageStack getStackImage(){
 		return altStack;
+	}
+
+	public Set<Integer> getAdjacentToTargetList() {
+		return adjacentToTargetSet;
 	}
 }
