@@ -1,6 +1,6 @@
 package sbmlplugin;
 import ij.IJ;
-import sbmlplugin.sbmlplugin.MainSBaseSpatial;
+import sbmlplugin.sbmlplugin.MainModelEdit;
 
 
 /**
@@ -9,7 +9,7 @@ import sbmlplugin.sbmlplugin.MainSBaseSpatial;
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 17, 2015
  */
-public class Spatial_SBase_SBML extends Spatial_SBML {
+public class Spatial_Model_Edit extends Spatial_SBML {
 
 	static {
 		String varname;
@@ -60,6 +60,6 @@ public class Spatial_SBase_SBML extends Spatial_SBML {
 	@Override
 	public void run(String args) {
 		if(checkJgraph() && check3Dviewer()) 
-			new MainSBaseSpatial().run(args);		
+			new MainModelEdit().run(args);		
 	}
 }

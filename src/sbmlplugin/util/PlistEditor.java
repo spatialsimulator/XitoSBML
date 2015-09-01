@@ -3,8 +3,6 @@ package sbmlplugin.util;
 import java.io.File;
 import java.io.IOException;
 
-import org.w3c.dom.Document;
-
 import xmlwise.Plist;
 import xmlwise.XmlElement;
 import xmlwise.XmlParseException;

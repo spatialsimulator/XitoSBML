@@ -237,7 +237,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	 * @see sbmlplugin.visual.ImageGeometryData#getSpatialImage()
 	 */
 	@Override
-	SpatialImage getSpatialImage() {
+	public SpatialImage getSpatialImage() {
 		return  new SpatialImage(hashSampledValue, img);
 	}
 

@@ -28,5 +28,5 @@ public abstract class ImageGeometryData extends AbstractData {
 
 	abstract void getSampledValues();
 	abstract void createImage();
-	abstract SpatialImage getSpatialImage();
+	public abstract SpatialImage getSpatialImage();
 }

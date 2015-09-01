@@ -1,7 +1,6 @@
 package sbmlplugin.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -17,11 +16,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
 
 import org.sbml.libsbml.AdvectionCoefficient;
 import org.sbml.libsbml.BoundaryCondition;
@@ -154,7 +151,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		p.setConstant(true);
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
 
-		switch(index){
+		switch (index) {
 		case ADVECTION:
 			AdvectionCoefficient ac = sp.createAdvectionCoefficient();
 			ac.setVariable(species);
@@ -162,19 +159,18 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 			break;
 		case BOUNDARY:
 			BoundaryCondition bc = sp.createBoundaryCondition();
-			bc.setVariable(species); bc.setBoundaryDomainType((String) domCombo.getSelectedItem());
+			bc.setVariable(species);
+			bc.setBoundaryDomainType(los.get(species).getCompartment());
 			bc.setCoordinateBoundary((String) boundCombo.getSelectedItem());
 			bc.setType(conditionCombo.getSelectedIndex());
 			break;
 		case DIFFUSION:
 			DiffusionCoefficient dc = sp.createDiffusionCoefficient();
-			dc.setVariable(species); 
+			dc.setVariable(species);
 			dc.setType(diffCombo.getSelectedIndex());
 			addDiffCoord(dc);
 			break;
 		}
-		//model.addParameter(p);
-		System.out.println(p.toSBML());
 	}
 
 	private void addDiffCoord(DiffusionCoefficient dc){
@@ -252,7 +248,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		case BOUNDARY:
 			boundCombo = createJComboBox("BoundaryCoordinate", lbound);
 			conditionCombo = createJComboBox("BoundaryKind", lboundcondition);
-			coeff.add(domCombo);
+			//coeff.add(domCombo);
 			coeff.add(boundCombo);
 			coeff.add(conditionCombo);
 			coeff.add(speciesCombo);
@@ -296,7 +292,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		cm.setId("spatial");
 		cm.setChangedBy( new SpatialPkgNamespaces(3, 1, 1).getURI());
 		cm.setViableWithoutChange(true);
-		System.out.println(s.toSBML());
 	}
 
 	private void addSpeciesMode(){
@@ -336,7 +331,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	private final int DIFFUSION = 4;
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-
 		if(e.getStateChange() == ItemEvent.SELECTED ){
 			state = comboList.indexOf(e.getItem());
 			
@@ -409,24 +403,6 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		JOptionPane.showMessageDialog(this, "Missing Component", "Error", JOptionPane.PLAIN_MESSAGE);	
 	}
 	
-	class ComboBoxRenderer extends JLabel implements ListCellRenderer
-    {
-		private static final long serialVersionUID = 1L;
-		private String title;
-
-        public ComboBoxRenderer(String title){
-            this.title = title;
-        }
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value,
-                int index, boolean isSelected, boolean hasFocus){
-            if (index == -1 && value == null) setText(title);
-            else setText(value.toString());
-            return this;
-        }
-    }
-
 	@Override
 	public void windowActivated(WindowEvent arg0) {
 		

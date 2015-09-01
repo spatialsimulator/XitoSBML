@@ -26,11 +26,12 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	private int width;
 	private int height;
 	private int depth;
+	
 	/**
 	 * @param gd
 	 * @param g
 	 */
-	SampledFieldGeometryData(GeometryDefinition gd, Geometry g) {
+	public SampledFieldGeometryData(GeometryDefinition gd, Geometry g) {
 		super(gd, g);
 		sfg = (SampledFieldGeometry)gd;
 		getSampledValues();
@@ -41,7 +42,7 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	 * @see sbmlplugin.visual.ImageGeometryData#getSampledValue()
 	 */
 	@Override
-	void getSampledValues() {											//may need to use min/max in future
+	protected void getSampledValues() {											//may need to use min/max in future
 		ListOfSampledVolumes losv = sfg.getListOfSampledVolumes();
 		for(int i = 0 ; i < losv.size() ; i++){
 			SampledVolume sv = losv.get(i);
@@ -51,8 +52,9 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	}
 
 	
-	void createImage(){
+	protected void createImage(){
 		ListOfSampledFields losf = g.getListOfSampledFields();
+		//TODO : be able create image with multiple sampledfield
 		if(losf.size() > 1)
 			System.err.println("not able to compute multiple sampledfields at this point");
 
@@ -101,7 +103,7 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	}
 	
 	
-	void intToByte(int[] array, byte[] raw){		// need to resolve when original image data is not 8 bit
+	private void intToByte(int[] array, byte[] raw){		// need to resolve when original image data is not 8 bit
 		for(int i = 0; i < array.length;i++){
 			raw[i] = (byte) array[i];
 		}	
@@ -111,7 +113,7 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	 * @see sbmlplugin.visual.ImageGeometryData#getSpatialImage()
 	 */
 	@Override
-	SpatialImage getSpatialImage() {
+	public SpatialImage getSpatialImage() {
 		return new SpatialImage(hashSampledValue, img);
 	}
 }

@@ -16,7 +16,6 @@ import org.sbml.libsbml.SBMLNamespaces;
 import org.sbml.libsbml.SBMLReader;
 import org.sbml.libsbml.SpatialExtension;
 
-import sbmlplugin.geometry.GeometryDatas;
 import sbmlplugin.image.SpatialImage;
 import sbmlplugin.util.PluginConstants;
 import sbmlplugin.visual.Viewer;
@@ -27,28 +26,23 @@ import sbmlplugin.visual.Viewer;
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 17, 2015
  */
-public class MainSBaseSpatial extends MainSpatial implements PlugIn{
+public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	
 	/* (non-Javadoc)
 	 * @see ij.plugin.PlugIn#run(java.lang.String)
 	 */
 	@Override
-	public void run(String arg) {
-		document = getDocment();
+	public abstract void run(String arg);
+
+	public void checkSBMLDocument(SBMLDocument document){
 		if(document == null || document.getModel() == null) return;
 		model = document.getModel();
 		if(checkLevelAndVersion()) return;
 		checkExtension();
 		
-		addParaAndSpecies();
-		save();
-		//ModelValidator  mv = new ModelValidator(model);
-		//mv.checkValidation();
-		showDomainStructure();
-		GeometryDatas gData = new GeometryDatas(model);
-		visualize(gData.getSpImgList());
 	}
-
+	
+	
 	protected void visualize(ArrayList<SpatialImage> spImgList){
 		Iterator<SpatialImage> it = spImgList.iterator();
 		Viewer viewer = new Viewer();
@@ -56,14 +50,16 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 			viewer.view(it.next());
 		}
 	}
+
 	
-	private SBMLDocument getDocment(){
+	protected SBMLDocument getDocment() {
 		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setMultiSelectionEnabled(false);
-		chooser.setFileFilter(new FileNameExtensionFilter("SBML File(*.xml)","xml"));
+		chooser.setFileFilter(new FileNameExtensionFilter("SBML File(*.xml)",
+				"xml"));
 		int returnVal = chooser.showOpenDialog(null);
-		
+
 		if (returnVal != JFileChooser.APPROVE_OPTION)
 			return null;
 		File f = chooser.getSelectedFile();
@@ -71,7 +67,7 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		return reader.readSBMLFromFile(f.getAbsolutePath());
 	}
 	
-	private boolean checkLevelAndVersion(){
+	protected boolean checkLevelAndVersion(){
 		if(model.getLevel() == PluginConstants.LOWERSBMLLEVEL){
 			System.err.println("Model must be level 3 to use this plugin");
 			return false;
@@ -81,7 +77,7 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		return true;
 	}
 	
-	private void checkExtension(){
+	protected void checkExtension(){
 		//if(model.getLevel() == 2) return;
 		
 		SBMLNamespaces sbmlns = document.getSBMLNamespaces();
