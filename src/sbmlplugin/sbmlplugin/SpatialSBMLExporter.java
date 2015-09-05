@@ -200,18 +200,15 @@ public class SpatialSBMLExporter{
 		 }else{
 			 hashMembrane.put(dt.getId(), 0);
 		 }
-		 
+		 one = e.get(0).substring(0, e.get(0).length());
+		 two = e.get(1).substring(0, e.get(1).length());
 		  for (int i = 0; i < 2; i++) {                           //add info about adjacent domain
 			  AdjacentDomains adj = geometry.createAdjacentDomains();
-			  adj.setId(dt.getId() + "_" + e.get(i));
+			  adj.setId(one + "_" + two + "_membrane_" + e.get(i));
 			  adj.setDomain1(dt.getId() + hashMembrane.get(dt.getId()));
 			  adj.setDomain2(e.get(i));
 		  }
 	  }
-  }
-
-  public static int unsignedToBytes(byte b) {
-	  return b & 0xFF;
   }
 
   public void addDomains() {
@@ -243,18 +240,23 @@ public class SpatialSBMLExporter{
 			dt.setSpatialDimensions(e.getValue());
 
 			// Compartment may need changes for name and id
+			if(model.getListOfCompartments().get(e.getKey()) != null)
+				continue;
 			Compartment c = model.createCompartment();
 			c.setSpatialDimensions(e.getValue());
 			c.setConstant(true);
 			c.setId(e.getKey());
 			c.setName(e.getKey());
-
+//			TODO volume
+			//c.setVolume();
+			
 			spatialcompplugin = (SpatialCompartmentPlugin) c.getPlugin("spatial");
 			CompartmentMapping cm = spatialcompplugin.createCompartmentMapping();
 			cm.setId(e.getKey() + c.getId());
 			cm.setDomainType(e.getKey());
 			//TODO find unit
 			cm.setUnitSize(1);
+			
 		}
   }
 
