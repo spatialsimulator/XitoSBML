@@ -87,7 +87,7 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		};
 		table.setBackground(new Color(169,169,169));
 		table.getTableHeader().setReorderingAllowed(false);
-		table.addFocusListener(this);
+		addFocusListener(this);
 		
 		//scrollbar
 		JScrollPane scroll = new JScrollPane(table);

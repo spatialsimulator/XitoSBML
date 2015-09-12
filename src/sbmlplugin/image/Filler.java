@@ -1,7 +1,6 @@
 package sbmlplugin.image;
 import ij.ImagePlus;
 import ij.ImageStack;
-import ij.io.FileSaver;
 import ij.process.ByteProcessor;
 
 import java.util.ArrayList;
@@ -64,10 +63,6 @@ public class Filler {
 			image.setStack(stack);
 			image.updateImage();
 		}
-		
-		image.show();
-		FileSaver fs = new FileSaver(image);
-		fs.saveAsTiffStack("/Users/ii/Desktop/test.tiff"); 
 		return image;
 	}
 	

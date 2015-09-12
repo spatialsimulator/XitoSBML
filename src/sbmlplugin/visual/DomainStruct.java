@@ -27,13 +27,12 @@ public class DomainStruct {
 	List<String> orderedList = new ArrayList<String>();
 	
 	public void show(Geometry geometry){
-		
 		this.geometry = geometry;
 		this.lod = geometry.getListOfDomains();
 		this.load = geometry.getListOfAdjacentDomains();
 		GraphStruct GraphStruct = new GraphStruct();
 		vertex(GraphStruct);
-		GeometryDefinition gd = geometry.getGeometryDefinition(0);				// for multiple geometry
+		GeometryDefinition gd = geometry.getGeometryDefinition(0);				// multiple geometry
 		
 		if(gd.isSampledFieldGeometry()){
 			SampledFieldGeometry sfg = (SampledFieldGeometry) gd;

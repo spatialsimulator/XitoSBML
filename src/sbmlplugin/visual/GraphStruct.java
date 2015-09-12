@@ -1,7 +1,7 @@
 package sbmlplugin.visual;
 
 
-import java.awt.GridBagConstraints;
+import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +30,7 @@ public class GraphStruct extends JFrame{
 		super("Domain Hiearchal Structure");
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
+        setMinimumSize(new Dimension(200,100));
         setResizable(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
@@ -47,13 +48,14 @@ public class GraphStruct extends JFrame{
 	}
 	
 	public void visualize(){
-        mxHierarchicalLayout layout = new mxHierarchicalLayout(jgxAdapter);
+		mxHierarchicalLayout layout = new mxHierarchicalLayout(jgxAdapter);	
         layout.setDisableEdgeStyle(false);
         layout.getGraph().setCellsLocked(true);
+        layout.getGraph().setAutoOrigin(true);
         layout.run(jgxAdapter.getDefaultParent());
         mxGraphComponent gc = new mxGraphComponent(jgxAdapter);
         gc.setDragEnabled(false);
-        add(gc, new GridBagConstraints());
+        add(gc);
         pack();
         setVisible(true);
 	}
