@@ -1,6 +1,5 @@
 package sbmlplugin.geometry;
 
-import ij.IJ;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
 
@@ -44,7 +43,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		this.dispCoord = dispCoord;
 		ag = (AnalyticGeometry)gd;
 		getSampledValues();
-		
+		createImage();
 	}
 
 	/* (non-Javadoc)
@@ -62,7 +61,6 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		}
 	}
 
-	
 	/* (non-Javadoc)
 	 * @see sbmlplugin.visual.ImageGeometryData#createImage()
 	 */
@@ -168,7 +166,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 				return Math.pow(resolveDomain(ast.getLeftChild(), x, y, z),
 						resolveDomain(ast.getRightChild(), x, y, z));
 			default:
-				System.err.println("Errot at operator");
+				System.err.println("Error at operator");
 				return 0;
 			}
 		} else if (ast.isReal()) {// ast is real number
@@ -193,28 +191,35 @@ public class AnalyticGeometryData extends ImageGeometryData {
 			} else if (var.equals("z")) {
 				return z + delta.getZ() + dispCoord.getZ();
 			} else {
-				System.err.println("cant find name");
+				System.err.println("can't find name");
 				return 0;
 			}
 		}
-		System.err.println("end of method");
+		
 		return 0;
 	}
 	
 	private ArrayList<AnalyticVolume> orderVolume(ArrayList<AnalyticVolume> orderedList, ListOfAnalyticVolumes loav){
 		int numDom = (int) loav.size();
 		
-		for(int i = numDom ; i > 0 ; i--){
+		for(int i = numDom - 1; i > 0 ; i--){
 			AnalyticVolume av;
 			for(int j = 0; j < numDom ; j++){
-				av = loav.get(i);
+				av = loav.get(j);
 				if(av.getOrdinal() == i){
+					rearrangeAST(av.getMath());
 					orderedList.add(av);
 				}
 			}
 		}
-		IJ.log(orderedList.toString());
 		return orderedList;
+	}
+	
+	private void rearrangeAST(ASTNode ast){
+		int type = ast.getType();
+		if(type == libsbmlConstants.AST_MINUS && ast.getNumChildren() ==1){
+			
+		}
 	}
 	
 	private void getSize(){

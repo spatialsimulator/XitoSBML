@@ -15,11 +15,11 @@ public class MainModelEdit extends MainSBaseSpatial {
 	 */
 	@Override
 	public void run(String arg) {
-		document = getDocment();
+		document = getDocument();
 		checkSBMLDocument(document);
 		
-		addParaAndSpecies();
-		save();
+		//addParaAndSpecies();
+		//save();
 
 		showDomainStructure();
 		GeometryDatas gData = new GeometryDatas(model);

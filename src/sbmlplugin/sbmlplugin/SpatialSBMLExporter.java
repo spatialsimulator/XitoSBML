@@ -148,9 +148,9 @@ public class SpatialSBMLExporter{
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
     
     byte[] compressed = compressRawData(raw);
-    if (compressed != null) {
+    if (compressed != null) 
     	sf.setSamples(byteArrayToIntArray(compressed),compressed.length); // see below byteArrayToIntArray
-    }
+    
   }
 
   public byte[] compressRawData(byte[] raw) {           //compression of image

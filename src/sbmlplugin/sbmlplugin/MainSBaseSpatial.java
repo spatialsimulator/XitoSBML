@@ -39,9 +39,7 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		model = document.getModel();
 		if(checkLevelAndVersion()) return;
 		checkExtension();
-		
 	}
-	
 	
 	protected void visualize(ArrayList<SpatialImage> spImgList){
 		Iterator<SpatialImage> it = spImgList.iterator();
@@ -50,9 +48,8 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 			viewer.view(it.next());
 		}
 	}
-
 	
-	protected SBMLDocument getDocment() {
+	protected SBMLDocument getDocument() {
 		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setMultiSelectionEnabled(false);

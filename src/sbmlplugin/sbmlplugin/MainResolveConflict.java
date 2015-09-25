@@ -35,7 +35,7 @@ public class MainResolveConflict extends MainSBaseSpatial {
 	 */
 	@Override
 	public void run(String arg) {
-		document = getDocment();
+		document = getDocument();
 		this.model = document.getModel();
 		checkSBMLDocument(document);
 		gd = getActiveSampledFieldGeometry(model);

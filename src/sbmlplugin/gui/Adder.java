@@ -225,10 +225,10 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	
 	JPanel coeff;
 	JComboBox coordCombo, speciesCombo, boundCombo, conditionCombo, diffCombo;
-	String[] lcoord = {"UNKNOWN","CARTESIANX","CARTESIANY","CARTESIANZ"};
-	String[] lbound = {"Xmax","Xmin","Ymax","Ymin","Zmax","Zmin"};
-	String[] lboundcondition = {"UNKNOWN","ROBIN_VALUE_COEFFICIENT","ROBIN_INWARD_NORMAL_GRADIENT_COEFFICIENT","ROBIN_SUM","NEUMANN","DIRICHLET"};
-	String[] ldiffusion = {"UNKNOWN", "ISOTROPIC","ANISOTROPIC","TENSOR"};
+	private final String[] lcoord = {/*"UNKNOWN",*/"CARTESIANX","CARTESIANY","CARTESIANZ"};
+	private final String[] lbound = {"Xmax","Xmin","Ymax","Ymin","Zmax","Zmin"};
+	private final String[] lboundcondition = {/*"UNKNOWN","ROBIN_VALUE_COEFFICIENT","ROBIN_INWARD_NORMAL_GRADIENT_COEFFICIENT","ROBIN_SUM",*/"NEUMANN","DIRICHLET"};
+	private final String[] ldiffusion = {/*"UNKNOWN", */"ISOTROPIC","ANISOTROPIC","TENSOR"};
 
 	private void addCoeffPart(int index){
 		if (mainPanel.getComponentCount() >= 6) { //removes previous parameter comboboxes if needed 

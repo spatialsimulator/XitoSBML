@@ -63,7 +63,7 @@ public class GeometryDatas {
 			AnalyticGeometryData agd = new AnalyticGeometryData(gd, geometry, minCoord, maxCoord, dispCoord);
 			return agd.getSpatialImage();
 		}else if(gd.isParametricGeometry()){
-			
+				//TODO 
 		}else{
 			System.err.println("Not able to obtain geometry \n"
 					+ "This plugin is only able to visualize AnalyticGeometry, ParametricGeometry, SampledFieldGeometry, ");
@@ -113,6 +113,7 @@ public class GeometryDatas {
 				maxCoord.setY(maxCoord.getY() - minCoord.getY());
 				minCoord.setY(0);
 			}
+			break;
 		}
 	}
 	
