@@ -4,6 +4,8 @@ import ij.ImageStack;
 import ij.process.ByteProcessor;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Vector;
 
 import javax.vecmath.Point3f;
 
@@ -13,6 +15,7 @@ import org.sbml.libsbml.AnalyticVolume;
 import org.sbml.libsbml.Geometry;
 import org.sbml.libsbml.GeometryDefinition;
 import org.sbml.libsbml.ListOfAnalyticVolumes;
+import org.sbml.libsbml.libsbml;
 import org.sbml.libsbml.libsbmlConstants;
 
 import sbmlplugin.image.SpatialImage;
@@ -28,20 +31,17 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	protected Point3f minCoord = new Point3f();
 	protected Point3f maxCoord = new Point3f();
 	protected Point3f dispCoord = new Point3f();
-	private int width = 256;
-	private int height = 256;
+	private int width = 32; //TODO find better way to determine image size
+	private int height;
 	private int depth;
 	private Point3f delta = new Point3f();
-	/**
-	 * @param gd
-	 * @param g
-	 */
+	
 	AnalyticGeometryData(GeometryDefinition gd, Geometry g, Point3f minCoord, Point3f maxCoord, Point3f dispCoord) {
 		super(gd, g);
 		this.minCoord = minCoord;
 		this.maxCoord = maxCoord;
 		this.dispCoord = dispCoord;
-		ag = (AnalyticGeometry)gd;
+		ag = (AnalyticGeometry) gd;
 		getSampledValues();
 		createImage();
 	}
@@ -58,7 +58,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		for(int i = 0 ; i < numDom ; i++){
 			AnalyticVolume av = loav.get(i);
 			hashSampledValue.put(av.getDomainType(), av.getOrdinal() * intervalVal);
-		}
+		}		
 	}
 
 	/* (non-Javadoc)
@@ -93,21 +93,23 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		int size = (int) orderedList.size();
 
 		for(int d = 0 ; d < depth ; d++){
-			for(int h = 0 ; d < height ; h++){
-				for(int w = 0 ; d < width ; w++){
+			for(int h = 0 ; h < height ; h++){
+				for(int w = 0 ; w < width ; w++){
 					for(int i = 0 ; i < size ; i++){
 						AnalyticVolume av = orderedList.get(i);
-						if(resolveDomain(av.getMath(), w,h,d) == 1){
+						if(resolveDomain(av.getMath(), w, h, d) == 1){				
 							raw[d * width * height + h * width + w] = (byte) (hashSampledValue.get(av.getDomainType()) & 0xFF);
 							continue;
-						}	
+						}				
 					}	
+					
 				}	
 			}	
 		}
 	}
 	
 	private double resolveDomain(ASTNode ast, int x, int y, int z) {
+		
 		if (ast.isRelational()) { // relational
 			int type = ast.getType();
 			switch (type) {
@@ -140,7 +142,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 					return 0;
 				}
 			default:
-				System.err.println("Errot at relational");
+				System.err.println("Error at relational");
 				return 0;
 			}
 		} else if (ast.isOperator()) {// ast is operator
@@ -178,11 +180,14 @@ public class AnalyticGeometryData extends ImageGeometryData {
 			switch (type) {
 			case libsbmlConstants.AST_CONSTANT_E:
 				return Math.E;
-
 			case libsbmlConstants.AST_CONSTANT_PI:
 				return Math.PI;
 			}
-		} else {// variable
+		} else if(ast.isFunction()) {
+			if(ast.getType() == libsbml.AST_FUNCTION_POWER){
+				return Math.pow(resolveDomain(ast.getLeftChild(), x, y, z), resolveDomain(ast.getRightChild(), x, y, z));
+			}
+		} else {// variable		
 			String var = ast.getName();
 			if (var.equals("x")) {
 				return x + delta.getX() + dispCoord.getX();
@@ -217,13 +222,92 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	
 	private void rearrangeAST(ASTNode ast){
 		int type = ast.getType();
-		if(type == libsbmlConstants.AST_MINUS && ast.getNumChildren() ==1){
-			
+		if(type == libsbml.AST_FUNCTION_PIECEWISE){
+			Vector<ASTNode> astChildrenList = new Vector<ASTNode>();
+			Vector<ASTNode> astBooleanList = new Vector<ASTNode>();
+			long nc = ast.getNumChildren();
+			ASTNode astOtherwise = new ASTNode();
+			// piece to boolean * expression
+			for (int i = 0 ; i < nc /2 ; i++){
+				ASTNode ast_times = new ASTNode(libsbml.AST_TIMES);
+				astBooleanList.add((ASTNode) ast.getChild(1).deepCopy());
+				ast_times.addChild(ast.getChild(0));
+				ast_times.addChild(ast.getChild(1));
+				astChildrenList.add(ast_times);
+				ast.removeChild(0);
+				ast.removeChild(0);
+			}
+			// otherwise to nand
+			if(nc % 2 != 0){
+				astOtherwise.setType(libsbml.AST_TIMES);
+				ASTNode otherwiseExpression = ast.getChild(0);
+				ast.removeChild(0);
+				ASTNode ast_and = new ASTNode(libsbml.AST_LOGICAL_AND);
+				Iterator<ASTNode> it = astBooleanList.iterator();
+				while(it.hasNext()){
+					ASTNode ast_not = new ASTNode(libsbml.AST_LOGICAL_NOT);
+					ast_not.addChild(it.next());
+					ast_and.addChild(ast_not);
+				}
+				astOtherwise.addChild(ast_and);
+				astOtherwise.addChild(otherwiseExpression);
+			} else {
+				astOtherwise.setType(libsbml.AST_INTEGER);
+				astOtherwise.setValue(0);
+			}
+			ast.setType(libsbml.AST_PLUS);
+			ASTNode ast_next = ast;
+			ast_next.addChild(astOtherwise);
+			for(int i = 0 ; i < astChildrenList.size() - 1 ; i++){
+				ast_next.addChild(new ASTNode(libsbml.AST_PLUS));
+				ast_next = ast_next.getChild(1);
+				ast_next.addChild(astChildrenList.get(i));
+			}
+			ast_next.addChild(astChildrenList.lastElement());
+		} else if(type == libsbml.AST_MINUS && ast.getNumChildren() == 1){ 
+			// -a to -1.0 * a
+			ast.setType(libsbml.AST_TIMES);
+			ASTNode ast_minus_one = new ASTNode(libsbml.AST_REAL);
+			ast_minus_one.setValue(-1.0);
+			ast.addChild(ast_minus_one);
+		} else if (type == libsbml.AST_PLUS && ast.getNumChildren() == 1){
+			// +a to 1.0 * a
+			ast.setType(libsbml.AST_TIMES);
+			ASTNode ast_plus_one = new ASTNode(libsbml.AST_REAL);
+			ast_plus_one.setValue(1.0);
+			ast.addChild(ast_plus_one);
+		} else if (ast.isLogical()) {
+			if(type != libsbml.AST_LOGICAL_NOT){
+				if(ast.getNumChildren() == 1){
+					ASTNode ast_one = new ASTNode(libsbml.AST_INTEGER);
+					ast_one.setValue(1);
+					ast.addChild(ast_one);
+				} else {
+					ast.reduceToBinary();
+				}
+			} else { 
+				//logical not
+			}
+		} else if (type == libsbml.AST_TIMES){
+			if( (ast.getLeftChild().isReal() && ast.getLeftChild().getReal() == 0) ||
+				(ast.getLeftChild().isInteger() && ast.getLeftChild().getReal() == 0) ||
+				(ast.getRightChild().isReal() && ast.getRightChild().getReal() == 0) ||
+				(ast.getRightChild().isInteger() && ast.getRightChild().getReal() == 0) 
+				) {
+				ast.setType(libsbml.AST_REAL);
+				ast.setValue(0);
+				ast.removeChild(0);
+				ast.removeChild(0);
+			}
+		}
+
+		for(int i = 0 ; i < ast.getNumChildren(); i++){
+			rearrangeAST(ast.getChild(i));
 		}
 	}
 	
 	private void getSize(){
-		width = 256;
+		//width = 256;
 		height = (int) (width * maxCoord.getY() / maxCoord.getX());
 		depth = (int) (width * maxCoord.getZ() / maxCoord.getX());
 		if(depth == 0) depth = 1;

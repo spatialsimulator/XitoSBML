@@ -66,7 +66,7 @@ public class GeometryDatas {
 				//TODO 
 		}else{
 			System.err.println("Not able to obtain geometry \n"
-					+ "This plugin is only able to visualize AnalyticGeometry, ParametricGeometry, SampledFieldGeometry, ");
+					+ "This plugin is only able to visualize AnalyticGeometry SampledFieldGeometry. ");
 			return null;
 		}
 		return null;

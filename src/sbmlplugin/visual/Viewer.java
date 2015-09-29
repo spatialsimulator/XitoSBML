@@ -1,4 +1,5 @@
 package sbmlplugin.visual;
+
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
@@ -106,13 +107,13 @@ public class Viewer {
 				case 2:
 					colors.add(new Color3f(0,0,1f));
 					break;
-				case 4:
+				case 3:
 					colors.add(new Color3f(1f,1f,0));
 					break;
-				case 5:
+				case 4:
 					colors.add(new Color3f(0,1f,1f));
 					break;
-				case 6:
+				case 5:
 					colors.add(new Color3f(1f,0,1f));
 					break;
 				default:	
