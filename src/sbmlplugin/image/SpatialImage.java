@@ -18,6 +18,7 @@ public class SpatialImage {
 	private HashMap<String,Integer> hashDomainNum;
 	private ArrayList<ArrayList<String>> adjacentsList;
 	public String title;
+	private String unit;
 	
 	public SpatialImage(HashMap<String, Integer> hashSampledValue, HashMap<String, Integer> hashDomainTypes, ImagePlus img){
 		this.setWidth(img.getWidth());
@@ -26,6 +27,7 @@ public class SpatialImage {
 		this.img = img;
 		this.setHashSampledValue(hashSampledValue);
 		this.setHashDomainTypes(hashDomainTypes);
+		this.unit = img.getFileInfo().unit;
 		setRawImage();
 	}	
 	
@@ -35,19 +37,18 @@ public class SpatialImage {
 		this.setDepth(img.getImageStackSize());
 		this.img = img;
 		this.setHashSampledValue(hashSampledValue);
+		this.unit = img.getFileInfo().unit;
 		setRawImage();
 	}	
 	
 	private void setRawImage(){
 		byte[] slice = null;   
 		raw = new byte[width * height * depth];
-    	ImageStack stack = img.getStack();
-    	
+    	ImageStack stack = img.getStack(); 	
     	for(int i = 1 ; i <= depth ; i++){
         	slice = (byte[]) stack.getPixels(i);
         	System.arraycopy(slice, 0, getRaw(), (i-1) * getHeight() * getWidth(), getHeight() * getWidth());
     	} 
-		
 	}
 	
 	public void setImage(ImagePlus image){
@@ -128,7 +129,6 @@ public class SpatialImage {
 				hashDomainTypes.put(s, 2);
 			else
 				hashDomainTypes.put(s, 3);
-
 		}
 	}
 	
@@ -155,6 +155,14 @@ public class SpatialImage {
 			fs.saveAsTiffStack(path + "/" + name + ".tiff");
 		else
 			fs.saveAsTiff(path + "/" + name + ".tiff");
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+	
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 }

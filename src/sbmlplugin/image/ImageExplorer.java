@@ -69,37 +69,11 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		}
 		
 		//table
-			tableModel = new MyTableModel(data, columnNames);
-		/*tableModel = new DefaultTableModel(data,columnNames){
-			private static final long serialVersionUID = 1L;
-			public boolean isCellEditable(int row, int column){	
-				if(column == 1)
-					return false;
-				else  							
-					return true;
-			}
-		};*/
+		tableModel = new MyTableModel(data, columnNames);
 				
 		//table setting 
 		table = new JTable(tableModel);
-		/*{
-			private static final long serialVersionUID = 1L;
-			@Override
-			public Class<?> getColumnClass(int Column){
-				switch (Column) {
-				case 0:
-				case 1:
-					return String.class;
-				case 2:
-					return JButton.class;
-				case 3:
-				case 4:
-					return BasicArrowButton.class;
-				default:
-					return Boolean.class;
-				}
-			}
-		};*/
+
 		table.setBackground(new Color(169,169,169));
 		table.getTableHeader().setReorderingAllowed(false);
 
@@ -264,10 +238,9 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 			setVisible(false);
 
 			dispose();
-		}else{
+		}else
 			new MessageDialog(new Frame(), "Error", "No Image");
-		}
-		
+			
 	}
 	
 	@Override

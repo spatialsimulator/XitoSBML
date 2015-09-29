@@ -66,8 +66,7 @@ public class ImageDialog implements ItemListener{
 			for(int i = 1 ; i <= numimage ; i++){
 				int id = WindowManager.getNthImageID(i);
 				ImagePlus ip = WindowManager.getImage(id);	
-			//	if(checkImage(ip))
-					windows.add(ip.getTitle());
+				windows.add(ip.getTitle());
 			}
 		}
 		

@@ -56,22 +56,22 @@ import sun.misc.FloatingDecimal;
  */
 public class SpatialSBMLExporter{
 
-  SBMLDocument document;
-  Model model;
-  SBMLNamespaces sbmlns;                       //class to store SBML Level, version, namespace
-  SpatialPkgNamespaces spatialns;
-  SpatialModelPlugin spatialplugin;
+  private SBMLDocument document;
+  private Model model;
+  private SBMLNamespaces sbmlns;                       //class to store SBML Level, version, namespace
+  private SpatialPkgNamespaces spatialns;
+  private SpatialModelPlugin spatialplugin;
   //ReqSBasePlugin reqplugin;
-  SpatialCompartmentPlugin spatialcompplugin;
-  Geometry geometry;
-  HashMap<String, Integer> hashDomainTypes;     //store domain type with corresponding dimension
-  HashMap<String, Integer> hashSampledValue;
-  HashMap<String, Integer> hashDomainNum;
-  ArrayList<ArrayList<String>> adjacentsList;
-  byte[] raw;
-  int matrix[];
-  int width, height, depth;
-
+  private SpatialCompartmentPlugin spatialcompplugin;
+  private Geometry geometry;
+  private HashMap<String, Integer> hashDomainTypes;     //store domain type with corresponding dimension
+  private HashMap<String, Integer> hashSampledValue;
+  private HashMap<String, Integer> hashDomainNum;
+  private ArrayList<ArrayList<String>> adjacentsList;
+  private byte[] raw;
+  private int width, height, depth;
+  private String unit = "um"; 	//default unit
+  
   @Deprecated
   public SpatialSBMLExporter() {                    //builds the framework of SBML document
 
@@ -149,11 +149,10 @@ public class SpatialSBMLExporter{
     
     byte[] compressed = compressRawData(raw);
     if (compressed != null) 
-    	sf.setSamples(byteArrayToIntArray(compressed),compressed.length); // see below byteArrayToIntArray
-    
+    	sf.setSamples(byteArrayToIntArray(compressed),compressed.length);
   }
 
-  public byte[] compressRawData(byte[] raw) {           //compression of image
+  public byte[] compressRawData(byte[] raw) {
     Deflater compresser = new Deflater();
     compresser.setLevel(Deflater.BEST_COMPRESSION);
     compresser.setInput(raw);
@@ -247,37 +246,35 @@ public class SpatialSBMLExporter{
 			c.setConstant(true);
 			c.setId(e.getKey());
 			c.setName(e.getKey());
-//			TODO volume
-			//c.setVolume();
-			
+
 			spatialcompplugin = (SpatialCompartmentPlugin) c.getPlugin("spatial");
 			CompartmentMapping cm = spatialcompplugin.createCompartmentMapping();
 			cm.setId(e.getKey() + c.getId());
 			cm.setDomainType(e.getKey());
-			//TODO find unit
-			cm.setUnitSize(1);
-			
+			// TODO 
+			cm.setUnitSize(1);	
+			//TODO volume ?           
+			//c.setVolume();          
 		}
   }
 
 	public void addCoordinates() { 
-		//TODO find unit
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
 		ccx.setId("x");
 		ccx.setType("cartesianX");
 		ccx.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_X);
-		ccx.setUnit("um");
+		ccx.setUnit(unit);
 		setCoordinateBoundary(ccx, "x", 0, width);
 		CoordinateComponent ccy = geometry.createCoordinateComponent();
 		ccy.setId("y");
 		ccy.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Y);
-		ccy.setUnit("um");
+		ccy.setUnit(unit);
 		setCoordinateBoundary(ccy, "y", 0, height);
 		if (depth != 1) {
 			CoordinateComponent ccz = geometry.createCoordinateComponent();
 			ccz.setId("z");
 			ccz.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Z);
-			ccz.setUnit("um");
+			ccz.setUnit(unit);
 			setCoordinateBoundary(ccz, "z", 0, depth);
 		}
 	}
@@ -372,19 +369,18 @@ public class SpatialSBMLExporter{
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
 		ccx.setId("x");
 		ccx.setType("cartesianX");
-		ccx.setUnit("um");
+		ccx.setUnit(unit);
 		setCoordinateBoundary(ccx, "X", hashBound.get("min").x, hashBound.get("max").x);
 		CoordinateComponent ccy = geometry.createCoordinateComponent();
 		ccy.setId("y");
 		ccy.setType("cartesianY");
-		ccy.setUnit("um");
+		ccy.setUnit(unit);
 		setCoordinateBoundary(ccy, "Y", hashBound.get("min").y, hashBound.get("max").y);
 		CoordinateComponent ccz = geometry.createCoordinateComponent();
 		ccz.setId("z");
 		ccz.setType("cartesianZ");
-		ccz.setUnit("um");
+		ccz.setUnit(unit);
 		setCoordinateBoundary(ccz, "Z", hashBound.get("min").z, hashBound.get("max").z);
 	}
 	
-
 }

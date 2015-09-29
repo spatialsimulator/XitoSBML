@@ -103,8 +103,9 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	}
 	
 	
-	private void intToByte(int[] array, byte[] raw){		// need to resolve when original image data is not 8 bit
-		for(int i = 0; i < array.length;i++){
+	private void intToByte(int[] array, byte[] raw){		
+		//TODO need to resolve when original image data is not 8 bit
+		for(int i = 0, length = array.length; i < length;i++){
 			raw[i] = (byte) array[i];
 		}	
 	}
