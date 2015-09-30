@@ -39,6 +39,7 @@ public class SpatialImage {
 		this.setHashSampledValue(hashSampledValue);
 		this.unit = img.getFileInfo().unit;
 		setRawImage();
+		saveAsImage("/Users/ii/Desktop","b");
 	}	
 	
 	private void setRawImage(){
@@ -150,7 +151,8 @@ public class SpatialImage {
 
 	public void saveAsImage(String path, String name){
 		FileSaver fs = new FileSaver(img);
-		name = name.substring(0, name.indexOf('.'));
+		if(name.contains("."))
+			name = name.substring(0, name.indexOf('.'));
 		if(depth > 1)
 			fs.saveAsTiffStack(path + "/" + name + ".tiff");
 		else

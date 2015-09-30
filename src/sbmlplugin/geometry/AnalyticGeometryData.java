@@ -90,19 +90,17 @@ public class AnalyticGeometryData extends ImageGeometryData {
     }
 	
 	private void setVolumeToArray(ArrayList<AnalyticVolume> orderedList){
-		int size = (int) orderedList.size();
-
+		System.out.println(orderedList.get(0).toSBML());
+		System.out.println(orderedList.get(1).toSBML());
 		for(int d = 0 ; d < depth ; d++){
 			for(int h = 0 ; h < height ; h++){
 				for(int w = 0 ; w < width ; w++){
-					for(int i = 0 ; i < size ; i++){
-						AnalyticVolume av = orderedList.get(i);
+					for(AnalyticVolume av : orderedList){
 						if(resolveDomain(av.getMath(), w, h, d) == 1){				
 							raw[d * width * height + h * width + w] = (byte) (hashSampledValue.get(av.getDomainType()) & 0xFF);
-							continue;
+							break;
 						}				
 					}	
-					
 				}	
 			}	
 		}
@@ -190,11 +188,11 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		} else {// variable		
 			String var = ast.getName();
 			if (var.equals("x")) {
-				return x + delta.getX() + dispCoord.getX();
+				return x * delta.getX() - dispCoord.getX();
 			} else if (var.equals("y")) {
-				return y + delta.getY() + dispCoord.getY();
+				return y * delta.getY() - dispCoord.getY();
 			} else if (var.equals("z")) {
-				return z + delta.getZ() + dispCoord.getZ();
+				return z * delta.getZ() - dispCoord.getZ();
 			} else {
 				System.err.println("can't find name");
 				return 0;
@@ -311,10 +309,10 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		height = (int) (width * maxCoord.getY() / maxCoord.getX());
 		depth = (int) (width * maxCoord.getZ() / maxCoord.getX());
 		if(depth == 0) depth = 1;
-		
+	
 		delta.setX(maxCoord.getX() / width);
 		delta.setY(maxCoord.getY() / height);
-		delta.setZ(maxCoord.getZ() / depth);
+		delta.setZ(maxCoord.getZ() / depth);	
 	}
 	
 	private void getArray(){

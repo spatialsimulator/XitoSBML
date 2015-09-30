@@ -20,7 +20,6 @@ public class MainModelEdit extends MainSBaseSpatial {
 		
 		//addParaAndSpecies();
 		//save();
-
 		showDomainStructure();
 		GeometryDatas gData = new GeometryDatas(model);
 		visualize(gData.getSpImgList());

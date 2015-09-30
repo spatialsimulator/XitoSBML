@@ -8,13 +8,12 @@
 	<classpathentry kind="lib" path="lib/jgrapht-core-0.9.0.jar"/>
 	<classpathentry kind="lib" path="lib/jgrapht-demo-0.9.0.jar"/>
 	<classpathentry kind="lib" path="lib/jgrapht-ext-0.9.0-uber.jar"/>
-	<classpathentry kind="lib" path="lib/jgrapht-ext-0.9.0.jar"/>
-	<classpathentry kind="lib" path="lib/jgraphx-2.0.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/libsbmlj.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="SBMLPlugin/lib"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/xmlwise-1.2.11.jar"/>
+	<classpathentry kind="lib" path="lib/jgraphx-1.10.4.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
