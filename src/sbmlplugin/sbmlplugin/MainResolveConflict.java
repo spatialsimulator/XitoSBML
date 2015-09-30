@@ -35,7 +35,12 @@ public class MainResolveConflict extends MainSBaseSpatial {
 	 */
 	@Override
 	public void run(String arg) {
-		document = getDocument();
+		try{
+			document = getDocument();
+		} catch (NullPointerException e){
+			e.getStackTrace();
+			return;
+		}
 		this.model = document.getModel();
 		checkSBMLDocument(document);
 		gd = getActiveSampledFieldGeometry(model);
@@ -43,9 +48,11 @@ public class MainResolveConflict extends MainSBaseSpatial {
 			IJ.error("This plugin is able to resolve membrane confliction only for Sampled Field Geometry");
 			return;
 		}
+		
 		getTargetDomains();
 		
 		if(targetDomain.equals("")){
+			IJ.error("No targete domain found");
 			return;
 		}
 		

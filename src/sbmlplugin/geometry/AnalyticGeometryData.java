@@ -90,8 +90,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
     }
 	
 	private void setVolumeToArray(ArrayList<AnalyticVolume> orderedList){
-		System.out.println(orderedList.get(0).toSBML());
-		System.out.println(orderedList.get(1).toSBML());
+
 		for(int d = 0 ; d < depth ; d++){
 			for(int h = 0 ; h < height ; h++){
 				for(int w = 0 ; w < width ; w++){

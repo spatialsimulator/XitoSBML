@@ -15,7 +15,13 @@ public class MainModelEdit extends MainSBaseSpatial {
 	 */
 	@Override
 	public void run(String arg) {
-		document = getDocument();
+		try{
+			document = getDocument();
+		} catch (NullPointerException e){
+			e.getStackTrace();
+			return;
+		}
+		
 		checkSBMLDocument(document);
 		
 		//addParaAndSpecies();

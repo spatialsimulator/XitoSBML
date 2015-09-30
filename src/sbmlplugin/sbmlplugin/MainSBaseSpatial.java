@@ -35,9 +35,9 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	public abstract void run(String arg);
 
 	public void checkSBMLDocument(SBMLDocument document){
-		if(document == null || document.getModel() == null) return;
+		if(document == null || document.getModel() == null) throw new IllegalArgumentException("Non-supported format");
 		model = document.getModel();
-		if(checkLevelAndVersion()) return;
+		if(checkLevelAndVersion()) throw new IllegalArgumentException("Incompatible level and version");
 		checkExtension();
 	}
 	
@@ -49,16 +49,15 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		}
 	}
 	
-	protected SBMLDocument getDocument() {
+	protected SBMLDocument getDocument() throws NullPointerException{
 		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setMultiSelectionEnabled(false);
-		chooser.setFileFilter(new FileNameExtensionFilter("SBML File(*.xml)",
-				"xml"));
+		chooser.setFileFilter(new FileNameExtensionFilter("SBML File(*.xml)", "xml"));
 		int returnVal = chooser.showOpenDialog(null);
 
 		if (returnVal != JFileChooser.APPROVE_OPTION)
-			return null;
+			throw new NullPointerException();
 		File f = chooser.getSelectedFile();
 		SBMLReader reader = new SBMLReader();
 		return reader.readSBMLFromFile(f.getAbsolutePath());
