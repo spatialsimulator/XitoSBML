@@ -45,7 +45,6 @@ public class Spatial_Img_SBML extends Spatial_SBML {
 					+ " setting or your CLASSPATH environment variable "
 					+ " do not include the file 'libsbmlj.jar'.");
 			e.printStackTrace();
-
 			System.exit(1);
 		} catch (SecurityException e) {
 			IJ.error("Error encountered while attempting to load libSBML:");

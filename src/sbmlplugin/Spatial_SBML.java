@@ -38,11 +38,4 @@ public abstract class Spatial_SBML implements PlugIn {
         IJ.error("Please Update 3D Viewer");
         return false;
 	}
-	
-	public void showAbout() {
-		IJ.showMessage("Spatial SBML Exporter",
-				"This plugin is just a demonstration for SBML and its Spatial Extension.\n"
-						+ "Implemented by Akira Funahashi");
-	}
-
 }
