@@ -1,5 +1,7 @@
 package sbmlplugin.util;
 
+import ij.IJ;
+
 import org.sbml.libsbml.AdvectionCoefficient;
 import org.sbml.libsbml.AnalyticGeometry;
 import org.sbml.libsbml.BoundaryCondition;
@@ -58,18 +60,18 @@ public class ModelValidator {
 	
 	private void checkModelVersion(){
 		if(model.getVersion() != PluginConstants.SBMLLEVEL  ||  model.getLevel() != PluginConstants.SBMLVERSION) 
-			System.err.println("model is not level 3 version 1");
+			IJ.log("model is not level 3 version 1");
 	}
 	
 	private void checkExtension(){
 		SBMLDocument document = model.getSBMLDocument();
 		
 		if(!document.getPackageRequired("spatial")){
-			System.err.println("model missing extension spatial");
+			IJ.log("model missing extension spatial");
 		}
 
 		if(!document.getPackageRequired("req")){
-			System.err.println("model missing extension req");
+			IJ.log("model missing extension req");
 		}
 		
 	}
@@ -83,16 +85,16 @@ public class ModelValidator {
 		checkGeometry();
 	
 		if(!errorFlag)
-			System.out.println( model.getId() + " Model is valid");
+			IJ.log( model.getId() + " Model is valid");
 	}
 	
 	private void checkModel(Model model){
-		System.out.println("Checking model");
+		IJ.log("Checking model");
 		checkRequired(model);
 	}
 	
 	private void checkSpecies(ListOfSpecies los){
-		System.out.println("Checking species");
+		IJ.log("Checking species");
 		for(int i = 0 ; i < los.size() ; i++){
 			Species s = los.get(i);
 			checkRequired(s);
@@ -103,7 +105,7 @@ public class ModelValidator {
 	
 	
 	private void checkParameter(ListOfParameters lop){
-		System.out.println("Checking parameter");
+		IJ.log("Checking parameter");
 		for(int i = 0 ; i < lop.size() ; i++){
 			Parameter p = lop.get(i);
 			SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
@@ -127,12 +129,12 @@ public class ModelValidator {
 			SpatialSymbolReference ssr = sp.getSpatialSymbolReference();
 			checkRequired(ssr);
 		} else{
-			System.err.println("missing spatial in " + sp.getParentSBMLObject().getId() + " at line:" + sp.getLine());
+			IJ.log("missing spatial in " + sp.getParentSBMLObject().getId() + " at line:" + sp.getLine());
 		}
 	}
 	
 	private void checkCompartment(ListOfCompartments loc){
-		System.out.println("Checking compartment");
+		IJ.log("Checking compartment");
 		for(int i = 0 ; i < loc.size() ; i++){
 			Compartment c = loc.get(i);
 			checkRequired(c);
@@ -143,11 +145,11 @@ public class ModelValidator {
 	
 	private void checkSpatialCompartment(SpatialCompartmentPlugin scp){
 		if(scp.isSetCompartmentMapping()) checkRequired(scp.getCompartmentMapping());
-		else System.err.println("missing compartment mapping in " + scp.getParentSBMLObject().getId() + " at line:" + scp.getLine());
+		else IJ.log("missing compartment mapping in " + scp.getParentSBMLObject().getId() + " at line:" + scp.getLine());
 	}
 	
 	private void checkReaction(ListOfReactions lor){
-		System.out.println("Checking reaction");
+		IJ.log("Checking reaction");
 		for(int i = 0; i < lor.size() ; i++){
 			Reaction r = lor.get(i);
 			checkRequired(r);
@@ -160,7 +162,7 @@ public class ModelValidator {
 	}
 		
 	private void checkGeometry(){
-		System.out.println("Checking geometry");
+		IJ.log("Checking geometry");
 		Geometry geometry = spatialplugin.getGeometry();
 		checkRequired(geometry);
 		checkCoordinateComponents(geometry.getListOfCoordinateComponents());
@@ -232,7 +234,7 @@ public class ModelValidator {
 	private void printError(SBase s, String part){
 		String id = s.getId();
 		if(id.equals("")) id = s.getParentSBMLObject().getId();
-		System.err.println("missing required " +  part + "in " +  s.getClass() + " " + id + " at line: " + s.getLine());
+		IJ.log("missing required " +  part + "in " +  s.getClass() + " " + id + " at line: " + s.getLine());
 		errorFlag = true;
 	}
 	

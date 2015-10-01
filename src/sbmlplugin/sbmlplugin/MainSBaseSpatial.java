@@ -10,11 +10,8 @@ import java.util.Iterator;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.sbml.libsbml.ReqExtension;
 import org.sbml.libsbml.SBMLDocument;
-import org.sbml.libsbml.SBMLNamespaces;
 import org.sbml.libsbml.SBMLReader;
-import org.sbml.libsbml.SpatialExtension;
 
 import sbmlplugin.image.SpatialImage;
 import sbmlplugin.util.PluginConstants;
@@ -33,13 +30,6 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	 */
 	@Override
 	public abstract void run(String arg);
-
-	public void checkSBMLDocument(SBMLDocument document){
-		if(document == null || document.getModel() == null) throw new IllegalArgumentException("Non-supported file format");
-		model = document.getModel();
-		if(!checkLevelAndVersion()) throw new IllegalArgumentException("Incompatible level and version");
-		checkExtension();
-	}
 	
 	protected void visualize(ArrayList<SpatialImage> spImgList){
 		Iterator<SpatialImage> it = spImgList.iterator();
@@ -62,37 +52,27 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		SBMLReader reader = new SBMLReader();
 		return reader.readSBMLFromFile(f.getAbsolutePath());
 	}
+
+	public void checkSBMLDocument(SBMLDocument document){
+		if(document == null || document.getModel() == null) 
+			throw new IllegalArgumentException("Non-supported format file");
+		model = document.getModel();
+		checkLevelAndVersion();
+		checkExtension();
+	}
 	
-	protected boolean checkLevelAndVersion(){
-		if(model.getLevel() == PluginConstants.LOWERSBMLLEVEL){
-			System.err.println("Model must be level 3 to use this plugin");
-			return false;
-		}
-		
-		//add check if new verison comes up check
-		return true;
+	protected void checkLevelAndVersion(){
+		if(model.getLevel() != PluginConstants.SBMLLEVEL || model.getVersion() != PluginConstants.SBMLVERSION)
+			throw new IllegalArgumentException("Incompatible level and version");
 	}
 	
 	protected void checkExtension(){
-		//if(model.getLevel() == 2) return;
-		
-		SBMLNamespaces sbmlns = document.getSBMLNamespaces();
-		if(!document.getPackageRequired("spatial")){			//check spatial
-			document.setPackageRequired("spatial", true);
-			sbmlns.addPackageNamespace("spatial", 1);
-		}
+		if(!document.getPackageRequired("spatial"))
+			throw new IllegalArgumentException("Could not find spatial extension");
 
-		if(!document.getPackageRequired("req")){				//check req
-			document.setPackageRequired("req", true);
-			sbmlns.addPackageNamespace("req", 1);
-		}
-		
-		// add extension if necessary
-		if(!model.isPackageEnabled("spatial"))
-			model.enablePackage(SpatialExtension.getXmlnsL3V1V1(), "spatial", true);
+		if(!document.getPackageRequired("req")) 
+			throw new IllegalArgumentException("Could not find req extension");
 
-		if(!model.isPackageEnabled("req"))
-			model.enablePackage(ReqExtension.getXmlnsL3V1V1(), "req", true);	
 	}
 
 }

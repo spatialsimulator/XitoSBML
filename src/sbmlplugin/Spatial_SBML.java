@@ -32,17 +32,9 @@ public abstract class Spatial_SBML implements PlugIn {
 	
 	public boolean check3Dviewer(){
 		String version = ij3d.Install_J3D.getJava3DVersion();
-        System.out.println("3D Viewer version = " + version);
         if(version != null && Float.parseFloat(version) >= PluginConstants.VIEWERVERSION)
                 return true;
         IJ.error("Please Update 3D Viewer");
         return false;
 	}
-	
-	public void showAbout() {
-		IJ.showMessage("Spatial SBML Exporter",
-				"This plugin is just a demonstration for SBML and its Spatial Extension.\n"
-						+ "Implemented by Akira Funahashi");
-	}
-
 }

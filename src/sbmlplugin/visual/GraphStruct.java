@@ -17,12 +17,9 @@ import org.jgrapht.graph.ListenableDirectedGraph;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
 
+@SuppressWarnings("serial")
 public class GraphStruct extends JFrame{
    
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	ListenableGraph<String, DefaultEdge> g = new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
     JGraphXAdapter<String, DefaultEdge>  jgxAdapter = new JGraphXAdapter<String, DefaultEdge>(g);
 
@@ -41,10 +38,6 @@ public class GraphStruct extends JFrame{
 	
 	public void addEdge(String v1, String v2){
 		g.addEdge(v1, v2);
-	}
-	
-	public void close(){
-		dispose();
 	}
 	
 	public void visualize(){

@@ -1,17 +1,15 @@
 package sbmlplugin;
 
-
-
+import sbmlplugin.sbmlplugin.MainModelValidator;
 import ij.IJ;
-import sbmlplugin.sbmlplugin.MainImgSpatial;
-
 
 /**
- * @author Akira Funahashi
- *
+ * Spatial SBML Plugin for ImageJ
+ * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
+ * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * Date Created: Oct 1, 2015
  */
-public class Spatial_Img_SBML extends Spatial_SBML {
-
+public class Spatial_Model_Validator extends Spatial_SBML {
 	static {
 
 		String varname;
@@ -55,9 +53,12 @@ public class Spatial_Img_SBML extends Spatial_SBML {
 		}
 	}
 	
-	public void run(String args) {   
-		if(checkJgraph() && check3Dviewer()) 
-			new MainImgSpatial().run(args);	
+	/* (non-Javadoc)
+	 * @see sbmlplugin.Spatial_SBML#run(java.lang.String)
+	 */
+	@Override
+	public void run(String arg) {
+		new MainModelValidator().run(arg);;
 	}
 
 }
