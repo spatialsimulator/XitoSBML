@@ -35,9 +35,9 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	public abstract void run(String arg);
 
 	public void checkSBMLDocument(SBMLDocument document){
-		if(document == null || document.getModel() == null) throw new IllegalArgumentException("Non-supported format");
+		if(document == null || document.getModel() == null) throw new IllegalArgumentException("Non-supported file format");
 		model = document.getModel();
-		if(checkLevelAndVersion()) throw new IllegalArgumentException("Incompatible level and version");
+		if(!checkLevelAndVersion()) throw new IllegalArgumentException("Incompatible level and version");
 		checkExtension();
 	}
 	

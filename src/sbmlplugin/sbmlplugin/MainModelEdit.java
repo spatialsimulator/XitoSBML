@@ -24,8 +24,8 @@ public class MainModelEdit extends MainSBaseSpatial {
 		
 		checkSBMLDocument(document);
 		
-		//addParaAndSpecies();
-		//save();
+		addParaAndSpecies();
+		save();
 		showDomainStructure();
 		GeometryDatas gData = new GeometryDatas(model);
 		visualize(gData.getSpImgList());
