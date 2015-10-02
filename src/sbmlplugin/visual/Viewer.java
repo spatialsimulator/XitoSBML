@@ -22,16 +22,16 @@ import customnode.CustomMesh;
 
 
 public class Viewer {
-	Image3DUniverse univ;
+	private Image3DUniverse univ;
 	private Vector<Color3f> colors = new Vector<Color3f>();
-	int width;
-	int height;
-	int depth;
-	HashMap<String, Integer> hashDoms;
-	HashMap<String, ImagePlus> hashImg = new HashMap<String, ImagePlus>();
-	byte[] rawMat;
-	HashMap<String, List<Point3f>> hashVertices = new HashMap<String, List<Point3f>>();
-	HashMap<String, Point3d> hashBound = new HashMap<String, Point3d>();
+	private int width;
+	private	int height;
+	private int depth;
+	private HashMap<String, Integer> hashDoms;
+	private HashMap<String, ImagePlus> hashImg = new HashMap<String, ImagePlus>();
+	private byte[] rawMat;
+	private HashMap<String, List<Point3f>> hashVertices = new HashMap<String, List<Point3f>>();
+	private HashMap<String, Point3d> hashBound = new HashMap<String, Point3d>();
 	
 	public void view(SpatialImage spImg){
 		univ = new Image3DUniverse();
@@ -45,7 +45,7 @@ public class Viewer {
 		setImages();
 	}
 	
-	void setImages(){
+	private void setImages(){
 		int i = 0;
 		for(Entry<String, ImagePlus> e : hashImg.entrySet()){
 			Content c = univ.addMesh(e.getValue(), colors.get(i++), e.getKey(), 0, new boolean[] {true,true,true}, 1);
@@ -75,7 +75,8 @@ public class Viewer {
 			setMinBound(p);
 		}
 	}
-	void setMaxBound(Point3d p){
+	
+	private void setMaxBound(Point3d p){
 		if(!hashBound.containsKey("max")) hashBound.put("max", p);
 		else{
 			Point3d tempMax = hashBound.get("max");
@@ -85,7 +86,7 @@ public class Viewer {
 		}
 	}
 	
-	void setMinBound(Point3d p){
+	private void setMinBound(Point3d p){
 		if(!hashBound.containsKey("min")) hashBound.put("min", p);
 		else{
 			Point3d tempMin = hashBound.get("min");
@@ -95,7 +96,7 @@ public class Viewer {
 		}
 	}
 	
-	void setColors(int size){
+	private void setColors(int size){
 		for(int i = 0 ; i <= size; i++){
 			switch(i){
 				case 0:
@@ -123,7 +124,7 @@ public class Viewer {
 		}
 	}
 	
-	void separateImg(){
+	private void separateImg(){
 		for(Entry<String, Integer> e : hashDoms.entrySet()){
 			if(e.getValue().equals(0))
 				continue;
@@ -133,7 +134,7 @@ public class Viewer {
 		}
 	}
 
-	ImageStack createLabelImage(int pixVal){
+	private ImageStack createLabelImage(int pixVal){
 		byte[] pixels = new byte[width*height*depth];
 		for (int d = 0; d < depth; d++) {
 			for (int h = 0; h < height; h++) {
@@ -163,9 +164,5 @@ public class Viewer {
 	public HashMap<String, Point3d> gethashBound(){
 		return hashBound;
 	}
-	
-	public static void main(String[] args){
-		Image3DUniverse univ = new Image3DUniverse();
-		univ.show();
-	}
+
 }
