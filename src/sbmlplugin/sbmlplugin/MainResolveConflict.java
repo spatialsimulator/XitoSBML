@@ -17,6 +17,7 @@ import sbmlplugin.geometry.SampledFieldGeometryData;
 import sbmlplugin.gui.TargetDomainChooser;
 import sbmlplugin.image.ImageEdit;
 import sbmlplugin.image.SplitDomains;
+import sbmlplugin.util.ModelSaver;
 
 /**
  * Spatial SBML Plugin for ImageJ
@@ -52,7 +53,7 @@ public class MainResolveConflict extends MainSBaseSpatial {
 		getTargetDomains();
 		
 		if(targetDomain.equals("")){
-			IJ.error("No targete domain found");
+			IJ.error("No target domain found");
 			return;
 		}
 		
@@ -65,14 +66,16 @@ public class MainResolveConflict extends MainSBaseSpatial {
 		removeMembrane(adjacentToTargetSet);
 		
 		renewModelData();
-		save();
+		ModelSaver saver = new ModelSaver(document);
+		saver.save();
+		spImg.saveAsImage(saver.getPath(), saver.getName());
 		visualize(spImg);
 	}
 
 	private void renewModelData(){
 		spImg.createHashDomainTypes();
 		new ImageEdit(spImg);
-		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg, document);
+		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg);
 		sbmlexp.createGeometryElements();
 	}
 	
@@ -99,7 +102,6 @@ public class MainResolveConflict extends MainSBaseSpatial {
 				base.removeFromParentAndDelete();
 		}
 	}
-	
 	
 	private GeometryDefinition getActiveSampledFieldGeometry(Model model){
 		spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
