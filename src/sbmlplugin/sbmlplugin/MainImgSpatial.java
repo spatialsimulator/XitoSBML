@@ -2,6 +2,8 @@ package sbmlplugin.sbmlplugin;
 
 import javax.swing.JOptionPane;
 
+import sbmlplugin.util.ModelSaver;
+
 
 /**
  * Spatial SBML Plugin for ImageJ
@@ -13,10 +15,11 @@ public class MainImgSpatial extends MainSpatial {
 
 	@Override
 	public void run(String arg) {
-		createSBMLDoc();
+
 		gui();
 		computeImg();
-		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg, document);
+		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg);
+		model = sbmlexp.getModel();
 		sbmlexp.createGeometryElements();
 		visualize(spImg);
 		
@@ -24,9 +27,12 @@ public class MainImgSpatial extends MainSpatial {
 		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species", JOptionPane.YES_NO_CANCEL_OPTION);
 		if(reply == JOptionPane.YES_OPTION)
 			addParaAndSpecies();
-
+		
 		sbmlexp.addCoordParameter();
-		save();
+		document = sbmlexp.getDocument();
+		ModelSaver saver = new ModelSaver(document);
+		saver.save();
+		spImg.saveAsImage(saver.getPath(), saver.getName());
 		showDomainStructure();
 	}
 }

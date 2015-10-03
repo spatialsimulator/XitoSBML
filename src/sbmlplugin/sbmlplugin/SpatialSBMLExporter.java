@@ -61,7 +61,7 @@ public class SpatialSBMLExporter{
   private SBMLNamespaces sbmlns;                       //class to store SBML Level, version, namespace
   private SpatialPkgNamespaces spatialns;
   private SpatialModelPlugin spatialplugin;
-  //ReqSBasePlugin reqplugin;
+  //private ReqSBasePlugin reqplugin;
   private SpatialCompartmentPlugin spatialcompplugin;
   private Geometry geometry;
   private HashMap<String, Integer> hashDomainTypes;     //store domain type with corresponding dimension
@@ -72,15 +72,15 @@ public class SpatialSBMLExporter{
   private int width, height, depth;
   private String unit = "um"; 	//default unit
   
-  @Deprecated
+ 
   public SpatialSBMLExporter() {                    //builds the framework of SBML document
 
 	sbmlns = new SBMLNamespaces(3,1);           //create SBML name space with level 3 version 1
-    //sbmlns.addPackageNamespace("req", 1);
+    sbmlns.addPackageNamespace("req", 1);
     sbmlns.addPackageNamespace("spatial", 1);
     // SBML Document
     document = new SBMLDocument(sbmlns); 
-    //document.setPackageRequired("req", true);        //set req package as required
+    document.setPackageRequired("req", true);        //set req package as required
     document.setPackageRequired("spatial", true);    //set spatial package as required
     model = document.createModel();  //create model using the document and return pointer
 
@@ -96,7 +96,7 @@ public class SpatialSBMLExporter{
     // The type of the returned value of SBase::getPlugin() function is SBasePlugin, and
     // thus the value needs to be casted for the corresponding derived class.
     //
-    //reqplugin = (ReqSBasePlugin)model.getPlugin("req");  //get required elements plugin
+   // reqplugin = (ReqSBasePlugin)model.getPlugin("req");  //get required elements plugin
     SBasePlugin basePlugin = (model.getPlugin ("spatial"));
     spatialplugin = (SpatialModelPlugin)basePlugin;                  //get spatial plugin
     if (spatialplugin == null) {
@@ -105,7 +105,8 @@ public class SpatialSBMLExporter{
     }
   }
 
-  public SpatialSBMLExporter(SpatialImage spImg, SBMLDocument document) {
+  public SpatialSBMLExporter(SpatialImage spImg) {
+	  	this();
 	    this.hashDomainTypes = spImg.getHashDomainTypes();
 	    this.hashSampledValue = spImg.getHashSampledValue();
 	    this.hashDomainNum = spImg.getHashDomainNum();
@@ -114,7 +115,6 @@ public class SpatialSBMLExporter{
 	    this.height = spImg.getHeight();
 	    this.depth = spImg.getDepth();
 	    this.adjacentsList = spImg.getAdjacentsList();
-	    this.document = document;
 	    model = document.getModel();
 	    spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
 	  }
@@ -306,8 +306,6 @@ public class SpatialSBMLExporter{
 	}
   }	
   
-
-  
   public void createParametric(HashMap<String, List<Point3f>> hashVertices, HashMap<String, Point3d> hashBound) {
 	    geometry = spatialplugin.createGeometry();
 	    geometry.setCoordinateSystem("Cartesian");
@@ -383,4 +381,11 @@ public class SpatialSBMLExporter{
 		setCoordinateBoundary(ccz, "Z", hashBound.get("min").z, hashBound.get("max").z);
 	}
 	
+	public Model getModel(){
+		return model;
+	}
+	
+	public SBMLDocument getDocument(){
+		return document;
+	}
 }

@@ -1,6 +1,7 @@
 package sbmlplugin.sbmlplugin;
 
 import sbmlplugin.geometry.GeometryDatas;
+import sbmlplugin.util.ModelSaver;
 
 /**
  * Spatial SBML Plugin for ImageJ
@@ -15,7 +16,7 @@ public class MainModelEdit extends MainSBaseSpatial {
 	 */
 	@Override
 	public void run(String arg) {
-		try{
+		try {
 			document = getDocument();
 		} catch (NullPointerException e){
 			e.getStackTrace();
@@ -25,7 +26,8 @@ public class MainModelEdit extends MainSBaseSpatial {
 		checkSBMLDocument(document);
 		
 		addParaAndSpecies();
-		save();
+		ModelSaver saver = new ModelSaver(document);
+		saver.save();
 		showDomainStructure();
 		GeometryDatas gData = new GeometryDatas(model);
 		visualize(gData.getSpImgList());

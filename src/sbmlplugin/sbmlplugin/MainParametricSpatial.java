@@ -1,13 +1,15 @@
 package sbmlplugin.sbmlplugin;
 import javax.swing.JOptionPane;
 
+import sbmlplugin.util.ModelSaver;
+
 
 public class MainParametricSpatial extends MainSpatial{
 	
 	@Override
 	public void run(String arg) {
 		/*
-		Frame[] f =ImageJ.getFrames();
+		Frame[] f = ImageJ.getFrames();
 		
 		Frame frame = null;
 		for(int i = 0 ; i < f.length ; i++){
@@ -20,10 +22,10 @@ public class MainParametricSpatial extends MainSpatial{
 		ImageWindow3D win = (ImageWindow3D) frame;
 		univ = (Image3DUniverse) win.getUniverse();
 		*/
-		createSBMLDoc();
+
 		gui();
 		computeImg();
-		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg, document);
+		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg);
 		visualize(spImg);
 		viewer.findPoints();
 		sbmlexp.createParametric(viewer.gethashVertices(), viewer.gethashBound());
@@ -34,6 +36,8 @@ public class MainParametricSpatial extends MainSpatial{
 			addParaAndSpecies();
 
 		sbmlexp.addCoordParameter();
-		save();
+		document = sbmlexp.getDocument();
+		ModelSaver saver = new ModelSaver(document);
+		saver.save();
 	}
 }
