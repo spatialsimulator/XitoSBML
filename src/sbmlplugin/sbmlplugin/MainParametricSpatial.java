@@ -36,6 +36,7 @@ public class MainParametricSpatial extends MainSpatial{
 			addParaAndSpecies();
 
 		sbmlexp.addCoordParameter();
+		document = sbmlexp.getDocument();
 		ModelSaver saver = new ModelSaver(document);
 		saver.save();
 	}

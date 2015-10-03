@@ -31,16 +31,17 @@ public class ModelSaver {
 	
 	public void save(){
 		SaveDialog sd = new SaveDialog("Save SBML Document", model.getId(), ".xml");
+	
 		path = sd.getDirectory();
 		name = sd.getFileName();
-		if(name.contains(".xml"))	
-			name = name.substring(0, name.indexOf('.'));
 			
 		IJ.log(name);
 		
 		setAnnotation();
 		
 		try {		
+			if(name.contains(".xml"))	
+				name = name.substring(0, name.indexOf('.'));
 			libsbml.writeSBMLToFile(document, path + "/" + name + ".xml"); 			
 		} catch(NullPointerException e) {
 			System.out.println("SBML document was not saved");
@@ -69,7 +70,6 @@ public class ModelSaver {
 		
 		model.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
 				+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
-
 	}
 
 	public String getPath() {

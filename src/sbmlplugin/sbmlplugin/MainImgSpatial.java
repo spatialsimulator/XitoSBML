@@ -29,7 +29,7 @@ public class MainImgSpatial extends MainSpatial {
 			addParaAndSpecies();
 		
 		sbmlexp.addCoordParameter();
-		
+		document = sbmlexp.getDocument();
 		ModelSaver saver = new ModelSaver(document);
 		saver.save();
 		spImg.saveAsImage(saver.getPath(), saver.getName());

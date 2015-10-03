@@ -66,6 +66,7 @@ public class MainResolveConflict extends MainSBaseSpatial {
 		removeMembrane(adjacentToTargetSet);
 		
 		renewModelData();
+		
 		ModelSaver saver = new ModelSaver(document);
 		saver.save();
 		spImg.saveAsImage(saver.getPath(), saver.getName());
@@ -77,6 +78,7 @@ public class MainResolveConflict extends MainSBaseSpatial {
 		new ImageEdit(spImg);
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg);
 		sbmlexp.createGeometryElements();
+		document = sbmlexp.getDocument();
 	}
 	
 	private void removeMembrane(Set<Integer> adjacentToTargetSet){
