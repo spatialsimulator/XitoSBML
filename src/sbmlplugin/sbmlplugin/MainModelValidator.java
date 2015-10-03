@@ -1,5 +1,7 @@
 package sbmlplugin.sbmlplugin;
 
+import sbmlplugin.util.ModelValidator;
+
 /**
  * Spatial SBML Plugin for ImageJ
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
@@ -21,6 +23,8 @@ public class MainModelValidator extends MainSBaseSpatial {
 		}
 	
 		checkSBMLDocument(document);
+		ModelValidator validator = new ModelValidator(model);
+		validator.validate();
 	}
 
 }

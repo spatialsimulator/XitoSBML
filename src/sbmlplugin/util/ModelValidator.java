@@ -55,7 +55,6 @@ public class ModelValidator {
 		this.model = model;
 		checkModelVersion();
 		checkExtension();
-		checkValidation();
 	}
 	
 	private void checkModelVersion(){
@@ -76,7 +75,7 @@ public class ModelValidator {
 		
 	}
 	
-	private void checkValidation(){
+	public void validate(){
 		checkModel(model);
 		checkSpecies(model.getListOfSpecies());
 		checkParameter(model.getListOfParameters());
@@ -242,8 +241,7 @@ public class ModelValidator {
 		SBMLReader reader = new SBMLReader();
 		SBMLDocument d = reader.readSBML("spatial_example1.xml");
 		ModelValidator mv = new ModelValidator(d.getModel());
-		mv.checkValidation();
-		
+		mv.validate();
 	}
 
 }
