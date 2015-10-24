@@ -15,6 +15,7 @@
  *******************************************************************************/
 package sbmlplugin.sbmlplugin;
 
+import ij.IJ;
 import ij.io.OpenDialog;
 import ij.plugin.PlugIn;
 
@@ -78,16 +79,15 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	
 	protected void checkLevelAndVersion(){
 		if(model.getLevel() != PluginConstants.SBMLLEVEL || model.getVersion() != PluginConstants.SBMLVERSION)
-			throw new IllegalArgumentException("Incompatible level and version");
+			IJ.error("Incompatible level and version");
 	}
 	
 	protected void checkExtension(){
 		if(!document.getPackageRequired("spatial"))
-			throw new IllegalArgumentException("Could not find spatial extension");
+			IJ.error("Could not find spatial extension");
 
 		if(!document.getPackageRequired("req")) 
-			throw new IllegalArgumentException("Could not find req extension");
-
+			IJ.error("Could not find req extension");
 	}
 
 }
