@@ -75,7 +75,6 @@ public class GeometryDatas {
 			SampledFieldGeometryData sfgd = new SampledFieldGeometryData(gd, geometry);
 			return sfgd.getSpatialImage();
 		}else if(gd.isAnalyticGeometry()){
-
 			AnalyticGeometryData agd = new AnalyticGeometryData(gd, geometry, minCoord, maxCoord, dispCoord);
 			return agd.getSpatialImage();
 		}else if(gd.isParametricGeometry()){
@@ -141,7 +140,6 @@ public class GeometryDatas {
 				domList.add(d.getId());
 		}
 	}
-
 
 	public ArrayList<SpatialImage> getSpImgList() {
 		createspImgList();

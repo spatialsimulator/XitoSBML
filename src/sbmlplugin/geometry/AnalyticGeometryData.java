@@ -319,7 +319,6 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	}
 	
 	private void getSize(){
-		//width = 256;
 		height = (int) (width * maxCoord.getY() / maxCoord.getX());
 		depth = (int) (width * maxCoord.getZ() / maxCoord.getX());
 		if(depth == 0) depth = 1;

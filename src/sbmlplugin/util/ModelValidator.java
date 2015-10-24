@@ -62,35 +62,41 @@ public class ModelValidator {
 		}
 	}
 	
-	Model model;
-	Boolean errorFlag = false;
-	SpatialModelPlugin spatialplugin;
+	private Model model;
+	private Boolean errorFlag = false;
+	private SpatialModelPlugin spatialplugin;
+	private boolean hasRequiredAttribute;
 	
 	public ModelValidator(Model model){
 		this.model = model;
-		checkModelVersion();
-		checkExtension();
+		 hasRequiredAttribute = checkModelVersion() && checkExtension();
 	}
 	
-	private void checkModelVersion(){
-		if(model.getVersion() != PluginConstants.SBMLLEVEL  ||  model.getLevel() != PluginConstants.SBMLVERSION) 
+	private boolean checkModelVersion(){
+		if(model.getLevel() != PluginConstants.SBMLLEVEL  ||  model.getVersion() != PluginConstants.SBMLVERSION) 
 			IJ.log("model is not level 3 version 1");
+		
+		return model.getLevel() == PluginConstants.SBMLLEVEL  &&  model.getVersion() == PluginConstants.SBMLVERSION;
 	}
 	
-	private void checkExtension(){
+	private boolean checkExtension(){
 		SBMLDocument document = model.getSBMLDocument();
 		
-		if(!document.getPackageRequired("spatial")){
+		if(!document.getPackageRequired("spatial"))
 			IJ.log("model missing extension spatial");
-		}
-
-		if(!document.getPackageRequired("req")){
-			IJ.log("model missing extension req");
-		}
+		 else
+		    spatialplugin =(SpatialModelPlugin) (model.getPlugin ("spatial"));   
 		
+		if(!document.getPackageRequired("req"))
+			IJ.log("model missing extension req");
+		
+		return document.getPackageRequired("spatial") && document.getPackageRequired("req");
 	}
 	
 	public void validate(){
+		if(!hasRequiredAttribute)
+			return;
+		
 		checkModel(model);
 		checkSpecies(model.getListOfSpecies());
 		checkParameter(model.getListOfParameters());
@@ -159,7 +165,7 @@ public class ModelValidator {
 	
 	private void checkSpatialCompartment(SpatialCompartmentPlugin scp){
 		if(scp.isSetCompartmentMapping()) checkRequired(scp.getCompartmentMapping());
-		else IJ.log("missing compartment mapping in " + scp.getParentSBMLObject().getId() + " at line:" + scp.getLine());
+		else IJ.log("Missing compartment mapping in " + scp.getParentSBMLObject().getId() + " at line:" + scp.getLine());
 	}
 	
 	private void checkReaction(ListOfReactions lor){
@@ -204,8 +210,7 @@ public class ModelValidator {
 			if(gd instanceof ParametricGeometry){
 				checkRequired(((ParametricGeometry) gd).getSpatialPoints());
 				checkList(((ParametricGeometry) gd).getListOfParametricObjects());
-			}
-				
+			}			
 		}
 	}
 	
@@ -232,12 +237,11 @@ public class ModelValidator {
 	}
 	
 	private void checkRequired(SBase s){
-		if(!s.hasRequiredAttributes()){
+		if(!s.hasRequiredAttributes())
 			printError(s, "attribute ");
-		}
-		if(!s.hasRequiredElements()){
+		
+		if(!s.hasRequiredElements())
 			printError(s, "element ");
-		}
 	}
 	
 	private void checkList(ListOf lo){
@@ -254,7 +258,7 @@ public class ModelValidator {
 	
 	public static void main(String[] args) {
 		SBMLReader reader = new SBMLReader();
-		SBMLDocument d = reader.readSBML("spatial_example1.xml");
+		SBMLDocument d = reader.readSBML("sampledfield_3d.xml");
 		ModelValidator mv = new ModelValidator(d.getModel());
 		mv.validate();
 	}

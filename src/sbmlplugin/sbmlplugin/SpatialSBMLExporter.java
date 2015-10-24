@@ -268,7 +268,7 @@ public class SpatialSBMLExporter{
 			cm.setDomainType(e.getKey());
 			// TODO 
 			cm.setUnitSize(1);	
-			//TODO volume ?           
+			//TODO volume      
 			//c.setVolume();          
 		}
   }
