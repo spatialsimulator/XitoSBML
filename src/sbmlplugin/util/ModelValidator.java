@@ -106,6 +106,8 @@ public class ModelValidator {
 	
 		if(!errorFlag)
 			IJ.log( model.getId() + " Model is valid");
+		
+		IJ.log("Done checking model");
 	}
 	
 	private void checkModel(Model model){
