@@ -68,7 +68,6 @@ public class SplitDomains {
 		}
 	}
 	
-	//assumes its in cytosol
 	private void checkAdjacents(int w, int h, int d, byte pixVal) {
 		List<Byte> adjVal = new ArrayList<Byte>();
 

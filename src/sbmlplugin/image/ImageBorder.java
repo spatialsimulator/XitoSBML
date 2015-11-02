@@ -39,8 +39,6 @@ public class ImageBorder {
 		this.depth = spImg.getDepth();
 		this.raw = spImg.getRaw();
 		
-		IJ.log( "If domain exist on the border, Image arrays may be modified\n");
-		
 		fixBorder();						// blackens all outside pixel
 		hasSafeBorder = isBorderSafe(); 	//depth = 0 or top/bottom slice does not have object
 		createNewStack(hasSafeBorder);
