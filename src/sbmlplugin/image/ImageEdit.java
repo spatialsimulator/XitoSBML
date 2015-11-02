@@ -57,9 +57,9 @@ public class ImageEdit {
     
     public ImageEdit(SpatialImage spImg){
     	this.image = spImg.getImage();    	
-        this.width = spImg.getWidth();                                //obtain width of image
-        this.height = spImg.getHeight();                              //obtain height of image
-        this.depth = spImg.getDepth();								//obtain number of slices
+        this.width = spImg.getWidth();
+        this.height = spImg.getHeight();
+        this.depth = spImg.getDepth();
         this.size = width * height * depth;
         this.hashDomainTypes = spImg.getHashDomainTypes();
         this.hashSampledValue = spImg.getHashSampledValue();

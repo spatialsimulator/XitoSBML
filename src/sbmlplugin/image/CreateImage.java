@@ -66,6 +66,10 @@ public class CreateImage {
     private byte[] getMat(ImagePlus image){
     	byte[] slice = null;   
     	byte[] pixels = new byte[width * height * depth];
+
+		if (image.isInvertedLut()) {
+			image.getProcessor().invertLut();
+		}
     	ImageStack stack = image.getStack();
     	
     	for(int i = 1 ; i <= depth ; i++){
@@ -73,10 +77,7 @@ public class CreateImage {
         	System.arraycopy(slice, 0, pixels, (i-1) * height * width, height * width);
     	} 
     	
-    	//invert image 
-		if (image.isInvertedLut()) {
-			image.getProcessor().invertLut();
-		}
+
     	return pixels;
     }
 
