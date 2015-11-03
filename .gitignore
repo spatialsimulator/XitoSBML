@@ -17,3 +17,4 @@ TAGS
 util/*.py
 src/ij
 source/
+!bin/sbmlplugin/util/ModelSaver.class
