@@ -84,7 +84,6 @@
 		<copy file="${sbmllib}/${jnilib}" toDir="${libDir}/linux" overwrite="true" />
 	</target>
 	
-	
 	<target name="plist" depends="" description="edit to info.plist">
 		<echo>Editing Info.plist.</echo>
 		<java classname="sbmlplugin.util.PlistEditor">
