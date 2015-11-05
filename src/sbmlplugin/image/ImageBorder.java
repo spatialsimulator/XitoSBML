@@ -15,7 +15,6 @@
  *******************************************************************************/
 package sbmlplugin.image;
 
-import ij.IJ;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
 
