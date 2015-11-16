@@ -38,7 +38,7 @@ public class MainModelValidator extends MainSBaseSpatial {
 		}
 	
 		checkSBMLDocument(document);
-		ModelValidator validator = new ModelValidator(model);
+		ModelValidator validator = new ModelValidator(document);
 		validator.validate();
 	}
 

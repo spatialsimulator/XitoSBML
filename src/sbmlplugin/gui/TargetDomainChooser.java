@@ -79,7 +79,7 @@ public class TargetDomainChooser extends JFrame implements ActionListener{
 		ListOfDomainTypes lodt = geometry.getListOfDomainTypes();
 		for(int i = 0 ; i < lodt.size() ; i++){
 			String dom = lodt.get(i).getId();
-			if(!Arrays.asList(excludeDom).contains(dom) && !dom.contains("membrane"))
+			if(!Arrays.asList(excludeDom).contains(dom) && dom.contains("membrane"))
 				compartmentList.add(lodt.get(i).getId());
 		}			
 	

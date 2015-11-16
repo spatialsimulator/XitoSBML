@@ -39,6 +39,7 @@ public class SplitDomains {
 	private byte cytVal;
 	private byte delTarget;
 	private Set<Integer> adjacentToTargetSet = new HashSet<Integer>();
+	private byte adjacentToTarget;
 	
 	public SplitDomains(SpatialImage spImg, String targetDomain){
 		this.width = spImg.getWidth();
@@ -53,7 +54,21 @@ public class SplitDomains {
 
 	private void createDomainToCheck(HashMap<String, Integer> hashSampledValue, String targetDomain){
 		cytVal =  hashSampledValue.get("Cytosol").byteValue();
-		delTarget = hashSampledValue.get(targetDomain).byteValue();
+		String[] memName = targetDomain.split("_");
+		
+		delTarget = hashSampledValue.get(getSmallerDom(memName, hashSampledValue)).byteValue();
+		//adjacentToTarget = 
+	}
+	
+	private String getSmallerDom(String[] domNames, HashMap<String, Integer> hashSampledValue){
+		String dom1 = domNames[0];
+		String dom2 = domNames[1];
+		
+		if( hashSampledValue.get(dom1) > hashSampledValue.get(dom2))		
+			return dom2;
+		
+		else 
+			return dom1;
 	}
 	
 	private void checkDomain(){

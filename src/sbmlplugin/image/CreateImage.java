@@ -92,13 +92,7 @@ public class CreateImage {
     }
 
    private boolean checkVal(byte compoVal , byte pixVal){
-	   int comp = compoVal & 0xFF;
-	   int pix = pixVal & 0xFF;
-	  
-	   if(comp < pix)
-		   return true;
-				  
-	  return false;
+	   return (compoVal & 0xFF) < (pixVal & 0xFF);
    }
     
 	private void replaceMat(){
