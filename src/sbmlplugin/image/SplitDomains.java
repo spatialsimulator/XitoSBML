@@ -57,10 +57,21 @@ public class SplitDomains {
 		String[] memName = targetDomain.split("_");
 		
 		delTarget = hashSampledValue.get(getSmallerDom(memName, hashSampledValue)).byteValue();
-		//adjacentToTarget = 
+		adjacentToTarget = hashSampledValue.get(getBiggerDom(memName, hashSampledValue)).byteValue();
 	}
 	
 	private String getSmallerDom(String[] domNames, HashMap<String, Integer> hashSampledValue){
+		String dom1 = domNames[0];
+		String dom2 = domNames[1];
+		
+		if( hashSampledValue.get(dom1) > hashSampledValue.get(dom2))		
+			return dom2;
+		
+		else 
+			return dom1;
+	}
+	
+	private String getBiggerDom(String[] domNames, HashMap<String, Integer> hashSampledValue){
 		String dom1 = domNames[0];
 		String dom2 = domNames[1];
 		
