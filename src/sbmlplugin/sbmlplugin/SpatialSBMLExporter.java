@@ -39,6 +39,7 @@ import org.sbml.libsbml.Domain;
 import org.sbml.libsbml.DomainType;
 import org.sbml.libsbml.Geometry;
 import org.sbml.libsbml.ListOf;
+import org.sbml.libsbml.ListOfUnitDefinitions;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
 import org.sbml.libsbml.ParametricGeometry;
@@ -56,6 +57,8 @@ import org.sbml.libsbml.SpatialParameterPlugin;
 import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.SpatialPoints;
 import org.sbml.libsbml.SpatialSymbolReference;
+import org.sbml.libsbml.Unit;
+import org.sbml.libsbml.UnitDefinition;
 import org.sbml.libsbml.libsbmlConstants;
 
 import sbmlplugin.image.SpatialImage;
@@ -91,11 +94,11 @@ public class SpatialSBMLExporter{
   public SpatialSBMLExporter() {                    //builds the framework of SBML document
 
 	sbmlns = new SBMLNamespaces(3,1);           //create SBML name space with level 3 version 1
-    sbmlns.addPackageNamespace("req", 1);
+   // sbmlns.addPackageNamespace("req", 1);
     sbmlns.addPackageNamespace("spatial", 1);
     // SBML Document
     document = new SBMLDocument(sbmlns); 
-    document.setPackageRequired("req", true);        //set req package as required
+    //document.setPackageRequired("req", true);        //set req package as required
     document.setPackageRequired("spatial", true);    //set spatial package as required
     model = document.createModel();  //create model using the document and return pointer
 
@@ -159,14 +162,16 @@ public class SpatialSBMLExporter{
     }
     SampledField sf = geometry.createSampledField();
     sf.setId("imgtest"); sf.setDataType(libsbmlConstants.SPATIAL_DATAKIND_UINT8);
-    sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
+    //sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
+    sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
     sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR);
     
-    byte[] compressed = compressRawData(raw);
-    if (compressed != null) 
-    	sf.setSamples(byteArrayToIntArray(compressed),compressed.length);
-   
+//    byte[] compressed = compressRawData(raw);
+//    if (compressed != null) 
+//    	sf.setSamples(byteArrayToIntArray(compressed),compressed.length);
+//   
+    sf.setSamples(byteArrayToIntArray(raw), raw.length);
   }
 
   public byte[] compressRawData(byte[] raw) {
@@ -281,18 +286,18 @@ public class SpatialSBMLExporter{
 		ccx.setType("cartesianX");
 		ccx.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_X);
 		ccx.setUnit(unit);
-		setCoordinateBoundary(ccx, "x", 0, width);
+		setCoordinateBoundary(ccx, "X", 0, width);
 		CoordinateComponent ccy = geometry.createCoordinateComponent();
 		ccy.setId("y");
 		ccy.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Y);
 		ccy.setUnit(unit);
-		setCoordinateBoundary(ccy, "y", 0, height);
+		setCoordinateBoundary(ccy, "Y", 0, height);
 		if (depth != 1) {
 			CoordinateComponent ccz = geometry.createCoordinateComponent();
 			ccz.setId("z");
 			ccz.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Z);
 			ccz.setUnit(unit);
-			setCoordinateBoundary(ccz, "z", 0, depth);
+			setCoordinateBoundary(ccz, "Z", 0, depth);
 		}
 	}
 
@@ -311,15 +316,15 @@ public class SpatialSBMLExporter{
 		cc = (CoordinateComponent) lcc.get(i);
 		p = model.createParameter();
 		p.setId(cc.getId());
-		p.setValue(0); p.setConstant(true);
+		p.setConstant(true);
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
 		SpatialSymbolReference ssr = sp.createSpatialSymbolReference();
 		ssr.setId(cc.getId());
 		ssr.setSpatialRef("spatial");
-		ReqSBasePlugin rsb = (ReqSBasePlugin) p.getPlugin("req");
-		ChangedMath cm = rsb.createChangedMath(); 
-		cm.setChangedBy("spatial");
-		cm.setViableWithoutChange(true);
+//		ReqSBasePlugin rsb = (ReqSBasePlugin) p.getPlugin("req");
+//		ChangedMath cm = rsb.createChangedMath(); 
+//		cm.setChangedBy("spatial");
+//		cm.setViableWithoutChange(true);
 	}
   }	
   
@@ -405,4 +410,5 @@ public class SpatialSBMLExporter{
 	public SBMLDocument getDocument(){
 		return document;
 	}
+	
 }
