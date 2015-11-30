@@ -39,7 +39,6 @@ import org.sbml.libsbml.Domain;
 import org.sbml.libsbml.DomainType;
 import org.sbml.libsbml.Geometry;
 import org.sbml.libsbml.ListOf;
-import org.sbml.libsbml.ListOfUnitDefinitions;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
 import org.sbml.libsbml.ParametricGeometry;
@@ -57,8 +56,6 @@ import org.sbml.libsbml.SpatialParameterPlugin;
 import org.sbml.libsbml.SpatialPkgNamespaces;
 import org.sbml.libsbml.SpatialPoints;
 import org.sbml.libsbml.SpatialSymbolReference;
-import org.sbml.libsbml.Unit;
-import org.sbml.libsbml.UnitDefinition;
 import org.sbml.libsbml.libsbmlConstants;
 
 import sbmlplugin.image.SpatialImage;
@@ -94,11 +91,11 @@ public class SpatialSBMLExporter{
   public SpatialSBMLExporter() {                    //builds the framework of SBML document
 
 	sbmlns = new SBMLNamespaces(3,1);           //create SBML name space with level 3 version 1
-   // sbmlns.addPackageNamespace("req", 1);
+    sbmlns.addPackageNamespace("req", 1);
     sbmlns.addPackageNamespace("spatial", 1);
     // SBML Document
     document = new SBMLDocument(sbmlns); 
-    //document.setPackageRequired("req", true);        //set req package as required
+    document.setPackageRequired("req", true);        //set req package as required
     document.setPackageRequired("spatial", true);    //set spatial package as required
     model = document.createModel();  //create model using the document and return pointer
 
@@ -321,10 +318,10 @@ public class SpatialSBMLExporter{
 		SpatialSymbolReference ssr = sp.createSpatialSymbolReference();
 		ssr.setId(cc.getId());
 		ssr.setSpatialRef("spatial");
-//		ReqSBasePlugin rsb = (ReqSBasePlugin) p.getPlugin("req");
-//		ChangedMath cm = rsb.createChangedMath(); 
-//		cm.setChangedBy("spatial");
-//		cm.setViableWithoutChange(true);
+		ReqSBasePlugin rsb = (ReqSBasePlugin) p.getPlugin("req");
+		ChangedMath cm = rsb.createChangedMath(); 
+		cm.setChangedBy("spatial");
+		cm.setViableWithoutChange(true);
 	}
   }	
   

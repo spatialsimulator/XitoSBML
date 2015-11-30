@@ -22,9 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-/*
- * Label the image and count number of domains
- */
+
 public class ImageEdit {
 	ImagePlus image;
 	ArrayList<Integer> labelList;
@@ -42,9 +40,9 @@ public class ImageEdit {
     
     ImageEdit(ImagePlus image,HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValue){
     	this.image = image;    	
-        this.width = image.getWidth();                                //obtain width of image
-        this.height = image.getHeight();                              //obtain height of image
-        this.depth = image.getStackSize();								//obtain number of slices
+        this.width = image.getWidth();
+        this.height = image.getHeight();
+        this.depth = image.getStackSize();
         this.size = width * height * depth;
         this.hashDomainTypes = hashDomainTypes;
         this.hashSampledValue = hashSampledValue;

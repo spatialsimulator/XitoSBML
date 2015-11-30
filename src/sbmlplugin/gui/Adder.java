@@ -302,11 +302,11 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) s.getPlugin("spatial");
 		ssp.setIsSpatial(true);
 		
-//		ReqSBasePlugin rsb = (ReqSBasePlugin) s.getPlugin("req");		
-//		ChangedMath cm = rsb.createChangedMath();
-//		cm.setId("spatial");
-//		cm.setChangedBy( new SpatialPkgNamespaces(3, 1, 1).getURI());
-//		cm.setViableWithoutChange(true);
+		ReqSBasePlugin rsb = (ReqSBasePlugin) s.getPlugin("req");		
+		ChangedMath cm = rsb.createChangedMath();
+		cm.setId("spatial");
+		cm.setChangedBy( new SpatialPkgNamespaces(3, 1, 1).getURI());
+		cm.setViableWithoutChange(true);
 	}
 
 	private void addSpeciesMode(){
