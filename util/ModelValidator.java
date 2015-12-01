@@ -63,19 +63,30 @@ public class ModelValidator {
 	Model model;
 	Boolean errorFlag = false;
 	SpatialModelPlugin spatialplugin;
+<<<<<<< 09dcdff56289c11b53b8d5e69bad50ddb993da8d:util/ModelValidator.java
 <<<<<<< 20744e32d077613303082db60ff5337295f2661b:util/ModelValidator.java
 
 =======
 >>>>>>> adds extension package if necessary, checks model validity:src/util/ModelValidator.java
+=======
+	long level;
+>>>>>>> Created pluginInfo class to store plugin informations:src/util/ModelValidator.java
 	public ModelValidator(Model model){
 		this.model = model;
+		level =  model.getLevel();
 		checkModelVersion();
 		checkExtension();
 		checkValidation();
 	}
+<<<<<<< 09dcdff56289c11b53b8d5e69bad50ddb993da8d:util/ModelValidator.java
 
 	private void checkModelVersion(){
 		if(model.getVersion() != PluginConstants.SBMLLEVEL  ||  model.getLevel() != PluginConstants.SBMLVERSION)
+=======
+	
+	void checkModelVersion(){
+		if(model.getVersion() != PluginInfo.SBMLLEVEL  ||  model.getLevel() != PluginInfo.SBMLVERSION) 
+>>>>>>> Created pluginInfo class to store plugin informations:src/util/ModelValidator.java
 			System.err.println("model is not level 3 version 1");
 	}
 <<<<<<< 20744e32d077613303082db60ff5337295f2661b:util/ModelValidator.java
@@ -97,7 +108,11 @@ public class ModelValidator {
 =======
 	
 	public void checkValidation(){
+<<<<<<< 09dcdff56289c11b53b8d5e69bad50ddb993da8d:util/ModelValidator.java
 >>>>>>> adds extension package if necessary, checks model validity:src/util/ModelValidator.java
+=======
+		if(level < PluginInfo.SBMLLEVEL) return;
+>>>>>>> Created pluginInfo class to store plugin informations:src/util/ModelValidator.java
 		checkModel(model);
 		checkSpecies(model.getListOfSpecies());
 		checkParameter(model.getListOfParameters());
