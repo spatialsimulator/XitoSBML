@@ -65,6 +65,7 @@ public class Viewer {
 		for(Entry<String, ImagePlus> e : hashImg.entrySet()){
 			Content c = univ.addMesh(e.getValue(), colors.get(i++), e.getKey(), 0, new boolean[] {true,true,true}, 1);
 			c.setShaded(false);
+<<<<<<< cdc200734e26e34f1f6ffe80745713b23e13e0ba:src/sbmlplugin/visual/Viewer.java
 		}
 		univ.getSelected();
 		univ.show();
@@ -80,6 +81,15 @@ public class Viewer {
 				@SuppressWarnings("unchecked")
 				List<Point3f> vertices = cm.getMesh();
 				hashVertices.put(c.getName(), vertices);
+=======
+			
+			ContentNode node = c.getContent();
+			//各メッシュの頂点を取ってくる、メッシュは三角形を形成する
+			if(node instanceof MeshGroup){
+				 CustomMesh cm  = ((MeshGroup)node).getMesh();
+				 List<Point3f> vertices = cm.getMesh();
+				 hashVertices.put(c.getName(), vertices);
+>>>>>>> created new feature to add parameter and species to existing model:src/visual/Viewer.java
 			}
 			// get min max coordinates
 			Point3d p = new Point3d();

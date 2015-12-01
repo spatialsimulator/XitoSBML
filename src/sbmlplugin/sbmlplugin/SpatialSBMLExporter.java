@@ -71,6 +71,7 @@ import sun.misc.FloatingDecimal;
  */
 public class SpatialSBMLExporter{
 
+<<<<<<< cdc200734e26e34f1f6ffe80745713b23e13e0ba:src/sbmlplugin/sbmlplugin/SpatialSBMLExporter.java
   private SBMLDocument document;
   private Model model;
   private SBMLNamespaces sbmlns;                       //class to store SBML Level, version, namespace
@@ -88,6 +89,25 @@ public class SpatialSBMLExporter{
   private String unit = "um"; 	//default unit
   
  
+=======
+  SBMLDocument document;
+  Model model;
+  SBMLNamespaces sbmlns;                       //class to store SBML Level, version, namespace
+  SpatialPkgNamespaces spatialns;
+  SpatialModelPlugin spatialplugin;
+  //ReqSBasePlugin reqplugin;
+  SpatialCompartmentPlugin spatialcompplugin;
+  Geometry geometry;
+  HashMap<String, Integer> hashDomainTypes;     //store domain type with corresponding dimension
+  HashMap<String, Integer> hashSampledValue;
+  HashMap<String, Integer> hashDomainNum;
+  ArrayList<ArrayList<String>> adjacentsList;
+  byte[] raw;
+  int matrix[];
+  int width, height, depth;
+
+  @Deprecated
+>>>>>>> created new feature to add parameter and species to existing model:src/sbmlplugin/SpatialSBMLExporter.java
   public SpatialSBMLExporter() {                    //builds the framework of SBML document
 
 	sbmlns = new SBMLNamespaces(3,1);           //create SBML name space with level 3 version 1
@@ -120,8 +140,12 @@ public class SpatialSBMLExporter{
     }
   }
 
+<<<<<<< cdc200734e26e34f1f6ffe80745713b23e13e0ba:src/sbmlplugin/sbmlplugin/SpatialSBMLExporter.java
   public SpatialSBMLExporter(SpatialImage spImg) {
 	  	this();
+=======
+  public SpatialSBMLExporter(SpatialImage spImg, SBMLDocument document) {
+>>>>>>> created new feature to add parameter and species to existing model:src/sbmlplugin/SpatialSBMLExporter.java
 	    this.hashDomainTypes = spImg.getHashDomainTypes();
 	    this.hashSampledValue = spImg.getHashSampledValue();
 	    this.hashDomainNum = spImg.getHashDomainNum();
