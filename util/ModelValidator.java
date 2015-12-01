@@ -63,7 +63,10 @@ public class ModelValidator {
 	Model model;
 	Boolean errorFlag = false;
 	SpatialModelPlugin spatialplugin;
+<<<<<<< 20744e32d077613303082db60ff5337295f2661b:util/ModelValidator.java
 
+=======
+>>>>>>> adds extension package if necessary, checks model validity:src/util/ModelValidator.java
 	public ModelValidator(Model model){
 		this.model = model;
 		checkModelVersion();
@@ -75,6 +78,7 @@ public class ModelValidator {
 		if(model.getVersion() != PluginConstants.SBMLLEVEL  ||  model.getLevel() != PluginConstants.SBMLVERSION)
 			System.err.println("model is not level 3 version 1");
 	}
+<<<<<<< 20744e32d077613303082db60ff5337295f2661b:util/ModelValidator.java
 
 	private void checkExtension(){
 		SBMLDocument document = model.getSBMLDocument();
@@ -90,6 +94,10 @@ public class ModelValidator {
 	}
 
 	private void checkValidation(){
+=======
+	
+	public void checkValidation(){
+>>>>>>> adds extension package if necessary, checks model validity:src/util/ModelValidator.java
 		checkModel(model);
 		checkSpecies(model.getListOfSpecies());
 		checkParameter(model.getListOfParameters());

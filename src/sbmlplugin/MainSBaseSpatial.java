@@ -8,9 +8,13 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
+import org.sbml.libsbml.ReqExtension;
 import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLNamespaces;
 import org.sbml.libsbml.SBMLReader;
+import org.sbml.libsbml.SpatialExtension;
+
+import util.ModelValidator;
 
 /**
  * Spatial SBML Plugin for ImageJ
@@ -39,7 +43,8 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		
 		addParaAndSpecies();
 		save();
-		
+		ModelValidator  mv = new ModelValidator(model);
+		mv.checkValidation();
 		IJ.log(document.toSBML());
 	}
 
@@ -76,6 +81,14 @@ public class MainSBaseSpatial extends MainSpatial implements PlugIn{
 			document.setPackageRequired("req", true);
 			sbmlns.addPackageNamespace("req", 1);
 		}
+		
+		if(!model.isPackageEnabled("spatial"))
+			model.enablePackage(SpatialExtension.getXmlnsL3V1V1(), "spatial", true);
+
+		if(!model.isPackageEnabled("req"))
+			model.enablePackage(ReqExtension.getXmlnsL3V1V1(), "req", true);
+		
+		
 	}
 
 }
