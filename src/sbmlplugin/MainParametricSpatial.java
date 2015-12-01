@@ -24,7 +24,7 @@ public class MainParametricSpatial extends MainSpatial{
 		computeImg();
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg, document);
 		visualize(spImg);
-
+		viewer.findPoints();
 		sbmlexp.createParametric(viewer.gethashVertices(), viewer.gethashBound());
 		
 		
