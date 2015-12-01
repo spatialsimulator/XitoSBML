@@ -18,7 +18,11 @@ package sbmlplugin;
 
 
 import ij.IJ;
+<<<<<<< 370f72c82a248df87f1bd741519d92ed77ed1b19:src/sbmlplugin/Spatial_Img_SBML.java
 import sbmlplugin.sbmlplugin.MainImgSpatial;
+=======
+import sbmlplugin.MainImgSpatial;
+>>>>>>> optemized image border check, created abstract class to inherit:src/Spatial_Img_SBML.java
 
 
 /**
