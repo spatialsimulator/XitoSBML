@@ -159,12 +159,16 @@ public class SpatialSBMLExporter{
     }
     SampledField sf = geometry.createSampledField();
     sf.setId("imgtest"); sf.setDataType(libsbmlConstants.SPATIAL_DATAKIND_UINT8);
-    sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
+    //sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
+    sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
+    sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR);
     
-    byte[] compressed = compressRawData(raw);
-    if (compressed != null) 
-    	sf.setSamples(byteArrayToIntArray(compressed),compressed.length);
+//    byte[] compressed = compressRawData(raw);
+//    if (compressed != null) 
+//    	sf.setSamples(byteArrayToIntArray(compressed),compressed.length);
+//   
+    sf.setSamples(byteArrayToIntArray(raw), raw.length);
   }
 
   public byte[] compressRawData(byte[] raw) {
@@ -268,7 +272,7 @@ public class SpatialSBMLExporter{
 			cm.setDomainType(e.getKey());
 			// TODO 
 			cm.setUnitSize(1);	
-			//TODO volume ?           
+			//TODO volume      
 			//c.setVolume();          
 		}
   }
@@ -279,18 +283,18 @@ public class SpatialSBMLExporter{
 		ccx.setType("cartesianX");
 		ccx.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_X);
 		ccx.setUnit(unit);
-		setCoordinateBoundary(ccx, "x", 0, width);
+		setCoordinateBoundary(ccx, "X", 0, width);
 		CoordinateComponent ccy = geometry.createCoordinateComponent();
 		ccy.setId("y");
 		ccy.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Y);
 		ccy.setUnit(unit);
-		setCoordinateBoundary(ccy, "y", 0, height);
+		setCoordinateBoundary(ccy, "Y", 0, height);
 		if (depth != 1) {
 			CoordinateComponent ccz = geometry.createCoordinateComponent();
 			ccz.setId("z");
 			ccz.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Z);
 			ccz.setUnit(unit);
-			setCoordinateBoundary(ccz, "z", 0, depth);
+			setCoordinateBoundary(ccz, "Z", 0, depth);
 		}
 	}
 
@@ -309,7 +313,7 @@ public class SpatialSBMLExporter{
 		cc = (CoordinateComponent) lcc.get(i);
 		p = model.createParameter();
 		p.setId(cc.getId());
-		p.setValue(0); p.setConstant(true);
+		p.setConstant(true);
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
 		SpatialSymbolReference ssr = sp.createSpatialSymbolReference();
 		ssr.setId(cc.getId());
@@ -403,4 +407,5 @@ public class SpatialSBMLExporter{
 	public SBMLDocument getDocument(){
 		return document;
 	}
+	
 }
