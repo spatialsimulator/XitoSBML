@@ -129,7 +129,10 @@ public class ImageDialog implements ItemListener{
 		return chooser.getSelectedFile();
 	}
 	
+<<<<<<< 370f72c82a248df87f1bd741519d92ed77ed1b19:src/sbmlplugin/image/ImageDialog.java
 	@SuppressWarnings("unchecked")
+=======
+>>>>>>> optemized image border check, created abstract class to inherit:src/image/ImageDialog.java
 	private void addImageName(String title){
 		Vector<Choice> vc = gd.getChoices();
 		Choice c = vc.get(1);

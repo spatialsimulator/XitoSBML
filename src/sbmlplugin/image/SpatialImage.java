@@ -1,3 +1,4 @@
+<<<<<<< 370f72c82a248df87f1bd741519d92ed77ed1b19:src/sbmlplugin/image/SpatialImage.java
 /*******************************************************************************
  * Copyright 2015 Kaito Ii
  *
@@ -18,6 +19,11 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
 
+=======
+package image;
+import ij.ImagePlus;
+import ij.ImageStack;
+>>>>>>> optemized image border check, created abstract class to inherit:src/image/SpatialImage.java
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -46,6 +52,7 @@ public class SpatialImage {
 		setRawImage();
 	}	
 	
+<<<<<<< 370f72c82a248df87f1bd741519d92ed77ed1b19:src/sbmlplugin/image/SpatialImage.java
 	public SpatialImage(HashMap<String, Integer> hashSampledValue, ImagePlus img){	//only for model editing
 		this.setWidth(img.getWidth());
 		this.setHeight(img.getHeight());
@@ -60,6 +67,13 @@ public class SpatialImage {
 		byte[] slice = null;   
 		raw = new byte[width * height * depth];
     	ImageStack stack = img.getStack(); 	
+=======
+	private void setRawImage(){
+		byte[] slice = null;   
+		raw = new byte[width * height * depth];
+    	ImageStack stack = img.getStack();
+    	
+>>>>>>> optemized image border check, created abstract class to inherit:src/image/SpatialImage.java
     	for(int i = 1 ; i <= depth ; i++){
         	slice = (byte[]) stack.getPixels(i);
         	System.arraycopy(slice, 0, getRaw(), (i-1) * getHeight() * getWidth(), getHeight() * getWidth());

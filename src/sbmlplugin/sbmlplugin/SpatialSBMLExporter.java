@@ -159,8 +159,12 @@ public class SpatialSBMLExporter{
     }
     SampledField sf = geometry.createSampledField();
     sf.setId("imgtest"); sf.setDataType(libsbmlConstants.SPATIAL_DATAKIND_UINT8);
+<<<<<<< 370f72c82a248df87f1bd741519d92ed77ed1b19:src/sbmlplugin/sbmlplugin/SpatialSBMLExporter.java
     //sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
     sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
+=======
+    sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
+>>>>>>> optemized image border check, created abstract class to inherit:src/sbmlplugin/SpatialSBMLExporter.java
     sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
     sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR);
     
