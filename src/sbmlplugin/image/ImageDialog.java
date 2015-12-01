@@ -14,6 +14,14 @@
  * limitations under the License.
  *******************************************************************************/
 package sbmlplugin.image;
+import ij.ImagePlus;
+import ij.WindowManager;
+import ij.gui.GenericDialog;
+import ij.gui.MessageDialog;
+import ij.io.OpenDialog;
+import ij.io.Opener;
+import ij.plugin.FolderOpener;
+
 import java.awt.Choice;
 import java.awt.Frame;
 import java.awt.event.ItemEvent;
@@ -22,14 +30,6 @@ import java.io.File;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
-
-import ij.ImagePlus;
-import ij.WindowManager;
-import ij.gui.GenericDialog;
-import ij.gui.MessageDialog;
-import ij.io.OpenDialog;
-import ij.io.Opener;
-import ij.plugin.FolderOpener;
 
 
 public class ImageDialog implements ItemListener{
@@ -129,14 +129,7 @@ public class ImageDialog implements ItemListener{
 		return chooser.getSelectedFile();
 	}
 	
-<<<<<<< 4d33b61e0fa721df60cd16c0d511242814b35393:src/sbmlplugin/image/ImageDialog.java
-<<<<<<< 370f72c82a248df87f1bd741519d92ed77ed1b19:src/sbmlplugin/image/ImageDialog.java
 	@SuppressWarnings("unchecked")
-=======
->>>>>>> optemized image border check, created abstract class to inherit:src/image/ImageDialog.java
-=======
-	@SuppressWarnings("unchecked")
->>>>>>> modified viewer to avoid redundancy, erased all warnings, need a way to visualize when importing an existing model:src/image/ImageDialog.java
 	private void addImageName(String title){
 		Vector<Choice> vc = gd.getChoices();
 		Choice c = vc.get(1);

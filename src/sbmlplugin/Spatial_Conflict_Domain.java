@@ -1,4 +1,3 @@
-<<<<<<< HEAD:src/sbmlplugin/Spatial_Conflict_Domain.java
 /*******************************************************************************
  * Copyright 2015 Kaito Ii
  *
@@ -16,21 +15,16 @@
  *******************************************************************************/
 package sbmlplugin;
 
-import sbmlplugin.sbmlplugin.MainResolveConflict;
-=======
->>>>>>> e558778aa9d5156e18eeeaa81e3a0110c6331924:src/Spatial_SBase_SBML.java
 import ij.IJ;
-import sbmlplugin.MainSBaseSpatial;
-
+import sbmlplugin.sbmlplugin.MainResolveConflict;
 
 /**
  * Spatial SBML Plugin for ImageJ
+ * 
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
- * Date Created: Jun 17, 2015
+ * @author Akira Funahashi <funa@bio.keio.ac.jp> Date Created: Aug 28, 2015
  */
-public class Spatial_SBase_SBML extends Spatial_SBML {
-
+public class Spatial_Conflict_Domain extends Spatial_SBML {
 	static {
 		String varname;
 		String shlibname;
@@ -74,12 +68,15 @@ public class Spatial_SBase_SBML extends Spatial_SBML {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see Spatial_SBML#run(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see sbmlplugin.Spatial_SBML#run(java.lang.String)
 	 */
 	@Override
 	public void run(String args) {
-		if(checkJgraph() && check3Dviewer()) 
-			new MainSBaseSpatial().run(args);		
+		if (check3Dviewer())
+			new MainResolveConflict().run(args);
+		;
 	}
 }

@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-<<<<<<< 4d33b61e0fa721df60cd16c0d511242814b35393:src/sbmlplugin/visual/Viewer.java
->>>>>>> e558778aa9d5156e18eeeaa81e3a0110c6331924
 /*******************************************************************************
  * Copyright 2015 Kaito Ii
  *
@@ -19,19 +15,12 @@
  *******************************************************************************/
 package sbmlplugin.visual;
 
-=======
-package visual;
->>>>>>> modified viewer to avoid redundancy, erased all warnings, need a way to visualize when importing an existing model:src/visual/Viewer.java
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
 import ij3d.Content;
 import ij3d.ContentNode;
 import ij3d.Image3DUniverse;
-<<<<<<< 4d33b61e0fa721df60cd16c0d511242814b35393:src/sbmlplugin/visual/Viewer.java
-=======
-import image.SpatialImage;
->>>>>>> modified viewer to avoid redundancy, erased all warnings, need a way to visualize when importing an existing model:src/visual/Viewer.java
 import isosurface.MeshGroup;
 
 import java.util.HashMap;
@@ -76,10 +65,6 @@ public class Viewer {
 		for(Entry<String, ImagePlus> e : hashImg.entrySet()){
 			Content c = univ.addMesh(e.getValue(), colors.get(i++), e.getKey(), 0, new boolean[] {true,true,true}, 1);
 			c.setShaded(false);
-<<<<<<< 4d33b61e0fa721df60cd16c0d511242814b35393:src/sbmlplugin/visual/Viewer.java
-<<<<<<< cdc200734e26e34f1f6ffe80745713b23e13e0ba:src/sbmlplugin/visual/Viewer.java
-=======
->>>>>>> modified viewer to avoid redundancy, erased all warnings, need a way to visualize when importing an existing model:src/visual/Viewer.java
 		}
 		univ.getSelected();
 		univ.show();
@@ -88,7 +73,6 @@ public class Viewer {
 	public void findPoints() {
 		for (Entry<String, ImagePlus> e : hashImg.entrySet()) {
 			Content c = univ.getContent(e.getKey());
-<<<<<<< 4d33b61e0fa721df60cd16c0d511242814b35393:src/sbmlplugin/visual/Viewer.java
 			ContentNode node = c.getContent();
 			// 各メッシュの頂点を取ってくる、メッシュは三角形を形成する
 			if (node instanceof MeshGroup) {
@@ -96,24 +80,6 @@ public class Viewer {
 				@SuppressWarnings("unchecked")
 				List<Point3f> vertices = cm.getMesh();
 				hashVertices.put(c.getName(), vertices);
-=======
-			
-			ContentNode node = c.getContent();
-			//各メッシュの頂点を取ってくる、メッシュは三角形を形成する
-			if(node instanceof MeshGroup){
-				 CustomMesh cm  = ((MeshGroup)node).getMesh();
-				 List<Point3f> vertices = cm.getMesh();
-				 hashVertices.put(c.getName(), vertices);
->>>>>>> created new feature to add parameter and species to existing model:src/visual/Viewer.java
-=======
-			ContentNode node = c.getContent();
-			// 各メッシュの頂点を取ってくる、メッシュは三角形を形成する
-			if (node instanceof MeshGroup) {
-				CustomMesh cm = ((MeshGroup) node).getMesh();
-				@SuppressWarnings("unchecked")
-				List<Point3f> vertices = cm.getMesh();
-				hashVertices.put(c.getName(), vertices);
->>>>>>> modified viewer to avoid redundancy, erased all warnings, need a way to visualize when importing an existing model:src/visual/Viewer.java
 			}
 			// get min max coordinates
 			Point3d p = new Point3d();
@@ -124,12 +90,8 @@ public class Viewer {
 			setMinBound(p);
 		}
 	}
-<<<<<<< 4d33b61e0fa721df60cd16c0d511242814b35393:src/sbmlplugin/visual/Viewer.java
 	
 	private void setMaxBound(Point3d p){
-=======
-	void setMaxBound(Point3d p){
->>>>>>> modified viewer to avoid redundancy, erased all warnings, need a way to visualize when importing an existing model:src/visual/Viewer.java
 		if(!hashBound.containsKey("max")) hashBound.put("max", p);
 		else{
 			Point3d tempMax = hashBound.get("max");

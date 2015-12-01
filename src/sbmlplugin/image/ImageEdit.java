@@ -106,7 +106,7 @@ public class ImageEdit {
     	hashLabelNum = new HashMap<Integer,Integer>();
     	for(Entry<Integer, Integer> e : num.entrySet()){
     		if(!hashLabelNum.containsKey(e.getValue()))
-    			hashLabelNum.put((Integer) e.getValue(), Collections.frequency(num.values(), e.getValue()));
+    			hashLabelNum.put(e.getValue(), Collections.frequency(num.values(), e.getValue()));
     	}
 			
     }

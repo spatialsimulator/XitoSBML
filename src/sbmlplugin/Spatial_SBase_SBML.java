@@ -16,16 +16,16 @@
 package sbmlplugin;
 
 import ij.IJ;
-import sbmlplugin.sbmlplugin.MainImgSpatial;
 
 /**
- * @author Akira Funahashi
- *
+ * Spatial SBML Plugin for ImageJ
+ * 
+ * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
+ * @author Akira Funahashi <funa@bio.keio.ac.jp> Date Created: Jun 17, 2015
  */
-public class Spatial_Img_SBML extends Spatial_SBML {
+public class Spatial_SBase_SBML extends Spatial_SBML {
 
 	static {
-
 		String varname;
 		String shlibname;
 
@@ -57,6 +57,7 @@ public class Spatial_Img_SBML extends Spatial_SBML {
 					+ " setting or your CLASSPATH environment variable "
 					+ " do not include the file 'libsbmlj.jar'.");
 			e.printStackTrace();
+
 			System.exit(1);
 		} catch (SecurityException e) {
 			IJ.error("Error encountered while attempting to load libSBML:");
@@ -67,10 +68,14 @@ public class Spatial_Img_SBML extends Spatial_SBML {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see Spatial_SBML#run(java.lang.String)
+	 */
 	@Override
 	public void run(String args) {
 		if (checkJgraph() && check3Dviewer())
-			new MainImgSpatial().run(args);
+			new MainSBaseSpatial().run(args);
 	}
-
 }

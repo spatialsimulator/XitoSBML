@@ -16,16 +16,9 @@
 package sbmlplugin;
 
 import ij.IJ;
-<<<<<<< 370f72c82a248df87f1bd741519d92ed77ed1b19:src/sbmlplugin/Spatial_Parametric_SBML.java
 import sbmlplugin.sbmlplugin.MainParametricSpatial;
 
-
-=======
-import sbmlplugin.MainParametricSpatial;
-
-
->>>>>>> optemized image border check, created abstract class to inherit:src/Spatial_Parametric_SBML.java
-public class Spatial_Parametric_SBML extends Spatial_SBML{
+public class Spatial_Parametric_SBML extends Spatial_SBML {
 
 	static {
 
@@ -70,9 +63,10 @@ public class Spatial_Parametric_SBML extends Spatial_SBML{
 			System.exit(1);
 		}
 	}
+
 	@Override
 	public void run(String args) {
-		if(check3Dviewer()) 
-			new MainParametricSpatial().run(args);	
+		if (check3Dviewer())
+			new MainParametricSpatial().run(args);
 	}
 }

@@ -15,13 +15,13 @@
  *******************************************************************************/
 package sbmlplugin.util;
 
+import ij.IJ;
+import ij.io.SaveDialog;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import ij.IJ;
-import ij.io.SaveDialog;
 
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.SBMLDocument;

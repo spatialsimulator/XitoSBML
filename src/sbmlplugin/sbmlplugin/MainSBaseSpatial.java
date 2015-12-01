@@ -71,7 +71,7 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 
 	public void checkSBMLDocument(SBMLDocument document){
 		if(document == null || document.getModel() == null) 
-			IJ.error("Non-supported format file");
+			throw new IllegalArgumentException("Non-supported format file");
 		model = document.getModel();
 		checkLevelAndVersion();
 		checkExtension();

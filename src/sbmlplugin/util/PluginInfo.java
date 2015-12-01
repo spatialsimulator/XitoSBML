@@ -1,4 +1,4 @@
-package util;
+package sbmlplugin.util;
 
 /**
  * Spatial SBML Plugin for ImageJ

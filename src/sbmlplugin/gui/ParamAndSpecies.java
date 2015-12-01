@@ -33,6 +33,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
 import org.sbml.libsbml.ListOfParameters;
@@ -81,6 +82,7 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		tableModel = new DefaultTableModel(data, header){
 			private static final long serialVersionUID = 1L;
 		
+			@Override
 			public boolean isCellEditable(int row, int column){	
 					return false;
 			}
@@ -107,8 +109,8 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		
 		//scrollbar
 		JScrollPane scroll = new JScrollPane(table);
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 	
 		//button
 		JButton ok = new JButton("OK"), plus = new JButton("+"), minus = new JButton("-");

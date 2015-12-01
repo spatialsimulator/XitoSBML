@@ -67,6 +67,7 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	}
 
 	
+	@Override
 	protected void createImage(){
 		ListOfSampledFields losf = g.getListOfSampledFields();
 		//TODO : be able create image with multiple sampledfield

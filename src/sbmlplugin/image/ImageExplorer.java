@@ -38,6 +38,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -98,8 +100,8 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		
 		//scrollbar
 		JScrollPane scroll = new JScrollPane(table);
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		//button
 		JButton ok = new JButton("OK"), plus = new JButton("+"), minus = new JButton("-");
@@ -114,15 +116,15 @@ public class ImageExplorer extends JFrame implements ActionListener, MouseListen
 		getContentPane().add(scroll, BorderLayout.CENTER);	
 
 		//arrow column
-		new ArrowColumn(table, 3, BasicArrowButton.NORTH);
-		new ArrowColumn(table, 4, BasicArrowButton.SOUTH);
+		new ArrowColumn(table, 3, SwingConstants.NORTH);
+		new ArrowColumn(table, 4, SwingConstants.SOUTH);
 		new AddingColumn(table, 2);
 		
-		TableColumn column = (TableColumn)table.getColumnModel().getColumn(2);
+		TableColumn column = table.getColumnModel().getColumn(2);
 		column.setMaxWidth(50);
-		column = (TableColumn)table.getColumnModel().getColumn(3);
+		column = table.getColumnModel().getColumn(3);
 		column.setMaxWidth(50);
-		column = (TableColumn)table.getColumnModel().getColumn(4);
+		column = table.getColumnModel().getColumn(4);
 		column.setMaxWidth(50);
 			
 		setVisible(true);

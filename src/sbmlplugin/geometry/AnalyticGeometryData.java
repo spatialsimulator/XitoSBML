@@ -196,7 +196,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 				return Math.PI;
 			}
 		} else if(ast.isFunction()) {
-			if(ast.getType() == libsbml.AST_FUNCTION_POWER){
+			if(ast.getType() == libsbmlConstants.AST_FUNCTION_POWER){
 				return Math.pow(resolveDomain(ast.getLeftChild(), x, y, z), resolveDomain(ast.getRightChild(), x, y, z));
 			}
 		} else {// variable		
@@ -234,14 +234,14 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	
 	private void rearrangeAST(ASTNode ast){
 		int type = ast.getType();
-		if(type == libsbml.AST_FUNCTION_PIECEWISE){
+		if(type == libsbmlConstants.AST_FUNCTION_PIECEWISE){
 			Vector<ASTNode> astChildrenList = new Vector<ASTNode>();
 			Vector<ASTNode> astBooleanList = new Vector<ASTNode>();
 			long nc = ast.getNumChildren();
 			ASTNode astOtherwise = new ASTNode();
 			// piece to boolean * expression
 			for (int i = 0 ; i < nc /2 ; i++){
-				ASTNode ast_times = new ASTNode(libsbml.AST_TIMES);
+				ASTNode ast_times = new ASTNode(libsbmlConstants.AST_TIMES);
 				astBooleanList.add((ASTNode) ast.getChild(1).deepCopy());
 				ast_times.addChild(ast.getChild(0));
 				ast_times.addChild(ast.getChild(1));
@@ -251,47 +251,47 @@ public class AnalyticGeometryData extends ImageGeometryData {
 			}
 			// otherwise to nand
 			if(nc % 2 != 0){
-				astOtherwise.setType(libsbml.AST_TIMES);
+				astOtherwise.setType(libsbmlConstants.AST_TIMES);
 				ASTNode otherwiseExpression = ast.getChild(0);
 				ast.removeChild(0);
-				ASTNode ast_and = new ASTNode(libsbml.AST_LOGICAL_AND);
+				ASTNode ast_and = new ASTNode(libsbmlConstants.AST_LOGICAL_AND);
 				Iterator<ASTNode> it = astBooleanList.iterator();
 				while(it.hasNext()){
-					ASTNode ast_not = new ASTNode(libsbml.AST_LOGICAL_NOT);
+					ASTNode ast_not = new ASTNode(libsbmlConstants.AST_LOGICAL_NOT);
 					ast_not.addChild(it.next());
 					ast_and.addChild(ast_not);
 				}
 				astOtherwise.addChild(ast_and);
 				astOtherwise.addChild(otherwiseExpression);
 			} else {
-				astOtherwise.setType(libsbml.AST_INTEGER);
+				astOtherwise.setType(libsbmlConstants.AST_INTEGER);
 				astOtherwise.setValue(0);
 			}
-			ast.setType(libsbml.AST_PLUS);
+			ast.setType(libsbmlConstants.AST_PLUS);
 			ASTNode ast_next = ast;
 			ast_next.addChild(astOtherwise);
 			for(int i = 0 ; i < astChildrenList.size() - 1 ; i++){
-				ast_next.addChild(new ASTNode(libsbml.AST_PLUS));
+				ast_next.addChild(new ASTNode(libsbmlConstants.AST_PLUS));
 				ast_next = ast_next.getChild(1);
 				ast_next.addChild(astChildrenList.get(i));
 			}
 			ast_next.addChild(astChildrenList.lastElement());
-		} else if(type == libsbml.AST_MINUS && ast.getNumChildren() == 1){ 
+		} else if(type == libsbmlConstants.AST_MINUS && ast.getNumChildren() == 1){ 
 			// -a to -1.0 * a
-			ast.setType(libsbml.AST_TIMES);
-			ASTNode ast_minus_one = new ASTNode(libsbml.AST_REAL);
+			ast.setType(libsbmlConstants.AST_TIMES);
+			ASTNode ast_minus_one = new ASTNode(libsbmlConstants.AST_REAL);
 			ast_minus_one.setValue(-1.0);
 			ast.addChild(ast_minus_one);
-		} else if (type == libsbml.AST_PLUS && ast.getNumChildren() == 1){
+		} else if (type == libsbmlConstants.AST_PLUS && ast.getNumChildren() == 1){
 			// +a to 1.0 * a
-			ast.setType(libsbml.AST_TIMES);
-			ASTNode ast_plus_one = new ASTNode(libsbml.AST_REAL);
+			ast.setType(libsbmlConstants.AST_TIMES);
+			ASTNode ast_plus_one = new ASTNode(libsbmlConstants.AST_REAL);
 			ast_plus_one.setValue(1.0);
 			ast.addChild(ast_plus_one);
 		} else if (ast.isLogical()) {
-			if(type != libsbml.AST_LOGICAL_NOT){
+			if(type != libsbmlConstants.AST_LOGICAL_NOT){
 				if(ast.getNumChildren() == 1){
-					ASTNode ast_one = new ASTNode(libsbml.AST_INTEGER);
+					ASTNode ast_one = new ASTNode(libsbmlConstants.AST_INTEGER);
 					ast_one.setValue(1);
 					ast.addChild(ast_one);
 				} else {
@@ -300,13 +300,13 @@ public class AnalyticGeometryData extends ImageGeometryData {
 			} else { 
 				//logical not
 			}
-		} else if (type == libsbml.AST_TIMES){
+		} else if (type == libsbmlConstants.AST_TIMES){
 			if( (ast.getLeftChild().isReal() && ast.getLeftChild().getReal() == 0) ||
 				(ast.getLeftChild().isInteger() && ast.getLeftChild().getReal() == 0) ||
 				(ast.getRightChild().isReal() && ast.getRightChild().getReal() == 0) ||
 				(ast.getRightChild().isInteger() && ast.getRightChild().getReal() == 0) 
 				) {
-				ast.setType(libsbml.AST_REAL);
+				ast.setType(libsbmlConstants.AST_REAL);
 				ast.setValue(0);
 				ast.removeChild(0);
 				ast.removeChild(0);
