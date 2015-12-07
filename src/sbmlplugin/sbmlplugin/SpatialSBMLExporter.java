@@ -61,14 +61,6 @@ import org.sbml.libsbml.libsbmlConstants;
 import sbmlplugin.image.SpatialImage;
 import sun.misc.FloatingDecimal;
 
-/**
- *
- */
-
-/**
- * @author Akira Funahashi
- *
- */
 public class SpatialSBMLExporter{
 
   private SBMLDocument document;
@@ -134,11 +126,10 @@ public class SpatialSBMLExporter{
 	    spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
 	  }
 
-  
   public void createGeometryElements() {
     // Creates a Geometry object via SpatialModelPlugin object.
-    geometry = spatialplugin.createGeometry();     //get geometry of spatial plugin
-    geometry.setCoordinateSystem("cartesian");  //set to Cartesian coordinate
+    geometry = spatialplugin.createGeometry();
+    geometry.setCoordinateSystem("cartesian");
     addCoordinates();                      
     addDomainTypes();                         
     addDomains();                           

@@ -15,16 +15,9 @@
  *******************************************************************************/
 package sbmlplugin;
 
-
-
 import ij.IJ;
 import sbmlplugin.sbmlplugin.MainImgSpatial;
 
-
-/**
- * @author Akira Funahashi
- *
- */
 public class Spatial_Img_SBML extends Spatial_SBML {
 
 	static {
@@ -74,5 +67,4 @@ public class Spatial_Img_SBML extends Spatial_SBML {
 		if(checkJgraph() && check3Dviewer()) 
 			new MainImgSpatial().run(args);	
 	}
-
 }

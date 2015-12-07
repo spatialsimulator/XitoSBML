@@ -101,13 +101,11 @@ public class ImageDialog implements ItemListener{
 		OpenDialog.setLastDirectory(f.getParentFile().getAbsolutePath());
 		ImagePlus inImg = null;
 		
-		try {
-			inImg = openImg.openFolder(f.getAbsolutePath());
-			if (inImg == null)
-				inImg = open.openImage(f.getAbsolutePath());	
-		} catch (Exception e) {
-			errMessage();
-		}
+
+		inImg = openImg.openFolder(f.getAbsolutePath());
+		if (inImg == null)
+			inImg = open.openImage(f.getAbsolutePath());
+
 		if(checkImage(inImg)){
 			addImageName(inImg.getTitle());
 			inImg.getTitle();
@@ -138,14 +136,12 @@ public class ImageDialog implements ItemListener{
 		gd.validate();
 		gd.pack();
 	}
-	
-	private void errMessage(){
-		new MessageDialog(new Frame(), "Error", "Input Image must be 8-bit grayscale");
-	}
 
 	private boolean checkImage(ImagePlus img){
-		if (img == null || img.getType() != ImagePlus.GRAY8) {
-			errMessage();
+		if (img == null)
+			return false;
+		else if(img.getType() != ImagePlus.GRAY8) {
+			new MessageDialog(new Frame(), "Error", "Input Image must be 8-bit grayscale");
 			return false;
 		} else {
 			return true;		
