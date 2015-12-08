@@ -121,12 +121,7 @@ public class ImageEdit {
 			for (int d = 0; d < depth; d++) {
 				for (int h = 0; h < height; h++) {
 					for (int w = 0; w < width; w++) {
-		
-						if (invert[d * height * width + h * width + w] == 1) {
-							matrix[d * height * width + h * width + w] = setLabel(w, h, d, pixels[d * height * width + h * width + w] & 0xFF);
-						}else{
-							matrix[d * height * width + h * width + w] = setbackLabel(w, h, d, pixels[d * height * width + h * width + w] & 0xFF);
-						}
+						matrix[d * height * width + h * width + w] = setLabel(w, h, d, pixels[d * height * width + h * width + w] & 0xFF);
 					}
 				}
 			}
@@ -181,56 +176,6 @@ public class ImageEdit {
 			return min;
 	}
 
-	
-	private int setbackLabel(int  w , int h, int d, int pixVal){
-		List<Integer> adjVal = new ArrayList<Integer>();
-		
-		//check left			
-		if(w != 0 && hashPix.get(matrix[d * height * width + h * width + w - 1]).equals(pixVal))
-			adjVal.add(matrix[d * height * width + h * width + w - 1]);
-
-		//check right			
-		if(w != width - 1 && matrix[d * height * width + h * width + w + 1] != 0 && hashPix.get(matrix[d * height * width + h * width + w + 1]).equals(pixVal))
-			adjVal.add(matrix[d * height * width + h * width + w + 1]);
-
-		//check up
-		if(h != 0 && hashPix.get(matrix[d * height * width + (h-1) * width + w]).equals(pixVal))
-			adjVal.add(matrix[d * height * width + (h-1) * width + w]);
-
-		//check down
-		if(h != height - 1 && matrix[d * height * width + (h+1) * width + w ] != 0 && hashPix.get(matrix[d * height * width + (h+1) * width + w]).equals(pixVal))
-			adjVal.add(matrix[d * height * width + (h+1) * width + w]);
-		
-		//check below
-		if(d != 0 && hashPix.get(matrix[(d-1) * height * width + h * width + w]).equals(pixVal))
-			adjVal.add(matrix[(d-1) * height * width + h * width + w]);
-
-		//check above
-		if(d != depth - 1 && matrix[(d+1) * height * width + h * width + w ] != 0 && hashPix.get(matrix[(d+1) * height * width + h * width + w]).equals(pixVal))
-			adjVal.add(matrix[(d+1) * height * width + h * width + w]);
-		
-		if(adjVal.isEmpty()){
-			hashPix.put(labelCount, pixVal);
-			return labelCount++;
-		}
-			
-		Collections.sort(adjVal);
-	
-		//if all element are same or list has only one element 
-		if(Collections.frequency(adjVal, adjVal.get(0)) == adjVal.size())
-			return adjVal.get(0);
-		
-		int min = adjVal.get(0);
-		for(int i = 1; i < adjVal.size(); i++){
-			if(min == adjVal.get(i))
-				continue;
-			
-			hashPix.remove(adjVal.get(i));
-			rewriteLabel(d, min, adjVal.get(i));
-		}
-			return min;
-		}
-	
 	private void rewriteLabel(int dEnd, int after, int before){
 		for (int d = 0; d <= dEnd; d++) {
 				for (int h = 0; h < height; h++) {
