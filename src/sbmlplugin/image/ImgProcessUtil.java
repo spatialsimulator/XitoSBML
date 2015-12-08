@@ -8,8 +8,21 @@ import ij.ImagePlus;
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Nov 2, 2015
  */
-public class ProcessUtil {
+public class ImgProcessUtil {
 
+    public static byte[] copyMat(ImagePlus ip){
+		int width = ip.getWidth();
+		int height = ip.getHeight();
+		int depth = ip.getStackSize();	
+    	byte[] slice;   
+    	byte[] pixels = new byte[width * height * depth];
+    	for(int i = 1 ; i <= depth ; i++){
+        	slice = (byte[])ip.getStack().getPixels(i);
+        	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
+        }
+		return pixels;
+    }
+	
     public static byte[] getRaw(ImagePlus ip){
 		int width = ip.getWidth();
 		int height = ip.getHeight();
@@ -34,8 +47,7 @@ public class ProcessUtil {
     	byte[] label = new byte[width * height * depth];
     	if (ip.isInvertedLut()) 
 			ip.getProcessor().invertLut();
-		
-    	
+			
     	return label;
     }
     

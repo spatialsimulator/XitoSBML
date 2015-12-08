@@ -46,7 +46,7 @@ public class ImageEdit {
         this.size = width * height * depth;
         this.hashDomainTypes = hashDomainTypes;
         this.hashSampledValue = hashSampledValue;
-        copyMat();
+        pixels = ImgProcessUtil.copyMat(image);
         listVal();
         invertMat();
         label();
@@ -69,16 +69,6 @@ public class ImageEdit {
         createMembrane();
         spImg.sethashDomainNum(hashDomainNum);
         spImg.setadjacentsList(adjacentsList);
-    }
-
-    //copies the matrix into array pixel
-    private void copyMat(){
-    	byte[] slice;   
-    	pixels = new byte[width * height * depth];
-    	for(int i = 1 ; i <= depth ; i++){
-        	slice = (byte[])image.getStack().getPixels(i);
-        	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
-        }
     }
     
     //create a list of pixel value
@@ -131,6 +121,7 @@ public class ImageEdit {
 			for (int d = 0; d < depth; d++) {
 				for (int h = 0; h < height; h++) {
 					for (int w = 0; w < width; w++) {
+		
 						if (invert[d * height * width + h * width + w] == 1) {
 							matrix[d * height * width + h * width + w] = setLabel(w, h, d, pixels[d * height * width + h * width + w] & 0xFF);
 						}else{

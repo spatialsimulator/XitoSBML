@@ -73,7 +73,7 @@ public class Interpolater {
 		this.image = imagePlus;
 		getInfo(image);
 		ImagePlus nImg = new ImagePlus();
-		copyMat();
+		pixels = ImgProcessUtil.copyMat(imagePlus);
 		
 		if (needInterpolate()) {
 			nearestNeighbor();
@@ -114,15 +114,6 @@ public class Interpolater {
 			hashdomFile.put(e.getKey(), i);
 		}
 	}
-	
-    private void copyMat(){
-    	byte[] slice;   
-    	pixels = new byte[width * height * depth];
-    	for(int i = 1 ; i <= depth ; i++){
-        	slice = (byte[])image.getStack().getPixels(i); 
-        	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
-        }
-    }
 	
 	private boolean needInterpolate(){
 		if(voxz > voxx || voxz > voxy)

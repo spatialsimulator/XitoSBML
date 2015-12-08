@@ -44,7 +44,7 @@ public class Filler {
 		this.depth = image.getStackSize();
 		this.image = image;
 
-		copyMat();
+		pixels = ImgProcessUtil.copyMat(image);
 		invertMat();
 		label();
 		if (checkHole()) {
@@ -90,16 +90,6 @@ public class Filler {
 		}
 		return altimage;
 	}
-	
-	 private void copyMat(){
-	    	byte[] slice;
-	    	pixels = new byte[width * height * depth];
-	    	System.out.println(pixels.length);
-	    	for(int i = 1 ; i <= depth ; i++){
-	        	slice = (byte[]) image.getStack().getPixels(i);
-	        	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
-	        }
-	    }
 	
 	 private void invertMat(){
 		lwidth = width + 2;
