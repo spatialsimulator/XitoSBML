@@ -78,6 +78,7 @@ public class Filler {
 			image.setStack(stack);
 			image.updateImage();
 		}
+		
 		return image;
 	}
 	

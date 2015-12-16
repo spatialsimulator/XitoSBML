@@ -40,6 +40,7 @@ import org.sbml.libsbml.BoundaryCondition;
 import org.sbml.libsbml.ChangedMath;
 import org.sbml.libsbml.CoordinateReference;
 import org.sbml.libsbml.DiffusionCoefficient;
+import org.sbml.libsbml.ListOf;
 import org.sbml.libsbml.ListOfCompartments;
 import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.ListOfSpecies;
@@ -93,7 +94,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		this.model = model;
 		this.los = model.getListOfSpecies();
 
-		addComp(model.getListOfCompartments());
+		domCombo = createJComboBox("Compartments", getSbaseArray(model.getListOfCompartments()));
 		typeCombo = createJComboBox("type", addingType);
 		getContentPane().add(typeCombo, BorderLayout.NORTH);
 		setVisible(true);
@@ -104,8 +105,8 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		this();
 		this.model = model;
 		this.los = los;
-		addComp(model.getListOfCompartments());
-		typeCombo = createJComboBox("type" ,addingType);
+		domCombo = createJComboBox("Compartments", getSbaseArray(model.getListOfCompartments()));
+		typeCombo = createJComboBox("type" , addingType);
 		getContentPane().add(typeCombo, BorderLayout.NORTH);
 		setVisible(true);
 		mainPanel = new JPanel();
@@ -120,20 +121,12 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		return box;
 	}
 
-	private void addComp(ListOfCompartments loc){
-		String[] s = new String[(int) loc.size()];
-		for(int i = 0 ; i < loc.size() ; i++)
-			s[i] = loc.get(i).getId();
+	private String[] getSbaseArray(ListOf lo){
+		String[] s = new String[(int) lo.size()];
+		for(int i = 0 ; i < lo.size() ; i++)
+			s[i] = lo.get(i).getId();
 		
-		domCombo = createJComboBox("Compartments", s);
-	}
-
-	private String[] addSpecies(){
-		String[] species = new String[(int) los.size()];
-		for(int i = 0 ; i < los.size() ; i++)
-			species[i] = los.get(i).getId();
-		
-		return species;	
+		return s;
 	}
 	
 	private JTextField idField;
@@ -244,7 +237,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	private final String[] lbound = {"Xmax","Xmin","Ymax","Ymin","Zmax","Zmin"};
 	private final String[] lboundcondition = {/*"UNKNOWN","ROBIN_VALUE_COEFFICIENT","ROBIN_INWARD_NORMAL_GRADIENT_COEFFICIENT","ROBIN_SUM",*/"NEUMANN","DIRICHLET"};
 	private final String[] ldiffusion = {/*"UNKNOWN", */"ISOTROPIC","ANISOTROPIC","TENSOR"};
-
+	
 	private void addCoeffPart(int index){
 		if (mainPanel.getComponentCount() >= 6) { //removes previous parameter comboboxes if needed 
 			mainPanel.remove(coeff);
@@ -252,8 +245,8 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		}
 		
 		coeff = new JPanel();
-		String[] lspecies = addSpecies(); 
-		speciesCombo = createJComboBox("Species", lspecies);
+		
+		speciesCombo = createJComboBox("Species", getSbaseArray(los));
 		coordCombo = createJComboBox("Coordinate", lcoord);
 		switch (index) {
 		case ADVECTION:
@@ -263,14 +256,12 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		case BOUNDARY:
 			boundCombo = createJComboBox("BoundaryCoordinate", lbound);
 			conditionCombo = createJComboBox("BoundaryKind", lboundcondition);
-			//coeff.add(domCombo);
 			coeff.add(boundCombo);
 			coeff.add(conditionCombo);
 			coeff.add(speciesCombo);
 			break;
 		case DIFFUSION:
 			diffCombo = createJComboBox("DiffusionType", ldiffusion);
-			//coeff.add(coordCombo);
 			addCoordCheckbox(coeff);
 			coeff.add(diffCombo);
 			coeff.add(speciesCombo);
@@ -286,7 +277,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	}
 	
 	private void addCoordCheckbox(JPanel panel){	
-		for(int i = 1 ; i <= 3 ; i++){
+		for(int i = 0 ; i < 3 ; i++){
 			JCheckBox coordCheckbox = new JCheckBox(lcoord[i]);
 			coordCheckbox.setName(lcoord[i]);
 			panel.add(coordCheckbox);
@@ -307,6 +298,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		cm.setId("spatial");
 		cm.setChangedBy( new SpatialPkgNamespaces(3, 1, 1).getURI());
 		cm.setViableWithoutChange(true);
+		
 	}
 
 	private void addSpeciesMode(){

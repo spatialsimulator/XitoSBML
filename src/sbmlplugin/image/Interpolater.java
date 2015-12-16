@@ -30,7 +30,6 @@ public class Interpolater {
 	private double zaxis;
 	private int width;
 	private int height;
-	private int depth;
 	private int altz;
 	private ImagePlus image;		//input image
 	private ImageStack altimage;	//output pixel image
@@ -59,7 +58,7 @@ public class Interpolater {
 	private void getInfo(ImagePlus imgPlus){
 		width = imgPlus.getWidth();
 		height = imgPlus.getHeight();
-		depth = imgPlus.getImageStackSize();
+		imgPlus.getImageStackSize();
 		info = image.getOriginalFileInfo();
 		
 		voxx = info.pixelWidth;

@@ -84,8 +84,8 @@ public abstract class MainSpatial implements PlugIn{
 		ImagePlus img = fill.fill(spImg);
 		spImg.setImage(img);
 		//showStep(spImg);
-		ImageBorder imgBorder = new ImageBorder(spImg);
-		spImg.updateImage(imgBorder.getStackImage());
+		//ImageBorder imgBorder = new ImageBorder(spImg);
+		//spImg.updateImage(imgBorder.getStackImage());
 
 		//showStep(spImg);
 		new ImageEdit(spImg);
