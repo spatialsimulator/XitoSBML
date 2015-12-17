@@ -78,6 +78,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	private List<String> comboList = new ArrayList<String>(Arrays.asList("Parameter", "Species","advectionCoefficient", "boudaryCondition", "diffusionCoefficient"));
 	private Model model;
 	private ListOfSpecies los;
+	private ListOfCompartments loc;
 	private int state;
 	
 	public Adder(){
@@ -93,8 +94,9 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		this();
 		this.model = model;
 		this.los = model.getListOfSpecies();
+		this.loc = model.getListOfCompartments();
 
-		domCombo = createJComboBox("Compartments", getSbaseArray(model.getListOfCompartments()));
+		domCombo = createJComboBox("Compartments", getSbaseArray(loc));
 		typeCombo = createJComboBox("type", addingType);
 		getContentPane().add(typeCombo, BorderLayout.NORTH);
 		setVisible(true);
@@ -105,7 +107,8 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		this();
 		this.model = model;
 		this.los = los;
-		domCombo = createJComboBox("Compartments", getSbaseArray(model.getListOfCompartments()));
+		this.loc = model.getListOfCompartments();
+		domCombo = createJComboBox("Compartments", getSbaseArray(loc));
 		typeCombo = createJComboBox("type" , addingType);
 		getContentPane().add(typeCombo, BorderLayout.NORTH);
 		setVisible(true);
@@ -163,34 +166,41 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		case ADVECTION:
 			AdvectionCoefficient ac = sp.createAdvectionCoefficient();
 			ac.setVariable(species);
-			ac.setCoordinate(coordCombo.getSelectedIndex());
+			ac.setCoordinate(coordCombo.getSelectedIndex() + 1);
 			break;
 		case BOUNDARY:
 			BoundaryCondition bc = sp.createBoundaryCondition();
 			bc.setVariable(species);
-			bc.setBoundaryDomainType(los.get(species).getCompartment());
-			bc.setCoordinateBoundary((String) boundCombo.getSelectedItem());
-			bc.setType(conditionCombo.getSelectedIndex());
+			setBound(bc, (String) boundCombo.getSelectedItem(), los.get(species));
+			bc.setType(conditionCombo.getSelectedIndex() + 1);
 			break;
 		case DIFFUSION:
 			DiffusionCoefficient dc = sp.createDiffusionCoefficient();
 			dc.setVariable(species);
-			dc.setType(diffCombo.getSelectedIndex());
+			dc.setType(diffCombo.getSelectedIndex() + 1);
 			addDiffCoord(dc);
 			break;
 		}
 	}
 
+	private void setBound(BoundaryCondition bc , String boundary, Species s){
+		if(match(boundary, lbound)){
+			int index = getIndex(boundary, lbound);
+			bc.setCoordinateBoundary(lbound[index]);
+		} else 
+			bc.setBoundaryDomainType(s.getCompartment());
+	}
+	
 	private void addDiffCoord(DiffusionCoefficient dc){
 		String s;
 		for(int i = 0 ; i < coeff.getComponentCount() ; i++){
 			s = coeff.getComponent(i).getName();
 			if(s == null) continue;
-			if(match(s)){
+			if(match(s, lcoord)){
 				JCheckBox jcb = (JCheckBox) coeff.getComponent(i);
 				if(jcb.isSelected()){
 					CoordinateReference cr = new CoordinateReference();
-					int index = getIndex(jcb.getName());
+					int index = getIndex(jcb.getName(), lcoord);
 					cr.setCoordinate(index);
 					addCoordinateReferences(dc.getType(), dc, index);
 				}	
@@ -214,18 +224,18 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		}
 	}
 	
-	private boolean match(String s){
-		for(int i = 0 ; i < lcoord.length ; i++){
-			if(s.equals(lcoord[i]))
+	private boolean match(String s, String[] list){
+		for(int i = 0 ; i < list.length ; i++){
+			if(s.equals(list[i]))
 				return true;
 		}
 		return false;
 	}
 	
-	private int getIndex(String s){
+	private int getIndex(String s, String[] list){
 		int num = 0;
-		for(int i = 0 ; i < lcoord.length ; i++)
-			if(s.equals(lcoord[i]))
+		for(int i = 0 ; i < list.length ; i++)
+			if(s.equals(list[i]))
 				num = i;
 		
 		return num;
@@ -235,8 +245,16 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	JComboBox coordCombo, speciesCombo, boundCombo, conditionCombo, diffCombo;
 	private final String[] lcoord = {/*"UNKNOWN",*/"CARTESIANX","CARTESIANY","CARTESIANZ"};
 	private final String[] lbound = {"Xmax","Xmin","Ymax","Ymin","Zmax","Zmin"};
-	private final String[] lboundcondition = {/*"UNKNOWN","ROBIN_VALUE_COEFFICIENT","ROBIN_INWARD_NORMAL_GRADIENT_COEFFICIENT","ROBIN_SUM",*/"NEUMANN","DIRICHLET"};
+	private final String[] lboundcondition = {/*"UNKNOWN",*/"ROBIN_VALUE_COEFFICIENT","ROBIN_INWARD_NORMAL_GRADIENT_COEFFICIENT","ROBIN_SUM","NEUMANN","DIRICHLET"};
 	private final String[] ldiffusion = {/*"UNKNOWN", */"ISOTROPIC","ANISOTROPIC","TENSOR"};
+	private String[] boundaries;
+	
+	private String[] joinStringArray(String[] arr1, String[] arr2){
+		String[] s = new String[arr1.length + arr2.length];
+		System.arraycopy(arr1, 0, s, 0, arr1.length);
+		System.arraycopy(arr2, 0, s, arr1.length, arr2.length);
+		return s;
+	}
 	
 	private void addCoeffPart(int index){
 		if (mainPanel.getComponentCount() >= 6) { //removes previous parameter comboboxes if needed 
@@ -254,11 +272,13 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 			coeff.add(speciesCombo);
 			break;
 		case BOUNDARY:
-			boundCombo = createJComboBox("BoundaryCoordinate", lbound);
+			coeff.add(speciesCombo);
+			String[] domain = {"domain"};
+			boundaries = joinStringArray(lbound, domain);
+			boundCombo = createJComboBox("BoundaryCoordinate",  boundaries);
 			conditionCombo = createJComboBox("BoundaryKind", lboundcondition);
 			coeff.add(boundCombo);
 			coeff.add(conditionCombo);
-			coeff.add(speciesCombo);
 			break;
 		case DIFFUSION:
 			diffCombo = createJComboBox("DiffusionType", ldiffusion);
@@ -297,8 +317,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		ChangedMath cm = rsb.createChangedMath();
 		cm.setId("spatial");
 		cm.setChangedBy( new SpatialPkgNamespaces(3, 1, 1).getURI());
-		cm.setViableWithoutChange(true);
-		
+		cm.setViableWithoutChange(true);	
 	}
 
 	private void addSpeciesMode(){
@@ -362,6 +381,7 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 	public void actionPerformed(ActionEvent e) {
 		String idText = idField.getText().replaceAll(" ", "_"); 	
 		String compartment = (String) domCombo.getSelectedItem();
+
 		Double num = null;
 		try{
 			num = Double.parseDouble(val.getText());
@@ -373,9 +393,9 @@ public class Adder extends JFrame implements ItemListener, ActionListener, Windo
 		if(checkComponent(idText, compartment, num)){
 			if(typeCombo.getSelectedItem().equals("Species"))
 				addSpecies(idText, compartment, num);	
-			else{
+			else
 				addParameter(idText, num, comboList.indexOf(paramCombo.getSelectedItem()));
-			}
+	
 			dispose();
 		}
 	}	
