@@ -39,8 +39,7 @@ public class ModelValidator {
 	
 	public ModelValidator(SBMLDocument document){
 		this.document = document;
-		this.model = document.getModel();
-		
+		this.model = document.getModel();	
 	}
 	
 	private boolean checkModelVersion(){

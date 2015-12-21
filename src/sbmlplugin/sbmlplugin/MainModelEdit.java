@@ -46,5 +46,7 @@ public class MainModelEdit extends MainSBaseSpatial {
 		showDomainStructure();
 		GeometryDatas gData = new GeometryDatas(model);
 		visualize(gData.getSpImgList());
+		
+		
 	}
 }

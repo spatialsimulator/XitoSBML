@@ -121,5 +121,3 @@ public abstract class MainSpatial implements PlugIn{
 		visualize(spImg);
 	}
 }
-	
-

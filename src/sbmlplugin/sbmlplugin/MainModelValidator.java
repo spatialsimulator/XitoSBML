@@ -15,6 +15,9 @@
  *******************************************************************************/
 package sbmlplugin.sbmlplugin;
 
+import org.sbml.libsbml.Model;
+import org.sbml.libsbml.SBMLDocument;
+
 import sbmlplugin.util.ModelValidator;
 
 /**
@@ -41,5 +44,4 @@ public class MainModelValidator extends MainSBaseSpatial {
 		ModelValidator validator = new ModelValidator(document);
 		validator.validate();
 	}
-
 }
