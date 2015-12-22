@@ -22,25 +22,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.vecmath.Point3f;
+
 
 public class ImageEdit {
-	ImagePlus image;
-	ArrayList<Integer> labelList;
-	HashMap<Integer,Integer> hashLabelNum;
-    HashMap<String,Integer> hashDomainTypes;
-    HashMap<String,Integer> hashSampledValue;
-	int width;
-    int height;
-    int depth;
-    int size;
-    byte[] pixels;
-    int[] matrix;	
-    int[] invert;
-	HashMap<Integer, Integer>  hashPix = new HashMap<Integer,Integer>();
-    
+	private ArrayList<Integer> labelList;
+	private HashMap<Integer,Integer> hashLabelNum;
+	private HashMap<String,Integer> hashDomainTypes;
+	private HashMap<String,Integer> hashSampledValue;
+	private int width;
+	private int height;
+	private int depth;
+	private int size;
+	private byte[] pixels;
+	private int[] matrix;	
+	private int[] invert;
+	private HashMap<Integer, Integer>  hashPix = new HashMap<Integer,Integer>(); //label + pixel vlaue
+	private HashMap<Integer, Point3f> hashLabelPt = new HashMap<Integer,Point3f>();  //label + coordinates
+    private HashMap<String, Point3f> hashDomInteriorPt = new HashMap<String,Point3f>();  //domain name + coordinates
+	
     ImageEdit(ImagePlus image,HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValue){
-    	this.image = image;    	
-        this.width = image.getWidth();
+    	this.width = image.getWidth();
         this.height = image.getHeight();
         this.depth = image.getStackSize();
         this.size = width * height * depth;
@@ -54,7 +56,7 @@ public class ImageEdit {
     }
     
     public ImageEdit(SpatialImage spImg){
-    	this.image = spImg.getImage();    	
+    	spImg.getImage();    	
         this.width = spImg.getWidth();
         this.height = spImg.getHeight();
         this.depth = spImg.getDepth();
@@ -68,28 +70,22 @@ public class ImageEdit {
         label();
         createMembrane();
         spImg.sethashDomainNum(hashDomainNum);
-        spImg.setadjacentsList(adjacentsList);
+        spImg.setAdjacentsList(adjacentsList);
+        createDomInteriorPt();
+        spImg.setHashDomInteriorpt(hashDomInteriorPt);
     }
     
-    //create a list of pixel value
+    //create a list of unique pixel values
     private void listVal(){
     	int temp;
     	labelList = new ArrayList<Integer>();
     	for (int i = 0 ; i < size ; i++) {
-			temp = pixels[i] & 0xFF;  			//convert byte to int
-			if (!hasLabel(temp)) {	
+			temp = pixels[i] & 0xFF;
+			if (!labelList.contains(temp)) {	
 				labelList.add(new Integer(temp));
 			}
 		}
     	Collections.sort(labelList);
-    }
-    
-    private boolean hasLabel(int label){
-    	for(Integer i : labelList){
-    		if(i.equals(label))
-    			return true;
-    	}
-    	return false;
     }
     
     public void domtype(HashMap<Integer,Integer> num){
@@ -97,8 +93,7 @@ public class ImageEdit {
     	for(Entry<Integer, Integer> e : num.entrySet()){
     		if(!hashLabelNum.containsKey(e.getValue()))
     			hashLabelNum.put((Integer) e.getValue(), Collections.frequency(num.values(), e.getValue()));
-    	}
-			
+    	}	
     }
 
 	 private void invertMat(){		
@@ -116,7 +111,7 @@ public class ImageEdit {
 			}
 	 }
 	 
-	int labelCount = 1;
+	private int labelCount = 1;
 	public void label(){
 			for (int d = 0; d < depth; d++) {
 				for (int h = 0; h < height; h++) {
@@ -156,6 +151,7 @@ public class ImageEdit {
 		
 		if(adjVal.isEmpty()){
 			hashPix.put(labelCount, pixVal);
+			hashLabelPt.put(labelCount, new Point3f(w,h,d));
 			return labelCount++;
 		}
 			
@@ -172,6 +168,7 @@ public class ImageEdit {
 			
 			rewriteLabel(d, min, adjVal.get(i));
 			hashPix.remove(adjVal.get(i));
+			hashLabelPt.remove(adjVal.get(i));
 		}
 			return min;
 	}
@@ -191,7 +188,7 @@ public class ImageEdit {
      * count number of domains in each domaintypes and add membrane to adjacents
      */
 
-	HashMap<String,Integer> hashDomainNum;
+	private HashMap<String,Integer> hashDomainNum;
     public void createMembrane(){
     	countDomain();
     	addMembrane();
@@ -207,9 +204,8 @@ public class ImageEdit {
 		}
     }
 
-    
     private ArrayList<ArrayList<Integer>> adjacentsPixel;
-    ArrayList<ArrayList<String>> adjacentsList;
+    private ArrayList<ArrayList<String>> adjacentsList;
     
     public void addMembrane(){
     	adjacentsPixel = new ArrayList<ArrayList<Integer>>();
@@ -255,12 +251,10 @@ public class ImageEdit {
     
     private int getLowerLabel(int dom1, int dom2){
     	int min = Math.min(hashPix.get(dom1), hashPix.get(dom2));
-    	
     	if(min  == hashPix.get(dom1) )
     		return dom1;
     	else 
     		return dom2;
-    	
     }
     
     private int getHigherLabel(int dom1, int dom2){	
@@ -269,7 +263,8 @@ public class ImageEdit {
     		return dom1;
     	else 
     		return dom2;
-    	}
+    }
+
 	private boolean hasLabel(int dom1, int dom2) {
 		if(adjacentsPixel.isEmpty()) return false;
 		
@@ -289,16 +284,11 @@ public class ImageEdit {
 		}
 	}
 
-	public void addmem(Integer bignum, Integer smallnum){
-		String big = null,small = null;
-		for(Entry<String,Integer> e : hashSampledValue.entrySet()){
-			if(e.getValue().equals( hashPix.get(bignum) )){
-				big = e.getKey();
-			}
-			if(e.getValue().equals(hashPix.get(smallnum))){
-				small = e.getKey();
-			}
-		}
+	private void addmem(Integer bignum, Integer smallnum){
+		String big ,small;
+		
+		big = getKeyFromValue(hashSampledValue, hashPix.get(bignum));
+		small = getKeyFromValue(hashSampledValue, hashPix.get(smallnum));
 		String buf = big + "_" + small + "_membrane";
 
 		ArrayList<String> adjacentDom = new ArrayList<String>();
@@ -328,4 +318,22 @@ public class ImageEdit {
 		return count.toString();
 	}
 	
+	private String getKeyFromValue(HashMap<String, Integer> hash, Integer val){
+		String str = "";
+		
+		for(Entry<String,Integer> e :hash.entrySet()){
+			if(e.getValue().equals( val ))
+				str = e.getKey();
+		}
+		
+		return str;
+	}
+	
+	private void createDomInteriorPt(){
+		for(Entry<Integer,Point3f> e : hashLabelPt.entrySet()){
+			int pixelVal = hashPix.get(e.getKey());
+			String domName = getKeyFromValue(hashSampledValue, pixelVal) + getIndexLabel(e.getKey());
+			hashDomInteriorPt.put(domName, e.getValue());
+		}
+	}
 }

@@ -15,9 +15,6 @@
  *******************************************************************************/
 package sbmlplugin.sbmlplugin;
 
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.SBMLDocument;
-
 import sbmlplugin.util.ModelValidator;
 
 /**

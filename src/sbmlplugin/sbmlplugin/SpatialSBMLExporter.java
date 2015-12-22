@@ -38,6 +38,7 @@ import org.sbml.libsbml.CoordinateComponent;
 import org.sbml.libsbml.Domain;
 import org.sbml.libsbml.DomainType;
 import org.sbml.libsbml.Geometry;
+import org.sbml.libsbml.InteriorPoint;
 import org.sbml.libsbml.ListOf;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
@@ -74,6 +75,7 @@ public class SpatialSBMLExporter{
   private HashMap<String, Integer> hashDomainTypes;     //store domain type with corresponding dimension
   private HashMap<String, Integer> hashSampledValue;
   private HashMap<String, Integer> hashDomainNum;
+  private HashMap<String,Point3f> hashDomInteriorPt;
   private ArrayList<ArrayList<String>> adjacentsList;
   private byte[] raw;
   private int width, height, depth;
@@ -117,6 +119,7 @@ public class SpatialSBMLExporter{
 	    this.hashDomainTypes = spImg.getHashDomainTypes();
 	    this.hashSampledValue = spImg.getHashSampledValue();
 	    this.hashDomainNum = spImg.getHashDomainNum();
+	    this.hashDomInteriorPt = spImg.getHashDomInteriorPt();
 	    this.raw = spImg.getRaw();
 	    this.width = spImg.getWidth();
 	    this.height = spImg.getHeight();
@@ -141,7 +144,7 @@ public class SpatialSBMLExporter{
     SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();   //create new geometry definition and add to ListOfGeometryDefinitions list
     sfg.setId("mySampledField"); sfg.setIsActive(true); sfg.setSampledField("imgtest");
     for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
-      if (e.getValue() == 3) {                                      //if dimensions is 3
+      if (e.getValue() == 3) {
     	SampledVolume sv = sfg.createSampledVolume();
         sv.setId(e.getKey()); sv.setDomainType(e.getKey());
         sv.setSampledValue( hashSampledValue.get(e.getKey()));
@@ -225,21 +228,23 @@ public class SpatialSBMLExporter{
      for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    			//add domains to corresponding domaintypes
  		DomainType dt = geometry.getDomainType(e.getKey());
 		Domain dom = new Domain();
-			if (dt.getId().matches(".*membrane")) {
-				for (int i = 0; i < hashDomainNum.get(e.getKey()); i++) {
-					dom.setId(dt.getId() + i);
-					dom.setDomainType(dt.getId());
-					lodom.append(dom);
-				}
-			} else {
-				for (int i = 0; i < hashDomainNum.get(e.getKey()); i++) { // add each domain
-					dom.setId(dt.getId() + i);
-					dom.setDomainType(dt.getId());
-					lodom.append(dom);
-				}
+		
+		for (int i = 0; i < hashDomainNum.get(e.getKey()); i++) { // add each domain
+			String id = dt.getId() + i;
+			dom.setId(id);
+			dom.setDomainType(dt.getId());
+			if (!dt.getId().matches(".*membrane")) {
+				  InteriorPoint ip = dom.createInteriorPoint();
+				  Point3f p = hashDomInteriorPt.get(id);
+				  ip.setId(id + " point");
+				  ip.setCoord1(p.x);
+				  ip.setCoord2(p.y);
+				  ip.setCoord3(p.z);  
 			}
+			lodom.append(dom);
+		}
      }   
-  }
+  }	
 
   public void addDomainTypes() {                        //create domain types, domain, compartment info
 		for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {

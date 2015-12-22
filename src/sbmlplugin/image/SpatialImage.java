@@ -21,6 +21,8 @@ import ij.io.FileSaver;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.vecmath.Point3f;
+
 
 public class SpatialImage {
 	private byte[] raw;
@@ -34,6 +36,7 @@ public class SpatialImage {
 	private ArrayList<ArrayList<String>> adjacentsList;
 	public String title;
 	private String unit;
+	private HashMap<String,Point3f> hashDomInteriorPt;
 	
 	public SpatialImage(HashMap<String, Integer> hashSampledValue, HashMap<String, Integer> hashDomainTypes, ImagePlus img){
 		this.setWidth(img.getWidth());
@@ -83,10 +86,6 @@ public class SpatialImage {
 	
 	public void sethashDomainNum(HashMap<String,Integer> hashDomainNum){
 		this.setHashDomainNum(hashDomainNum);
-	}
-	
-	public void setadjacentsList(ArrayList<ArrayList<String>> adjacentsList){
-		this.setAdjacentsList(adjacentsList);
 	}
 
 	public int getWidth() {
@@ -178,6 +177,14 @@ public class SpatialImage {
 	
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public HashMap<String,Point3f> getHashDomInteriorPt() {
+		return hashDomInteriorPt;
+	}
+
+	public void setHashDomInteriorpt(HashMap<String,Point3f> hashDomInteriorPt) {
+		this.hashDomInteriorPt = hashDomInteriorPt;
 	}
 
 }

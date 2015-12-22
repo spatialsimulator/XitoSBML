@@ -33,7 +33,6 @@ import org.sbml.libsbml.SpatialPkgNamespaces;
 import sbmlplugin.gui.ParamAndSpecies;
 import sbmlplugin.image.CreateImage;
 import sbmlplugin.image.Filler;
-import sbmlplugin.image.ImageBorder;
 import sbmlplugin.image.ImageEdit;
 import sbmlplugin.image.ImageExplorer;
 import sbmlplugin.image.Interpolater;
