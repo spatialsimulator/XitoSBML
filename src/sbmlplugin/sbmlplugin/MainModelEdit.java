@@ -40,7 +40,7 @@ public class MainModelEdit extends MainSBaseSpatial {
 		
 		checkSBMLDocument(document);
 		
-		addParaAndSpecies();
+		addSBases();
 		ModelSaver saver = new ModelSaver(document);
 		saver.save();
 		showDomainStructure();

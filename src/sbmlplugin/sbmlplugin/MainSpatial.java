@@ -37,6 +37,7 @@ import sbmlplugin.image.ImageEdit;
 import sbmlplugin.image.ImageExplorer;
 import sbmlplugin.image.Interpolater;
 import sbmlplugin.image.SpatialImage;
+import sbmlplugin.pane.TabTables;
 import sbmlplugin.visual.DomainStruct;
 import sbmlplugin.visual.Viewer;
 
@@ -102,6 +103,20 @@ public abstract class MainSpatial implements PlugIn{
 		ParamAndSpecies pas = new ParamAndSpecies(model);
 		
 		while(lop.size() == 0 || los.size() == 0 || pas.isRunning()){
+			synchronized(lop){
+				synchronized(los){
+					
+				}
+			}
+		}
+	}
+	
+	protected void addSBases(){
+		ListOfParameters lop = model.getListOfParameters();
+		ListOfSpecies los = model.getListOfSpecies();
+		TabTables tt = new TabTables(model);
+		
+		while(tt.isRunning()){
 			synchronized(lop){
 				synchronized(los){
 					

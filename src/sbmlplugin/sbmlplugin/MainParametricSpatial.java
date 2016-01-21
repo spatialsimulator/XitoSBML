@@ -48,7 +48,7 @@ public class MainParametricSpatial extends MainSpatial{
 		
 		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species", JOptionPane.YES_NO_CANCEL_OPTION);
 		if(reply == JOptionPane.YES_OPTION)
-			addParaAndSpecies();
+			addSBases();
 
 		sbmlexp.addCoordParameter();
 		document = sbmlexp.getDocument();
