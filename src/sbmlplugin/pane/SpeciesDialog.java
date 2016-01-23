@@ -79,7 +79,10 @@ public class SpeciesDialog {
 	}
 	
 	private void setSpeciesData(){
-		species.setId(gd.getNextString());
+		String str = gd.getNextString();
+		if (str.indexOf(' ')!=-1)
+				str = str.replace(' ', '_');
+		species.setId(str);
 		String quantity = gd.getNextRadioButton();
 		if(quantity.contains(initial[0])) 
 			species.setInitialAmount(gd.getNextNumber());
@@ -93,6 +96,5 @@ public class SpeciesDialog {
 		species.setConstant(Boolean.parseBoolean(gd.getNextRadioButton()));
 		SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) species.getPlugin("spatial");
 		ssp.setIsSpatial(true);
-		
 	}
 }

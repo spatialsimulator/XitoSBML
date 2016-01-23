@@ -72,11 +72,14 @@ public class BoundaryConditionDialog {
 	}
 		
 	private void setParameterData(){
-		parameter.setId(gd.getNextString());
+		String str = gd.getNextString();
+		if (str.indexOf(' ')!=-1)
+				str = str.replace(' ', '_');
+		parameter.setId(str);
 		parameter.setValue(gd.getNextNumber());
 		parameter.setConstant(Boolean.getBoolean(gd.getNextRadioButton()));
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
-		BoundaryCondition bc = sp.getBoundaryCondition();
+		BoundaryCondition bc = sp.isSetBoundaryCondition() ? sp.getBoundaryCondition() : sp.createBoundaryCondition();
 		bc.setVariable(gd.getNextChoice());
 		bc.setType(gd.getNextChoice());
 		String bound = gd.getNextChoice();

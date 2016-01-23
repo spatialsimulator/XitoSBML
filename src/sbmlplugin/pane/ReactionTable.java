@@ -1,9 +1,14 @@
 package sbmlplugin.pane;
 
+import java.util.Vector;
+
 import javax.swing.JTable;
 
 import org.sbml.libsbml.ListOfReactions;
+import org.sbml.libsbml.ListOfSpeciesReferences;
+import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Reaction;
+import org.sbml.libsbml.SpatialReactionPlugin;
 
 /**
  * Spatial SBML Plugin for ImageJ
@@ -13,10 +18,13 @@ import org.sbml.libsbml.Reaction;
  */
 public class ReactionTable extends SBaseTable {
 
-	private final String[] header = { "id","initialAmount", "initialConcentration", "Compartment", "substanceUnits","hasOnlySubstanceUnits","boundaryCondition"};
+	private final String[] header = { "id","fast","reversible","islocal","kinetic law","reactant","product","modifier"};
 	private JTable table;
+	private Model model;
+	private ReactionDialog rd;
 	
 	ReactionTable(ListOfReactions lor){
+		this.model = lor.getModel();
 		setReactionToList(lor);
 		MyTableModel tm = getTableModelWithReaction(lor);
 		table = new JTable(tm);
@@ -37,13 +45,15 @@ public class ReactionTable extends SBaseTable {
 		Object[][] data  = new Object[max][header.length];
 		for(int i = 0; i < max; i++){
 			Reaction r = (Reaction) memberList.get(i);
+			SpatialReactionPlugin srp = (SpatialReactionPlugin) r.getPlugin("spatial");
 			data[i][0] = r.getId();
-//			data[i][1] = r.isSetInitialAmount() ? s.getInitialAmount(): null;			
-//			data[i][2] = r.isSetInitialConcentration() ? s.getInitialConcentration(): null;
-//			data[i][3] = r.getCompartment();
-//			data[i][4] = r.getSubstanceUnits();
-//			data[i][5] = r.getHasOnlySubstanceUnits();
-//			data[i][6] = r.getBoundaryCondition();
+			data[i][1] = r.getFast();
+			data[i][2] = r.getReversible();
+			data[i][3] = srp.getIsLocal();
+			data[i][4] = r.isSetKineticLaw() ? r.getKineticLaw().getFormula() : null;
+			data[i][5] = listMemberToString(r.getListOfReactants());
+			data[i][6] = listMemberToString(r.getListOfProducts());
+			data[i][7] = listMemberToString(r.getListOfModifiers());
 		}
 		
 		MyTableModel tm = new MyTableModel(data, header) {
@@ -53,14 +63,13 @@ public class ReactionTable extends SBaseTable {
 			public Class<?> getColumnClass(int Column) {
 				switch (Column) {
 				case 0: // id
-					return String.class;
-				case 1: // amount
-				case 2: // concentration
-					return Double.class;
-				case 3: // Compartment
-				case 4: // substance unit
-				case 5: // hasOnlySubstanceUnits
-				case 6: // boundaryCondition
+				case 1: // fast
+				case 2: // reversible
+				case 3:	// islocal
+				case 4: // kinetic law
+				case 5: // reactant
+				case 6: // product
+				case 7: // modifier
 					return String.class;
 				default:
 					return String.class;
@@ -71,14 +80,50 @@ public class ReactionTable extends SBaseTable {
 			
 		return tm;
 	}
+	
+	private String listMemberToString(ListOfSpeciesReferences lo){
+		StringBuilder sb = new StringBuilder();
+		
+		for(int i = 0 ; i < lo.size(); i++)
+			sb.append(lo.get(i).getSpecies() + " ");
 
+		return sb.toString();
+	}
+	
+	private Vector<Object> reactionToVector(Reaction r){
+		SpatialReactionPlugin srp = (SpatialReactionPlugin) r.getPlugin("spatial");
+		Vector<Object> v = new Vector<Object>();
+		v.add(r.getId());
+		v.add(r.getFast());
+		v.add(r.getReversible());
+		v.add(srp.getIsLocal());
+		v.add(r.getKineticLaw().getFormula());
+		v.add(listMemberToString(r.getListOfReactants()));
+		v.add(listMemberToString(r.getListOfProducts()));
+		v.add(listMemberToString(r.getListOfModifiers()));
+		
+		return v;
+	}
+	
 	/* (non-Javadoc)
 	 * @see sbmlplugin.pane.SBaseTable#add()
 	 */
 	@Override
 	void add() {
-		// TODO Auto-generated method stub
+		if(rd == null)
+			rd = new ReactionDialog(model);
 		
+		Reaction r = rd.showDialog();
+		
+		if(r == null) return;
+		
+		if(containsDuplicateId(r)){
+			errDupID(table);
+			return;
+		}
+			
+		memberList.add(r);
+		((MyTableModel)table.getModel()).addRow(reactionToVector(r));
 	}
 
 	/* (non-Javadoc)
@@ -86,7 +131,21 @@ public class ReactionTable extends SBaseTable {
 	 */
 	@Override
 	void edit(int index) {
-		// TODO Auto-generated method stub
+		if(index == -1 ) return;
+		if(rd == null)
+			rd = new ReactionDialog(model);
 		
+		Reaction r = rd.showDialog((Reaction) memberList.get(index));
+		
+		if(r == null) return;
+		
+		if(containsDuplicateId(r)){
+			errDupID(table);
+			return;
+		}
+			
+		memberList.set(index, r);
+		((MyTableModel)table.getModel()).updateRow(index, reactionToVector(r));
+	
 	}
 }

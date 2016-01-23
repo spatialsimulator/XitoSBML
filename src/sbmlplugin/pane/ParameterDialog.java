@@ -63,7 +63,10 @@ public class ParameterDialog {
 	}
 		
 	private void setParameterData(){
-		parameter.setId(gd.getNextString());
+		String str = gd.getNextString();
+		if (str.indexOf(' ')!=-1)
+				str = str.replace(' ', '_');
+		parameter.setId(str);
 		parameter.setValue(gd.getNextNumber());
 		parameter.setUnits(gd.getNextChoice());
 		parameter.setConstant(Boolean.getBoolean(gd.getNextRadioButton()));

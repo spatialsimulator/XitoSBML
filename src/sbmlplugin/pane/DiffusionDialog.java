@@ -72,11 +72,14 @@ public class DiffusionDialog {
 	}
 		
 	private void setParameterData(){
-		parameter.setId(gd.getNextString());
+		String str = gd.getNextString();
+		if (str.indexOf(' ')!=-1)
+				str = str.replace(' ', '_');
+		parameter.setId(str);
 		parameter.setValue(gd.getNextNumber());
 		parameter.setConstant(Boolean.getBoolean(gd.getNextRadioButton()));
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
-		DiffusionCoefficient dc = sp.getDiffusionCoefficient();
+		DiffusionCoefficient dc = sp.isSetDiffusionCoefficient() ? sp.getDiffusionCoefficient() : sp.createDiffusionCoefficient();
 		dc.setVariable(gd.getNextChoice());
 		dc.setType(gd.getNextChoice());
 		String coord1 = gd.getNextChoice();

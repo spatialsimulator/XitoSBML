@@ -118,12 +118,11 @@ public class ParameterTable extends SBaseTable {
 		if(pd == null)
 			pd = new ParameterDialog(model);
 		
-		String idBefore = memberList.get(index).getId();
 		Parameter p = pd.showDialog((Parameter) memberList.get(index));
 		
 		if(p == null) return;
 		
-		if(!idBefore.equals(p.getId()) && containsDuplicateId(p)){
+		if(containsDuplicateId(p)){
 			errDupID(table);
 			return;
 		}

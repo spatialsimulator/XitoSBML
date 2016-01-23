@@ -68,12 +68,16 @@ public class AdvectionDialog {
 	}
 		
 	private void setParameterData(){
-		parameter.setId(gd.getNextString());
+		String str = gd.getNextString();
+		if (str.indexOf(' ')!=-1)
+				str = str.replace(' ', '_');
+		parameter.setId(str);
 		parameter.setValue(gd.getNextNumber());
 		parameter.setConstant(Boolean.getBoolean(gd.getNextRadioButton()));
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
-		AdvectionCoefficient ac = sp.getAdvectionCoefficient();
-		ac.setVariable(gd.getNextChoice());
+		AdvectionCoefficient ac = sp.isSetAdvectionCoefficient() ? sp.getAdvectionCoefficient() : sp.createAdvectionCoefficient();
+		String var = gd.getNextChoice();
+		ac.setVariable(var);
 		ac.setCoordinate(gd.getNextChoice());
 	}
 }
