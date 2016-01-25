@@ -20,6 +20,7 @@ import javax.swing.JViewport;
 import org.sbml.libsbml.ListOfParameters;
 import org.sbml.libsbml.ListOfReactions;
 import org.sbml.libsbml.ListOfSpecies;
+import org.sbml.libsbml.ListOfUnitDefinitions;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLReader;
@@ -59,6 +60,7 @@ public class TabTables extends JFrame implements ActionListener {
 		ListOfParameters lop = model.getListOfParameters();
 		ListOfSpecies los = model.getListOfSpecies();
 		ListOfReactions lor = model.getListOfReactions();
+		ListOfUnitDefinitions loud = model.getListOfUnitDefinitions();
 		
 		SpeciesTable stable = new SpeciesTable(los);		
 		ParameterTable ptable = new ParameterTable(lop);		
@@ -66,13 +68,15 @@ public class TabTables extends JFrame implements ActionListener {
 		BoundaryConditionTable bctable = new BoundaryConditionTable(lop);
 		DiffusionTable dtable = new DiffusionTable(lop);
 		ReactionTable rtable = new ReactionTable(lor);
-				
+		UnitDefinitionTable udtable = new UnitDefinitionTable(loud);
+		
 		sbaseList.add(stable);
 		sbaseList.add(ptable);
 		sbaseList.add(atable);
 		sbaseList.add(bctable);
 		sbaseList.add(dtable);
 		sbaseList.add(rtable);
+		sbaseList.add(udtable);
 		
 		tabbedpane.addTab("Species", stable.getPane());
 		tabbedpane.addTab("Parameter", ptable.getPane());
@@ -80,6 +84,7 @@ public class TabTables extends JFrame implements ActionListener {
 		tabbedpane.addTab("Boundary Condition", bctable.getPane());
 		tabbedpane.addTab("Diffusion", dtable.getPane());
 		tabbedpane.addTab("Reaction", rtable.getPane());
+		tabbedpane.addTab("Unit Definition", udtable.getPane());
 		
 		// button
 		JButton ok = new JButton("OK"), add = new JButton("add"), del = new JButton("delete"), edit = new JButton("edit");
@@ -113,8 +118,9 @@ public class TabTables extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		SBMLReader reader = new SBMLReader();
 		//SBMLDocument d = reader.readSBML("spatial_example1.xml");
-		SBMLDocument d = reader.readSBML("sampledField_3d.xml");
+		//SBMLDocument d = reader.readSBML("sampledField_3d.xml");
 		//SBMLDocument d = reader.readSBML("mem_diff.xml");
+		SBMLDocument d = reader.readSBML("analytic_3d.xml");
 		new TabTables(d.getModel());
 	}
 

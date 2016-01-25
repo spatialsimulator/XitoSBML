@@ -6,7 +6,6 @@ import org.sbml.libsbml.DiffusionCoefficient;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
 import org.sbml.libsbml.SpatialParameterPlugin;
-
 /**
  * Spatial SBML Plugin for ImageJ
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
@@ -87,5 +86,6 @@ public class DiffusionDialog {
 		String coord2 = gd.getNextChoice();
 		if(!coord1.equals(coord2))
 			dc.setCoordinateReference2(gd.getNextChoice());		
+	
 	} 
 }

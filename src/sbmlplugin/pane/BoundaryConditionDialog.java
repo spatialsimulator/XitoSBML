@@ -8,6 +8,7 @@ import org.sbml.libsbml.BoundaryCondition;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
 import org.sbml.libsbml.SpatialParameterPlugin;
+import org.sbml.libsbml.libsbmlConstants;
 
 /**
  * Spatial SBML Plugin for ImageJ
@@ -81,12 +82,14 @@ public class BoundaryConditionDialog {
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
 		BoundaryCondition bc = sp.isSetBoundaryCondition() ? sp.getBoundaryCondition() : sp.createBoundaryCondition();
 		bc.setVariable(gd.getNextChoice());
-		bc.setType(gd.getNextChoice());
+		//bc.setType(gd.getNextChoice());
+		bc.setType(libsbmlConstants.SPATIAL_BOUNDARYKIND_ROBIN_VALUE_COEFFICIENT);
 		String bound = gd.getNextChoice();
 		if(Arrays.asList(SBMLProcessUtil.bounds).contains(bound))
 			bc.setCoordinateBoundary(bound);
 		else
 			bc.setBoundaryDomainType(bound);
+		System.out.println(bc.toSBML());
 	} 
 	
 	private String[] getAllBoundAsString(){
