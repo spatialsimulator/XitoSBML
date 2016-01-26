@@ -21,6 +21,7 @@ import ij.io.FileSaver;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 
 
@@ -37,6 +38,7 @@ public class SpatialImage {
 	public String title;
 	private String unit;
 	private HashMap<String,Point3f> hashDomInteriorPt;
+	private Point3d delta = new Point3d();
 	
 	public SpatialImage(HashMap<String, Integer> hashSampledValue, HashMap<String, Integer> hashDomainTypes, ImagePlus img){
 		this.setWidth(img.getWidth());
@@ -46,6 +48,9 @@ public class SpatialImage {
 		this.setHashSampledValue(hashSampledValue);
 		this.setHashDomainTypes(hashDomainTypes);
 		this.unit = img.getFileInfo().unit;
+		delta.x = img.getFileInfo().pixelWidth;
+		delta.y = img.getFileInfo().pixelHeight;
+		delta.z = img.getFileInfo().pixelDepth;
 		setRawImage();
 	}	
 	
@@ -56,6 +61,9 @@ public class SpatialImage {
 		this.img = img;
 		this.setHashSampledValue(hashSampledValue);
 		this.unit = img.getFileInfo().unit;
+		delta.x = img.getFileInfo().pixelWidth;
+		delta.y = img.getFileInfo().pixelHeight;
+		delta.z = img.getFileInfo().pixelDepth;
 		setRawImage();
 	}	
 	

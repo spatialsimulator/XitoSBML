@@ -44,7 +44,7 @@ public class CreateImage {
 		replaceMat();
 		compoImg = new ImagePlus("Combined_Image", altimage);
 		compoImg.setFileInfo(img.getFileInfo());
-	
+		compoImg.setCalibration(img.getCalibration());
 		System.out.println("fileinfo " + compoImg.getOriginalFileInfo());
 	}
 	
