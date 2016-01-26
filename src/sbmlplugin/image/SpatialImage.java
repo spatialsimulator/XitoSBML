@@ -172,7 +172,7 @@ public class SpatialImage {
 
 	public void saveAsImage(String path, String name){
 		FileSaver fs = new FileSaver(img);
-		
+		if(name == null) return;
 		if(depth > 1)
 			fs.saveAsTiffStack(path + "/" + name + ".tiff");
 		else
