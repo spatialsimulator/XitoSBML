@@ -80,7 +80,7 @@ public class SpatialSBMLExporter{
   private byte[] raw;
   private int width, height, depth;
   private String unit = "um"; 	//default unit
-  
+  private Point3d delta;
  
   public SpatialSBMLExporter() {                    //builds the framework of SBML document
 
@@ -125,6 +125,7 @@ public class SpatialSBMLExporter{
 	    this.height = spImg.getHeight();
 	    this.depth = spImg.getDepth();
 	    this.adjacentsList = spImg.getAdjacentsList();
+	    this.delta = spImg.getDelta();
 	    model = document.getModel();
 	    spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
 	  }
@@ -267,7 +268,7 @@ public class SpatialSBMLExporter{
 			cm.setId(e.getKey() + c.getId());
 			cm.setDomainType(e.getKey());
 			// TODO 
-			cm.setUnitSize(1);	
+			cm.setUnitSize(delta.x * delta.y * delta.z);	
 			//TODO volume      
 			//c.setVolume();          
 		}

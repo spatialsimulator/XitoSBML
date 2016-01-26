@@ -187,6 +187,14 @@ public class SpatialImage {
 		this.unit = unit;
 	}
 
+	public Point3d getDelta(){
+		return delta;
+	}
+	
+	public void setDelta(Point3d delta) {
+		this.delta = delta;
+	}
+	
 	public HashMap<String,Point3f> getHashDomInteriorPt() {
 		return hashDomInteriorPt;
 	}
