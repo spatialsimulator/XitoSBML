@@ -35,7 +35,6 @@ public class SpeciesDialog {
 		gd.addNumericField("quantity:", 0, 1);
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), null);
 		gd.addChoice("substanceUnit:", units, null);
-		gd.addRadioButtonGroup("hasOnlySubstnaceUnit:", bool, 1,2,"true");
 		gd.addRadioButtonGroup("boundaryCondition:",bool,1,2,"true");
 		gd.addRadioButtonGroup("constant:",bool,1,2,"true");
 		
@@ -91,7 +90,10 @@ public class SpeciesDialog {
 	
 		species.setCompartment(gd.getNextChoice());
 		species.setSubstanceUnits(gd.getNextChoice());
-		species.setHasOnlySubstanceUnits(Boolean.parseBoolean(gd.getNextRadioButton()));
+		if(species.isSetInitialAmount())
+			species.setHasOnlySubstanceUnits(true);
+		else
+			species.setHasOnlySubstanceUnits(false);
 		species.setBoundaryCondition(Boolean.parseBoolean(gd.getNextRadioButton()));
 		species.setConstant(Boolean.parseBoolean(gd.getNextRadioButton()));
 		SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) species.getPlugin("spatial");

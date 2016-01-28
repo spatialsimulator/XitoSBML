@@ -57,6 +57,7 @@ public class ModelSaver {
 		try {		
 			if(name.contains(".xml"))	
 				name = name.substring(0, name.indexOf('.'));
+			document.getModel().setId(name);	
 			libsbml.writeSBMLToFile(document, path + "/" + name + ".xml"); 			
 		} catch(NullPointerException e) {
 			System.out.println("SBML document was not saved");

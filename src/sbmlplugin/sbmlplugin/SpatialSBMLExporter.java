@@ -40,7 +40,6 @@ import org.sbml.libsbml.DomainType;
 import org.sbml.libsbml.Geometry;
 import org.sbml.libsbml.InteriorPoint;
 import org.sbml.libsbml.ListOf;
-import org.sbml.libsbml.ListOfUnitDefinitions;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
 import org.sbml.libsbml.ParametricGeometry;
@@ -63,7 +62,6 @@ import org.sbml.libsbml.UnitDefinition;
 import org.sbml.libsbml.libsbmlConstants;
 
 import sbmlplugin.image.SpatialImage;
-import sbmlplugin.pane.SBMLProcessUtil;
 import sun.misc.FloatingDecimal;
 
 public class SpatialSBMLExporter{
@@ -132,6 +130,7 @@ public class SpatialSBMLExporter{
 	    this.delta = spImg.getDelta();
 	    model = document.getModel();
 	    spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
+	    unit = spImg.getUnit();
 	  }
 
   public void createGeometryElements() {
@@ -413,26 +412,26 @@ public class SpatialSBMLExporter{
 	public void addUnits(){
 		UnitDefinition ud = model.createUnitDefinition();
 		ud.setId("um");
-		Unit unit = ud.createUnit();
-		unit.setKind(libsbmlConstants.UNIT_KIND_METRE);
-		unit.setExponent(1);
-		unit.setScale(0);
-		unit.setMultiplier(0.000001);
+		Unit u = ud.createUnit();
+		u.setKind(libsbmlConstants.UNIT_KIND_METRE);
+		u.setExponent(1);
+		u.setScale(0);
+		u.setMultiplier(0.000001);
 	
 		ud = model.createUnitDefinition();
 		ud.setId("um2");
-		unit = ud.createUnit();
-		unit.setKind(libsbmlConstants.UNIT_KIND_METRE);
-		unit.setExponent(2);
-		unit.setScale(0);
-		unit.setMultiplier(0.000001);
+		u = ud.createUnit();
+		u.setKind(libsbmlConstants.UNIT_KIND_METRE);
+		u.setExponent(2);
+		u.setScale(0);
+		u.setMultiplier(0.000001);
 		
 		ud = model.createUnitDefinition();
 		ud.setId("um3");
-		unit = ud.createUnit();
-		unit.setKind(libsbmlConstants.UNIT_KIND_METRE);
-		unit.setExponent(3);
-		unit.setScale(0);
-		unit.setMultiplier(0.000001);
+		u = ud.createUnit();
+		u.setKind(libsbmlConstants.UNIT_KIND_METRE);
+		u.setExponent(3);
+		u.setScale(0);
+		u.setMultiplier(0.000001);
 	}
 }
