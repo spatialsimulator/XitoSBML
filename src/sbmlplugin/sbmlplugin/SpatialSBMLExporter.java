@@ -81,7 +81,7 @@ public class SpatialSBMLExporter{
   private ArrayList<ArrayList<String>> adjacentsList;
   private byte[] raw;
   private int width, height, depth;
-  private String unit = "um"; 	//default unit
+  private String unit;
   private Point3d delta;
  
   public SpatialSBMLExporter() {                    //builds the framework of SBML document
@@ -131,6 +131,7 @@ public class SpatialSBMLExporter{
 	    model = document.getModel();
 	    spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
 	    unit = spImg.getUnit();
+	    System.out.println(unit);
 	  }
 
   public void createGeometryElements() {
@@ -283,18 +284,18 @@ public class SpatialSBMLExporter{
 		ccx.setId("x");
 		ccx.setType("cartesianX");
 		ccx.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_X);
-		ccx.setUnit(unit);
+		if(unit != null) ccx.setUnit(unit);
 		setCoordinateBoundary(ccx, "X", 0, width);
 		CoordinateComponent ccy = geometry.createCoordinateComponent();
 		ccy.setId("y");
 		ccy.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Y);
-		ccy.setUnit(unit);
+		if(unit != null)  ccy.setUnit(unit);
 		setCoordinateBoundary(ccy, "Y", 0, height);
 		if (depth != 1) {
 			CoordinateComponent ccz = geometry.createCoordinateComponent();
 			ccz.setId("z");
 			ccz.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Z);
-			ccz.setUnit(unit);
+			if(unit != null) ccz.setUnit(unit);
 			setCoordinateBoundary(ccz, "Z", 0, depth);
 		}
 	}
@@ -387,17 +388,17 @@ public class SpatialSBMLExporter{
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
 		ccx.setId("x");
 		ccx.setType("cartesianX");
-		ccx.setUnit(unit);
+		if(unit !=null) ccx.setUnit(unit);
 		setCoordinateBoundary(ccx, "X", hashBound.get("min").x, hashBound.get("max").x);
 		CoordinateComponent ccy = geometry.createCoordinateComponent();
 		ccy.setId("y");
 		ccy.setType("cartesianY");
-		ccy.setUnit(unit);
+		if(unit !=null) ccy.setUnit(unit);
 		setCoordinateBoundary(ccy, "Y", hashBound.get("min").y, hashBound.get("max").y);
 		CoordinateComponent ccz = geometry.createCoordinateComponent();
 		ccz.setId("z");
 		ccz.setType("cartesianZ");
-		ccz.setUnit(unit);
+		if(unit !=null) ccz.setUnit(unit);
 		setCoordinateBoundary(ccz, "Z", hashBound.get("min").z, hashBound.get("max").z);
 	}
 	
@@ -410,28 +411,36 @@ public class SpatialSBMLExporter{
 	}
 	
 	public void addUnits(){
+		if(unit == null) return; 
 		UnitDefinition ud = model.createUnitDefinition();
-		ud.setId("um");
+		ud.setId(unit);
 		Unit u = ud.createUnit();
 		u.setKind(libsbmlConstants.UNIT_KIND_METRE);
 		u.setExponent(1);
 		u.setScale(0);
-		u.setMultiplier(0.000001);
+		u.setMultiplier(getUnitMultiplier(unit));
 	
 		ud = model.createUnitDefinition();
-		ud.setId("um2");
+		ud.setId(unit+"2");
 		u = ud.createUnit();
 		u.setKind(libsbmlConstants.UNIT_KIND_METRE);
 		u.setExponent(2);
 		u.setScale(0);
-		u.setMultiplier(0.000001);
+		u.setMultiplier(getUnitMultiplier(unit));
 		
 		ud = model.createUnitDefinition();
-		ud.setId("um3");
+		ud.setId(unit+"3");
 		u = ud.createUnit();
 		u.setKind(libsbmlConstants.UNIT_KIND_METRE);
 		u.setExponent(3);
 		u.setScale(0);
-		u.setMultiplier(0.000001);
+		u.setMultiplier(getUnitMultiplier(unit));
+	}
+	
+	private Double getUnitMultiplier(String unit){
+		if(unit.equals("um")) return 0.000001;
+		if(unit.equals("nm")) return 0.000000001;
+		
+		return 1.0;
 	}
 }

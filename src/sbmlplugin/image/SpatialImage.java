@@ -47,8 +47,9 @@ public class SpatialImage {
 		this.img = img;
 		this.setHashSampledValue(hashSampledValue);
 		this.setHashDomainTypes(hashDomainTypes);
-		// assumes image unit is um
-		this.unit = img.getFileInfo().unit.equals("micron") ? img.getFileInfo().unit : "um";
+		if(img.getFileInfo().unit != null)
+			setUnit(img.getFileInfo().unit);
+			
 		delta.x = img.getFileInfo().pixelWidth;
 		delta.y = img.getFileInfo().pixelHeight;
 		delta.z = img.getFileInfo().pixelDepth;
@@ -185,6 +186,7 @@ public class SpatialImage {
 	}
 	
 	public void setUnit(String unit) {
+		unit = unit.equals("micron") ? "um" : img.getFileInfo().unit;
 		this.unit = unit;
 	}
 
