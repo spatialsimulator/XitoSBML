@@ -435,6 +435,7 @@ public class SpatialSBMLExporter{
 	}
 	
 	private Double getUnitMultiplier(String unit){
+		if(unit.equals("mm")) return 0.001;
 		if(unit.equals("um")) return 0.000001;
 		if(unit.equals("nm")) return 0.000000001;
 		
