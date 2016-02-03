@@ -230,11 +230,9 @@ public class SpatialSBMLExporter{
   }
 
   public void addDomains() {
-     ListOf lodom = geometry.getListOfDomains();
      for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    			//add domains to corresponding domaintypes
  		DomainType dt = geometry.getDomainType(e.getKey());
-		Domain dom = new Domain();
-		
+		Domain dom = geometry.createDomain();
 		for (int i = 0; i < hashDomainNum.get(e.getKey()); i++) { // add each domain
 			String id = dt.getId() + i;
 			dom.setId(id);
@@ -245,9 +243,8 @@ public class SpatialSBMLExporter{
 				  ip.setId(id + " point");
 				  ip.setCoord1(p.x);
 				  ip.setCoord2(p.y);
-				  ip.setCoord3(p.z);  
+				  if(depth > 1) ip.setCoord3(p.z);  
 			}
-			lodom.append(dom);
 		}
      }   
   }	
@@ -273,7 +270,7 @@ public class SpatialSBMLExporter{
 			cm.setId(e.getKey() + c.getId());
 			cm.setDomainType(e.getKey());
 			// TODO 
-			cm.setUnitSize(delta.x * delta.y * delta.z);	
+			cm.setUnitSize(delta.x * delta.y * delta.z);
 			//TODO volume      
 			//c.setVolume();          
 		}
