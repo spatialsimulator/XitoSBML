@@ -45,7 +45,7 @@ public class ImageTable extends JTable implements MouseListener{
 	public ImageTable() {
 		super();
 
-		Object[][] data = new Object[defaultDomtype.length][5];
+		Object[][] data = new Object[defaultDomtype.length][columnNames.length];
 		for (int i = 0; i < defaultDomtype.length; i++) {
 			data[i][0] = defaultDomtype[i];
 		}
@@ -65,8 +65,7 @@ public class ImageTable extends JTable implements MouseListener{
 		new ArrowColumn(this, colDownButton, BasicArrowButton.SOUTH);
 		new AddingColumn(this, colAddImage);
 
-		TableColumn column = (TableColumn) this.getColumnModel().getColumn(
-				colAddImage);
+		TableColumn column = (TableColumn) this.getColumnModel().getColumn(colAddImage);
 		column.setMaxWidth(50);
 		column = (TableColumn) getColumnModel().getColumn(colDownButton);
 		column.setMaxWidth(50);
@@ -130,15 +129,16 @@ public class ImageTable extends JTable implements MouseListener{
 		tableModel.removeRow(selectedRow);
 	}
 	
-	private void moveRow(boolean isUp, int selectedRow){
-		if(isUp && selectedRow > 0){
+	private void moveRowUp(int selectedRow){
+		if(selectedRow > 0)
 			tableModel.moveRow(selectedRow - 1 , selectedRow - 1, selectedRow);
-		}
-	
-		if(!isUp && selectedRow < getRowCount() - 1){
-			tableModel.moveRow(selectedRow, selectedRow, selectedRow + 1);
-		}
 	}
+	
+	private void moveRowDown(int selectedRow){	
+		if(selectedRow < getRowCount() - 1)
+			tableModel.moveRow(selectedRow, selectedRow, selectedRow + 1);
+	}
+	
 	
 	public void importFile(int row, ImagePlus img){
 		if(!hashDomFile.isEmpty() && !compImage(img, hashDomFile.values().iterator().next())) {
@@ -161,7 +161,7 @@ public class ImageTable extends JTable implements MouseListener{
 	public int getImgNum(){
 		return hashDomFile.size();
 	}
-	
+			
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 */
@@ -194,9 +194,8 @@ public class ImageTable extends JTable implements MouseListener{
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
-
-		int selectedRow = getSelectedRow();
-		int selectedColumn = getSelectedColumn();
+		int selectedColumn = this.getSelectedColumn();
+		int selectedRow = this.getSelectedRow();
 		
 		if(selectedColumn == colAddImage){
 			ImageDialog id = new ImageDialog();
@@ -204,11 +203,11 @@ public class ImageTable extends JTable implements MouseListener{
 			
 			if(img != null)
 				importFile(selectedRow, img);
-		}
-		
-		if(selectedColumn == colUpButton || selectedColumn == colDownButton){
-			moveRow(selectedColumn == 3, selectedRow);
-		}	
+		} else if(selectedColumn == colUpButton)
+			moveRowUp(selectedRow);
+		 else if(selectedColumn == colDownButton)
+			moveRowDown( selectedRow);	
+	
 	}
 
 	/* (non-Javadoc)

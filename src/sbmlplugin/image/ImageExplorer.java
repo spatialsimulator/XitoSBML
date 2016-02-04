@@ -33,15 +33,16 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 
 @SuppressWarnings("serial")
 public class ImageExplorer extends JFrame implements ActionListener{
 
 	private HashMap<String, Integer> hashDomainTypes;
 	private HashMap<String, Integer> hashSampledValues;
-	private ImageTable table;
 	private HashMap<String,ImagePlus> hashDomFile;
 	private FileInfo compoInfo;
+	private JScrollPane scroll; 
 	
 	public ImageExplorer(){
 		super("DomainType Namer");
@@ -57,12 +58,13 @@ public class ImageExplorer extends JFrame implements ActionListener{
 		this.hashDomainTypes = hashDomainTypes;
 		this.hashSampledValues = hashSampledValues;
 		
-		table = new ImageTable();
+		ImageTable table = new ImageTable();
 		
 		//scrollbar
-		JScrollPane scroll = new JScrollPane(table);
+		scroll = new JScrollPane(table);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.setName("table");
 		
 		//button
 		JButton ok = new JButton("OK"), plus = new JButton("+"), minus = new JButton("-");
@@ -76,8 +78,7 @@ public class ImageExplorer extends JFrame implements ActionListener{
 		getContentPane().add(p2, BorderLayout.PAGE_END);
 		getContentPane().add(scroll, BorderLayout.CENTER);	
 			
-		setVisible(true);
-		
+		setVisible(true);	
 	}
 
 	//sets the datatable to the domaintype and return it
@@ -92,7 +93,7 @@ public class ImageExplorer extends JFrame implements ActionListener{
 	}
 	
 	//sets the datatable to the sampledvalue and return it
-	public HashMap<String, Integer> getSampledValues(){
+	public HashMap<String, Integer> getSampledValues(ImageTable table){
 		int pixel = 255;
 		int interval = 255 / hashDomFile.size();
 		for(int i = 0 ; i < table.getRowCount() ; i++){
@@ -124,6 +125,9 @@ public class ImageExplorer extends JFrame implements ActionListener{
 	@Override
 	public  void actionPerformed(ActionEvent e) {		
 		String input = e.getActionCommand();
+		JViewport viewport = scroll.getViewport();
+		ImageTable table = (ImageTable) viewport.getView();
+		System.out.println(input);
 		if(input == "+")
 			table.addRow();
 		
@@ -133,10 +137,10 @@ public class ImageExplorer extends JFrame implements ActionListener{
 		else if(input == "OK" && table.getImgNum() > 0){
 			hashDomFile = table.getHashDomFile();
 			hashDomainTypes = getDomainTypes();			
-			hashSampledValues = getSampledValues();
+			hashSampledValues = getSampledValues(table);
 			setVisible(false);		
 			dispose();
-		}else
+		} else
 			new MessageDialog(new Frame(), "Error", "No Image");
 			
 	}
