@@ -131,11 +131,9 @@ public class SpatialSBMLExporter{
 	    model = document.getModel();
 	    spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
 	    unit = spImg.getUnit();
-	    System.out.println(unit);
-	  }
+	 }
 
   public void createGeometryElements() {
-    // Creates a Geometry object via SpatialModelPlugin object.
     geometry = spatialplugin.createGeometry();
     geometry.setCoordinateSystem("cartesian");
     addCoordinates();                      

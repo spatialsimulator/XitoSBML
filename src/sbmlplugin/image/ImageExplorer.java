@@ -82,10 +82,12 @@ public class ImageExplorer extends JFrame implements ActionListener{
 
 	//sets the datatable to the domaintype and return it
 	public HashMap<String, Integer> getDomainTypes(){	
+		int dimension = 3;
 		for(Entry<String, ImagePlus> e : hashDomFile.entrySet()){
-			hashDomainTypes.put( e.getKey().toString(), 3);	
+			if(e.getValue().getSlice() == 1) dimension = 2;
+ 			hashDomainTypes.put( e.getKey().toString(), dimension);	
 		}
-		hashDomainTypes.put("Extracellular", 3);
+		hashDomainTypes.put("Extracellular", dimension);
 		return hashDomainTypes;
 	}
 	
