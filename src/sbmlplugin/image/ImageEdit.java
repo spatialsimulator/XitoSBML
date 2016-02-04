@@ -277,16 +277,15 @@ public class ImageEdit {
 	}
     
 	private boolean checkAdjacent(int org, int next){
-		if(matrix[org] != matrix[next] && !hasLabel(getHigherLabel(matrix[next], matrix[org]), getLowerLabel(matrix[next], matrix[org]))){
+		if(matrix[org] != matrix[next] && !hasLabel(getHigherLabel(matrix[next], matrix[org]), getLowerLabel(matrix[next], matrix[org])))
 			return true;
-		} else {
-			return false;
-		}
+		 else 
+			return false;		
 	}
 
 	private void addmem(Integer bignum, Integer smallnum){
 		String big ,small;
-		
+
 		big = getKeyFromValue(hashSampledValue, hashPix.get(bignum));
 		small = getKeyFromValue(hashSampledValue, hashPix.get(smallnum));
 		String buf = big + "_" + small + "_membrane";
@@ -297,7 +296,8 @@ public class ImageEdit {
 		adjacentsList.add(adjacentDom);
 
 		if(!hashDomainTypes.containsKey(buf)){
-			hashDomainTypes.put(buf,2);
+			if(depth > 1) hashDomainTypes.put(buf,2);
+			else hashDomainTypes.put(buf,1);
 			hashDomainNum.put(buf,1);
 		}else{
 			int temp = hashDomainNum.get(buf);
