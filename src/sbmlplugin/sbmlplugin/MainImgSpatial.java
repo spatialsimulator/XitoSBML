@@ -53,5 +53,6 @@ public class MainImgSpatial extends MainSpatial {
 		
 		ModelValidator validator = new ModelValidator(document);
 		validator.validate();
+	
 	}
 }

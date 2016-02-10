@@ -82,10 +82,10 @@ public class ModelSaver {
 		Calendar date = new GregorianCalendar();
 		annot = annot.concat(" in " + date.getTime());
 		
-		document.setAnnotation(annot);
-		
-		model.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
-				+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
+//		document.setAnnotation(annot);
+//		
+//		model.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
+//				+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
 	}
 
 	public String getPath() {

@@ -148,7 +148,7 @@ public class SpatialSBMLExporter{
     SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();   //create new geometry definition and add to ListOfGeometryDefinitions list
     sfg.setId("mySampledField"); sfg.setIsActive(true); sfg.setSampledField("imgtest");
     for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
-      if (e.getValue() == 3) {
+      if ((e.getValue() == 3 && depth > 2) || (e.getValue() == 2 && depth == 1)) {
     	SampledVolume sv = sfg.createSampledVolume();
         sv.setId(e.getKey()); sv.setDomainType(e.getKey());
         sv.setSampledValue( hashSampledValue.get(e.getKey()));
@@ -165,7 +165,7 @@ public class SpatialSBMLExporter{
 //    byte[] compressed = compressRawData(raw);
 //    if (compressed != null) 
 //    	sf.setSamples(byteArrayToIntArray(compressed),compressed.length);
-//   
+  
     sf.setSamples(byteArrayToIntArray(raw), raw.length);
   }
 
@@ -252,13 +252,15 @@ public class SpatialSBMLExporter{
 			// DomainTypes
 			DomainType dt = geometry.createDomainType();
 			dt.setId(e.getKey());
-			dt.setSpatialDimensions(e.getValue());
+			//dt.setSpatialDimensions(e.getValue());
+			dt.setSpatialDimensions(3);
 
 			// Compartment may need changes for name and id
 			if(model.getListOfCompartments().get(e.getKey()) != null)
 				continue;
 			Compartment c = model.createCompartment();
-			c.setSpatialDimensions(e.getValue());
+			//c.setSpatialDimensions(e.getValue());
+			c.setSpatialDimensions(3);
 			c.setConstant(true);
 			c.setId(e.getKey());
 			c.setName(e.getKey());
@@ -268,9 +270,8 @@ public class SpatialSBMLExporter{
 			cm.setId(e.getKey() + c.getId());
 			cm.setDomainType(e.getKey());
 			// TODO 
-			cm.setUnitSize(delta.x * delta.y * delta.z);
-			//TODO volume      
-			//c.setVolume();          
+			//cm.setUnitSize(delta.x * delta.y * delta.z);
+			cm.setUnitSize(1);
 		}
   }
 
@@ -280,26 +281,26 @@ public class SpatialSBMLExporter{
 		ccx.setType("cartesianX");
 		ccx.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_X);
 		if(unit != null) ccx.setUnit(unit);
-		setCoordinateBoundary(ccx, "X", 0, width);
+		setCoordinateBoundary(ccx, "X", 0, width, delta.x);
 		CoordinateComponent ccy = geometry.createCoordinateComponent();
 		ccy.setId("y");
 		ccy.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Y);
 		if(unit != null)  ccy.setUnit(unit);
-		setCoordinateBoundary(ccy, "Y", 0, height);
+		setCoordinateBoundary(ccy, "Y", 0, height, delta.y);
 		if (depth != 1) {
 			CoordinateComponent ccz = geometry.createCoordinateComponent();
 			ccz.setId("z");
 			ccz.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Z);
 			if(unit != null) ccz.setUnit(unit);
-			setCoordinateBoundary(ccz, "Z", 0, depth);
+			setCoordinateBoundary(ccz, "Z", 0, depth, delta.z);
 		}
 	}
 
-  public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max) { 
+  public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max, double delta) { 
 	  Boundary bmin = cc.createBoundaryMin();
-	  bmin.setId(s + "min"); bmin.setValue(min);
+	  bmin.setId(s + "min"); bmin.setValue(min * delta);
 	  Boundary bmax = cc.createBoundaryMax();
-	  bmax.setId(s + "max"); bmax.setValue(max);
+	  bmax.setId(s + "max"); bmax.setValue(max * delta);
 	}
   
   public void addCoordParameter(){
@@ -384,17 +385,17 @@ public class SpatialSBMLExporter{
 		ccx.setId("x");
 		ccx.setType("cartesianX");
 		if(unit !=null) ccx.setUnit(unit);
-		setCoordinateBoundary(ccx, "X", hashBound.get("min").x, hashBound.get("max").x);
+		setCoordinateBoundary(ccx, "X", hashBound.get("min").x, hashBound.get("max").x, delta.x);
 		CoordinateComponent ccy = geometry.createCoordinateComponent();
 		ccy.setId("y");
 		ccy.setType("cartesianY");
 		if(unit !=null) ccy.setUnit(unit);
-		setCoordinateBoundary(ccy, "Y", hashBound.get("min").y, hashBound.get("max").y);
+		setCoordinateBoundary(ccy, "Y", hashBound.get("min").y, hashBound.get("max").y, delta.x);
 		CoordinateComponent ccz = geometry.createCoordinateComponent();
 		ccz.setId("z");
 		ccz.setType("cartesianZ");
 		if(unit !=null) ccz.setUnit(unit);
-		setCoordinateBoundary(ccz, "Z", hashBound.get("min").z, hashBound.get("max").z);
+		setCoordinateBoundary(ccz, "Z", hashBound.get("min").z, hashBound.get("max").z, delta.x);
 	}
 	
 	public Model getModel(){
