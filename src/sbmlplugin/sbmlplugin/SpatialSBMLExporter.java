@@ -148,7 +148,8 @@ public class SpatialSBMLExporter{
     SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();   //create new geometry definition and add to ListOfGeometryDefinitions list
     sfg.setId("mySampledField"); sfg.setIsActive(true); sfg.setSampledField("imgtest");
     for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
-      if ((e.getValue() == 3 && depth > 2) || (e.getValue() == 2 && depth == 1)) {
+     // if ((e.getValue() == 3 && depth > 2) || (e.getValue() == 2 && depth == 1)) {
+    if(e.getValue() == 3){
     	SampledVolume sv = sfg.createSampledVolume();
         sv.setId(e.getKey()); sv.setDomainType(e.getKey());
         sv.setSampledValue( hashSampledValue.get(e.getKey()));
@@ -252,15 +253,15 @@ public class SpatialSBMLExporter{
 			// DomainTypes
 			DomainType dt = geometry.createDomainType();
 			dt.setId(e.getKey());
-			//dt.setSpatialDimensions(e.getValue());
-			dt.setSpatialDimensions(3);
+			dt.setSpatialDimensions(e.getValue());
+			//dt.setSpatialDimensions(3);
 
 			// Compartment may need changes for name and id
 			if(model.getListOfCompartments().get(e.getKey()) != null)
 				continue;
 			Compartment c = model.createCompartment();
-			//c.setSpatialDimensions(e.getValue());
-			c.setSpatialDimensions(3);
+			c.setSpatialDimensions(e.getValue());
+			//c.setSpatialDimensions(3);
 			c.setConstant(true);
 			c.setId(e.getKey());
 			c.setName(e.getKey());

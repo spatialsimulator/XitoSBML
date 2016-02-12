@@ -296,8 +296,9 @@ public class ImageEdit {
 		adjacentsList.add(adjacentDom);
 
 		if(!hashDomainTypes.containsKey(buf)){
-			if(depth > 1) hashDomainTypes.put(buf,2);
-			else hashDomainTypes.put(buf,1);
+//			if(depth > 1) hashDomainTypes.put(buf,2);
+//			else hashDomainTypes.put(buf,1);
+			hashDomainTypes.put(buf,2);
 			hashDomainNum.put(buf,1);
 		}else{
 			int temp = hashDomainNum.get(buf);
