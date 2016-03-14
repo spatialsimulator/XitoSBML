@@ -160,7 +160,9 @@ public class SpatialSBMLExporter{
     sf.setId("imgtest"); sf.setDataType(libsbmlConstants.SPATIAL_DATAKIND_UINT8);
     //sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
     sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
-    sf.setNumSamples1(width); sf.setNumSamples2(height); sf.setNumSamples3(depth);
+    sf.setNumSamples1(width); sf.setNumSamples2(height); 
+    //if(depth > 1) 
+    	sf.setNumSamples3(depth);
     sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR);
     
 //    byte[] compressed = compressRawData(raw);
@@ -180,8 +182,8 @@ public class SpatialSBMLExporter{
     byte[] compressed = null;
     ByteArrayOutputStream stream = new ByteArrayOutputStream();
     while(true) {
-      size = compresser.deflate(buffer);              //insert compressed data
-      stream.write(buffer, 0, size);                  //write compressed date to buffer
+      size = compresser.deflate(buffer);
+      stream.write(buffer, 0, size);
       if(compresser.finished()) {
         break;
       }
@@ -248,7 +250,7 @@ public class SpatialSBMLExporter{
      }   
   }	
 
-  public void addDomainTypes() {                        //create domain types, domain, compartment info
+  public void addDomainTypes() {
 		for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
 			// DomainTypes
 			DomainType dt = geometry.createDomainType();
