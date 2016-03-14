@@ -47,12 +47,11 @@ public class SpatialImage {
 		this.img = img;
 		this.setHashSampledValue(hashSampledValue);
 		this.setHashDomainTypes(hashDomainTypes);
-		if(img.getFileInfo().unit != null)
-			setUnit(img.getFileInfo().unit);
-			
 		delta.x = img.getFileInfo().pixelWidth;
 		delta.y = img.getFileInfo().pixelHeight;
 		delta.z = img.getFileInfo().pixelDepth;
+		setUnit();
+		adjustUnit(img.getFileInfo().unit);
 		setRawImage();
 	}	
 	
@@ -62,10 +61,11 @@ public class SpatialImage {
 		this.setDepth(img.getImageStackSize());
 		this.img = img;
 		this.setHashSampledValue(hashSampledValue);
-		this.unit = img.getFileInfo().unit;
 		delta.x = img.getFileInfo().pixelWidth;
 		delta.y = img.getFileInfo().pixelHeight;
 		delta.z = img.getFileInfo().pixelDepth;
+		setUnit();
+		adjustUnit(img.getFileInfo().unit);
 		setRawImage();
 	}	
 	
@@ -185,11 +185,19 @@ public class SpatialImage {
 		return unit;
 	}
 	
-	public void setUnit(String unit) {
-		unit = unit.equals("micron") ? "um" : img.getFileInfo().unit;
-		this.unit = unit;
+	public void setUnit() {
+			this.unit = "um";
 	}
 
+	//adjust img info to um
+	private void adjustUnit(String unit){
+		if(unit.equals("nm")){
+			delta.x /= 1000;
+			delta.y /= 1000;
+			delta.z /= 1000;
+		}
+	}
+	
 	public Point3d getDelta(){
 		return delta;
 	}
