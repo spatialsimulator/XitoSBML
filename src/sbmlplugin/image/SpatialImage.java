@@ -51,7 +51,8 @@ public class SpatialImage {
 		delta.y = img.getFileInfo().pixelHeight;
 		delta.z = img.getFileInfo().pixelDepth;
 		setUnit();
-		adjustUnit(img.getFileInfo().unit);
+		if(img.getFileInfo().unit != null) 
+			adjustUnit(img.getFileInfo().unit);
 		setRawImage();
 	}	
 	
@@ -65,7 +66,8 @@ public class SpatialImage {
 		delta.y = img.getFileInfo().pixelHeight;
 		delta.z = img.getFileInfo().pixelDepth;
 		setUnit();
-		adjustUnit(img.getFileInfo().unit);
+		if(img.getFileInfo().unit != null) 
+			adjustUnit(img.getFileInfo().unit);
 		setRawImage();
 	}	
 	
@@ -92,10 +94,6 @@ public class SpatialImage {
 		depth = imStack.getSize();
 		img.setStack(imStack);
 		setRawImage();
-	}
-	
-	public void sethashDomainNum(HashMap<String,Integer> hashDomainNum){
-		this.setHashDomainNum(hashDomainNum);
 	}
 
 	public int getWidth() {
@@ -186,7 +184,7 @@ public class SpatialImage {
 	}
 	
 	public void setUnit() {
-			this.unit = "um";
+		this.unit = "um";
 	}
 
 	//adjust img info to um

@@ -69,7 +69,7 @@ public class ImageEdit {
         invertMat();
         label();
         createMembrane();
-        spImg.sethashDomainNum(hashDomainNum);
+        spImg.setHashDomainNum(hashDomainNum);
         spImg.setAdjacentsList(adjacentsList);
         createDomInteriorPt();
         spImg.setHashDomInteriorpt(hashDomInteriorPt);
@@ -193,7 +193,6 @@ public class ImageEdit {
     	countDomain();
     	addMembrane();
     }
-    
 
     public void countDomain(){
     	hashDomainNum = new HashMap<String,Integer>();
