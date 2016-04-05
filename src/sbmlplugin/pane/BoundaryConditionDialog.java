@@ -82,8 +82,7 @@ public class BoundaryConditionDialog {
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
 		BoundaryCondition bc = sp.isSetBoundaryCondition() ? sp.getBoundaryCondition() : sp.createBoundaryCondition();
 		bc.setVariable(gd.getNextChoice());
-		//bc.setType(gd.getNextChoice());
-		bc.setType(libsbmlConstants.SPATIAL_BOUNDARYKIND_ROBIN_VALUE_COEFFICIENT);
+		bc.setType(gd.getNextChoice());
 		String bound = gd.getNextChoice();
 		if(Arrays.asList(SBMLProcessUtil.bounds).contains(bound))
 			bc.setCoordinateBoundary(bound);
