@@ -123,11 +123,12 @@ public class ReactionDialog {
 		for (int i = 0; i < size; i++) {
 			Checkbox cb = v.get(i);
 			String label = cb.getLabel();
-			if (label.indexOf(' ')!=-1)
+			if (label.indexOf(' ') != -1)
 					label = label.replace(' ', '_');
 			if (cb.getState()) {
 				SpeciesReference sr = (SpeciesReference) (losr.get(label) != null ? losr.get(label) : reaction.createReactant());
 				sr.setSpecies(label);
+				sr.setStoichiometry(1);
 			} else {
 				losr.remove(label);
 			}
@@ -137,11 +138,12 @@ public class ReactionDialog {
 		for (int i = size; i < size * 2; i++) {
 			Checkbox cb = v.get(i);
 			String label = cb.getLabel();
-			if (label.indexOf(' ')!=-1)
+			if (label.indexOf(' ') != -1)
 					label = label.replace(' ', '_');
 			if (cb.getState()) {
 				SpeciesReference sr = (SpeciesReference) (losr.get(label) != null ? losr.get(label) : reaction.createProduct());
 				sr.setSpecies(label);
+				sr.setStoichiometry(1);
 			} else {
 				losr.remove(label);
 			}
@@ -151,7 +153,7 @@ public class ReactionDialog {
 		for (int i = size * 2; i < v.size(); i++) {
 			Checkbox cb = v.get(i);
 			String label = cb.getLabel();
-			if (label.indexOf(' ')!=-1)
+			if (label.indexOf(' ') != -1)
 					label = label.replace(' ', '_');
 			if (cb.getState()) {
 				ModifierSpeciesReference sr = (ModifierSpeciesReference) (losr.get(label) != null ? losr.get(label) : reaction.createModifier());				
