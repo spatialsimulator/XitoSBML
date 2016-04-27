@@ -6,6 +6,7 @@ import org.sbml.libsbml.DiffusionCoefficient;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
 import org.sbml.libsbml.SpatialParameterPlugin;
+import org.sbml.libsbml.libsbmlConstants;
 /**
  * Spatial SBML Plugin for ImageJ
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
@@ -81,11 +82,23 @@ public class DiffusionDialog {
 		DiffusionCoefficient dc = sp.isSetDiffusionCoefficient() ? sp.getDiffusionCoefficient() : sp.createDiffusionCoefficient();
 		dc.setVariable(gd.getNextChoice());
 		dc.setType(gd.getNextChoice());
+
 		String coord1 = gd.getNextChoice();
-		dc.setCoordinateReference1(coord1);
 		String coord2 = gd.getNextChoice();
-		if(!coord1.equals(coord2))
-			dc.setCoordinateReference2(gd.getNextChoice());		
-	
+		
+		switch (dc.getType()) {
+		case libsbmlConstants.SPATIAL_DIFFUSIONKIND_TENSOR:
+			dc.setCoordinateReference2(coord2);
+
+		case libsbmlConstants.SPATIAL_DIFFUSIONKIND_ANISOTROPIC:
+			dc.setCoordinateReference1(coord1);
+
+		case libsbmlConstants.SPATIAL_DIFFUSIONKIND_ISOTROPIC:
+			break;
+		}
+		
+		if(dc.getType() == libsbmlConstants.SPATIAL_DIFFUSIONKIND_TENSOR && dc.getCoordinateReference1() == dc.getCoordinateReference2())
+			dc.unsetCoordinateReference2();
+		
 	} 
 }
