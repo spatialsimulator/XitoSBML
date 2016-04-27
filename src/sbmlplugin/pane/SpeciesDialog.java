@@ -96,7 +96,5 @@ public class SpeciesDialog {
 			species.setHasOnlySubstanceUnits(false);
 		species.setBoundaryCondition(Boolean.parseBoolean(gd.getNextRadioButton()));
 		species.setConstant(Boolean.parseBoolean(gd.getNextRadioButton()));
-		SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) species.getPlugin("spatial");
-		ssp.setIsSpatial(true);
 	}
 }
