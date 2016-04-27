@@ -128,6 +128,7 @@ public class ReactionDialog {
 			if (cb.getState()) {
 				SpeciesReference sr = (SpeciesReference) (losr.get(label) != null ? losr.get(label) : reaction.createReactant());
 				sr.setSpecies(label);
+				sr.setConstant(true);
 				sr.setStoichiometry(1);
 			} else {
 				losr.remove(label);
@@ -143,6 +144,7 @@ public class ReactionDialog {
 			if (cb.getState()) {
 				SpeciesReference sr = (SpeciesReference) (losr.get(label) != null ? losr.get(label) : reaction.createProduct());
 				sr.setSpecies(label);
+				sr.setConstant(true);
 				sr.setStoichiometry(1);
 			} else {
 				losr.remove(label);
