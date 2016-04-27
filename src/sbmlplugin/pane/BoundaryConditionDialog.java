@@ -8,8 +8,6 @@ import org.sbml.libsbml.BoundaryCondition;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
 import org.sbml.libsbml.SpatialParameterPlugin;
-import org.sbml.libsbml.libsbmlConstants;
-
 /**
  * Spatial SBML Plugin for ImageJ
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>

@@ -318,7 +318,7 @@ public class SpatialSBMLExporter{
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
 		SpatialSymbolReference ssr = sp.createSpatialSymbolReference();
 		ssr.setId(cc.getId());
-		ssr.setSpatialRef("spatial");
+		ssr.setSpatialRef(cc.getId());
 		ReqSBasePlugin rsb = (ReqSBasePlugin) p.getPlugin("req");
 		ChangedMath cm = rsb.createChangedMath(); 
 		cm.setChangedBy("spatial");
