@@ -33,6 +33,7 @@ import org.sbml.libsbml.SpatialPkgNamespaces;
 import sbmlplugin.gui.ParamAndSpecies;
 import sbmlplugin.image.CreateImage;
 import sbmlplugin.image.Filler;
+import sbmlplugin.image.ImageBorder;
 import sbmlplugin.image.ImageEdit;
 import sbmlplugin.image.ImageExplorer;
 import sbmlplugin.image.Interpolater;
@@ -80,16 +81,12 @@ public abstract class MainSpatial implements PlugIn{
 		
 		CreateImage creIm = new CreateImage(imgexp.getDomFile(), hashSampledValue);
 		spImg = new SpatialImage(hashSampledValue, hashDomainTypes, creIm.getCompoImg());
-		//showStep(spImg);
 		ImagePlus img = fill.fill(spImg);
 		spImg.setImage(img);
-		//showStep(spImg);
-		//ImageBorder imgBorder = new ImageBorder(spImg);
-		//spImg.updateImage(imgBorder.getStackImage());
+		ImageBorder imgBorder = new ImageBorder(spImg);
+		spImg.updateImage(imgBorder.getStackImage());
 
-		//showStep(spImg);
 		new ImageEdit(spImg);
-		//showStep(spImg);
 	}
 	
 	protected void visualize (SpatialImage spImg){
