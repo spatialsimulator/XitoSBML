@@ -3,7 +3,6 @@ package sbmlplugin.pane;
 import ij.gui.GenericDialog;
 
 import org.sbml.libsbml.Model;
-import org.sbml.libsbml.SpatialSpeciesPlugin;
 import org.sbml.libsbml.Species;
 
 /**

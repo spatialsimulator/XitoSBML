@@ -68,13 +68,13 @@ public class SpatialSBMLExporter{
 
   private SBMLDocument document;
   private Model model;
-  private SBMLNamespaces sbmlns;                       //class to store SBML Level, version, namespace
+  private SBMLNamespaces sbmlns;
   private SpatialPkgNamespaces spatialns;
   private SpatialModelPlugin spatialplugin;
   //private ReqSBasePlugin reqplugin;
   private SpatialCompartmentPlugin spatialcompplugin;
   private Geometry geometry;
-  private HashMap<String, Integer> hashDomainTypes;     //store domain type with corresponding dimension
+  private HashMap<String, Integer> hashDomainTypes;
   private HashMap<String, Integer> hashSampledValue;
   private HashMap<String, Integer> hashDomainNum;
   private HashMap<String,Point3f> hashDomInteriorPt;
@@ -83,154 +83,181 @@ public class SpatialSBMLExporter{
   private int width, height, depth;
   private String unit;
   private Point3d delta;
- 
-  public SpatialSBMLExporter() {                    //builds the framework of SBML document
 
-	sbmlns = new SBMLNamespaces(3,1);           //create SBML name space with level 3 version 1
-    sbmlns.addPackageNamespace("req", 1);
-    sbmlns.addPackageNamespace("spatial", 1);
-    // SBML Document
-    document = new SBMLDocument(sbmlns); 
-    document.setPackageRequired("req", true);        //set req package as required
-    document.setPackageRequired("spatial", true);    //set spatial package as required
-    model = document.createModel();  //create model using the document and return pointer
+	/**
+	 * 
+	 */
+	public SpatialSBMLExporter() {
+		sbmlns = new SBMLNamespaces(3, 1);
+		sbmlns.addPackageNamespace("req", 1);
+		sbmlns.addPackageNamespace("spatial", 1);
 
+		document = new SBMLDocument(sbmlns);
+		document.setPackageRequired("req", false);
+		document.setPackageRequired("spatial", true);
+		model = document.createModel();
 
-    // Create Spatial
-    //
-    // set the SpatialPkgNamespaces for Level 3 Version 1 Spatial Version 1
-    //
-    spatialns = new SpatialPkgNamespaces(3, 1, 1);    //create spatial package name space
-    //
-    // Get a SpatialModelPlugin object plugged in the model object.
-    //
-    // The type of the returned value of SBase::getPlugin() function is SBasePlugin, and
-    // thus the value needs to be casted for the corresponding derived class.
-    //
-   // reqplugin = (ReqSBasePlugin)model.getPlugin("req");  //get required elements plugin
-    SBasePlugin basePlugin = (model.getPlugin ("spatial"));
-    spatialplugin = (SpatialModelPlugin)basePlugin;                  //get spatial plugin
-    if (spatialplugin == null) {
-      System.err.println("[Fatal Error] Layout Extension Level " + spatialns.getLevel () + " Version " + spatialns.getVersion () + " package version " + spatialns.getPackageVersion () + " is not registered.");
-      System.exit(1);
-    }
-  }
+		
+		spatialns = new SpatialPkgNamespaces(3, 1, 1);
+		// reqplugin = (ReqSBasePlugin)model.getPlugin("req"); //get required
 
-  public SpatialSBMLExporter(SpatialImage spImg) {
-	  	this();
-	    this.hashDomainTypes = spImg.getHashDomainTypes();
-	    this.hashSampledValue = spImg.getHashSampledValue();
-	    this.hashDomainNum = spImg.getHashDomainNum();
-	    this.hashDomInteriorPt = spImg.getHashDomInteriorPt();
-	    this.raw = spImg.getRaw();
-	    this.width = spImg.getWidth();
-	    this.height = spImg.getHeight();
-	    this.depth = spImg.getDepth();
-	    this.adjacentsList = spImg.getAdjacentsList();
-	    this.delta = spImg.getDelta();
-	    model = document.getModel();
-	    spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
-	    unit = spImg.getUnit();
-	 }
+		SBasePlugin basePlugin = (model.getPlugin("spatial"));
+		spatialplugin = (SpatialModelPlugin) basePlugin;
+		if (spatialplugin == null) {
+			System.err.println("[Fatal Error] Layout Extension Level "
+					+ spatialns.getLevel() + " Version "
+					+ spatialns.getVersion() + " package version "
+					+ spatialns.getPackageVersion() + " is not registered.");
+			System.exit(1);
+		}
+	}
 
-  public void createGeometryElements() {
-    geometry = spatialplugin.createGeometry();
-    geometry.setCoordinateSystem("cartesian");
-    addCoordinates();                      
-    addDomainTypes();                         
-    addDomains();                           
-    addAdjacentDomains();  
-    addGeometryDefinitions();  
-    addUnits();
-  }
+	/**
+	 * @param spImg
+	 */
+	public SpatialSBMLExporter(SpatialImage spImg) {
+		this();
+		this.hashDomainTypes = spImg.getHashDomainTypes();
+		this.hashSampledValue = spImg.getHashSampledValue();
+		this.hashDomainNum = spImg.getHashDomainNum();
+		this.hashDomInteriorPt = spImg.getHashDomInteriorPt();
+		this.raw = spImg.getRaw();
+		this.width = spImg.getWidth();
+		this.height = spImg.getHeight();
+		this.depth = spImg.getDepth();
+		this.adjacentsList = spImg.getAdjacentsList();
+		this.delta = spImg.getDelta();
+		model = document.getModel();
+		spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
+		unit = spImg.getUnit();
+	}
 
-  public void addGeometryDefinitions(){
-    SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();   //create new geometry definition and add to ListOfGeometryDefinitions list
-    sfg.setId("mySampledField"); sfg.setIsActive(true); sfg.setSampledField("imgtest");
-    for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
-     // if ((e.getValue() == 3 && depth > 2) || (e.getValue() == 2 && depth == 1)) {
-    if(e.getValue() == 3){
-    	SampledVolume sv = sfg.createSampledVolume();
-        sv.setId(e.getKey()); sv.setDomainType(e.getKey());
-        sv.setSampledValue( hashSampledValue.get(e.getKey()));
-        // sv.setMinValue(0); sv.setMaxValue(0); 					may need changes 
-      }
-    }
-    SampledField sf = geometry.createSampledField();
-    sf.setId("imgtest"); sf.setDataType(libsbmlConstants.SPATIAL_DATAKIND_UINT8);
-    //sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
-    sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
-    sf.setNumSamples1(width); sf.setNumSamples2(height); 
-    //if(depth > 1) 
-    	sf.setNumSamples3(depth);
-    sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR);
-    
-//    byte[] compressed = compressRawData(raw);
-//    if (compressed != null) 
-//    	sf.setSamples(byteArrayToIntArray(compressed),compressed.length);
-  
-    sf.setSamples(byteArrayToIntArray(raw), raw.length);
-  }
+	/**
+	 * 
+	 */
+	public void createGeometryElements() {
+		geometry = spatialplugin.createGeometry();
+		geometry.setCoordinateSystem("cartesian");
+		addCoordinates();
+		addDomainTypes();
+		addDomains();
+		addAdjacentDomains();
+		addGeometryDefinitions();
+		addUnits();
+	}
 
-  public byte[] compressRawData(byte[] raw) {
-    Deflater compresser = new Deflater();
-    compresser.setLevel(Deflater.BEST_COMPRESSION);
-    compresser.setInput(raw);
-    compresser.finish();
-    int size;
-    byte[] buffer = new byte[1024];
-    byte[] compressed = null;
-    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    while(true) {
-      size = compresser.deflate(buffer);
-      stream.write(buffer, 0, size);
-      if(compresser.finished()) {
-        break;
-      }
-    }
-    compressed = stream.toByteArray();
-    try {
-      stream.close();
-    } catch (IOException e1) {
-      e1.printStackTrace();
-      return null;
-    }
-    return compressed;
-  }
+	/**
+	 * 
+	 */
+//TODO determine to use compressed or uncompressed data
+	public void addGeometryDefinitions() {
+		SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();
+		sfg.setId("mySampledField");
+		sfg.setIsActive(true);
+		sfg.setSampledField("imgtest");
+		for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
+			// if ((e.getValue() == 3 && depth > 2) || (e.getValue() == 2 &&
+			// depth == 1)) {
+			if (e.getValue() == 3) {
+				SampledVolume sv = sfg.createSampledVolume();
+				sv.setId(e.getKey());
+				sv.setDomainType(e.getKey());
+				sv.setSampledValue(hashSampledValue.get(e.getKey()));
+				// sv.setMinValue(0); sv.setMaxValue(0);
+			}
+		}
+		SampledField sf = geometry.createSampledField();
+		sf.setId("imgtest");
+		sf.setDataType(libsbmlConstants.SPATIAL_DATAKIND_UINT8);
+		// sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
+		sf.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
+		sf.setNumSamples1(width);
+		sf.setNumSamples2(height);
+		// if(depth > 1)
+		sf.setNumSamples3(depth);
+		sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR);
 
-  public int[] byteArrayToIntArray(byte[] compressed) {
-    int[] intArray = new int[compressed.length];
-    for (int i = 0; i < compressed.length; i++) {
-      intArray[i] = compressed[i] & 0xff;
-    }
-    return intArray;
-  }
+		// byte[] compressed = compressRawData(raw);
+		// if (compressed != null)
+		// sf.setSamples(byteArrayToIntArray(compressed),compressed.length);
 
-  public void addAdjacentDomains() {		//adds membrane domains and adjacents
-	  WeakHashMap<String, Integer> hashMembrane = new WeakHashMap<String,Integer>();   
-	  for(ArrayList<String> e : adjacentsList){
-		 String one = e.get(0).substring(0, e.get(0).length());
-		 one = one.replaceAll("[0-9]","");
-		 String two = e.get(1).substring(0, e.get(1).length());
-		 two = two.replaceAll("[0-9]","");
-		 DomainType dt = geometry.getDomainType(one + "_" + two + "_membrane");
-		 if(hashMembrane.containsKey(dt.getId())){
-			 hashMembrane.put(dt.getId(), hashMembrane.get(dt.getId()) + 1);
-		 }else{
-			 hashMembrane.put(dt.getId(), 0);
-		 }
-		 one = e.get(0).substring(0, e.get(0).length());
-		 two = e.get(1).substring(0, e.get(1).length());
-		  for (int i = 0; i < 2; i++) {                           //add info about adjacent domain
-			  AdjacentDomains adj = geometry.createAdjacentDomains();
-			  adj.setId(one + "_" + two + "_membrane_" + e.get(i));
-			  adj.setDomain1(dt.getId() + hashMembrane.get(dt.getId()));
-			  adj.setDomain2(e.get(i));
-		  }
-	  }
-  }
+		sf.setSamples(byteArrayToIntArray(raw), raw.length);
+	}
 
-  public void addDomains() {
+	/**
+	 * @param raw
+	 * @return
+	 */
+	public byte[] compressRawData(byte[] raw) {
+		Deflater compresser = new Deflater();
+		compresser.setLevel(Deflater.BEST_COMPRESSION);
+		compresser.setInput(raw);
+		compresser.finish();
+		int size;
+		byte[] buffer = new byte[1024];
+		byte[] compressed = null;
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		while (true) {
+			size = compresser.deflate(buffer);
+			stream.write(buffer, 0, size);
+			if (compresser.finished()) {
+				break;
+			}
+		}
+		compressed = stream.toByteArray();
+		try {
+			stream.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+		return compressed;
+	}
+
+	/**
+	 * @param compressed
+	 * @return
+	 */
+	public int[] byteArrayToIntArray(byte[] compressed) {
+		int[] intArray = new int[compressed.length];
+		for (int i = 0; i < compressed.length; i++) {
+			intArray[i] = compressed[i] & 0xff;
+		}
+		return intArray;
+	}
+
+	/**
+	 * 
+	 */
+	public void addAdjacentDomains() { // adds membrane domains and adjacents
+		WeakHashMap<String, Integer> hashMembrane = new WeakHashMap<String, Integer>();
+		for (ArrayList<String> e : adjacentsList) {
+			String one = e.get(0).substring(0, e.get(0).length());
+			one = one.replaceAll("[0-9]", "");
+			String two = e.get(1).substring(0, e.get(1).length());
+			two = two.replaceAll("[0-9]", "");
+			DomainType dt = geometry.getDomainType(one + "_" + two
+					+ "_membrane");
+			if (hashMembrane.containsKey(dt.getId())) {
+				hashMembrane.put(dt.getId(), hashMembrane.get(dt.getId()) + 1);
+			} else {
+				hashMembrane.put(dt.getId(), 0);
+			}
+			one = e.get(0).substring(0, e.get(0).length());
+			two = e.get(1).substring(0, e.get(1).length());
+			for (int i = 0; i < 2; i++) { // add info about adjacent domain
+				AdjacentDomains adj = geometry.createAdjacentDomains();
+				adj.setId(one + "_" + two + "_membrane_" + e.get(i));
+				adj.setDomain1(dt.getId() + hashMembrane.get(dt.getId()));
+				adj.setDomain2(e.get(i));
+			}
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public void addDomains() {
      for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    			//add domains to corresponding domaintypes
  		DomainType dt = geometry.getDomainType(e.getKey());
 		Domain dom = geometry.createDomain();
@@ -245,12 +272,15 @@ public class SpatialSBMLExporter{
 				  ip.setCoord1(p.x);
 				  ip.setCoord2(p.y);
 				  if(depth > 1) ip.setCoord3(p.z);  
+				}
 			}
-		}
-     }   
-  }	
+     	}   
+	}	
 
-  public void addDomainTypes() {
+  	/**
+  	 * 
+  	 */
+	public void addDomainTypes() {
 		for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
 			// DomainTypes
 			DomainType dt = geometry.createDomainType();
@@ -276,8 +306,11 @@ public class SpatialSBMLExporter{
 			//cm.setUnitSize(delta.x * delta.y * delta.z);
 			cm.setUnitSize(1);
 		}
-  }
+	}
 
+	/**
+	 * 
+	 */
 	public void addCoordinates() { 
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
 		ccx.setId("x");
@@ -290,7 +323,7 @@ public class SpatialSBMLExporter{
 		ccy.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Y);
 		if(unit != null)  ccy.setUnit(unit);
 		setCoordinateBoundary(ccy, "Y", 0, height, delta.y);
-		if (depth != 1) {
+		if (depth > 1) {
 			CoordinateComponent ccz = geometry.createCoordinateComponent();
 			ccz.setId("z");
 			ccz.setType(libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Z);
@@ -299,34 +332,52 @@ public class SpatialSBMLExporter{
 		}
 	}
 
-  public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max, double delta) { 
+	/**
+	 * @param cc
+	 * @param s
+	 * @param min
+	 * @param max
+	 * @param delta
+	 */
+	//TODO fix bound after fixing the simulator
+	public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max, double delta) { 
 	  Boundary bmin = cc.createBoundaryMin();
-	  bmin.setId(s + "min"); bmin.setValue(min * delta);
+	  //bmin.setId(s + "min"); bmin.setValue(min * delta);
+	  bmin.setId(s + "min"); bmin.setValue(min);
 	  Boundary bmax = cc.createBoundaryMax();
-	  bmax.setId(s + "max"); bmax.setValue(max * delta);
+	  //bmax.setId(s + "max"); bmax.setValue(max * delta);
+	  bmax.setId(s + "max"); bmax.setValue(max);
 	}
   
-  public void addCoordParameter(){
-	 ListOf lcc = geometry.getListOfCoordinateComponents();
-	 Parameter p;
-	 CoordinateComponent cc;	 
-	for (int i = 0; i < lcc.size(); i++) {
-		cc = (CoordinateComponent) lcc.get(i);
-		p = model.createParameter();
-		p.setId(cc.getId());
-		p.setConstant(true);
-		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-		SpatialSymbolReference ssr = sp.createSpatialSymbolReference();
-		ssr.setId(cc.getId());
-		ssr.setSpatialRef(cc.getId());
-		ReqSBasePlugin rsb = (ReqSBasePlugin) p.getPlugin("req");
-		ChangedMath cm = rsb.createChangedMath(); 
-		cm.setChangedBy("spatial");
-		cm.setViableWithoutChange(true);
+	/**
+	 * 
+	 */
+	public void addCoordParameter() {
+		ListOf lcc = geometry.getListOfCoordinateComponents();
+		Parameter p;
+		CoordinateComponent cc;
+		for (int i = 0; i < lcc.size(); i++) {
+			cc = (CoordinateComponent) lcc.get(i);
+			p = model.createParameter();
+			p.setId(cc.getId());
+			p.setConstant(true);
+			SpatialParameterPlugin sp = (SpatialParameterPlugin) p
+					.getPlugin("spatial");
+			SpatialSymbolReference ssr = sp.createSpatialSymbolReference();
+			ssr.setId(cc.getId());
+			ssr.setSpatialRef(cc.getId());
+			ReqSBasePlugin rsb = (ReqSBasePlugin) p.getPlugin("req");
+			ChangedMath cm = rsb.createChangedMath();
+			cm.setChangedBy("spatial");
+			cm.setViableWithoutChange(true);
+		}
 	}
-  }	
   
-  public void createParametric(HashMap<String, List<Point3f>> hashVertices, HashMap<String, Point3d> hashBound) {
+	/**
+	 * @param hashVertices
+	 * @param hashBound
+	 */
+	public void createParametric(HashMap<String, List<Point3f>> hashVertices, HashMap<String, Point3d> hashBound) {
 	    geometry = spatialplugin.createGeometry();
 	    geometry.setCoordinateSystem("Cartesian");
 	    addCoordinates(hashBound);                        
@@ -336,6 +387,10 @@ public class SpatialSBMLExporter{
 	    addParaGeoDefinitions(hashVertices, hashBound);    
 	  }
   
+	/**
+	 * @param hashVertices
+	 * @param hashBound
+	 */
 	public void addParaGeoDefinitions(HashMap<String, List<Point3f>> hashVertices, HashMap<String, Point3d> hashBound) {
 		ParametricGeometry pg = geometry.createParametricGeometry();
 		pg.setIsActive(true);
@@ -359,6 +414,10 @@ public class SpatialSBMLExporter{
 		}	
 	}
 
+	/**
+	 * @param sp
+	 * @param uniquePointSet
+	 */
 	public void addUniqueVertices(SpatialPoints sp, ArrayList<Point3f> uniquePointSet){
 		Iterator<Point3f> pIt = uniquePointSet.iterator();
 		int count = 0;
@@ -373,6 +432,11 @@ public class SpatialSBMLExporter{
 		sp.setArrayData(d, uniquePointSet.size());
 	}
 	
+	/**
+	 * @param po
+	 * @param list
+	 * @param uniquePointSet
+	 */
 	public void setPointIndex(ParametricObject po, List<Point3f> list, ArrayList<Point3f> uniquePointSet) {
 		int size = list.size();
 		int[] points = new int[list.size()];
@@ -383,6 +447,9 @@ public class SpatialSBMLExporter{
 		po.setPointIndex(points, size);
 	}
 	
+	/**
+	 * @param hashBound
+	 */
 	public void addCoordinates(HashMap<String, Point3d> hashBound) { 
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
 		ccx.setId("x");
@@ -401,14 +468,23 @@ public class SpatialSBMLExporter{
 		setCoordinateBoundary(ccz, "Z", hashBound.get("min").z, hashBound.get("max").z, delta.x);
 	}
 	
+	/**
+	 * @return
+	 */
 	public Model getModel(){
 		return model;
 	}
 	
+	/**
+	 * @return
+	 */
 	public SBMLDocument getDocument(){
 		return document;
 	}
 	
+	/**
+	 * 
+	 */
 	public void addUnits(){
 		if(unit == null) return; 
 		UnitDefinition ud = model.createUnitDefinition();
@@ -436,6 +512,10 @@ public class SpatialSBMLExporter{
 		u.setMultiplier(getUnitMultiplier(unit));
 	}
 	
+	/**
+	 * @param unit
+	 * @return
+	 */
 	private Double getUnitMultiplier(String unit){
 		if(unit.equals("um")) return 0.000001;
 		return 1.0;

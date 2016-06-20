@@ -127,7 +127,7 @@ public class ImageExplorer extends JFrame implements ActionListener{
 		String input = e.getActionCommand();
 		JViewport viewport = scroll.getViewport();
 		ImageTable table = (ImageTable) viewport.getView();
-		System.out.println(input);
+
 		if(input == "+")
 			table.addRow();
 		

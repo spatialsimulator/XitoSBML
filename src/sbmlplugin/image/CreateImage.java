@@ -83,6 +83,7 @@ public class CreateImage {
 
     private void cmpImg(ImagePlus img, byte[] imgMat, String name){
     	int max = imgMat.length;
+    	System.out.println("cmpImg " + name);
     	byte pixVal = hashSampledValue.get(name).byteValue();
     	for(int i = 0 ; i < max ; i++){
     		if(imgMat[i] != 0 && (compoMat[i] == 0 || checkVal(compoMat[i],pixVal))){

@@ -125,7 +125,8 @@ public class ImageTable extends JTable implements MouseListener{
 			return;
 
 		if (tableModel.getValueAt(selectedRow, colImgName) != null)
-			hashDomFile.remove(tableModel.getValueAt(selectedRow, colImgName));
+			hashDomFile.remove(tableModel.getValueAt(selectedRow, colDomType));
+
 		tableModel.removeRow(selectedRow);
 	}
 	

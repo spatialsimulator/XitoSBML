@@ -41,6 +41,7 @@ public class ImageBorder {
 		fixBorder();						// blackens all outside pixel
 		hasSafeBorder = isBorderSafe(); 	//depth = 0 or top/bottom slice does not have object
 		createNewStack(hasSafeBorder);
+		//createNewStack();
 	}
 	
 	private void fixBorder() {
@@ -79,17 +80,37 @@ public class ImageBorder {
 	private void createNewStack(boolean hasSafeBorder){
 		altStack = new ImageStack(width, height);
 		
-		if(!hasSafeBorder) addBlackSlice(altStack);
+		if(!hasSafeBorder)
+			addBlackSlice(altStack);
 		
 		for(int i = 1 ; i <= depth ; i++){
 			byte[] slice = new byte[height * width];
 			System.arraycopy(raw, (i-1) * height * width, slice, 0, height * width);
 			altStack.addSlice(new ByteProcessor(width,height,slice,null));
     	} 
-		if(!hasSafeBorder) addBlackSlice(altStack);
-	
-		if(!hasSafeBorder) depth += 2;
 		
+		if(!hasSafeBorder) 
+			addBlackSlice(altStack);
+	
+		if(!hasSafeBorder) 
+			depth += 2;
+		
+	}
+	
+	private void createNewStack(){
+		altStack = new ImageStack(width, height);
+		for (int h = 0; h < height; h++) {
+			for (int w = 0; w < width; w++) {
+				raw[ h * width + w] = 0;
+				raw[(depth - 1) * height * width + h * width + w] = 0;
+			}
+		}
+
+		for(int i = 1 ; i <= depth ; i++){
+			byte[] slice = new byte[height * width];
+			System.arraycopy(raw, (i-1) * height * width, slice, 0, height * width);
+			altStack.addSlice(new ByteProcessor(width,height,slice,null));
+    	} 
 	}
 	
 	private void addBlackSlice(ImageStack is){
