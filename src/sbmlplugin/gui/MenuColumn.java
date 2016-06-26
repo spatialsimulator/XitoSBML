@@ -27,14 +27,29 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MenuColumn.
+ */
 @SuppressWarnings("serial")
 public class MenuColumn extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener {
 
+	/** The table. */
 	JTable table;
+	
+	/** The edit button. */
 	JComboBox editButton;
+	
+	/** The render button. */
 	JComboBox renderButton;
 
 	
+	/**
+	 * Instantiates a new menu column.
+	 *
+	 * @param table the table
+	 * @param column the column
+	 */
 	public MenuColumn(JTable table, int column){
 		super();
 		this.table = table;
@@ -57,17 +72,26 @@ public class MenuColumn extends AbstractCellEditor implements TableCellRenderer,
 
 	}
 	
+	/* (non-Javadoc)
+	 * @see javax.swing.CellEditor#getCellEditorValue()
+	 */
 	@Override
 	public Object getCellEditorValue() {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
+	 */
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value,
 			boolean isSelected, int hasFocus, int row) {
 		return editButton;
 	}
 
+	/* (non-Javadoc)
+	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+	 */
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int row, int column) {

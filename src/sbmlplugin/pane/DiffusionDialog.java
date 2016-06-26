@@ -7,22 +7,43 @@ import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
 import org.sbml.libsbml.SpatialParameterPlugin;
 import org.sbml.libsbml.libsbmlConstants;
+// TODO: Auto-generated Javadoc
+
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jan 20, 2016
  */
 public class DiffusionDialog {
+	
+	/** The parameter. */
 	private Parameter parameter;
+	
+	/** The gd. */
 	private GenericDialog gd;
+	
+	/** The bool. */
 	private final String[] bool = {"true","false"};
+	
+	/** The model. */
 	private Model model;
 	
+	/**
+	 * Instantiates a new diffusion dialog.
+	 *
+	 * @param model the model
+	 */
 	public DiffusionDialog(Model model){
 		this.model = model;
 	}
 	
+	/**
+	 * Show dialog.
+	 *
+	 * @return the parameter
+	 */
 	public Parameter showDialog(){
 		gd = new GenericDialog("Add Diffusion Coeffcient");
 		gd.setResizable(true);
@@ -46,6 +67,12 @@ public class DiffusionDialog {
 		return parameter;
 	}
 
+	/**
+	 * Show dialog.
+	 *
+	 * @param parameter the parameter
+	 * @return the parameter
+	 */
 	public Parameter showDialog(Parameter parameter){
 		this.parameter = parameter;
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
@@ -71,6 +98,9 @@ public class DiffusionDialog {
 		return parameter;
 	}
 		
+	/**
+	 * Sets the parameter data.
+	 */
 	private void setParameterData(){
 		String str = gd.getNextString();
 		if (str.indexOf(' ')!=-1)

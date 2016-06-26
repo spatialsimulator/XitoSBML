@@ -34,16 +34,23 @@ import sbmlplugin.image.ImageEdit;
 import sbmlplugin.image.SplitDomains;
 import sbmlplugin.util.ModelSaver;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Aug 28, 2015
  */
 public class MainResolveConflict extends MainSBaseSpatial {
 	
+	/** The target domain. */
 	private String targetDomain;
+	
+	/** The geometry. */
 	private Geometry geometry;
+	
+	/** The gd. */
 	private GeometryDefinition gd;
 	
 	/* (non-Javadoc)
@@ -88,6 +95,9 @@ public class MainResolveConflict extends MainSBaseSpatial {
 		visualize(spImg);
 	}
 
+	/**
+	 * Renew model data.
+	 */
 	private void renewModelData(){
 		spImg.createHashDomainTypes();
 		new ImageEdit(spImg);
@@ -96,6 +106,11 @@ public class MainResolveConflict extends MainSBaseSpatial {
 		document = sbmlexp.getDocument();
 	}
 	
+	/**
+	 * Removes the membrane.
+	 *
+	 * @param adjacentToTargetSet the adjacent to target set
+	 */
 	private void removeMembrane(Set<Integer> adjacentToTargetSet){
 		for(Entry<String, Integer> e : hashSampledValue.entrySet()){
 			if(adjacentToTargetSet.contains(e.getValue()))
@@ -103,12 +118,25 @@ public class MainResolveConflict extends MainSBaseSpatial {
 		}
 	}
 	
+	/**
+	 * Removes the membrane from model.
+	 *
+	 * @param dom1 the dom 1
+	 * @param dom2 the dom 2
+	 */
 	private void removeMembraneFromModel(String dom1, String dom2) {
 		removeFromListOf(dom1, dom2, geometry.getListOfDomainTypes());
 		removeFromListOf(dom1, dom2, geometry.getListOfDomains());
 		removeFromListOf(dom1, dom2, geometry.getListOfAdjacentDomains());
 	}
 	
+	/**
+	 * Removes the from list of.
+	 *
+	 * @param id1 the id 1
+	 * @param id2 the id 2
+	 * @param list the list
+	 */
 	private void removeFromListOf(String id1, String id2, ListOf list){
 		SBase base;
 		String id;
@@ -120,6 +148,12 @@ public class MainResolveConflict extends MainSBaseSpatial {
 		}
 	}
 	
+	/**
+	 * Gets the active sampled field geometry.
+	 *
+	 * @param model the model
+	 * @return the active sampled field geometry
+	 */
 	private GeometryDefinition getActiveSampledFieldGeometry(Model model){
 		spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
 		geometry = spatialplugin.getGeometry();
@@ -134,6 +168,11 @@ public class MainResolveConflict extends MainSBaseSpatial {
 		return null;
 	}
 
+	/**
+	 * Gets the target domains.
+	 *
+	 * @return the target domains
+	 */
 	private void getTargetDomains() {
 		TargetDomainChooser tdc = new TargetDomainChooser(model);
 		while (tdc.getTargetDomain() == null){

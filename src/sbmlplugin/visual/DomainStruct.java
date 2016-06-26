@@ -33,14 +33,32 @@ import org.sbml.libsbml.SampledFieldGeometry;
 import org.sbml.libsbml.SampledVolume;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DomainStruct.
+ */
 public class DomainStruct {
 
+	/** The geometry. */
 	Geometry geometry;
+	
+	/** The lod. */
 	ListOfDomains lod;
+	
+	/** The load. */
 	ListOfAdjacentDomains load;
+	
+	/** The losv. */
 	ListOfSampledVolumes losv;
+	
+	/** The ordered list. */
 	List<String> orderedList = new ArrayList<String>();
 	
+	/**
+	 * Show.
+	 *
+	 * @param geometry the geometry
+	 */
 	public void show(Geometry geometry){
 		this.geometry = geometry;
 		this.lod = geometry.getListOfDomains();
@@ -61,6 +79,11 @@ public class DomainStruct {
 		GraphStruct.visualize();
 	}
 
+	/**
+	 * Creates the domain order.
+	 *
+	 * @param loav the loav
+	 */
 	private void createDomainOrder(ListOfAnalyticVolumes loav){
 		int numDom = (int) loav.size();
 		
@@ -75,6 +98,11 @@ public class DomainStruct {
 		}
 	}
 	
+	/**
+	 * Creates the domain order.
+	 *
+	 * @param losv the losv
+	 */
 	private void createDomainOrder(ListOfSampledVolumes losv){
 		int numDom = (int) losv.size();
 		List<Double> sampleList = new ArrayList<Double>();
@@ -92,6 +120,11 @@ public class DomainStruct {
 		}
 	}
 	
+	/**
+	 * Vertex.
+	 *
+	 * @param GraphStruct the graph struct
+	 */
 	private void vertex(GraphStruct GraphStruct) {
 		Domain dom;
 		for (int i = 0; i < lod.size(); i++) {
@@ -101,17 +134,36 @@ public class DomainStruct {
 		}
 	}
 	
+	/**
+	 * Edge.
+	 *
+	 * @param GraphStruct the graph struct
+	 */
 	private void edge(GraphStruct GraphStruct){
 		for(int i = 0; i < load.size(); i+=2){
 			addedge( ((AdjacentDomains) load.get(i)).getDomain2(), ((AdjacentDomains) load.get(i+1)).getDomain2(), GraphStruct);			
 		}
 	}
 	
+	/**
+	 * Addedge.
+	 *
+	 * @param dom1 the dom 1
+	 * @param dom2 the dom 2
+	 * @param GraphStruct the graph struct
+	 */
 	private void addedge(String dom1, String dom2, GraphStruct GraphStruct){
 		if(getOrder(dom1, dom2)) GraphStruct.addEdge(dom1, dom2);
 		else GraphStruct.addEdge(dom2, dom1);
 	}
 	
+	/**
+	 * Gets the order.
+	 *
+	 * @param dom1 the dom 1
+	 * @param dom2 the dom 2
+	 * @return the order
+	 */
 	private boolean getOrder(String dom1, String dom2){
 		 dom1 = dom1.replaceAll("[0-9]","");
 		 dom2 = dom2.replaceAll("[0-9]","");

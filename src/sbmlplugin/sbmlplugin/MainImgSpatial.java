@@ -21,14 +21,19 @@ import sbmlplugin.util.ModelSaver;
 import sbmlplugin.util.ModelValidator;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: May 12, 2015
  */
 public class MainImgSpatial extends MainSpatial {
 
+	/* (non-Javadoc)
+	 * @see ij.plugin.PlugIn#run(java.lang.String)
+	 */
 	@Override
 	public void run(String arg) {
 

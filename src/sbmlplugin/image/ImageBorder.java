@@ -18,20 +18,39 @@ package sbmlplugin.image;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 18, 2015
  */
 public class ImageBorder {
+	
+	/** The width. */
 	private int width;
+	
+	/** The height. */
 	private int height;
+	
+	/** The depth. */
 	private int depth;
+	
+	/** The raw. */
 	private byte[] raw;
+	
+	/** The has safe border. */
 	private boolean hasSafeBorder = true;
+	
+	/** The alt stack. */
 	private ImageStack altStack;
 	
+	/**
+	 * Instantiates a new image border.
+	 *
+	 * @param spImg the sp img
+	 */
 	public ImageBorder(SpatialImage spImg){
 		this.width = spImg.getWidth();
 		this.height = spImg.getHeight();
@@ -44,6 +63,9 @@ public class ImageBorder {
 		//createNewStack();
 	}
 	
+	/**
+	 * Fix border.
+	 */
 	private void fixBorder() {
 		int init = 0, end = depth;
 		
@@ -58,12 +80,22 @@ public class ImageBorder {
 		}
 	}
 
+	/**
+	 * Checks if is border safe.
+	 *
+	 * @return true, if is border safe
+	 */
 	private boolean isBorderSafe(){
 		boolean safez = true;
 		if(depth != 1)	safez = checkTopBottom();
 		return safez;
 	}
 	
+	/**
+	 * Check top bottom.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean checkTopBottom(){
 		int bottomSlice = (depth - 1) * width * height;
 		
@@ -77,6 +109,11 @@ public class ImageBorder {
 		return true;
 	}
 	
+	/**
+	 * Creates the new stack.
+	 *
+	 * @param hasSafeBorder the has safe border
+	 */
 	private void createNewStack(boolean hasSafeBorder){
 		altStack = new ImageStack(width, height);
 		
@@ -97,6 +134,9 @@ public class ImageBorder {
 		
 	}
 	
+	/**
+	 * Creates the new stack.
+	 */
 	private void createNewStack(){
 		altStack = new ImageStack(width, height);
 		for (int h = 0; h < height; h++) {
@@ -113,11 +153,21 @@ public class ImageBorder {
     	} 
 	}
 	
+	/**
+	 * Adds the black slice.
+	 *
+	 * @param is the is
+	 */
 	private void addBlackSlice(ImageStack is){
 		byte[] blackSlice = new byte[width * height];
 		is.addSlice(new ByteProcessor(width,height,blackSlice,null));
 	}
 	
+	/**
+	 * Gets the stack image.
+	 *
+	 * @return the stack image
+	 */
 	public ImageStack getStackImage(){
 		return altStack;
 	}

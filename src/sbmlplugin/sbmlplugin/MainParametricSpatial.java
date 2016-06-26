@@ -19,8 +19,15 @@ import javax.swing.JOptionPane;
 import sbmlplugin.util.ModelSaver;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MainParametricSpatial.
+ */
 public class MainParametricSpatial extends MainSpatial{
 	
+	/* (non-Javadoc)
+	 * @see ij.plugin.PlugIn#run(java.lang.String)
+	 */
 	@Override
 	public void run(String arg) {
 		/*

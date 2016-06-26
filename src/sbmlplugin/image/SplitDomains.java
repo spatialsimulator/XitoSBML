@@ -24,23 +24,49 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Aug 27, 2015
  */
 public class SplitDomains {
+	
+	/** The width. */
 	private int width;
+	
+	/** The height. */
 	private int height;
+	
+	/** The depth. */
 	private int depth;
+	
+	/** The raw. */
 	private byte[] raw;
+	
+	/** The alt stack. */
 	private ImageStack altStack;
+	
+	/** The cyt val. */
 	private byte cytVal;
+	
+	/** The del target. */
 	private byte delTarget;
+	
+	/** The adjacent to target set. */
 	private Set<Integer> adjacentToTargetSet = new HashSet<Integer>();
+	
+	/** The adjacent to target. */
 	private byte adjacentToTarget;
 	
+	/**
+	 * Instantiates a new split domains.
+	 *
+	 * @param spImg the sp img
+	 * @param targetDomain the target domain
+	 */
 	public SplitDomains(SpatialImage spImg, String targetDomain){
 		this.width = spImg.getWidth();
 		this.height = spImg.getHeight();
@@ -52,6 +78,12 @@ public class SplitDomains {
 		createNewStack();
 	}
 
+	/**
+	 * Creates the domain to check.
+	 *
+	 * @param hashSampledValue the hash sampled value
+	 * @param targetDomain the target domain
+	 */
 	private void createDomainToCheck(HashMap<String, Integer> hashSampledValue, String targetDomain){
 		cytVal =  hashSampledValue.get("Cytosol").byteValue();
 		String[] memName = targetDomain.split("_");
@@ -60,6 +92,13 @@ public class SplitDomains {
 		adjacentToTarget = hashSampledValue.get(getBiggerDom(memName, hashSampledValue)).byteValue();
 	}
 	
+	/**
+	 * Gets the smaller dom.
+	 *
+	 * @param domNames the dom names
+	 * @param hashSampledValue the hash sampled value
+	 * @return the smaller dom
+	 */
 	private String getSmallerDom(String[] domNames, HashMap<String, Integer> hashSampledValue){
 		String dom1 = domNames[0];
 		String dom2 = domNames[1];
@@ -71,6 +110,13 @@ public class SplitDomains {
 			return dom1;
 	}
 	
+	/**
+	 * Gets the bigger dom.
+	 *
+	 * @param domNames the dom names
+	 * @param hashSampledValue the hash sampled value
+	 * @return the bigger dom
+	 */
 	private String getBiggerDom(String[] domNames, HashMap<String, Integer> hashSampledValue){
 		String dom1 = domNames[0];
 		String dom2 = domNames[1];
@@ -82,6 +128,9 @@ public class SplitDomains {
 			return dom1;
 	}
 	
+	/**
+	 * Check domain.
+	 */
 	private void checkDomain(){
 		for (int d = 0; d < depth; d++) {
 			for (int h = 0; h < height; h++) {
@@ -94,6 +143,14 @@ public class SplitDomains {
 		}
 	}
 	
+	/**
+	 * Check adjacents.
+	 *
+	 * @param w the w
+	 * @param h the h
+	 * @param d the d
+	 * @param pixVal the pix val
+	 */
 	private void checkAdjacents(int w, int h, int d, byte pixVal) {
 		List<Byte> adjVal = new ArrayList<Byte>();
 
@@ -131,11 +188,19 @@ public class SplitDomains {
 		}
 	}
 	
+	/**
+	 * List to set.
+	 *
+	 * @param adjVal the adj val
+	 */
 	private void listToSet(List<Byte> adjVal){
 		for(Byte b : adjVal)
 			adjacentToTargetSet.add(b & 0xFF);	
 	}
 	
+	/**
+	 * Creates the new stack.
+	 */
 	private void createNewStack(){
 		altStack = new ImageStack(width, height);
 		
@@ -146,10 +211,20 @@ public class SplitDomains {
     	} 
 	}
 	
+	/**
+	 * Gets the stack image.
+	 *
+	 * @return the stack image
+	 */
 	public ImageStack getStackImage(){
 		return altStack;
 	}
 
+	/**
+	 * Gets the adjacent to target list.
+	 *
+	 * @return the adjacent to target list
+	 */
 	public Set<Integer> getAdjacentToTargetList() {
 		return adjacentToTargetSet;
 	}

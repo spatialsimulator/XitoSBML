@@ -23,23 +23,57 @@ import ij.io.FileInfo;
 import ij.process.ByteProcessor;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Interpolater.
+ */
 public class Interpolater {
+	
+	/** The voxx. */
 	private double voxx;			
+	
+	/** The voxy. */
 	private double voxy;
+	
+	/** The voxz. */
 	private double voxz;
+	
+	/** The zaxis. */
 	private double zaxis;
+	
+	/** The width. */
 	private int width;
+	
+	/** The height. */
 	private int height;
+	
+	/** The altz. */
 	private int altz;
+	
+	/** The image. */
 	private ImagePlus image;		//input image
+	
+	/** The altimage. */
 	private ImageStack altimage;	//output pixel image
+	
+	/** The pixels. */
 	private byte[] pixels;
+	
+	/** The info. */
 	private FileInfo info;
 	
+	/**
+	 * Instantiates a new interpolater.
+	 */
 	public Interpolater(){
 		
 	}
 	
+	/**
+	 * Instantiates a new interpolater.
+	 *
+	 * @param spImg the sp img
+	 */
 	public Interpolater(SpatialImage spImg){
 			this.image = spImg.getImage();
 			getInfo(image);
@@ -55,6 +89,12 @@ public class Interpolater {
 			}
 	}
 	
+	/**
+	 * Gets the info.
+	 *
+	 * @param imgPlus the img plus
+	 * @return the info
+	 */
 	private void getInfo(ImagePlus imgPlus){
 		width = imgPlus.getWidth();
 		height = imgPlus.getHeight();
@@ -68,6 +108,12 @@ public class Interpolater {
 		System.out.println("voxel size " + voxx + " " + voxy + " " + voxz);
 	}
 	
+	/**
+	 * Interpolate.
+	 *
+	 * @param imagePlus the image plus
+	 * @return the image plus
+	 */
 	public ImagePlus interpolate(ImagePlus imagePlus){
 		this.image = imagePlus;
 		getInfo(image);
@@ -88,6 +134,12 @@ public class Interpolater {
 		return nImg;
 	}
 	
+	/**
+	 * Interpolate.
+	 *
+	 * @param spImg the sp img
+	 * @return the spatial image
+	 */
 	public SpatialImage interpolate(SpatialImage spImg){
 		this.image = spImg.getImage();
 		getInfo(image);
@@ -107,6 +159,11 @@ public class Interpolater {
 		return spImg;
 	}
 
+	/**
+	 * Interpolate.
+	 *
+	 * @param hashdomFile the hashdom file
+	 */
 	public void interpolate(HashMap<String, ImagePlus> hashdomFile) {
 		for(Entry<String, ImagePlus> e : hashdomFile.entrySet()){
 			ImagePlus i = interpolate(e.getValue());
@@ -114,6 +171,11 @@ public class Interpolater {
 		}
 	}
 	
+	/**
+	 * Need interpolate.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean needInterpolate(){
 		if(voxz > voxx || voxz > voxy)
 			return true;
@@ -121,6 +183,9 @@ public class Interpolater {
 		return false;
 	}
 
+	/**
+	 * Nearest neighbor.
+	 */
 	private void nearestNeighbor(){
 		altz = (int) (zaxis / voxx);
 		System.out.println("interpolated stack size " + altz);
@@ -149,6 +214,11 @@ public class Interpolater {
 		}
 	}
 	
+	/**
+	 * Gets the interpolated image.
+	 *
+	 * @return the interpolated image
+	 */
 	public ImagePlus getInterpolatedImage(){
 		return image;
 	}

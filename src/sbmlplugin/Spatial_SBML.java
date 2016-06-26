@@ -19,14 +19,20 @@ import ij.IJ;
 import ij.plugin.PlugIn;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 17, 2015
  */
 public abstract class Spatial_SBML implements PlugIn {
+	
+	/** The is running. */
 	static boolean isRunning = false;
+	
+	/** The title. */
 	String title = "Export segmented image to Spatial SBML";
 	
 	/* (non-Javadoc)
@@ -35,6 +41,11 @@ public abstract class Spatial_SBML implements PlugIn {
 	@Override
 	public abstract void run(String arg);
 
+	/**
+	 * Check jgraph.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean checkJgraph(){
 		try {
 			Class.forName("org.jgrapht.ListenableGraph");
@@ -45,6 +56,11 @@ public abstract class Spatial_SBML implements PlugIn {
 		}
 	}
 	
+	/**
+	 * Check 3 dviewer.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean check3Dviewer(){
 		String version = ij3d.Install_J3D.getJava3DVersion();
         if(version != null && Float.parseFloat(version) >= PluginConstants.VIEWERVERSION)

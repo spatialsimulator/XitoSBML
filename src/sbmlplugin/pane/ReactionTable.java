@@ -10,19 +10,33 @@ import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Reaction;
 import org.sbml.libsbml.SpatialReactionPlugin;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jan 20, 2016
  */
 public class ReactionTable extends SBaseTable {
 
+	/** The header. */
 	private final String[] header = { "id","fast","reversible","islocal","kinetic law","reactant","product","modifier"};
+	
+	/** The table. */
 	private JTable table;
+	
+	/** The model. */
 	private Model model;
+	
+	/** The rd. */
 	private ReactionDialog rd;
 	
+	/**
+	 * Instantiates a new reaction table.
+	 *
+	 * @param lor the lor
+	 */
 	ReactionTable(ListOfReactions lor){
 		this.model = lor.getModel();
 		setReactionToList(lor);
@@ -32,6 +46,11 @@ public class ReactionTable extends SBaseTable {
 		pane = setTableToScroll("reaction",table);
 	}
 	
+	/**
+	 * Sets the reaction to list.
+	 *
+	 * @param lor the new reaction to list
+	 */
 	private void setReactionToList(ListOfReactions lor){
 		long max = lor.size();
 		for(int i = 0; i < max; i++){
@@ -40,6 +59,12 @@ public class ReactionTable extends SBaseTable {
 		}
 	}
 	
+	/**
+	 * Gets the table model with reaction.
+	 *
+	 * @param lor the lor
+	 * @return the table model with reaction
+	 */
 	private MyTableModel getTableModelWithReaction(ListOfReactions lor){
 		int max = memberList.size();
 		Object[][] data  = new Object[max][header.length];
@@ -81,6 +106,12 @@ public class ReactionTable extends SBaseTable {
 		return tm;
 	}
 	
+	/**
+	 * List member to string.
+	 *
+	 * @param lo the lo
+	 * @return the string
+	 */
 	private String listMemberToString(ListOfSpeciesReferences lo){
 		StringBuilder sb = new StringBuilder();
 		
@@ -90,6 +121,12 @@ public class ReactionTable extends SBaseTable {
 		return sb.toString();
 	}
 	
+	/**
+	 * Reaction to vector.
+	 *
+	 * @param r the r
+	 * @return the vector
+	 */
 	private Vector<Object> reactionToVector(Reaction r){
 		SpatialReactionPlugin srp = (SpatialReactionPlugin) r.getPlugin("spatial");
 		Vector<Object> v = new Vector<Object>();

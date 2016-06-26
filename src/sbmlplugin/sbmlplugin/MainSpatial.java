@@ -43,20 +43,48 @@ import sbmlplugin.visual.DomainStruct;
 import sbmlplugin.visual.Viewer;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class MainSpatial.
+ */
 public abstract class MainSpatial implements PlugIn{
 
+	/** The document. */
 	protected SBMLDocument document;
+	
+	/** The model. */
 	protected Model model;
+	
+	/** The sbmlns. */
 	protected SBMLNamespaces sbmlns; 
+	
+	/** The spatialns. */
 	protected SpatialPkgNamespaces spatialns;
+	
+	/** The spatialplugin. */
 	protected SpatialModelPlugin spatialplugin;
+	
+	/** The reqplugin. */
 	protected ReqSBasePlugin reqplugin;
+	
+	/** The imgexp. */
 	private ImageExplorer imgexp;
+	
+	/** The hash domain types. */
 	private HashMap<String, Integer> hashDomainTypes;
+	
+	/** The hash sampled value. */
 	protected HashMap<String, Integer> hashSampledValue;
+	
+	/** The viewer. */
 	protected Viewer viewer;
+	
+	/** The sp img. */
 	protected SpatialImage spImg;
 	
+	/**
+	 * Gui.
+	 */
 	protected void gui() {
 		hashDomainTypes = new HashMap<String, Integer>();
 		hashSampledValue = new HashMap<String, Integer> ();
@@ -70,6 +98,9 @@ public abstract class MainSpatial implements PlugIn{
 		}
 	}
 	
+	/**
+	 * Compute img.
+	 */
 	protected void computeImg(){
 		Interpolater interpolater = new Interpolater();
 		HashMap<String, ImagePlus> hashDomFile = imgexp.getDomFile();
@@ -89,11 +120,19 @@ public abstract class MainSpatial implements PlugIn{
 		new ImageEdit(spImg);
 	}
 	
+	/**
+	 * Visualize.
+	 *
+	 * @param spImg the sp img
+	 */
 	protected void visualize (SpatialImage spImg){
 		viewer = new Viewer();
 		viewer.view(spImg);
 	}
 	
+	/**
+	 * Adds the para and species.
+	 */
 	protected void addParaAndSpecies(){
 		ListOfParameters lop = model.getListOfParameters();
 		ListOfSpecies los = model.getListOfSpecies();
@@ -108,6 +147,9 @@ public abstract class MainSpatial implements PlugIn{
 		}
 	}
 	
+	/**
+	 * Adds the S bases.
+	 */
 	protected void addSBases(){
 		ListOfParameters lop = model.getListOfParameters();
 		ListOfSpecies los = model.getListOfSpecies();
@@ -122,12 +164,20 @@ public abstract class MainSpatial implements PlugIn{
 		}
 	}
 	
+	/**
+	 * Show domain structure.
+	 */
 	protected void showDomainStructure(){
 		spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial");
 		Geometry g = spatialplugin.getGeometry();
 		new DomainStruct().show(g);	
 	}
 	
+	/**
+	 * Show step.
+	 *
+	 * @param spImg the sp img
+	 */
 	protected void showStep(SpatialImage spImg){
 		visualize(spImg);
 	}

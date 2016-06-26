@@ -64,28 +64,63 @@ import org.sbml.libsbml.libsbmlConstants;
 import sbmlplugin.image.SpatialImage;
 import sun.misc.FloatingDecimal;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SpatialSBMLExporter.
+ */
 public class SpatialSBMLExporter{
 
+  /** The document. */
   private SBMLDocument document;
+  
+  /** The model. */
   private Model model;
+  
+  /** The sbmlns. */
   private SBMLNamespaces sbmlns;
+  
+  /** The spatialns. */
   private SpatialPkgNamespaces spatialns;
+  
+  /** The spatialplugin. */
   private SpatialModelPlugin spatialplugin;
+  
+  /** The spatialcompplugin. */
   //private ReqSBasePlugin reqplugin;
   private SpatialCompartmentPlugin spatialcompplugin;
+  
+  /** The geometry. */
   private Geometry geometry;
+  
+  /** The hash domain types. */
   private HashMap<String, Integer> hashDomainTypes;
+  
+  /** The hash sampled value. */
   private HashMap<String, Integer> hashSampledValue;
+  
+  /** The hash domain num. */
   private HashMap<String, Integer> hashDomainNum;
+  
+  /** The hash dom interior pt. */
   private HashMap<String,Point3f> hashDomInteriorPt;
+  
+  /** The adjacents list. */
   private ArrayList<ArrayList<String>> adjacentsList;
+  
+  /** The raw. */
   private byte[] raw;
+  
+  /** The depth. */
   private int width, height, depth;
+  
+  /** The unit. */
   private String unit;
+  
+  /** The delta. */
   private Point3d delta;
 
 	/**
-	 * 
+	 * Instantiates a new spatial SBML exporter.
 	 */
 	public SpatialSBMLExporter() {
 		sbmlns = new SBMLNamespaces(3, 1);
@@ -113,7 +148,9 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * @param spImg
+	 * Instantiates a new spatial SBML exporter.
+	 *
+	 * @param spImg the sp img
 	 */
 	public SpatialSBMLExporter(SpatialImage spImg) {
 		this();
@@ -133,7 +170,7 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * 
+	 * Creates the geometry elements.
 	 */
 	public void createGeometryElements() {
 		geometry = spatialplugin.createGeometry();
@@ -147,7 +184,7 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * 
+	 * Adds the geometry definitions.
 	 */
 //TODO determine to use compressed or uncompressed data
 	public void addGeometryDefinitions() {
@@ -185,8 +222,10 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * @param raw
-	 * @return
+	 * Compress raw data.
+	 *
+	 * @param raw the raw
+	 * @return the byte[]
 	 */
 	public byte[] compressRawData(byte[] raw) {
 		Deflater compresser = new Deflater();
@@ -215,8 +254,10 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * @param compressed
-	 * @return
+	 * Byte array to int array.
+	 *
+	 * @param compressed the compressed
+	 * @return the int[]
 	 */
 	public int[] byteArrayToIntArray(byte[] compressed) {
 		int[] intArray = new int[compressed.length];
@@ -227,7 +268,7 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * 
+	 * Adds the adjacent domains.
 	 */
 	public void addAdjacentDomains() { // adds membrane domains and adjacents
 		WeakHashMap<String, Integer> hashMembrane = new WeakHashMap<String, Integer>();
@@ -255,7 +296,7 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * 
+	 * Adds the domains.
 	 */
 	public void addDomains() {
      for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    			//add domains to corresponding domaintypes
@@ -278,8 +319,8 @@ public class SpatialSBMLExporter{
 	}	
 
   	/**
-  	 * 
-  	 */
+	   * Adds the domain types.
+	   */
 	public void addDomainTypes() {
 		for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
 			// DomainTypes
@@ -309,7 +350,7 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * 
+	 * Adds the coordinates.
 	 */
 	public void addCoordinates() { 
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
@@ -333,11 +374,13 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * @param cc
-	 * @param s
-	 * @param min
-	 * @param max
-	 * @param delta
+	 * Sets the coordinate boundary.
+	 *
+	 * @param cc the cc
+	 * @param s the s
+	 * @param min the min
+	 * @param max the max
+	 * @param delta the delta
 	 */
 	//TODO fix bound after fixing the simulator
 	public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max, double delta) { 
@@ -350,7 +393,7 @@ public class SpatialSBMLExporter{
 	}
   
 	/**
-	 * 
+	 * Adds the coord parameter.
 	 */
 	public void addCoordParameter() {
 		ListOf lcc = geometry.getListOfCoordinateComponents();
@@ -374,8 +417,10 @@ public class SpatialSBMLExporter{
 	}
   
 	/**
-	 * @param hashVertices
-	 * @param hashBound
+	 * Creates the parametric.
+	 *
+	 * @param hashVertices the hash vertices
+	 * @param hashBound the hash bound
 	 */
 	public void createParametric(HashMap<String, List<Point3f>> hashVertices, HashMap<String, Point3d> hashBound) {
 	    geometry = spatialplugin.createGeometry();
@@ -388,8 +433,10 @@ public class SpatialSBMLExporter{
 	  }
   
 	/**
-	 * @param hashVertices
-	 * @param hashBound
+	 * Adds the para geo definitions.
+	 *
+	 * @param hashVertices the hash vertices
+	 * @param hashBound the hash bound
 	 */
 	public void addParaGeoDefinitions(HashMap<String, List<Point3f>> hashVertices, HashMap<String, Point3d> hashBound) {
 		ParametricGeometry pg = geometry.createParametricGeometry();
@@ -415,8 +462,10 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * @param sp
-	 * @param uniquePointSet
+	 * Adds the unique vertices.
+	 *
+	 * @param sp the sp
+	 * @param uniquePointSet the unique point set
 	 */
 	public void addUniqueVertices(SpatialPoints sp, ArrayList<Point3f> uniquePointSet){
 		Iterator<Point3f> pIt = uniquePointSet.iterator();
@@ -433,9 +482,11 @@ public class SpatialSBMLExporter{
 	}
 	
 	/**
-	 * @param po
-	 * @param list
-	 * @param uniquePointSet
+	 * Sets the point index.
+	 *
+	 * @param po the po
+	 * @param list the list
+	 * @param uniquePointSet the unique point set
 	 */
 	public void setPointIndex(ParametricObject po, List<Point3f> list, ArrayList<Point3f> uniquePointSet) {
 		int size = list.size();
@@ -448,7 +499,9 @@ public class SpatialSBMLExporter{
 	}
 	
 	/**
-	 * @param hashBound
+	 * Adds the coordinates.
+	 *
+	 * @param hashBound the hash bound
 	 */
 	public void addCoordinates(HashMap<String, Point3d> hashBound) { 
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
@@ -469,21 +522,25 @@ public class SpatialSBMLExporter{
 	}
 	
 	/**
-	 * @return
+	 * Gets the model.
+	 *
+	 * @return the model
 	 */
 	public Model getModel(){
 		return model;
 	}
 	
 	/**
-	 * @return
+	 * Gets the document.
+	 *
+	 * @return the document
 	 */
 	public SBMLDocument getDocument(){
 		return document;
 	}
 	
 	/**
-	 * 
+	 * Adds the units.
 	 */
 	public void addUnits(){
 		if(unit == null) return; 
@@ -513,8 +570,10 @@ public class SpatialSBMLExporter{
 	}
 	
 	/**
-	 * @param unit
-	 * @return
+	 * Gets the unit multiplier.
+	 *
+	 * @param unit the unit
+	 * @return the unit multiplier
 	 */
 	private Double getUnitMultiplier(String unit){
 		if(unit.equals("um")) return 0.000001;

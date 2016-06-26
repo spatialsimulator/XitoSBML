@@ -15,23 +15,45 @@ import org.sbml.libsbml.SpatialReactionPlugin;
 import org.sbml.libsbml.SpeciesReference;
 import org.sbml.libsbml.libsbml;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jan 22, 2016
  */
 public class ReactionDialog {
+	
+	/** The reaction. */
 	private Reaction reaction;
+	
+	/** The gd. */
 	private GenericDialog gd;
+	
+	/** The bool. */
 	private final String[] bool = {"true","false"};
+	
+	/** The model. */
 	private Model model;
+	
+	/** The los. */
 	private ListOfSpecies los;
 	
+	/**
+	 * Instantiates a new reaction dialog.
+	 *
+	 * @param model the model
+	 */
 	public ReactionDialog(Model model){
 		this.model = model;
 	}
 	
+	/**
+	 * Show dialog.
+	 *
+	 * @return the reaction
+	 */
 	public Reaction showDialog(){
 		this.los = model.getListOfSpecies();
 		gd = new GenericDialog("Add Reaction");
@@ -62,6 +84,12 @@ public class ReactionDialog {
 		return reaction;
 	}
 	
+	/**
+	 * Show dialog.
+	 *
+	 * @param reaction the reaction
+	 * @return the reaction
+	 */
 	public Reaction showDialog(Reaction reaction){
 		this.los = model.getListOfSpecies();
 		this.reaction = reaction;
@@ -91,6 +119,13 @@ public class ReactionDialog {
 		return reaction;
 	}
 	
+	/**
+	 * Bool species in S reference.
+	 *
+	 * @param los the los
+	 * @param losr the losr
+	 * @return the boolean[]
+	 */
 	private boolean[] boolSpeciesInSReference(ListOfSpecies los, ListOfSpeciesReferences losr){
 		boolean[] bool = new boolean[(int)los.size()];
 		
@@ -102,6 +137,9 @@ public class ReactionDialog {
 		return bool;
 	}
 	
+	/**
+	 * Sets the reaction data.
+	 */
 	private void setReactionData(){
 		String str = gd.getNextString();
 		if (str.indexOf(' ')!=-1)

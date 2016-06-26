@@ -25,21 +25,58 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SpatialImage.
+ */
 public class SpatialImage {
+	
+	/** The raw. */
 	private byte[] raw;
+	
+	/** The width. */
 	private int width;
+	
+	/** The height. */
 	private int height;
+	
+	/** The depth. */
 	private int depth;
+	
+	/** The img. */
 	private ImagePlus img;
+	
+	/** The hash domain types. */
 	private HashMap<String, Integer> hashDomainTypes;
+	
+	/** The hash sampled value. */
 	private HashMap<String, Integer> hashSampledValue;
+	
+	/** The hash domain num. */
 	private HashMap<String,Integer> hashDomainNum;
+	
+	/** The adjacents list. */
 	private ArrayList<ArrayList<String>> adjacentsList;
+	
+	/** The title. */
 	public String title;
+	
+	/** The unit. */
 	private String unit;
+	
+	/** The hash dom interior pt. */
 	private HashMap<String,Point3f> hashDomInteriorPt;
+	
+	/** The delta. */
 	private Point3d delta = new Point3d();
 	
+	/**
+	 * Instantiates a new spatial image.
+	 *
+	 * @param hashSampledValue the hash sampled value
+	 * @param hashDomainTypes the hash domain types
+	 * @param img the img
+	 */
 	public SpatialImage(HashMap<String, Integer> hashSampledValue, HashMap<String, Integer> hashDomainTypes, ImagePlus img){
 		this.setWidth(img.getWidth());
 		this.setHeight(img.getHeight());
@@ -56,6 +93,12 @@ public class SpatialImage {
 		setRawImage();
 	}	
 	
+	/**
+	 * Instantiates a new spatial image.
+	 *
+	 * @param hashSampledValue the hash sampled value
+	 * @param img the img
+	 */
 	public SpatialImage(HashMap<String, Integer> hashSampledValue, ImagePlus img){	//only for model editing
 		this.setWidth(img.getWidth());
 		this.setHeight(img.getHeight());
@@ -71,6 +114,9 @@ public class SpatialImage {
 		setRawImage();
 	}	
 	
+	/**
+	 * Sets the raw image.
+	 */
 	private void setRawImage(){
 		byte[] slice = null;   
 		raw = new byte[width * height * depth];
@@ -81,69 +127,147 @@ public class SpatialImage {
     	} 
 	}
 	
+	/**
+	 * Sets the image.
+	 *
+	 * @param image the new image
+	 */
 	public void setImage(ImagePlus image){
 		this.img = image;
 		setRawImage();
 	}
 
+	/**
+	 * Gets the image.
+	 *
+	 * @return the image
+	 */
 	public ImagePlus getImage(){
 		return img;
 	}
 
+	/**
+	 * Update image.
+	 *
+	 * @param imStack the im stack
+	 */
 	public void updateImage(ImageStack imStack){
 		depth = imStack.getSize();
 		img.setStack(imStack);
 		setRawImage();
 	}
 
+	/**
+	 * Gets the width.
+	 *
+	 * @return the width
+	 */
 	public int getWidth() {
 		return width;
 	}
 
+	/**
+	 * Sets the width.
+	 *
+	 * @param width the new width
+	 */
 	public void setWidth(int width) {
 		this.width = width;
 	}
 
+	/**
+	 * Gets the height.
+	 *
+	 * @return the height
+	 */
 	public int getHeight() {
 		return height;
 	}
 
+	/**
+	 * Sets the height.
+	 *
+	 * @param height the new height
+	 */
 	public void setHeight(int height) {
 		this.height = height;
 	}
 
+	/**
+	 * Gets the depth.
+	 *
+	 * @return the depth
+	 */
 	public int getDepth() {
 		return depth;
 	}
 
+	/**
+	 * Sets the depth.
+	 *
+	 * @param depth the new depth
+	 */
 	public void setDepth(int depth) {
 		this.depth = depth;
 	}
 
+	/**
+	 * Gets the hash sampled value.
+	 *
+	 * @return the hash sampled value
+	 */
 	public HashMap<String, Integer> getHashSampledValue() {
 		return hashSampledValue;
 	}
 
+	/**
+	 * Sets the hash sampled value.
+	 *
+	 * @param hashSampledValue the hash sampled value
+	 */
 	public void setHashSampledValue(HashMap<String, Integer> hashSampledValue) {
 		this.hashSampledValue = hashSampledValue;
 	}
 
+	/**
+	 * Gets the raw.
+	 *
+	 * @return the raw
+	 */
 	public byte[] getRaw() {
 		return raw;
 	}
 
+	/**
+	 * Sets the raw.
+	 *
+	 * @param raw the new raw
+	 */
 	public void setRaw(byte[] raw) {
 		this.raw = raw;
 	}
 
+	/**
+	 * Gets the hash domain types.
+	 *
+	 * @return the hash domain types
+	 */
 	public HashMap<String, Integer> getHashDomainTypes() {
 		return hashDomainTypes;
 	}
 
+	/**
+	 * Sets the hash domain types.
+	 *
+	 * @param hashDomainTypes the hash domain types
+	 */
 	public void setHashDomainTypes(HashMap<String, Integer> hashDomainTypes) {
 		this.hashDomainTypes =  hashDomainTypes;
 	}
 	
+	/**
+	 * Creates the hash domain types.
+	 */
 	public void createHashDomainTypes() {
 		hashDomainTypes = new HashMap<String, Integer>();
 		for (String s : hashSampledValue.keySet()) {
@@ -154,22 +278,48 @@ public class SpatialImage {
 		}
 	}
 	
+	/**
+	 * Gets the hash domain num.
+	 *
+	 * @return the hash domain num
+	 */
 	public HashMap<String, Integer> getHashDomainNum() {
 		return hashDomainNum;
 	}
 	
+	/**
+	 * Sets the hash domain num.
+	 *
+	 * @param hashDomainNum the hash domain num
+	 */
 	public void setHashDomainNum(HashMap<String,Integer> hashDomainNum) {
 		this.hashDomainNum = hashDomainNum;
 	}
 
+	/**
+	 * Gets the adjacents list.
+	 *
+	 * @return the adjacents list
+	 */
 	public ArrayList<ArrayList<String>> getAdjacentsList() {
 		return adjacentsList;
 	}
 
+	/**
+	 * Sets the adjacents list.
+	 *
+	 * @param adjacentsList the new adjacents list
+	 */
 	public void setAdjacentsList(ArrayList<ArrayList<String>> adjacentsList) {
 		this.adjacentsList = adjacentsList;
 	}
 
+	/**
+	 * Save as image.
+	 *
+	 * @param path the path
+	 * @param name the name
+	 */
 	public void saveAsImage(String path, String name){
 		FileSaver fs = new FileSaver(img);
 		if(name == null) return;
@@ -179,14 +329,27 @@ public class SpatialImage {
 			fs.saveAsTiff(path + "/" + name + ".tiff");
 	}
 
+	/**
+	 * Gets the unit.
+	 *
+	 * @return the unit
+	 */
 	public String getUnit() {
 		return unit;
 	}
 	
+	/**
+	 * Sets the unit.
+	 */
 	public void setUnit() {
 		this.unit = "um";
 	}
 
+	/**
+	 * Adjust unit.
+	 *
+	 * @param unit the unit
+	 */
 	//adjust img info to um
 	private void adjustUnit(String unit){
 		if(unit.equals("nm")){
@@ -196,18 +359,38 @@ public class SpatialImage {
 		}
 	}
 	
+	/**
+	 * Gets the delta.
+	 *
+	 * @return the delta
+	 */
 	public Point3d getDelta(){
 		return delta;
 	}
 	
+	/**
+	 * Sets the delta.
+	 *
+	 * @param delta the new delta
+	 */
 	public void setDelta(Point3d delta) {
 		this.delta = delta;
 	}
 	
+	/**
+	 * Gets the hash dom interior pt.
+	 *
+	 * @return the hash dom interior pt
+	 */
 	public HashMap<String,Point3f> getHashDomInteriorPt() {
 		return hashDomInteriorPt;
 	}
 
+	/**
+	 * Sets the hash dom interiorpt.
+	 *
+	 * @param hashDomInteriorPt the hash dom interior pt
+	 */
 	public void setHashDomInteriorpt(HashMap<String,Point3f> hashDomInteriorPt) {
 		this.hashDomInteriorPt = hashDomInteriorPt;
 	}

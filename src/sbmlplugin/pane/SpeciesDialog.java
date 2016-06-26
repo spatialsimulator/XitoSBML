@@ -5,25 +5,49 @@ import ij.gui.GenericDialog;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Species;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jan 20, 2016
  */
 public class SpeciesDialog {
+	
+	/** The species. */
 	private Species species;
+	
+	/** The gd. */
 	private GenericDialog gd;
+	
+	/** The initial. */
 	private final String[] initial = {"amount","concentration"};
+	
+	/** The units. */
 	private final String[] units = {"substance","mole","item","gram","kilogram","dimensionless"};
+	
+	/** The bool. */
 	private final String[] bool = {"true","false"};
+	
+	/** The model. */
 	private Model model;
 	
+	/**
+	 * Instantiates a new species dialog.
+	 *
+	 * @param model the model
+	 */
 	public SpeciesDialog(Model model){
 		this.model = model;
 		
 	}
 	
+	/**
+	 * Show dialog.
+	 *
+	 * @return the species
+	 */
 	public Species showDialog(){
 		gd = new GenericDialog("Add Species");
 		gd.setResizable(true);
@@ -47,6 +71,12 @@ public class SpeciesDialog {
 		return species;
 	}
 	
+	/**
+	 * Show dialog.
+	 *
+	 * @param species the species
+	 * @return the species
+	 */
 	public Species showDialog(Species species){
 		this.species = species;
 		gd = new GenericDialog("Edit Species");
@@ -76,6 +106,9 @@ public class SpeciesDialog {
 		return species;
 	}
 	
+	/**
+	 * Sets the species data.
+	 */
 	private void setSpeciesData(){
 		String str = gd.getNextString();
 		if (str.indexOf(' ')!=-1)

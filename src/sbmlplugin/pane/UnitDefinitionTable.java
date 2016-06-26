@@ -15,18 +15,33 @@ import org.sbml.libsbml.UnitDefinition;
 
 import sbmlplugin.pane.SBaseTable.MyTableModel;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jan 26, 2016
  */
 public class UnitDefinitionTable extends SBaseTable {
+	
+	/** The header. */
 	private final String[] header = { "id", "unit"};
+	
+	/** The table. */
 	private JTable table;
+	
+	/** The udd. */
 	private UnitDefinitionDialog udd;
+	
+	/** The model. */
 	private Model model;
 	
+	/**
+	 * Instantiates a new unit definition table.
+	 *
+	 * @param loud the loud
+	 */
 	UnitDefinitionTable(ListOfUnitDefinitions loud){
 		this.model = loud.getModel();
 		list = loud;
@@ -37,6 +52,11 @@ public class UnitDefinitionTable extends SBaseTable {
 		pane = setTableToScroll("unit",table);
 	}
 	
+	/**
+	 * Sets the unit definition to list.
+	 *
+	 * @param loud the new unit definition to list
+	 */
 	private void setUnitDefinitionToList(ListOfUnitDefinitions loud){
 		long max = loud.size();
 		for(int i = 0; i < max; i++){
@@ -45,6 +65,12 @@ public class UnitDefinitionTable extends SBaseTable {
 		}
 	}
 	
+	/**
+	 * Gets the table model with unit definitions.
+	 *
+	 * @param loud the loud
+	 * @return the table model with unit definitions
+	 */
 	private MyTableModel getTableModelWithUnitDefinitions(ListOfUnitDefinitions loud){
 		int max = memberList.size();
 		Object[][] data  = new Object[max][header.length];
@@ -74,6 +100,12 @@ public class UnitDefinitionTable extends SBaseTable {
 		return tm;
 	}
 
+	/**
+	 * Units to string.
+	 *
+	 * @param lou the lou
+	 * @return the string
+	 */
 	private String unitsToString(ListOfUnits lou){
 		StringBuilder sb = new StringBuilder();
 		
@@ -91,6 +123,12 @@ public class UnitDefinitionTable extends SBaseTable {
 		return sb.toString();
 	}
 	
+	/**
+	 * Unit definition to vector.
+	 *
+	 * @param ud the ud
+	 * @return the vector
+	 */
 	private Vector<Object> unitDefinitionToVector(UnitDefinition ud){
 		Vector<Object> v = new Vector<Object>();
 		v.add(ud.getId());

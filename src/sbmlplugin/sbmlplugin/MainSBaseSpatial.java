@@ -33,8 +33,10 @@ import sbmlplugin.image.SpatialImage;
 import sbmlplugin.util.PluginConstants;
 import sbmlplugin.visual.Viewer;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 17, 2015
@@ -47,6 +49,11 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	@Override
 	public abstract void run(String arg);
 	
+	/**
+	 * Visualize.
+	 *
+	 * @param spImgList the sp img list
+	 */
 	protected void visualize(ArrayList<SpatialImage> spImgList){
 		Iterator<SpatialImage> it = spImgList.iterator();
 		Viewer viewer = new Viewer();
@@ -55,6 +62,12 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		}
 	}
 	
+	/**
+	 * Gets the document.
+	 *
+	 * @return the document
+	 * @throws NullPointerException the null pointer exception
+	 */
 	protected SBMLDocument getDocument() throws NullPointerException{
 		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -69,6 +82,11 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		return reader.readSBMLFromFile(f.getAbsolutePath());
 	}
 
+	/**
+	 * Check SBML document.
+	 *
+	 * @param document the document
+	 */
 	public void checkSBMLDocument(SBMLDocument document){
 		if(document == null || document.getModel() == null) 
 			throw new IllegalArgumentException("Non-supported format file");
@@ -77,11 +95,17 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		checkExtension();
 	}
 	
+	/**
+	 * Check level and version.
+	 */
 	protected void checkLevelAndVersion(){
 		if(model.getLevel() != PluginConstants.SBMLLEVEL || model.getVersion() != PluginConstants.SBMLVERSION)
 			IJ.error("Incompatible level and version");
 	}
 	
+	/**
+	 * Check extension.
+	 */
 	protected void checkExtension(){
 		if(!document.getPackageRequired("spatial"))
 			IJ.error("Could not find spatial extension");

@@ -35,15 +35,31 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ImageExplorer.
+ */
 @SuppressWarnings("serial")
 public class ImageExplorer extends JFrame implements ActionListener{
 
+	/** The hash domain types. */
 	private HashMap<String, Integer> hashDomainTypes;
+	
+	/** The hash sampled values. */
 	private HashMap<String, Integer> hashSampledValues;
+	
+	/** The hash dom file. */
 	private HashMap<String,ImagePlus> hashDomFile;
+	
+	/** The compo info. */
 	private FileInfo compoInfo;
+	
+	/** The scroll. */
 	private JScrollPane scroll; 
 	
+	/**
+	 * Instantiates a new image explorer.
+	 */
 	public ImageExplorer(){
 		super("DomainType Namer");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);	
@@ -53,6 +69,12 @@ public class ImageExplorer extends JFrame implements ActionListener{
 		setLocationRelativeTo(null);
 	}
 	
+	/**
+	 * Instantiates a new image explorer.
+	 *
+	 * @param hashDomainTypes the hash domain types
+	 * @param hashSampledValues the hash sampled values
+	 */
 	public ImageExplorer(HashMap<String, Integer> hashDomainTypes, HashMap<String, Integer> hashSampledValues){
 		this();
 		this.hashDomainTypes = hashDomainTypes;
@@ -81,6 +103,11 @@ public class ImageExplorer extends JFrame implements ActionListener{
 		setVisible(true);	
 	}
 
+	/**
+	 * Gets the domain types.
+	 *
+	 * @return the domain types
+	 */
 	//sets the datatable to the domaintype and return it
 	public HashMap<String, Integer> getDomainTypes(){	
 		int dimension = 3;
@@ -92,6 +119,12 @@ public class ImageExplorer extends JFrame implements ActionListener{
 		return hashDomainTypes;
 	}
 	
+	/**
+	 * Gets the sampled values.
+	 *
+	 * @param table the table
+	 * @return the sampled values
+	 */
 	//sets the datatable to the sampledvalue and return it
 	public HashMap<String, Integer> getSampledValues(ImageTable table){
 		int pixel = 255;
@@ -108,20 +141,38 @@ public class ImageExplorer extends JFrame implements ActionListener{
 		return hashSampledValues;
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args){	
 		HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
 		HashMap<String, Integer> hashSampledValues = new HashMap<String, Integer>();
 		new ImageExplorer(hashDomainTypes, hashSampledValues);
 	}
 	
+	/**
+	 * Gets the dom file.
+	 *
+	 * @return the dom file
+	 */
 	public HashMap<String, ImagePlus> getDomFile(){
 		return hashDomFile;
 	}
 	
+	/**
+	 * Gets the file info.
+	 *
+	 * @return the file info
+	 */
 	public FileInfo getFileInfo(){
 		return compoInfo;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public  void actionPerformed(ActionEvent e) {		
 		String input = e.getActionCommand();

@@ -32,12 +32,27 @@ import ij.io.Opener;
 import ij.plugin.FolderOpener;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ImageDialog.
+ */
 public class ImageDialog implements ItemListener{
+	
+	/** The img. */
 	private ImagePlus img;
+	
+	/** The gd. */
 	private GenericDialog gd;
+	
+	/** The from file. */
 	private boolean fromFile;
 	
 	
+	/**
+	 * Show dialog.
+	 *
+	 * @return the image plus
+	 */
 	public ImagePlus showDialog(){
 		gd = new GenericDialog("Add Image");
 		gd.setResizable(true);
@@ -60,6 +75,11 @@ public class ImageDialog implements ItemListener{
 		return img;
 	}
 	
+	/**
+	 * From image.
+	 *
+	 * @return the image plus
+	 */
 	@SuppressWarnings("unchecked")
 	private ImagePlus fromImage(){
 		fromFile = false;
@@ -69,6 +89,9 @@ public class ImageDialog implements ItemListener{
 		return img;
 	}
 	
+	/**
+	 * Adds the image choice.
+	 */
 	private void addImageChoice(){
 		int numimage = WindowManager.getImageCount();
 		Vector<String> windows = new Vector<String>();
@@ -91,9 +114,17 @@ public class ImageDialog implements ItemListener{
 		gd.addChoice("Image", images, name);
 	}
 		
+	/** The open img. */
 	private FolderOpener openImg = new FolderOpener();
+	
+	/** The open. */
 	private Opener open = new Opener();
 	
+	/**
+	 * From file.
+	 *
+	 * @return the image plus
+	 */
 	public ImagePlus fromFile(){
 		File f = getFile();
 		if(f == null) return null;
@@ -114,6 +145,11 @@ public class ImageDialog implements ItemListener{
 			return null;
 	}
 
+	/**
+	 * Gets the file.
+	 *
+	 * @return the file
+	 */
 	private File getFile(){
 		fromFile = true;
 		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());
@@ -127,6 +163,11 @@ public class ImageDialog implements ItemListener{
 		return chooser.getSelectedFile();
 	}
 	
+	/**
+	 * Adds the image name.
+	 *
+	 * @param title the title
+	 */
 	@SuppressWarnings("unchecked")
 	private void addImageName(String title){
 		Vector<Choice> vc = gd.getChoices();
@@ -137,6 +178,12 @@ public class ImageDialog implements ItemListener{
 		gd.pack();
 	}
 
+	/**
+	 * Check image.
+	 *
+	 * @param img the img
+	 * @return true, if successful
+	 */
 	private boolean checkImage(ImagePlus img){
 		if (img == null)
 			return false;
@@ -148,6 +195,9 @@ public class ImageDialog implements ItemListener{
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
+	 */
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		Choice c = (Choice) e.getSource();

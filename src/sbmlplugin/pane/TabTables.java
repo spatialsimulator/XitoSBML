@@ -24,9 +24,11 @@ import org.sbml.libsbml.ListOfUnitDefinitions;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLReader;
+// TODO: Auto-generated Javadoc
+
 /**
- * Spatial SBML Plugin for ImageJ
- * 
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp> Date Created: Jan 12, 2016
  */
@@ -42,10 +44,18 @@ public class TabTables extends JFrame implements ActionListener {
 		}
 	}
 
+	/** The tabbedpane. */
 	private JTabbedPane tabbedpane = new JTabbedPane();
+	
+	/** The sbase list. */
 	private ArrayList<SBaseTable> sbaseList = new ArrayList<SBaseTable>();
+	
+	/** The is running. */
 	private boolean isRunning = true;	
 	
+	/**
+	 * Instantiates a new tab tables.
+	 */
 	public TabTables() {
 		super("Parameter and Species Table");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -55,6 +65,11 @@ public class TabTables extends JFrame implements ActionListener {
 		setLocationRelativeTo(null);
 	}
 
+	/**
+	 * Instantiates a new tab tables.
+	 *
+	 * @param model the model
+	 */
 	public TabTables(Model model) {
 		this();
 		ListOfParameters lop = model.getListOfParameters();
@@ -108,6 +123,9 @@ public class TabTables extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 	
+	/**
+	 * Adds the all S base.
+	 */
 	private void addAllSBase() {
 //		for (Component c : tabbedpane.getComponents()) {
 //			JViewport viewport = ((JScrollPane) c).getViewport();
@@ -115,6 +133,11 @@ public class TabTables extends JFrame implements ActionListener {
 //		}
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		SBMLReader reader = new SBMLReader();
 		//SBMLDocument d = reader.readSBML("spatial_example1.xml");
@@ -124,6 +147,11 @@ public class TabTables extends JFrame implements ActionListener {
 		new TabTables(d.getModel());
 	}
 
+	/**
+	 * Checks if is running.
+	 *
+	 * @return true, if is running
+	 */
 	public boolean isRunning(){
 		return isRunning;
 	}

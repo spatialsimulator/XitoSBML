@@ -8,22 +8,43 @@ import org.sbml.libsbml.BoundaryCondition;
 import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
 import org.sbml.libsbml.SpatialParameterPlugin;
+// TODO: Auto-generated Javadoc
+
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jan 21, 2016
  */
 public class BoundaryConditionDialog {
+	
+	/** The parameter. */
 	private Parameter parameter;
+	
+	/** The gd. */
 	private GenericDialog gd;
+	
+	/** The bool. */
 	private final String[] bool = {"true","false"};
+	
+	/** The model. */
 	private Model model;
 	
+	/**
+	 * Instantiates a new boundary condition dialog.
+	 *
+	 * @param model the model
+	 */
 	public BoundaryConditionDialog(Model model){
 		this.model = model;
 	}
 	
+	/**
+	 * Show dialog.
+	 *
+	 * @return the parameter
+	 */
 	public Parameter showDialog(){
 		gd = new GenericDialog("Add Boundary Condition");
 		gd.setResizable(true);
@@ -46,6 +67,12 @@ public class BoundaryConditionDialog {
 		return parameter;
 	}
 
+	/**
+	 * Show dialog.
+	 *
+	 * @param parameter the parameter
+	 * @return the parameter
+	 */
 	public Parameter showDialog(Parameter parameter){
 		this.parameter = parameter;
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
@@ -70,6 +97,9 @@ public class BoundaryConditionDialog {
 		return parameter;
 	}
 		
+	/**
+	 * Sets the parameter data.
+	 */
 	private void setParameterData(){
 		String str = gd.getNextString();
 		if (str.indexOf(' ')!=-1)
@@ -89,6 +119,11 @@ public class BoundaryConditionDialog {
 		System.out.println(bc.toSBML());
 	} 
 	
+	/**
+	 * Gets the all bound as string.
+	 *
+	 * @return the all bound as string
+	 */
 	private String[] getAllBoundAsString(){
 		String[] bound = SBMLProcessUtil.bounds;
 		String[] compartment = SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments());

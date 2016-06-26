@@ -9,19 +9,33 @@ import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Species;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jan 13, 2016
  */
 public class SpeciesTable extends SBaseTable{
 	
+	/** The header. */
 	private final String[] header = { "id","initial","quantity", "compartment", "substanceUnits","hasOnlySubstanceUnits","boundaryCondition","constant"};
+	
+	/** The table. */
 	private JTable table;
+	
+	/** The sd. */
 	private SpeciesDialog sd;
+	
+	/** The model. */
 	private Model model;
 	
+	/**
+	 * Instantiates a new species table.
+	 *
+	 * @param los the los
+	 */
 	SpeciesTable(ListOfSpecies los){
 		this.model = los.getModel();
 		list = los;
@@ -32,6 +46,11 @@ public class SpeciesTable extends SBaseTable{
 		pane = setTableToScroll("species",table);
 	}
 	
+	/**
+	 * Sets the species to list.
+	 *
+	 * @param los the new species to list
+	 */
 	private void setSpeciesToList(ListOfSpecies los){
 		long max = los.size();
 		for(int i = 0; i < max; i++){
@@ -40,6 +59,12 @@ public class SpeciesTable extends SBaseTable{
 		}
 	}
 	
+	/**
+	 * Gets the table model with species.
+	 *
+	 * @param los the los
+	 * @return the table model with species
+	 */
 	private MyTableModel getTableModelWithSpecies(ListOfSpecies los){
 		int max = memberList.size();
 		Object[][] data  = new Object[max][header.length];
@@ -87,6 +112,12 @@ public class SpeciesTable extends SBaseTable{
 		return tm;
 	}
 
+	/**
+	 * Species to vector.
+	 *
+	 * @param s the s
+	 * @return the vector
+	 */
 	private Vector<Object> speciesToVector(Species s){
 		Vector<Object> v = new Vector<Object>();
 		v.add(s.getId());

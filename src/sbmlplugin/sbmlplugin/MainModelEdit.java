@@ -18,8 +18,10 @@ package sbmlplugin.sbmlplugin;
 import sbmlplugin.geometry.GeometryDatas;
 import sbmlplugin.util.ModelSaver;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Aug 28, 2015

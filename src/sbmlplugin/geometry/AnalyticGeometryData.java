@@ -35,22 +35,49 @@ import org.sbml.libsbml.libsbmlConstants;
 
 import sbmlplugin.image.SpatialImage;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 26, 2015
  */
 public class AnalyticGeometryData extends ImageGeometryData {
+	
+	/** The ag. */
 	private AnalyticGeometry ag;
+	
+	/** The min coord. */
 	protected Point3f minCoord = new Point3f();
+	
+	/** The max coord. */
 	protected Point3f maxCoord = new Point3f();
+	
+	/** The disp coord. */
 	protected Point3f dispCoord = new Point3f();
+	
+	/** The width. */
 	private int width = 32; //TODO find better way to determine image size
+	
+	/** The height. */
 	private int height;
+	
+	/** The depth. */
 	private int depth;
+	
+	/** The delta. */
 	private Point3f delta = new Point3f();
 	
+	/**
+	 * Instantiates a new analytic geometry data.
+	 *
+	 * @param gd the gd
+	 * @param g the g
+	 * @param minCoord the min coord
+	 * @param maxCoord the max coord
+	 * @param dispCoord the disp coord
+	 */
 	AnalyticGeometryData(GeometryDefinition gd, Geometry g, Point3f minCoord, Point3f maxCoord, Point3f dispCoord) {
 		super(gd, g);
 		this.minCoord = minCoord;
@@ -92,6 +119,11 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		img.setTitle(title);
 	}
 	
+	/**
+	 * Creates the stack.
+	 *
+	 * @return the image stack
+	 */
 	private ImageStack createStack(){
 		ImageStack stack = new ImageStack(width, height);
 		byte[] slice;   
@@ -104,6 +136,11 @@ public class AnalyticGeometryData extends ImageGeometryData {
     	return stack;
     }
 	
+	/**
+	 * Sets the volume to array.
+	 *
+	 * @param orderedList the new volume to array
+	 */
 	private void setVolumeToArray(ArrayList<AnalyticVolume> orderedList){
 
 		for(int d = 0 ; d < depth ; d++){
@@ -120,6 +157,15 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		}
 	}
 	
+	/**
+	 * Resolve domain.
+	 *
+	 * @param ast the ast
+	 * @param x the x
+	 * @param y the y
+	 * @param z the z
+	 * @return the double
+	 */
 	private double resolveDomain(ASTNode ast, int x, int y, int z) {
 		
 		if (ast.isRelational()) { // relational
@@ -216,6 +262,13 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		return 0;
 	}
 	
+	/**
+	 * Order volume.
+	 *
+	 * @param orderedList the ordered list
+	 * @param loav the loav
+	 * @return the array list
+	 */
 	private ArrayList<AnalyticVolume> orderVolume(ArrayList<AnalyticVolume> orderedList, ListOfAnalyticVolumes loav){
 		int numDom = (int) loav.size();
 		
@@ -232,6 +285,11 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		return orderedList;
 	}
 	
+	/**
+	 * Rearrange AST.
+	 *
+	 * @param ast the ast
+	 */
 	private void rearrangeAST(ASTNode ast){
 		int type = ast.getType();
 		if(type == libsbml.AST_FUNCTION_PIECEWISE){
@@ -318,6 +376,11 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		}
 	}
 	
+	/**
+	 * Gets the size.
+	 *
+	 * @return the size
+	 */
 	private void getSize(){
 		height = (int) (width * maxCoord.getY() / maxCoord.getX());
 		depth = (int) (width * maxCoord.getZ() / maxCoord.getX());
@@ -328,6 +391,11 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		delta.setZ(maxCoord.getZ() / depth);	
 	}
 	
+	/**
+	 * Gets the array.
+	 *
+	 * @return the array
+	 */
 	private void getArray(){
 		int length = height * width * depth;
 		raw = new byte[length];

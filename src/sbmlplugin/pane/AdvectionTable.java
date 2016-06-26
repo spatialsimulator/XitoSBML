@@ -10,19 +10,33 @@ import org.sbml.libsbml.Model;
 import org.sbml.libsbml.Parameter;
 import org.sbml.libsbml.SpatialParameterPlugin;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jan 20, 2016
  */
 public class AdvectionTable extends SBaseTable {
 
+	/** The header. */
 	private final String[] header = { "id", "value", "constant", "species", "coordinate"};
+	
+	/** The table. */
 	private JTable table;
+	
+	/** The model. */
 	private Model model;
+	
+	/** The ad. */
 	private AdvectionDialog ad;
 	
+	/**
+	 * Instantiates a new advection table.
+	 *
+	 * @param lop the lop
+	 */
 	AdvectionTable(ListOfParameters lop){
 		this.model = lop.getModel();
 		list = lop;
@@ -33,6 +47,11 @@ public class AdvectionTable extends SBaseTable {
 		pane = setTableToScroll("Advection",table);
 	}
 	
+	/**
+	 * Sets the parameter to list.
+	 *
+	 * @param lop the new parameter to list
+	 */
 	private void setParameterToList(ListOfParameters lop){
 		long max = lop.size();
 		for(int i = 0; i < max; i++){
@@ -43,6 +62,12 @@ public class AdvectionTable extends SBaseTable {
 		}
 	}
 	
+	/**
+	 * Gets the table model with parameter.
+	 *
+	 * @param lop the lop
+	 * @return the table model with parameter
+	 */
 	private MyTableModel getTableModelWithParameter(ListOfParameters lop){
 		int max = memberList.size();
 		Object[][] data  = new Object[max][header.length];
@@ -81,6 +106,12 @@ public class AdvectionTable extends SBaseTable {
 		return tm;
 	}
 	
+	/**
+	 * Parameter to vector.
+	 *
+	 * @param p the p
+	 * @return the vector
+	 */
 	private Vector<Object> parameterToVector(Parameter p){
 		Vector<Object> v = new Vector<Object>();
 		v.add(p.getId());

@@ -36,18 +36,47 @@ import sbmlplugin.image.SpatialImage;
 import customnode.CustomMesh;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Viewer.
+ */
 public class Viewer {
+	
+	/** The univ. */
 	private Image3DUniverse univ;
+	
+	/** The colors. */
 	private Vector<Color3f> colors = new Vector<Color3f>();
+	
+	/** The width. */
 	private int width;
+	
+	/** The height. */
 	private	int height;
+	
+	/** The depth. */
 	private int depth;
+	
+	/** The hash doms. */
 	private HashMap<String, Integer> hashDoms;
+	
+	/** The hash img. */
 	private HashMap<String, ImagePlus> hashImg = new HashMap<String, ImagePlus>();
+	
+	/** The raw mat. */
 	private byte[] rawMat;
+	
+	/** The hash vertices. */
 	private HashMap<String, List<Point3f>> hashVertices = new HashMap<String, List<Point3f>>();
+	
+	/** The hash bound. */
 	private HashMap<String, Point3d> hashBound = new HashMap<String, Point3d>();
 	
+	/**
+	 * View.
+	 *
+	 * @param spImg the sp img
+	 */
 	public void view(SpatialImage spImg){
 		univ = new Image3DUniverse();
 		this.width = spImg.getWidth();
@@ -60,6 +89,9 @@ public class Viewer {
 		setImages();
 	}
 	
+	/**
+	 * Sets the images.
+	 */
 	private void setImages(){
 		int i = 0;
 		for(Entry<String, ImagePlus> e : hashImg.entrySet()){
@@ -70,6 +102,9 @@ public class Viewer {
 		univ.show();
 	}
 	
+	/**
+	 * Find points.
+	 */
 	public void findPoints() {
 		for (Entry<String, ImagePlus> e : hashImg.entrySet()) {
 			Content c = univ.getContent(e.getKey());
@@ -91,6 +126,11 @@ public class Viewer {
 		}
 	}
 	
+	/**
+	 * Sets the max bound.
+	 *
+	 * @param p the new max bound
+	 */
 	private void setMaxBound(Point3d p){
 		if(!hashBound.containsKey("max")) hashBound.put("max", p);
 		else{
@@ -101,6 +141,11 @@ public class Viewer {
 		}
 	}
 	
+	/**
+	 * Sets the min bound.
+	 *
+	 * @param p the new min bound
+	 */
 	private void setMinBound(Point3d p){
 		if(!hashBound.containsKey("min")) hashBound.put("min", p);
 		else{
@@ -111,6 +156,11 @@ public class Viewer {
 		}
 	}
 	
+	/**
+	 * Sets the colors.
+	 *
+	 * @param size the new colors
+	 */
 	private void setColors(int size){
 		for(int i = 0 ; i <= size; i++){
 			switch(i){
@@ -139,6 +189,9 @@ public class Viewer {
 		}
 	}
 	
+	/**
+	 * Separate img.
+	 */
 	private void separateImg(){
 		for(Entry<String, Integer> e : hashDoms.entrySet()){
 			if(e.getValue().equals(0))
@@ -149,6 +202,12 @@ public class Viewer {
 		}
 	}
 
+	/**
+	 * Creates the label image.
+	 *
+	 * @param pixVal the pix val
+	 * @return the image stack
+	 */
 	private ImageStack createLabelImage(int pixVal){
 		byte[] pixels = new byte[width*height*depth];
 		for (int d = 0; d < depth; d++) {
@@ -162,6 +221,12 @@ public class Viewer {
 		return setStack(pixels);
 	}
 	
+	/**
+	 * Sets the stack.
+	 *
+	 * @param pixels the pixels
+	 * @return the image stack
+	 */
 	private ImageStack setStack(byte[] pixels){
 		ImageStack imstack = new ImageStack(width, height);
 		for(int d = 0 ; d < depth ; d++){
@@ -172,10 +237,20 @@ public class Viewer {
 		return imstack;
 	}
 	
+	/**
+	 * Gets the hash vertices.
+	 *
+	 * @return the hash vertices
+	 */
 	public HashMap<String, List<Point3f>> gethashVertices(){
 		return hashVertices;
 	}
 
+	/**
+	 * Gets the hash bound.
+	 *
+	 * @return the hash bound
+	 */
 	public HashMap<String, Point3d> gethashBound(){
 		return hashBound;
 	}

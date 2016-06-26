@@ -3,19 +3,35 @@ package sbmlplugin.pane;
 import org.sbml.libsbml.ListOf;
 import org.sbml.libsbml.libsbmlConstants;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jan 20, 2016
  */
 public class SBMLProcessUtil {
+	
+	/** The Constant lcoord. */
 	public static final String[] lcoord = {/*"UNKNOWN",*/"cartesianX","cartesianY","cartesianZ"};
+	
+	/** The Constant bounds. */
 	public static final String[] bounds = {"Xmax","Xmin","Ymax","Ymin","Zmax","Zmin"};
+	
+	/** The Constant boundType. */
 	public static final String[] boundType = {/*"UNKNOWN",*/"Robin_valueCoefficient","Robin_inwardNormalGradientCoefficient","Robin_sum","Neumann","Dirichlet"};
+	
+	/** The Constant diffType. */
 	public static final String[] diffType = {/*"UNKNOWN", */"isotropic","anisotropic","tensor"};
 
 	
+	/**
+	 * List id to string array.
+	 *
+	 * @param lo the lo
+	 * @return the string[]
+	 */
 	public static String[] listIdToStringArray(ListOf lo){
 		String[] str = new String[(int)lo.size()];
 				
@@ -25,6 +41,12 @@ public class SBMLProcessUtil {
 		return str;
 	}
 
+	/**
+	 * Boundary index to string.
+	 *
+	 * @param index the index
+	 * @return the string
+	 */
 	public static String boundaryIndexToString(int index){
 		if(index == libsbmlConstants.SPATIAL_BOUNDARYKIND_ROBIN_VALUE_COEFFICIENT) return boundType[0];
 		if(index == libsbmlConstants.SPATIAL_BOUNDARYKIND_ROBIN_INWARD_NORMAL_GRADIENT_COEFFICIENT) return boundType[1];
@@ -36,6 +58,12 @@ public class SBMLProcessUtil {
 	}
 	
 	
+	/**
+	 * Coordinate index to string.
+	 *
+	 * @param index the index
+	 * @return the string
+	 */
 	public static String coordinateIndexToString(int index){
 		if(index == libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_X) return SBMLProcessUtil.lcoord[0];
 		if(index == libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Y) return SBMLProcessUtil.lcoord[1];
@@ -44,6 +72,12 @@ public class SBMLProcessUtil {
 	}
 	
 	
+	/**
+	 * Diff type index to string.
+	 *
+	 * @param index the index
+	 * @return the string
+	 */
 	public static String diffTypeIndexToString(int index){
 		if(index == libsbmlConstants.SPATIAL_DIFFUSIONKIND_ISOTROPIC) return diffType[0];
 		if(index == libsbmlConstants.SPATIAL_DIFFUSIONKIND_ANISOTROPIC) return diffType[1];
@@ -52,6 +86,12 @@ public class SBMLProcessUtil {
 		return null;
 	}
 	
+	/**
+	 * Unit index to string.
+	 *
+	 * @param index the index
+	 * @return the string
+	 */
 	public static String unitIndexToString(int index){
 		if(index == libsbmlConstants.UNIT_KIND_AMPERE) return "ampere";
 		if(index == libsbmlConstants.UNIT_KIND_AVOGADRO) return "avogadro";
@@ -94,6 +134,9 @@ public class SBMLProcessUtil {
 	}
 	
 	
+	/**
+	 * The Enum Unit.
+	 */
 	enum Unit {
 		
 	}
