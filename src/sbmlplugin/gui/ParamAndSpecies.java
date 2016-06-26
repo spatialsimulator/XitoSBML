@@ -33,7 +33,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
 import org.sbml.libsbml.ListOfParameters;
@@ -42,6 +41,10 @@ import org.sbml.libsbml.Model;
 import org.sbml.libsbml.SBMLDocument;
 import org.sbml.libsbml.SBMLReader;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ParamAndSpecies.
+ */
 @SuppressWarnings("serial")
 public class ParamAndSpecies extends JFrame implements ActionListener, FocusListener{
 
@@ -54,13 +57,27 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		}
 	}
 	
+	/** The model. */
 	private Model model;
+	
+	/** The lop. */
 	private ListOfParameters lop; 
+	
+	/** The los. */
 	private ListOfSpecies los;
+	
+	/** The init row. */
 	private final int initRow = 1;
+	
+	/** The table model. */
 	private DefaultTableModel tableModel;
+	
+	/** The table. */
 	private JTable table;
 	
+	/**
+	 * Instantiates a new param and species.
+	 */
 	public ParamAndSpecies(){
 		super("Parameter and Species Table");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);	
@@ -70,8 +87,14 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		setLocationRelativeTo(null);
 	}
 	
+	/** The header. */
 	private final String[] header = {"Parameter","Species"};
 	
+	/**
+	 * Instantiates a new param and species.
+	 *
+	 * @param model the model
+	 */
 	public ParamAndSpecies(Model model){
 		this();
 		this.model = model;
@@ -82,7 +105,6 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		tableModel = new DefaultTableModel(data, header){
 			private static final long serialVersionUID = 1L;
 		
-			@Override
 			public boolean isCellEditable(int row, int column){	
 					return false;
 			}
@@ -109,8 +131,8 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		
 		//scrollbar
 		JScrollPane scroll = new JScrollPane(table);
-		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 	
 		//button
 		JButton ok = new JButton("OK"), plus = new JButton("+"), minus = new JButton("-");
@@ -127,9 +149,18 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		setVisible(true);
 	}
 	
+	/** The parameter. */
 	private final int PARAMETER = 0;
+	
+	/** The species. */
 	private final int SPECIES = 1;
 	
+	/**
+	 * Removes the cell.
+	 *
+	 * @param row the row
+	 * @param column the column
+	 */
 	private void removeCell(int row, int column){
 		String name = (String) table.getValueAt(row, column);
 		if(column == PARAMETER){
@@ -144,6 +175,9 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		updateTable();
 	}
 	
+	/**
+	 * Update table.
+	 */
 	private void updateTable(){
 		long pSize = lop.size();
 		long sSize = los.size();
@@ -162,18 +196,33 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 		validate();
 	}
 	
+	/** The is running. */
 	private boolean isRunning = true;
+	
+	/**
+	 * Checks if is running.
+	 *
+	 * @return true, if is running
+	 */
 	public boolean isRunning(){
 		return isRunning;
 	}
 
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 		SBMLReader reader = new SBMLReader();
 		SBMLDocument d = reader.readSBML("mem_diff.xml");
 		new ParamAndSpecies( d.getModel());
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String input = e.getActionCommand();
@@ -201,11 +250,17 @@ public class ParamAndSpecies extends JFrame implements ActionListener, FocusList
 			
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
+	 */
 	@Override
 	public void focusGained(FocusEvent f) {
 		updateTable();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
+	 */
 	@Override
 	public void focusLost(FocusEvent arg0) {
 		

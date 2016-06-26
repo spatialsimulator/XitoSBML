@@ -25,26 +25,58 @@ import java.util.List;
 import java.util.Map.Entry;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Filler.
+ */
 public class Filler {
+	
+	/** The image. */
 	private ImagePlus image;
+	
+	/** The width. */
 	private int width;
+	
+	/** The height. */
 	private int height;
+	
+	/** The depth. */
 	private int depth;
+	
+	/** The lwidth. */
 	private int lwidth;
+	
+	/** The lheight. */
 	private int lheight;
+	
+	/** The ldepth. */
 	private int ldepth;
+	
+	/** The mask. */
 	private int[] mask;
+	
+	/** The hash pix. */
 	private HashMap<Integer, Byte> hashPix = new HashMap<Integer, Byte>();		// label number, pixel value
+	
+	/** The pixels. */
 	private byte[] pixels;
+	
+	/** The invert. */
 	private int[] invert;
 	
+	/**
+	 * Fill.
+	 *
+	 * @param image the image
+	 * @return the image plus
+	 */
 	public ImagePlus fill(ImagePlus image){
 		this.width = image.getWidth();
 		this.height = image.getHeight();
 		this.depth = image.getStackSize();
 		this.image = image;
 
-		copyMat();
+		pixels = ImgProcessUtil.copyMat(image);
 		invertMat();
 		label();
 		if (checkHole()) {
@@ -60,6 +92,12 @@ public class Filler {
 		return image;
 	}
 
+	/**
+	 * Fill.
+	 *
+	 * @param spImg the sp img
+	 * @return the image plus
+	 */
 	public ImagePlus fill(SpatialImage spImg){
 		this.width = spImg.getWidth();
 		this.height = spImg.getHeight();
@@ -78,9 +116,15 @@ public class Filler {
 			image.setStack(stack);
 			image.updateImage();
 		}
+		
 		return image;
 	}
 	
+	/**
+	 * Creates the stack.
+	 *
+	 * @return the image stack
+	 */
 	private ImageStack createStack(){
 		ImageStack altimage = new ImageStack(width, height);
 		for(int d = 0 ; d < depth ; d++){
@@ -91,17 +135,10 @@ public class Filler {
 		return altimage;
 	}
 	
-	 private void copyMat(){
-	    	byte[] slice;
-	    	pixels = new byte[width * height * depth];
-	    	System.out.println(pixels.length);
-	    	for(int i = 1 ; i <= depth ; i++){
-	        	slice = (byte[]) image.getStack().getPixels(i);
-	        	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
-	        }
-	    }
-	
-	 private void invertMat(){
+	 /**
+ 	 * Invert mat.
+ 	 */
+ 	private void invertMat(){
 		lwidth = width + 2;
 		lheight = height + 2;
 		if(depth < 3) ldepth = depth;
@@ -146,8 +183,12 @@ public class Filler {
 		}
 	 }
 	
+	/** The label count. */
 	private int labelCount;
 	
+	/**
+	 * Label.
+	 */
 	public void label(){
 		hashPix.put(1, (byte)0);
 		labelCount = 2;
@@ -178,6 +219,11 @@ public class Filler {
 		}
 	}
 	
+	/**
+	 * Check hole.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean checkHole(){
 		if(Collections.frequency(hashPix.values(), (byte) 0) > 1)
 			return true;
@@ -185,6 +231,9 @@ public class Filler {
 			return false;
 	}
 	
+	/**
+	 * Fill hole.
+	 */
 	public void fillHole(){
 		for(Entry<Integer, Byte> e : hashPix.entrySet()){
 			if(!e.getKey().equals(1) && e.getValue().equals((byte)0)){
@@ -193,6 +242,11 @@ public class Filler {
 		}
 	}
 	
+	/**
+	 * Fill.
+	 *
+	 * @param index the index
+	 */
 	public void fill(int index){
 		if (ldepth > depth) {
 			for (int d = 1; d < ldepth; d++) {
@@ -217,6 +271,15 @@ public class Filler {
 		}
 	}
 	
+	/**
+	 * Check adjacents label.
+	 *
+	 * @param w the w
+	 * @param h the h
+	 * @param d the d
+	 * @param index the index
+	 * @return the byte
+	 */
 	public byte checkAdjacentsLabel(int w, int h, int d, int index){
 		List<Byte> adjVal = new ArrayList<Byte>();
 			//check right
@@ -268,6 +331,15 @@ public class Filler {
 		return (byte) max;	
 	}
 	
+	/**
+	 * Sets the label.
+	 *
+	 * @param w the w
+	 * @param h the h
+	 * @param d the d
+	 * @param pixVal the pix val
+	 * @return the int
+	 */
 	private int setLabel(int  w , int h, int d, byte pixVal){
 		List<Integer> adjVal = new ArrayList<Integer>();
 		//check left			
@@ -305,6 +377,15 @@ public class Filler {
 	}
 
 	
+	/**
+	 * Setback label.
+	 *
+	 * @param w the w
+	 * @param h the h
+	 * @param d the d
+	 * @param pixVal the pix val
+	 * @return the int
+	 */
 	private int setbackLabel(int  w , int h, int d, byte pixVal){
 		List<Integer> adjVal = new ArrayList<Integer>();
 
@@ -342,6 +423,13 @@ public class Filler {
 			return min;
 		}
 	
+	/**
+	 * Rewrite label.
+	 *
+	 * @param dEnd the d end
+	 * @param after the after
+	 * @param before the before
+	 */
 	private void rewriteLabel(int dEnd, int after, int before){
 		if (ldepth > depth) {
 			for (int d = 1; d <= dEnd; d++) {

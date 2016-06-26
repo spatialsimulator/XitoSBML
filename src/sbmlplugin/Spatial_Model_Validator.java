@@ -15,14 +15,16 @@
  *******************************************************************************/
 package sbmlplugin;
 
-import ij.IJ;
 import sbmlplugin.sbmlplugin.MainModelValidator;
+import ij.IJ;
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
- * 
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp> Date Created: Oct 1, 2015
+ * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * Date Created: Oct 1, 2015
  */
 public class Spatial_Model_Validator extends Spatial_SBML {
 	static {
@@ -67,16 +69,13 @@ public class Spatial_Model_Validator extends Spatial_SBML {
 			System.exit(1);
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	/* (non-Javadoc)
 	 * @see sbmlplugin.Spatial_SBML#run(java.lang.String)
 	 */
 	@Override
 	public void run(String arg) {
-		new MainModelValidator().run(arg);
-		;
+		new MainModelValidator().run(arg);;
 	}
 
 }

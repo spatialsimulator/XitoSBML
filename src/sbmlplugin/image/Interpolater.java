@@ -14,33 +14,66 @@
  * limitations under the License.
  *******************************************************************************/
 package sbmlplugin.image;
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileInfo;
 import ij.process.ByteProcessor;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
 
-
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Interpolater.
+ */
 public class Interpolater {
+	
+	/** The voxx. */
 	private double voxx;			
+	
+	/** The voxy. */
 	private double voxy;
+	
+	/** The voxz. */
 	private double voxz;
+	
+	/** The zaxis. */
 	private double zaxis;
+	
+	/** The width. */
 	private int width;
+	
+	/** The height. */
 	private int height;
-	private int depth;
+	
+	/** The altz. */
 	private int altz;
+	
+	/** The image. */
 	private ImagePlus image;		//input image
+	
+	/** The altimage. */
 	private ImageStack altimage;	//output pixel image
+	
+	/** The pixels. */
 	private byte[] pixels;
+	
+	/** The info. */
 	private FileInfo info;
 	
+	/**
+	 * Instantiates a new interpolater.
+	 */
 	public Interpolater(){
 		
 	}
 	
+	/**
+	 * Instantiates a new interpolater.
+	 *
+	 * @param spImg the sp img
+	 */
 	public Interpolater(SpatialImage spImg){
 			this.image = spImg.getImage();
 			getInfo(image);
@@ -56,10 +89,16 @@ public class Interpolater {
 			}
 	}
 	
+	/**
+	 * Gets the info.
+	 *
+	 * @param imgPlus the img plus
+	 * @return the info
+	 */
 	private void getInfo(ImagePlus imgPlus){
 		width = imgPlus.getWidth();
 		height = imgPlus.getHeight();
-		depth = imgPlus.getImageStackSize();
+		imgPlus.getImageStackSize();
 		info = image.getOriginalFileInfo();
 		
 		voxx = info.pixelWidth;
@@ -69,11 +108,17 @@ public class Interpolater {
 		System.out.println("voxel size " + voxx + " " + voxy + " " + voxz);
 	}
 	
+	/**
+	 * Interpolate.
+	 *
+	 * @param imagePlus the image plus
+	 * @return the image plus
+	 */
 	public ImagePlus interpolate(ImagePlus imagePlus){
 		this.image = imagePlus;
 		getInfo(image);
 		ImagePlus nImg = new ImagePlus();
-		copyMat();
+		pixels = ImgProcessUtil.copyMat(imagePlus);
 		
 		if (needInterpolate()) {
 			nearestNeighbor();
@@ -89,6 +134,12 @@ public class Interpolater {
 		return nImg;
 	}
 	
+	/**
+	 * Interpolate.
+	 *
+	 * @param spImg the sp img
+	 * @return the spatial image
+	 */
 	public SpatialImage interpolate(SpatialImage spImg){
 		this.image = spImg.getImage();
 		getInfo(image);
@@ -108,6 +159,11 @@ public class Interpolater {
 		return spImg;
 	}
 
+	/**
+	 * Interpolate.
+	 *
+	 * @param hashdomFile the hashdom file
+	 */
 	public void interpolate(HashMap<String, ImagePlus> hashdomFile) {
 		for(Entry<String, ImagePlus> e : hashdomFile.entrySet()){
 			ImagePlus i = interpolate(e.getValue());
@@ -115,15 +171,11 @@ public class Interpolater {
 		}
 	}
 	
-    private void copyMat(){
-    	byte[] slice;   
-    	pixels = new byte[width * height * depth];
-    	for(int i = 1 ; i <= depth ; i++){
-        	slice = (byte[])image.getStack().getPixels(i); 
-        	System.arraycopy(slice, 0, pixels, (i-1) * height * width, slice.length);
-        }
-    }
-	
+	/**
+	 * Need interpolate.
+	 *
+	 * @return true, if successful
+	 */
 	private boolean needInterpolate(){
 		if(voxz > voxx || voxz > voxy)
 			return true;
@@ -131,6 +183,9 @@ public class Interpolater {
 		return false;
 	}
 
+	/**
+	 * Nearest neighbor.
+	 */
 	private void nearestNeighbor(){
 		altz = (int) (zaxis / voxx);
 		System.out.println("interpolated stack size " + altz);
@@ -159,6 +214,11 @@ public class Interpolater {
 		}
 	}
 	
+	/**
+	 * Gets the interpolated image.
+	 *
+	 * @return the interpolated image
+	 */
 	public ImagePlus getInterpolatedImage(){
 		return image;
 	}
