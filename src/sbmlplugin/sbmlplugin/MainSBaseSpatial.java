@@ -69,7 +69,7 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		return reader.readSBMLFromFile(f.getAbsolutePath());
 	}
 
-	public void checkSBMLDocument(SBMLDocument document){
+	public void checkSBMLDocument(SBMLDocument document) throws IllegalArgumentException{
 		if(document == null || document.getModel() == null) 
 			throw new IllegalArgumentException("Non-supported format file");
 		model = document.getModel();
@@ -77,15 +77,18 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		checkExtension();
 	}
 	
-	protected void checkLevelAndVersion(){
-		if(model.getLevel() != PluginConstants.SBMLLEVEL || model.getVersion() != PluginConstants.SBMLVERSION)
+	protected void checkLevelAndVersion() throws IllegalArgumentException{
+		if(model.getLevel() != PluginConstants.SBMLLEVEL || model.getVersion() != PluginConstants.SBMLVERSION){
 			IJ.error("Incompatible level and version");
+			throw new IllegalArgumentException("Incompatible level and version");
+		}
 	}
 	
-	protected void checkExtension(){
-		if(!document.getPackageRequired("spatial"))
+	protected void checkExtension() throws IllegalArgumentException{
+		if(!document.getPackageRequired("spatial")){
 			IJ.error("Could not find spatial extension");
-
+			throw new IllegalArgumentException("Could not find spatial extension");
+		}
 		if(!document.getPackageRequired("req")) 
 			IJ.error("Could not find req extension");
 	}

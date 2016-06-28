@@ -24,7 +24,11 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.sbml.libsbml.Model;
+import org.sbml.libsbml.SBMLConverter;
 import org.sbml.libsbml.SBMLDocument;
+import org.sbml.libsbml.SBMLDocumentPlugin;
+import org.sbml.libsbml.SBMLReader;
+import org.sbml.libsbml.SBMLWriter;
 import org.sbml.libsbml.libsbml;
 
 /**
@@ -82,7 +86,6 @@ public class ModelSaver {
 		annot = annot.concat(" in " + date.getTime());
 		
 		document.setAnnotation(annot);
-		
 		model.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
 				+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
 	}

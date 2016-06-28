@@ -4,10 +4,7 @@
     SBMLPlugin build file
   </description>
 	<property name="src" location="src" />
-	<property name="bin" location="bin" />
-  <property name="build" location="build" />
-  <property name="jar" location="Spatial_SBML.jar" />
-  <property name="buildjar" location="${build}/${jar}" />
+	<property name="build" location="bin" />
 	<property name="FijiDir" location="/Applications/Fiji.app" />
 	<property name="pluginsDir" location="${basedir}/plugins" />
 	<property name="libDir" location="${FijiDir}/lib" />
@@ -43,16 +40,17 @@
 	</target>
 
 	<target name="compress" depends="" description="generate the distribution">
-    <jar jarfile="Spatial_SBML.jar" destfile="${buildjar}">
+		<jar jarfile="Spatial_SBML.jar">
 			<fileset dir="${basedir}" includes="plugins.config" />
-			<fileset dir="${bin}" includes="**/**.class" />
+			<fileset dir="${build}" includes="**/**.class" />
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 			</manifest>
-		</jar>
-		<copy file="Spatial_SBML.jar" toDir="${destDir}" overwrite="true" />
+    </jar>
+    <copy file="Spatial_SBML.jar" toDir="${destDir}" overwrite="true" />
+    <copy file="Spatial_SBML.jar" toDir="${pluginsDir}" overwrite="true" />
 		<copy file="Spatial_SBML.jar" toDir="${basedir}" overwrite="true" />
-	</target>
+</target>
 
 	<target name="mv" depends="mvMacLib, mvWindowsLib, mvLinuxLib" description="move library">
 		<echo>Moving jgraph library</echo>

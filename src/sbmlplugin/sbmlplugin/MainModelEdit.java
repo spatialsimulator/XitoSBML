@@ -33,12 +33,16 @@ public class MainModelEdit extends MainSBaseSpatial {
 	public void run(String arg) {
 		try {
 			document = getDocument();
+			checkSBMLDocument(document);
 		} catch (NullPointerException e){
+			e.getStackTrace();
+			return;
+		} catch (IllegalArgumentException e){
 			e.getStackTrace();
 			return;
 		}
 		
-		checkSBMLDocument(document);
+
 		
 		addParaAndSpecies();
 		ModelSaver saver = new ModelSaver(document);
