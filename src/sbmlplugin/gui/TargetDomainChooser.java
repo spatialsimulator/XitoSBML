@@ -38,8 +38,10 @@ import org.sbml.libsbml.SBMLReader;
 import org.sbml.libsbml.SpatialModelPlugin;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Aug 30, 2015
@@ -54,10 +56,19 @@ public class TargetDomainChooser extends JFrame implements ActionListener{
 			System.exit(1);
 		}
 	}
+	
+	/** The target domain. */
 	private String targetDomain = null;
+	
+	/** The compartment list. */
 	private List<String> compartmentList = new ArrayList<String>();
+	
+	/** The exclude dom. */
 	private final String[] excludeDom = {"Extracellular","Cytosol"};
 	
+	/**
+	 * Instantiates a new target domain chooser.
+	 */
 	TargetDomainChooser() {
 		super("Target Domain Chooser");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);	
@@ -67,12 +78,22 @@ public class TargetDomainChooser extends JFrame implements ActionListener{
 		setLocationRelativeTo(null);
 	}
 	
+	/**
+	 * Instantiates a new target domain chooser.
+	 *
+	 * @param model the model
+	 */
 	public TargetDomainChooser(Model model){
 		this();
 		createCompartmentList(model);
 		initComponent();
 	}
 	
+	/**
+	 * Creates the compartment list.
+	 *
+	 * @param model the model
+	 */
 	private void createCompartmentList(Model model){
 		SpatialModelPlugin spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
 		Geometry geometry = spatialplugin.getGeometry();
@@ -89,8 +110,15 @@ public class TargetDomainChooser extends JFrame implements ActionListener{
 		}
 	}
 	
+	/** The compartment box. */
 	private JComboBox compartmentBox;
+	
+	/** The ok button. */
 	private JButton okButton;
+	
+	/**
+	 * Inits the component.
+	 */
 	private void initComponent(){
 		JLabel label = new JLabel(" Select one domain :");
 		JPanel panel = new JPanel();
@@ -113,10 +141,20 @@ public class TargetDomainChooser extends JFrame implements ActionListener{
 		setVisible(true);
 	}
 
+	/**
+	 * Gets the target domain.
+	 *
+	 * @return the target domain
+	 */
 	public String getTargetDomain() {
 		return targetDomain;
 	}
 
+	/**
+	 * Sets the target domain.
+	 *
+	 * @param targetDomain the new target domain
+	 */
 	private void setTargetDomain(String targetDomain) {
 		this.targetDomain = targetDomain;
 	}
@@ -134,6 +172,11 @@ public class TargetDomainChooser extends JFrame implements ActionListener{
 		}
 	}
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args){
 		SBMLReader reader = new SBMLReader();
 		SBMLDocument d = reader.readSBML("mem_diff.xml");

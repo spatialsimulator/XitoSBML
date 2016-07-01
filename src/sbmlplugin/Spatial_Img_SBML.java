@@ -18,10 +18,6 @@ package sbmlplugin;
 import ij.IJ;
 import sbmlplugin.sbmlplugin.MainImgSpatial;
 
-/**
- * @author Akira Funahashi
- *
- */
 public class Spatial_Img_SBML extends Spatial_SBML {
 
 	static {
@@ -66,11 +62,12 @@ public class Spatial_Img_SBML extends Spatial_SBML {
 			System.exit(1);
 		}
 	}
-
-	@Override
-	public void run(String args) {
-		if (checkJgraph() && check3Dviewer())
-			new MainImgSpatial().run(args);
+	
+	/* (non-Javadoc)
+	 * @see sbmlplugin.Spatial_SBML#run(java.lang.String)
+	 */
+	public void run(String args) {   
+		if(checkJgraph() && check3Dviewer()) 
+			new MainImgSpatial().run(args);	
 	}
-
 }
