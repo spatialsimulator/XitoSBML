@@ -2,8 +2,8 @@ package sbmlplugin.pane;
 
 import ij.gui.GenericDialog;
 
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.Parameter;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Parameter;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -99,7 +99,7 @@ public class ParameterDialog {
 				str = str.replace(' ', '_');
 		parameter.setId(str);
 		parameter.setValue(gd.getNextNumber());
-		parameter.setUnits(gd.getNextChoice());
+		parameter.setUnits(SBMLProcessUtil.StringToUnit(gd.getNextChoice()));
 		parameter.setConstant(Boolean.getBoolean(gd.getNextRadioButton()));
 		
 	}

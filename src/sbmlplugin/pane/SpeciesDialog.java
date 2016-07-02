@@ -2,8 +2,9 @@ package sbmlplugin.pane;
 
 import ij.gui.GenericDialog;
 
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.Species;
+import org.sbml.jsbml.IdentifierException;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Species;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -47,8 +48,9 @@ public class SpeciesDialog {
 	 * Show dialog.
 	 *
 	 * @return the species
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
-	public Species showDialog(){
+	public Species showDialog()throws IllegalArgumentException, IdentifierException{
 		gd = new GenericDialog("Add Species");
 		gd.setResizable(true);
 		gd.pack();
@@ -76,8 +78,9 @@ public class SpeciesDialog {
 	 *
 	 * @param species the species
 	 * @return the species
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
-	public Species showDialog(Species species){
+	public Species showDialog(Species species)throws IllegalArgumentException, IdentifierException{
 		this.species = species;
 		gd = new GenericDialog("Edit Species");
 		gd.setResizable(true);
@@ -108,8 +111,10 @@ public class SpeciesDialog {
 	
 	/**
 	 * Sets the species data.
+	 *
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
-	private void setSpeciesData(){
+	private void setSpeciesData() throws IllegalArgumentException, IdentifierException{
 		String str = gd.getNextString();
 		if (str.indexOf(' ')!=-1)
 				str = str.replace(' ', '_');
@@ -121,7 +126,7 @@ public class SpeciesDialog {
 			species.setInitialConcentration(gd.getNextNumber());
 	
 		species.setCompartment(gd.getNextChoice());
-		species.setSubstanceUnits(gd.getNextChoice());
+		species.setSubstanceUnits(SBMLProcessUtil.StringToUnit(gd.getNextChoice()));
 		if(species.isSetInitialAmount())
 			species.setHasOnlySubstanceUnits(true);
 		else

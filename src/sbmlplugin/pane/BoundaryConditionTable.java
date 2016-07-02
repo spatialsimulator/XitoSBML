@@ -4,11 +4,12 @@ import java.util.Vector;
 
 import javax.swing.JTable;
 
-import org.sbml.libsbml.BoundaryCondition;
-import org.sbml.libsbml.ListOfParameters;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.Parameter;
-import org.sbml.libsbml.SpatialParameterPlugin;
+import org.sbml.jsbml.IdentifierException;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.ext.spatial.BoundaryCondition;
+import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -37,7 +38,7 @@ public class BoundaryConditionTable extends SBaseTable {
 	 *
 	 * @param lop the lop
 	 */
-	BoundaryConditionTable(ListOfParameters lop){
+	BoundaryConditionTable(ListOf<Parameter> lop){
 		this.model = lop.getModel();
 		list = lop;
 		setParameterToList(lop);
@@ -52,13 +53,13 @@ public class BoundaryConditionTable extends SBaseTable {
 	 *
 	 * @param lop the new parameter to list
 	 */
-	private void setParameterToList(ListOfParameters lop){
+	private void setParameterToList(ListOf<Parameter> lop){
 		long max = lop.size();
 		for(int i = 0; i < max; i++){
 			Parameter p = lop.get(i);
 			SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-			if(!sp.isSetBoundaryCondition()) continue;
-			memberList.add(p);
+			if(!(sp.getParamType() instanceof BoundaryCondition)) continue;
+			memberList.add(p.clone());
 		}
 	}
 	
@@ -73,8 +74,8 @@ public class BoundaryConditionTable extends SBaseTable {
 		for(int i = 0; i < max; i++){
 			Parameter p = (Parameter) memberList.get(i);
 			SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-			if(!sp.isSetBoundaryCondition()) continue;
-			BoundaryCondition bc = sp.getBoundaryCondition();
+			if(!(sp.getParamType() instanceof BoundaryCondition)) continue;
+			BoundaryCondition bc = (BoundaryCondition) sp.getParamType();
 			data[i][0] = p.getId();
 			data[i][1] = p.isSetValue() ? p.getValue(): null;			
 			data[i][2] = p.getConstant();
@@ -120,7 +121,7 @@ public class BoundaryConditionTable extends SBaseTable {
 		v.add(p.getValue());
 		v.add(p.getConstant());
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-		BoundaryCondition bc = sp.getBoundaryCondition();
+		BoundaryCondition bc = (BoundaryCondition) sp.getParamType();
 		v.add(bc.getVariable());
 		v.add(SBMLProcessUtil.boundaryIndexToString(bc.getType()));
 		v.add(bc.isSetCoordinateBoundary() ? bc.getCoordinateBoundary() : bc.getBoundaryDomainType());
@@ -131,7 +132,7 @@ public class BoundaryConditionTable extends SBaseTable {
 	 * @see sbmlplugin.pane.SBaseTable#abcd()
 	 */
 	@Override
-	void add() {
+	void add() throws IllegalArgumentException, IdentifierException{
 		if(bcd == null)
 			bcd = new BoundaryConditionDialog(model);
 		
@@ -139,21 +140,16 @@ public class BoundaryConditionTable extends SBaseTable {
 		
 		if(p == null) return;
 		
-		if(containsDuplicateId(p)){
-			errDupID(table);
-			return;
-		}
-			
 		memberList.add(p);
 		((MyTableModel)table.getModel()).addRow(parameterToVector(p));
-	
+			
 	}
 
 	/* (non-Javadoc)
 	 * @see sbmlplugin.pane.SBaseTable#edit(int)
 	 */
 	@Override
-	void edit(int index) {
+	void edit(int index) throws IllegalArgumentException, IdentifierException{
 		if(index == -1 ) return ;
 		if(bcd == null)
 			bcd = new BoundaryConditionDialog(model);
@@ -162,13 +158,7 @@ public class BoundaryConditionTable extends SBaseTable {
 		
 		if(p == null) return;
 		
-		if(containsDuplicateId(p)){
-			errDupID(table);
-			return;
-		}
-			
 		memberList.set(index, p);
 		((MyTableModel)table.getModel()).updateRow(index,parameterToVector(p));
-		
 	}
 }

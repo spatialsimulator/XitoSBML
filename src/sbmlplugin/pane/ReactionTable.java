@@ -4,11 +4,12 @@ import java.util.Vector;
 
 import javax.swing.JTable;
 
-import org.sbml.libsbml.ListOfReactions;
-import org.sbml.libsbml.ListOfSpeciesReferences;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.Reaction;
-import org.sbml.libsbml.SpatialReactionPlugin;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Reaction;
+import org.sbml.jsbml.SimpleSpeciesReference;
+import org.sbml.jsbml.ext.spatial.SpatialReactionPlugin;
+import org.sbml.jsbml.text.parser.ParseException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -37,7 +38,7 @@ public class ReactionTable extends SBaseTable {
 	 *
 	 * @param lor the lor
 	 */
-	ReactionTable(ListOfReactions lor){
+	ReactionTable(ListOf<Reaction> lor){
 		this.model = lor.getModel();
 		setReactionToList(lor);
 		MyTableModel tm = getTableModelWithReaction(lor);
@@ -51,11 +52,11 @@ public class ReactionTable extends SBaseTable {
 	 *
 	 * @param lor the new reaction to list
 	 */
-	private void setReactionToList(ListOfReactions lor){
+	private void setReactionToList(ListOf<Reaction> lor){
 		long max = lor.size();
 		for(int i = 0; i < max; i++){
-			Reaction p = lor.get(i);
-			memberList.add(p);
+			Reaction r = lor.get(i);
+			memberList.add(r.clone());
 		}
 	}
 	
@@ -65,7 +66,7 @@ public class ReactionTable extends SBaseTable {
 	 * @param lor the lor
 	 * @return the table model with reaction
 	 */
-	private MyTableModel getTableModelWithReaction(ListOfReactions lor){
+	private MyTableModel getTableModelWithReaction(ListOf<Reaction> lor){
 		int max = memberList.size();
 		Object[][] data  = new Object[max][header.length];
 		for(int i = 0; i < max; i++){
@@ -75,7 +76,7 @@ public class ReactionTable extends SBaseTable {
 			data[i][1] = r.getFast();
 			data[i][2] = r.getReversible();
 			data[i][3] = srp.getIsLocal();
-			data[i][4] = r.isSetKineticLaw() ? r.getKineticLaw().getFormula() : null;
+			data[i][4] = r.isSetKineticLaw() ? r.getKineticLaw().getMathMLString() : "";
 			data[i][5] = listMemberToString(r.getListOfReactants());
 			data[i][6] = listMemberToString(r.getListOfProducts());
 			data[i][7] = listMemberToString(r.getListOfModifiers());
@@ -112,14 +113,16 @@ public class ReactionTable extends SBaseTable {
 	 * @param lo the lo
 	 * @return the string
 	 */
-	private String listMemberToString(ListOfSpeciesReferences lo){
+	private String listMemberToString(ListOf<?> lo){
 		StringBuilder sb = new StringBuilder();
 		
 		for(int i = 0 ; i < lo.size(); i++)
-			sb.append(lo.get(i).getSpecies() + " ");
+			sb.append(((SimpleSpeciesReference)lo.get(i)).getSpecies() + " ");
 
 		return sb.toString();
 	}
+	
+	
 	
 	/**
 	 * Reaction to vector.
@@ -134,7 +137,7 @@ public class ReactionTable extends SBaseTable {
 		v.add(r.getFast());
 		v.add(r.getReversible());
 		v.add(srp.getIsLocal());
-		v.add(r.getKineticLaw().getFormula());
+		v.add(r.getKineticLaw().getMathMLString());
 		v.add(listMemberToString(r.getListOfReactants()));
 		v.add(listMemberToString(r.getListOfProducts()));
 		v.add(listMemberToString(r.getListOfModifiers()));
@@ -146,18 +149,13 @@ public class ReactionTable extends SBaseTable {
 	 * @see sbmlplugin.pane.SBaseTable#add()
 	 */
 	@Override
-	void add() {
+	void add() throws IllegalArgumentException, ParseException{
 		if(rd == null)
 			rd = new ReactionDialog(model);
 		
 		Reaction r = rd.showDialog();
 		
 		if(r == null) return;
-		
-		if(containsDuplicateId(r)){
-			errDupID(table);
-			return;
-		}
 			
 		memberList.add(r);
 		((MyTableModel)table.getModel()).addRow(reactionToVector(r));
@@ -167,7 +165,7 @@ public class ReactionTable extends SBaseTable {
 	 * @see sbmlplugin.pane.SBaseTable#edit(int)
 	 */
 	@Override
-	void edit(int index) {
+	void edit(int index) throws IllegalArgumentException, ParseException{
 		if(index == -1 ) return;
 		if(rd == null)
 			rd = new ReactionDialog(model);
@@ -175,11 +173,6 @@ public class ReactionTable extends SBaseTable {
 		Reaction r = rd.showDialog((Reaction) memberList.get(index));
 		
 		if(r == null) return;
-		
-		if(containsDuplicateId(r)){
-			errDupID(table);
-			return;
-		}
 			
 		memberList.set(index, r);
 		((MyTableModel)table.getModel()).updateRow(index, reactionToVector(r));

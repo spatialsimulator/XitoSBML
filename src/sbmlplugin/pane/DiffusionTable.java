@@ -4,11 +4,11 @@ import java.util.Vector;
 
 import javax.swing.JTable;
 
-import org.sbml.libsbml.DiffusionCoefficient;
-import org.sbml.libsbml.ListOfParameters;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.Parameter;
-import org.sbml.libsbml.SpatialParameterPlugin;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.ext.spatial.DiffusionCoefficient;
+import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -37,7 +37,7 @@ public class DiffusionTable extends SBaseTable {
 	 *
 	 * @param lop the lop
 	 */
-	DiffusionTable(ListOfParameters lop){
+	DiffusionTable(ListOf<Parameter> lop){
 		this.model = lop.getModel();
 		list = lop;
 		setParameterToList(lop);
@@ -52,13 +52,13 @@ public class DiffusionTable extends SBaseTable {
 	 *
 	 * @param lop the new parameter to list
 	 */
-	private void setParameterToList(ListOfParameters lop){
+	private void setParameterToList(ListOf<Parameter> lop){
 		long max = lop.size();
 		for(int i = 0; i < max; i++){
 			Parameter p = lop.get(i);
 			SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-			if(!sp.isSetDiffusionCoefficient()) continue;
-			memberList.add(p);
+			if(!(sp.getParamType() instanceof DiffusionCoefficient)) continue;
+			memberList.add(p.clone());
 		}
 	}
 	
@@ -68,18 +68,19 @@ public class DiffusionTable extends SBaseTable {
 	 * @param lop the lop
 	 * @return the table model with parameter
 	 */
-	private MyTableModel getTableModelWithParameter(ListOfParameters lop){
+	private MyTableModel getTableModelWithParameter(ListOf<Parameter> lop){
 		int max = memberList.size();
 		Object[][] data  = new Object[(int) max][header.length];
 		for(int i = 0; i < max; i++){
 			Parameter p = (Parameter) memberList.get(i);
 			SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-			DiffusionCoefficient dc = sp.getDiffusionCoefficient();
+			if(!(sp.getParamType() instanceof DiffusionCoefficient)) continue;
+			DiffusionCoefficient dc = (DiffusionCoefficient) sp.getParamType();
 			data[i][0] = p.getId();
 			data[i][1] = p.isSetValue() ? p.getValue(): null;			
 			data[i][2] = p.getConstant();
 			data[i][3] = dc.getVariable();
-			data[i][4] = SBMLProcessUtil.diffTypeIndexToString(dc.getType());
+			data[i][4] = SBMLProcessUtil.diffTypeIndexToString(dc.getDiffusionKind());
 			data[i][5] = SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference1());
 			data[i][6] = SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference2());
 		}
@@ -122,9 +123,9 @@ public class DiffusionTable extends SBaseTable {
 		v.add(p.getValue());
 		v.add(p.getConstant());
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-		DiffusionCoefficient dc = sp.getDiffusionCoefficient();
+		DiffusionCoefficient dc = (DiffusionCoefficient) sp.getParamType();
 		v.add(dc.getVariable());
-		v.add(SBMLProcessUtil.diffTypeIndexToString(dc.getType()));
+		v.add(SBMLProcessUtil.diffTypeIndexToString(dc.getDiffusionKind()));
 		v.add(SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference1()));
 		v.add(SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference2()));
 		
@@ -135,18 +136,13 @@ public class DiffusionTable extends SBaseTable {
 	 * @see sbmlplugin.pane.SBaseTable#add()
 	 */
 	@Override
-	void add() {
+	void add() throws IllegalArgumentException{
 		if(dd == null)
 			dd = new DiffusionDialog(model);
 		
 		Parameter p = dd.showDialog();
 		
 		if(p == null) return;
-		
-		if(containsDuplicateId(p)){
-			errDupID(table);
-			return;
-		}
 			
 		memberList.add(p);
 		((MyTableModel)table.getModel()).addRow(parameterToVector(p));
@@ -157,19 +153,14 @@ public class DiffusionTable extends SBaseTable {
 	 * @see sbmlplugin.pane.SBaseTable#edit(int)
 	 */
 	@Override
-	void edit(int index) {
+	void edit(int index) throws IllegalArgumentException{
 		if(index == -1 ) return ;
 		if(dd == null)
 			dd = new DiffusionDialog(model);
 		
 		Parameter p = dd.showDialog((Parameter) memberList.get(index));
 		
-		if(p == null) return;
-		
-		if(containsDuplicateId(p)){
-			errDupID(table);
-			return;
-		}
+		if(p == null) return;		
 			
 		memberList.set(index, p);
 		((MyTableModel)table.getModel()).updateRow(index,parameterToVector(p));

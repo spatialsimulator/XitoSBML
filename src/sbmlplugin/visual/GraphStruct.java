@@ -32,12 +32,22 @@ import org.jgrapht.graph.ListenableDirectedGraph;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GraphStruct.
+ */
 @SuppressWarnings("serial")
 public class GraphStruct extends JFrame{
    
+	/** The g. */
 	ListenableGraph<String, DefaultEdge> g = new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
+    
+    /** The jgx adapter. */
     JGraphXAdapter<String, DefaultEdge>  jgxAdapter = new JGraphXAdapter<String, DefaultEdge>(g);
 
+	/**
+	 * Instantiates a new graph struct.
+	 */
 	GraphStruct(){
 		super("Domain Hiearchal Structure");
         setLocationRelativeTo(null);
@@ -47,14 +57,28 @@ public class GraphStruct extends JFrame{
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 	
+	/**
+	 * Adds the vertex.
+	 *
+	 * @param name the name
+	 */
 	public void addVertex(String name){
 		g.addVertex(name);
 	}
 	
+	/**
+	 * Adds the edge.
+	 *
+	 * @param v1 the v 1
+	 * @param v2 the v 2
+	 */
 	public void addEdge(String v1, String v2){
 		g.addEdge(v1, v2);
 	}
 	
+	/**
+	 * Visualize.
+	 */
 	public void visualize(){
 		mxHierarchicalLayout layout = new mxHierarchicalLayout(jgxAdapter);	
         layout.setDisableEdgeStyle(false);
@@ -68,6 +92,11 @@ public class GraphStruct extends JFrame{
         setVisible(true);
 	}
 	
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args){
 	        GraphStruct graph = new GraphStruct();
 	        HashMap<String, Integer> hashDomainNum = new HashMap<String,Integer>();

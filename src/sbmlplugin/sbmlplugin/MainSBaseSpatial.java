@@ -25,9 +25,10 @@ import java.util.Iterator;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.stream.XMLStreamException;
 
-import org.sbml.libsbml.SBMLDocument;
-import org.sbml.libsbml.SBMLReader;
+import org.sbml.jsbml.SBMLDocument;
+import org.sbml.jsbml.SBMLReader;
 
 import sbmlplugin.image.SpatialImage;
 import sbmlplugin.util.PluginConstants;
@@ -67,8 +68,9 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	 *
 	 * @return the document
 	 * @throws NullPointerException the null pointer exception
+	 * @throws XMLStreamException 
 	 */
-	protected SBMLDocument getDocument() throws NullPointerException{
+	protected SBMLDocument getDocument() throws NullPointerException, XMLStreamException{
 		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setMultiSelectionEnabled(false);
@@ -78,8 +80,7 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		if (returnVal != JFileChooser.APPROVE_OPTION)
 			throw new NullPointerException();
 		File f = chooser.getSelectedFile();
-		SBMLReader reader = new SBMLReader();
-		return reader.readSBMLFromFile(f.getAbsolutePath());
+		return SBMLReader.read(f.getAbsolutePath());
 	}
 
 	/**

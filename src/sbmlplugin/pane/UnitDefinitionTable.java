@@ -4,16 +4,10 @@ import java.util.Vector;
 
 import javax.swing.JTable;
 
-import org.sbml.libsbml.ListOfParameters;
-import org.sbml.libsbml.ListOfUnitDefinitions;
-import org.sbml.libsbml.ListOfUnits;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.Parameter;
-import org.sbml.libsbml.SpatialParameterPlugin;
-import org.sbml.libsbml.Unit;
-import org.sbml.libsbml.UnitDefinition;
-
-import sbmlplugin.pane.SBaseTable.MyTableModel;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Unit;
+import org.sbml.jsbml.UnitDefinition;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -42,7 +36,7 @@ public class UnitDefinitionTable extends SBaseTable {
 	 *
 	 * @param loud the loud
 	 */
-	UnitDefinitionTable(ListOfUnitDefinitions loud){
+	UnitDefinitionTable(ListOf<UnitDefinition> loud){
 		this.model = loud.getModel();
 		list = loud;
 		setUnitDefinitionToList(loud);
@@ -57,11 +51,11 @@ public class UnitDefinitionTable extends SBaseTable {
 	 *
 	 * @param loud the new unit definition to list
 	 */
-	private void setUnitDefinitionToList(ListOfUnitDefinitions loud){
+	private void setUnitDefinitionToList(ListOf<UnitDefinition> loud){
 		long max = loud.size();
 		for(int i = 0; i < max; i++){
 			UnitDefinition ud = loud.get(i);
-			memberList.add(ud);
+			memberList.add(ud.clone());
 		}
 	}
 	
@@ -71,7 +65,7 @@ public class UnitDefinitionTable extends SBaseTable {
 	 * @param loud the loud
 	 * @return the table model with unit definitions
 	 */
-	private MyTableModel getTableModelWithUnitDefinitions(ListOfUnitDefinitions loud){
+	private MyTableModel getTableModelWithUnitDefinitions(ListOf<UnitDefinition> loud){
 		int max = memberList.size();
 		Object[][] data  = new Object[max][header.length];
 		for(int i = 0; i < max; i++){
@@ -106,7 +100,7 @@ public class UnitDefinitionTable extends SBaseTable {
 	 * @param lou the lou
 	 * @return the string
 	 */
-	private String unitsToString(ListOfUnits lou){
+	private String unitsToString(ListOf<Unit> lou){
 		StringBuilder sb = new StringBuilder();
 		
 		for(int i = 0; i< lou.size(); i++){

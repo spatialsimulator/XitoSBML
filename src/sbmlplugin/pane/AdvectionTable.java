@@ -4,11 +4,11 @@ import java.util.Vector;
 
 import javax.swing.JTable;
 
-import org.sbml.libsbml.AdvectionCoefficient;
-import org.sbml.libsbml.ListOfParameters;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.Parameter;
-import org.sbml.libsbml.SpatialParameterPlugin;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.ext.spatial.AdvectionCoefficient;
+import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -37,7 +37,7 @@ public class AdvectionTable extends SBaseTable {
 	 *
 	 * @param lop the lop
 	 */
-	AdvectionTable(ListOfParameters lop){
+	AdvectionTable(ListOf<Parameter> lop){
 		this.model = lop.getModel();
 		list = lop;
 		setParameterToList(lop);
@@ -52,13 +52,13 @@ public class AdvectionTable extends SBaseTable {
 	 *
 	 * @param lop the new parameter to list
 	 */
-	private void setParameterToList(ListOfParameters lop){
+	private void setParameterToList(ListOf<Parameter> lop){
 		long max = lop.size();
 		for(int i = 0; i < max; i++){
 			Parameter p = lop.get(i);
 			SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-			if(!sp.isSetAdvectionCoefficient()) continue;
-			memberList.add(p);
+			if(!(sp.getParamType() instanceof AdvectionCoefficient)) continue;
+			memberList.add(p.clone());
 		}
 	}
 	
@@ -68,13 +68,14 @@ public class AdvectionTable extends SBaseTable {
 	 * @param lop the lop
 	 * @return the table model with parameter
 	 */
-	private MyTableModel getTableModelWithParameter(ListOfParameters lop){
+	private MyTableModel getTableModelWithParameter(ListOf<Parameter> lop){
 		int max = memberList.size();
 		Object[][] data  = new Object[max][header.length];
 		for(int i = 0; i < max; i++){
 			Parameter p = (Parameter) memberList.get(i);
 			SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-			AdvectionCoefficient ac = sp.getAdvectionCoefficient();
+			if(!(sp.getParamType() instanceof AdvectionCoefficient)) continue;
+			AdvectionCoefficient ac = (AdvectionCoefficient) sp.getParamType();
 			data[i][0] = p.getId();
 			data[i][1] = p.isSetValue() ? p.getValue(): null;			
 			data[i][2] = p.getConstant();
@@ -118,7 +119,7 @@ public class AdvectionTable extends SBaseTable {
 		v.add(p.getValue());
 		v.add(p.getConstant());
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-		AdvectionCoefficient ac = sp.getAdvectionCoefficient();
+		AdvectionCoefficient ac = (AdvectionCoefficient) sp.getParamType();
 		v.add(ac.getVariable());
 		v.add(SBMLProcessUtil.coordinateIndexToString(ac.getCoordinate()));
 		
@@ -129,7 +130,7 @@ public class AdvectionTable extends SBaseTable {
 	 * @see sbmlplugin.pane.SBaseTable#add()
 	 */
 	@Override
-	void add() {
+	void add() throws IllegalArgumentException{
 		if(ad == null)
 			ad = new AdvectionDialog(model);
 		
@@ -137,11 +138,6 @@ public class AdvectionTable extends SBaseTable {
 		
 		if(p == null) return;
 		
-		if(containsDuplicateId(p)){
-			errDupID(table);
-			return;
-		}
-			
 		memberList.add(p);
 		((MyTableModel)table.getModel()).addRow(parameterToVector(p));
 	
@@ -151,7 +147,7 @@ public class AdvectionTable extends SBaseTable {
 	 * @see sbmlplugin.pane.SBaseTable#edit(int)
 	 */
 	@Override
-	void edit(int index) {
+	void edit(int index) throws IllegalArgumentException{
 		if(index == -1 ) return ;
 		if(ad == null)
 			ad = new AdvectionDialog(model);
@@ -159,12 +155,7 @@ public class AdvectionTable extends SBaseTable {
 		Parameter p = ad.showDialog((Parameter) memberList.get(index));
 		
 		if(p == null) return;
-		
-		if(containsDuplicateId(p)){
-			errDupID(table);
-			return;
-		}
-			
+
 		memberList.set(index, p);
 		((MyTableModel)table.getModel()).updateRow(index, parameterToVector(p));
 		

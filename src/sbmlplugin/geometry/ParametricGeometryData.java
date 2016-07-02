@@ -15,7 +15,7 @@
  *******************************************************************************/
 package sbmlplugin.geometry;
 
-import org.sbml.libsbml.GeometryDefinition;
+import org.sbml.jsbml.ext.spatial.GeometryDefinition;
 
 /**
  * Spatial SBML Plugin for ImageJ

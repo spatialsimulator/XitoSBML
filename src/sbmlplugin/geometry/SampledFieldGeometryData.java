@@ -18,14 +18,14 @@ package sbmlplugin.geometry;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
 
-import org.sbml.libsbml.Geometry;
-import org.sbml.libsbml.GeometryDefinition;
-import org.sbml.libsbml.ListOfSampledFields;
-import org.sbml.libsbml.ListOfSampledVolumes;
-import org.sbml.libsbml.SampledField;
-import org.sbml.libsbml.SampledFieldGeometry;
-import org.sbml.libsbml.SampledVolume;
-import org.sbml.libsbml.libsbmlConstants;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.ext.spatial.CompressionKind;
+import org.sbml.jsbml.ext.spatial.DataKind;
+import org.sbml.jsbml.ext.spatial.Geometry;
+import org.sbml.jsbml.ext.spatial.GeometryDefinition;
+import org.sbml.jsbml.ext.spatial.SampledField;
+import org.sbml.jsbml.ext.spatial.SampledFieldGeometry;
+import org.sbml.jsbml.ext.spatial.SampledVolume;
 
 import sbmlplugin.image.SpatialImage;
 
@@ -58,7 +58,7 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	 */
 	@Override
 	protected void getSampledValues() {											//may need to use min/max in future
-		ListOfSampledVolumes losv = sfg.getListOfSampledVolumes();
+		ListOf<SampledVolume> losv = sfg.getListOfSampledVolumes();
 		for(int i = 0 ; i < losv.size() ; i++){
 			SampledVolume sv = losv.get(i);
 			if(sv.isSetSampledValue())
@@ -69,13 +69,13 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	
 	@Override
 	protected void createImage(){
-		ListOfSampledFields losf = g.getListOfSampledFields();
+		ListOf<SampledField> losf = g.getListOfSampledFields();
 		//TODO : be able create image with multiple sampledfield
 		if(losf.size() > 1)
 			System.err.println("not able to compute multiple sampledfields at this point");
 
 		SampledField sf = losf.get(0);
-		if(sf.getDataType() != libsbmlConstants.SPATIAL_DATAKIND_UINT8)
+		if(sf.getDataType() != DataKind.UINT8)
 			System.err.println("Image data is automatically changed to 8 bit image");
 		getSize(sf);
 		getArray(sf);
@@ -108,12 +108,11 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 		int length = height * width * depth;
 		raw = new byte[length];
 		int array[] = new int[length];
-		
-
-		if(sf.getCompression() == libsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED)
-			sf.getUncompressed(array);
+		String data;
+		if(sf.getCompression() == CompressionKind.uncompressed)
+			data = sf.getDataString();
 		else
-			sf.getSamples(array);
+			data = sf.getSamples();
 
 		intToByte(array, raw);
 	}

@@ -5,27 +5,35 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
+import javax.xml.stream.XMLStreamException;
 
-import org.sbml.libsbml.ListOfParameters;
-import org.sbml.libsbml.ListOfReactions;
-import org.sbml.libsbml.ListOfSpecies;
-import org.sbml.libsbml.ListOfUnitDefinitions;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.SBMLDocument;
-import org.sbml.libsbml.SBMLReader;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.Reaction;
+import org.sbml.jsbml.SBMLDocument;
+import org.sbml.jsbml.SBMLException;
+import org.sbml.jsbml.SBMLReader;
+import org.sbml.jsbml.SBMLWriter;
+import org.sbml.jsbml.Species;
+import org.sbml.jsbml.UnitDefinition;
+import org.sbml.jsbml.text.parser.ParseException;
+
 // TODO: Auto-generated Javadoc
-
 /**
  * Spatial SBML Plugin for ImageJ.
  *
@@ -35,15 +43,6 @@ import org.sbml.libsbml.SBMLReader;
 @SuppressWarnings("serial")
 public class TabTables extends JFrame implements ActionListener {
 
-	static {
-		try {
-			System.loadLibrary("sbmlj");
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-	}
-
 	/** The tabbedpane. */
 	private JTabbedPane tabbedpane = new JTabbedPane();
 	
@@ -52,6 +51,8 @@ public class TabTables extends JFrame implements ActionListener {
 	
 	/** The is running. */
 	private boolean isRunning = true;	
+	
+	private Model model;
 	
 	/**
 	 * Instantiates a new tab tables.
@@ -72,10 +73,11 @@ public class TabTables extends JFrame implements ActionListener {
 	 */
 	public TabTables(Model model) {
 		this();
-		ListOfParameters lop = model.getListOfParameters();
-		ListOfSpecies los = model.getListOfSpecies();
-		ListOfReactions lor = model.getListOfReactions();
-		ListOfUnitDefinitions loud = model.getListOfUnitDefinitions();
+		this.model = model;
+		ListOf<Parameter> lop = model.getListOfParameters();
+		ListOf<Species> los = model.getListOfSpecies();
+		ListOf<Reaction> lor = model.getListOfReactions();
+		ListOf<UnitDefinition> loud = model.getListOfUnitDefinitions();
 		
 		SpeciesTable stable = new SpeciesTable(los);		
 		ParameterTable ptable = new ParameterTable(lop);		
@@ -139,12 +141,17 @@ public class TabTables extends JFrame implements ActionListener {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		SBMLReader reader = new SBMLReader();
-		//SBMLDocument d = reader.readSBML("spatial_example1.xml");
-		//SBMLDocument d = reader.readSBML("sampledField_3d.xml");
-		//SBMLDocument d = reader.readSBML("mem_diff.xml");
-		SBMLDocument d = reader.readSBML("analytic_3d.xml");
-		new TabTables(d.getModel());
+		SBMLDocument d;
+		try {
+			d = SBMLReader.read(new File("sample/prob.xml"));
+			new TabTables(d.getModel());
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -170,21 +177,43 @@ public class TabTables extends JFrame implements ActionListener {
 		JViewport viewport = scroll.getViewport();
 		JTable table = (JTable) viewport.getView();
 		
-		if (input.contentEquals("add")) {
-			sbaseList.get(paneIndex).add();
-		}
+		try{
+			if (input.contentEquals("add")) {
+				sbaseList.get(paneIndex).add();
+			}
 
-		if (input.contentEquals("edit")) {
-			sbaseList.get(paneIndex).edit(table.getSelectedRow());
+			if (input.contentEquals("edit")) {
+				sbaseList.get(paneIndex).edit(table.getSelectedRow());
+			}
+
+			if (input.contentEquals("delete")) {
+				sbaseList.get(paneIndex).removeFromList(table.getSelectedRow());
+				sbaseList.get(paneIndex).removeSelectedFromTable(table);
+			}
+		} catch(IllegalArgumentException ex){
+			if(ex.getCause() == null){
+				JOptionPane.showMessageDialog(this, "No species in model");
+			} else {
+				JOptionPane.showMessageDialog(this, "Duplicate Id");
+			}
+			//JOptionPane.showMessageDialog(this, ex.getMessage());
+			ex.printStackTrace();
+		}catch (ParseException ex) {
+			JOptionPane.showMessageDialog(this, ex.getMessage());
+			ex.printStackTrace();
 		}
 		
-		if (input.contentEquals("delete")) {
-			sbaseList.get(paneIndex).removeFromList(table.getSelectedRow());
-			sbaseList.get(paneIndex).removeSelectedFromTable(table);
-		}
-
 		if (input.equals("OK")) {
 			addAllSBase();
+			try {
+				SBMLWriter.write(model.getSBMLDocument(), System.out, ' ', (short)2);
+			} catch (SBMLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (XMLStreamException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			isRunning = false;
 			dispose();
 			return;

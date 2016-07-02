@@ -15,7 +15,7 @@
  *******************************************************************************/
 package sbmlplugin.geometry;
 
-import org.sbml.libsbml.GeometryDefinition;
+import org.sbml.jsbml.ext.spatial.GeometryDefinition;
 
 /**
  * Spatial SBML Plugin for ImageJ
@@ -29,6 +29,6 @@ public abstract class AbstractData {
 	
 	AbstractData(GeometryDefinition gd){
 		this.gd = gd;
-		title = gd.getId();
+		title = gd.getSpatialId();
 	}	
 }

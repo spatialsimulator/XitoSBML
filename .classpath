@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 6 [1.6.0_65-b14-462]"/>
+	<classpathentry including="**/*.java" kind="src" output="target/classes" path="src">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/ij.jar"/>
 	<classpathentry kind="lib" path="lib/ImageJ_3D_Viewer.jar"/>
 	<classpathentry kind="lib" path="lib/jgraph-5.13.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/jgrapht-core-0.9.0.jar"/>
 	<classpathentry kind="lib" path="lib/jgrapht-demo-0.9.0.jar"/>
 	<classpathentry kind="lib" path="lib/jgrapht-ext-0.9.0-uber.jar"/>
-	<classpathentry kind="lib" path="lib/libsbmlj.jar">
+	<classpathentry kind="lib" path="lib/jgraphx-1.10.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/GarudaSDK2.0src.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="SBMLPlugin/lib"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jgraphx-1.10.4.1.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

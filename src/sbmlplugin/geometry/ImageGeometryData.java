@@ -19,8 +19,8 @@ import ij.ImagePlus;
 
 import java.util.HashMap;
 
-import org.sbml.libsbml.Geometry;
-import org.sbml.libsbml.GeometryDefinition;
+import org.sbml.jsbml.ext.spatial.Geometry;
+import org.sbml.jsbml.ext.spatial.GeometryDefinition;
 
 import sbmlplugin.image.SpatialImage;
 

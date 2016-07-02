@@ -20,17 +20,15 @@ import ij.plugin.PlugIn;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.sbml.libsbml.Geometry;
-import org.sbml.libsbml.ListOfParameters;
-import org.sbml.libsbml.ListOfSpecies;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.ReqSBasePlugin;
-import org.sbml.libsbml.SBMLDocument;
-import org.sbml.libsbml.SBMLNamespaces;
-import org.sbml.libsbml.SpatialModelPlugin;
-import org.sbml.libsbml.SpatialPkgNamespaces;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.SBMLDocument;
+import org.sbml.jsbml.Species;
+import org.sbml.jsbml.ext.req.ReqSBasePlugin;
+import org.sbml.jsbml.ext.spatial.Geometry;
+import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
 
-import sbmlplugin.gui.ParamAndSpecies;
 import sbmlplugin.image.CreateImage;
 import sbmlplugin.image.Filler;
 import sbmlplugin.image.ImageBorder;
@@ -54,12 +52,6 @@ public abstract class MainSpatial implements PlugIn{
 	
 	/** The model. */
 	protected Model model;
-	
-	/** The sbmlns. */
-	protected SBMLNamespaces sbmlns; 
-	
-	/** The spatialns. */
-	protected SpatialPkgNamespaces spatialns;
 	
 	/** The spatialplugin. */
 	protected SpatialModelPlugin spatialplugin;
@@ -131,28 +123,11 @@ public abstract class MainSpatial implements PlugIn{
 	}
 	
 	/**
-	 * Adds the para and species.
-	 */
-	protected void addParaAndSpecies(){
-		ListOfParameters lop = model.getListOfParameters();
-		ListOfSpecies los = model.getListOfSpecies();
-		ParamAndSpecies pas = new ParamAndSpecies(model);
-		
-		while(lop.size() == 0 || los.size() == 0 || pas.isRunning()){
-			synchronized(lop){
-				synchronized(los){
-					
-				}
-			}
-		}
-	}
-	
-	/**
 	 * Adds the S bases.
 	 */
 	protected void addSBases(){
-		ListOfParameters lop = model.getListOfParameters();
-		ListOfSpecies los = model.getListOfSpecies();
+		ListOf<Parameter> lop = model.getListOfParameters();
+		ListOf<Species> los = model.getListOfSpecies();
 		TabTables tt = new TabTables(model);
 		
 		while(tt.isRunning()){
