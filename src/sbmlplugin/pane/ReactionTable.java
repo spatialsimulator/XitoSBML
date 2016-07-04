@@ -157,8 +157,8 @@ public class ReactionTable extends SBaseTable {
 		
 		if(r == null) return;
 			
-		memberList.add(r);
-		((MyTableModel)table.getModel()).addRow(reactionToVector(r));
+		memberList.add(r.clone());
+		((MyTableModel)table.getModel()).addRow(reactionToVector(r.clone()));
 	}
 
 	/* (non-Javadoc)

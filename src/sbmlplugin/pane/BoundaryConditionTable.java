@@ -140,8 +140,8 @@ public class BoundaryConditionTable extends SBaseTable {
 		
 		if(p == null) return;
 		
-		memberList.add(p);
-		((MyTableModel)table.getModel()).addRow(parameterToVector(p));
+		memberList.add(p.clone());
+		((MyTableModel)table.getModel()).addRow(parameterToVector(p.clone()));
 			
 	}
 

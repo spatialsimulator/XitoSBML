@@ -147,8 +147,8 @@ public class SpeciesTable extends SBaseTable{
 		Species s = sd.showDialog();
 		if(s == null) return;
 			
-		memberList.add(s);
-		((MyTableModel)table.getModel()).addRow(speciesToVector(s));
+		memberList.add(s.clone());
+		((MyTableModel)table.getModel()).addRow(speciesToVector(s.clone()));
 	}
 
 	/* (non-Javadoc)

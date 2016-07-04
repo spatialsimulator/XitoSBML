@@ -124,16 +124,6 @@ public class SpatialSBMLExporter{
 		if (spatialplugin == null) {
 			System.exit(1);
 		}
-		Geometry g = spatialplugin.createGeometry();
-		g.createDomainType("a");
-		g.createDomainType("b");
-		g.createDomainType("c");
-		
-		for(DomainType d : g.getListOfDomainTypes()){
-			System.out.println(d.getSpatialId());
-		}
-		DomainType dt  = g.getListOfDomainTypes().get("a");
-		System.out.println(dt);
 	}
 
 	/**
@@ -347,8 +337,10 @@ public class SpatialSBMLExporter{
 			c.setId(e.getKey());
 			c.setName(e.getKey());
 			
+			//TODO add size
+			c.setSize(0d);
 			spatialcompplugin = (SpatialCompartmentPlugin) c.getPlugin("spatial");
-			CompartmentMapping cm = new CompartmentMapping();//spatialcompplugin.getCompartmentMapping();
+			CompartmentMapping cm = new CompartmentMapping();
 			cm.setSpatialId(e.getKey() + c.getId());
 			cm.setDomainType(e.getKey());
 			// TODO 
@@ -414,6 +406,7 @@ public class SpatialSBMLExporter{
 			p = model.createParameter();
 			p.setId(cc.getSpatialId());
 			p.setConstant(true);
+			p.setValue(0d);
 		}
 	}
   

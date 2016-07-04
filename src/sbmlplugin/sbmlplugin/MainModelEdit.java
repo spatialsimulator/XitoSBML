@@ -54,6 +54,6 @@ public class MainModelEdit extends MainSBaseSpatial {
 		GeometryDatas gData = new GeometryDatas(model);
 		visualize(gData.getSpImgList());
 		
-		
+		print();
 	}
 }

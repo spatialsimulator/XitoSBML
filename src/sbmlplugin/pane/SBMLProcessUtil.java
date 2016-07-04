@@ -1,16 +1,12 @@
 package sbmlplugin.pane;
 
 import org.sbml.jsbml.ListOf;
-import org.sbml.jsbml.Parameter;
-import org.sbml.jsbml.Reaction;
-import org.sbml.jsbml.SBase;
-import org.sbml.jsbml.Species;
+import org.sbml.jsbml.Symbol;
 import org.sbml.jsbml.Unit.Kind;
 import org.sbml.jsbml.ext.spatial.BoundaryConditionKind;
 import org.sbml.jsbml.ext.spatial.CoordinateKind;
 import org.sbml.jsbml.ext.spatial.DiffusionKind;
 
-// TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.
  *
@@ -43,28 +39,11 @@ public class SBMLProcessUtil {
 		String[] str = new String[(int)lo.size()];
 				
 		for(int i = 0; i < lo.size(); i++)
-			str[i] = getIdFromSBase(lo.get(i));
+			str[i] = ((Symbol)lo.get(i)).getId();
 		
 		return str;
 	}
 
-	
-	/**
-	 * Gets the id from S base.
-	 *
-	 * @param sbase the sbase
-	 * @return the id from S base
-	 */
-	public static String getIdFromSBase(SBase sbase){
-		if(sbase instanceof Parameter)
-			return ((Parameter)sbase).getId();
-		else if(sbase instanceof Species)
-			return ((Species)sbase).getId();
-		else if(sbase instanceof Reaction)
-			return ((Reaction)sbase).getId();
-		else 
-			return "";
-	}
 	
 	/**
 	 * Boundary index to string.
@@ -73,13 +52,18 @@ public class SBMLProcessUtil {
 	 * @return the string
 	 */
 	public static String boundaryIndexToString(BoundaryConditionKind index){
-		if(index == BoundaryConditionKind.Robin_valueCoefficient) return boundType[0];
-		if(index == BoundaryConditionKind.Robin_inwardNormalGradientCoefficient) return boundType[1];
-		if(index == BoundaryConditionKind.Robin_sum) return boundType[2];
-		if(index == BoundaryConditionKind.Neumann) return boundType[3];
-		if(index == BoundaryConditionKind.Dirichlet) return boundType[4];
-
-		return null;
+		if(index == BoundaryConditionKind.Robin_valueCoefficient)
+			return boundType[0]; 
+		else if(index == BoundaryConditionKind.Robin_inwardNormalGradientCoefficient)
+			return boundType[1];
+		else if(index == BoundaryConditionKind.Robin_sum)
+			return boundType[2];
+		else if(index == BoundaryConditionKind.Neumann)
+			return boundType[3];
+		else if(index == BoundaryConditionKind.Dirichlet)
+			return boundType[4];
+		else 
+			return null;
 	}
 	
 	/**

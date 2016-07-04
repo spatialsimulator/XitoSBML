@@ -20,11 +20,15 @@ import ij.plugin.PlugIn;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import javax.xml.stream.XMLStreamException;
+
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.SBMLDocument;
+import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.Species;
+import org.sbml.jsbml.TidySBMLWriter;
 import org.sbml.jsbml.ext.req.ReqSBasePlugin;
 import org.sbml.jsbml.ext.spatial.Geometry;
 import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
@@ -155,5 +159,20 @@ public abstract class MainSpatial implements PlugIn{
 	 */
 	protected void showStep(SpatialImage spImg){
 		visualize(spImg);
+	}
+	
+	protected void print(){
+		String docStr;
+		try {
+			docStr = new TidySBMLWriter().writeSBMLToString(document);
+			System.out.println(docStr);
+		} catch (SBMLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
