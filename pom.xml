@@ -7,7 +7,7 @@
     <sourceDirectory>src</sourceDirectory>
     <resources>
       <resource>
-        <directory>..</directory>
+        <directory>${basedir}</directory>
         <includes>
           <include>*.config</include>
         </includes>
