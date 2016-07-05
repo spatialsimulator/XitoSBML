@@ -135,11 +135,10 @@ public class AdvectionTable extends SBaseTable {
 			ad = new AdvectionDialog(model);
 		
 		Parameter p = ad.showDialog();
-		
 		if(p == null) return;
 		
 		memberList.add(p.clone());
-		((MyTableModel)table.getModel()).addRow(parameterToVector(p.clone()));
+		((MyTableModel)table.getModel()).addRow(parameterToVector(p));
 	
 	}
 

@@ -111,6 +111,8 @@ public class AdvectionDialog {
 		String var = gd.getNextChoice();
 		ac.setVariable(var);
 		ac.setCoordinate(SBMLProcessUtil.StringToCoordinateKind(gd.getNextChoice()));
+		if(!ac.isSetParentSBMLObject())
+			sp.setParamType(ac);
 	}
 	
 }

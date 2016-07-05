@@ -120,6 +120,9 @@ public class BoundaryConditionDialog {
 			bc.setCoordinateBoundary(bound);
 		else
 			bc.setBoundaryDomainType(bound);
+		
+		if(!bc.isSetParentSBMLObject())
+			sp.setParamType(bc);
 	} 
 	
 	/**

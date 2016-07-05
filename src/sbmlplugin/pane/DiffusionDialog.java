@@ -129,6 +129,9 @@ public class DiffusionDialog {
 		
 		if(dc.getDiffusionKind() == DiffusionKind.tensor && dc.getCoordinateReference1() == dc.getCoordinateReference2())
 			dc.unsetCoordinateReference2();
+		
+		if(!dc.isSetParentSBMLObject())
+			sp.setParamType(dc);
 	} 
 	
 }
