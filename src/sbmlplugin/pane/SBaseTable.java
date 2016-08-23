@@ -65,12 +65,8 @@ public abstract class SBaseTable {
 	 */
 	void removeFromList(int index){
 		if(index == -1) return;
-		//String id = memberList.get(index).getId();
 		SBase id = memberList.get(index);
 		list.remove(id);
-//		for(int i = 0; i < list.size(); i++)
-//			if(list.get(i).getId().equals(id)) 
-//				list.remove(i);
 		memberList.remove(index);
 	}
 	
