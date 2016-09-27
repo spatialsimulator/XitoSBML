@@ -76,7 +76,7 @@ public class ModelSaver {
 			
 		IJ.log(name);
 		
-		//setAnnotation();
+		setAnnotation();
 		
 		try {		
 			if(name.contains(".xml"))	
@@ -120,8 +120,8 @@ public class ModelSaver {
 		annot = annot.concat(" in " + date.getTime());
 		
 		try {
-			document.setAnnotation(annot);
-			model.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
+			document.setNotes(annot);
+			model.setNotes("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
 					+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
 		} catch (XMLStreamException e) {
 			// TODO Auto-generated catch block

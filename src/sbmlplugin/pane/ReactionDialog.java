@@ -176,7 +176,8 @@ public class ReactionDialog {
 		srp.setIsLocal(Boolean.getBoolean(gd.getNextRadioButton()));
 		KineticLaw kl = reaction.isSetKineticLaw() ? reaction.getKineticLaw() : reaction.createKineticLaw();
 		String formula = gd.getNextString();
-		kl.setMath(ASTNode.parseFormula(formula));
+		if(formula != null)
+			kl.setMath(ASTNode.parseFormula(formula));
 		
 		@SuppressWarnings("unchecked")
 		Vector<Checkbox> v = gd.getCheckboxes();
@@ -185,7 +186,7 @@ public class ReactionDialog {
 		
 		for (int i = 0; i < size; i++) {
 			Checkbox cb = v.get(i);
-			String label = cb.getLabel();
+			String label = cb.getLabel().trim();
 			if (label.indexOf(' ') != -1)
 					label = label.replace(' ', '_');
 			if (cb.getState()) {

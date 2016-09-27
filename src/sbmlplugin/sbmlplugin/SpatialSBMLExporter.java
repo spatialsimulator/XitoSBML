@@ -16,7 +16,6 @@
 package sbmlplugin.sbmlplugin;
 
 import java.io.ByteArrayOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +36,6 @@ import org.sbml.jsbml.Unit;
 import org.sbml.jsbml.Unit.Kind;
 import org.sbml.jsbml.UnitDefinition;
 import org.sbml.jsbml.ext.SBasePlugin;
-import org.sbml.jsbml.ext.req.ReqSBasePlugin;
 import org.sbml.jsbml.ext.spatial.AdjacentDomains;
 import org.sbml.jsbml.ext.spatial.Boundary;
 import org.sbml.jsbml.ext.spatial.CompartmentMapping;
@@ -56,6 +54,8 @@ import org.sbml.jsbml.ext.spatial.SampledFieldGeometry;
 import org.sbml.jsbml.ext.spatial.SampledVolume;
 import org.sbml.jsbml.ext.spatial.SpatialCompartmentPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
+import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
+import org.sbml.jsbml.ext.spatial.SpatialSymbolReference;
 
 import sbmlplugin.image.SpatialImage;
 
@@ -116,8 +116,6 @@ public class SpatialSBMLExporter{
 		document.setPackageRequired("req", false);
 		document.setPackageRequired("spatial", true);
 		model = document.createModel();
-		
-		ReqSBasePlugin reqplugin = (ReqSBasePlugin)model.getPlugin("req"); //get required
 
 		SBasePlugin basePlugin = (model.getPlugin("spatial"));
 		spatialplugin = (SpatialModelPlugin) basePlugin;
@@ -170,7 +168,7 @@ public class SpatialSBMLExporter{
 		SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();
 		sfg.setSpatialId("mySampledField");
 		sfg.setIsActive(true);
-		sfg.setSampledField("imgtest");
+		sfg.setSampledField("img");
 		for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
 			// if ((e.getValue() == 3 && depth > 2) || (e.getValue() == 2 &&
 			// depth == 1)) {
@@ -332,13 +330,10 @@ public class SpatialSBMLExporter{
 				continue;
 			Compartment c = model.createCompartment();
 			c.setSpatialDimensions(e.getValue());
-			//c.setSpatialDimensions(3);
 			c.setConstant(true);
 			c.setId(e.getKey());
 			c.setName(e.getKey());
 			
-			//TODO add size
-			c.setSize(0d);
 			spatialcompplugin = (SpatialCompartmentPlugin) c.getPlugin("spatial");
 			CompartmentMapping cm = new CompartmentMapping();
 			cm.setSpatialId(e.getKey() + c.getId());
@@ -355,18 +350,18 @@ public class SpatialSBMLExporter{
 	 */
 	public void addCoordinates() { 
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
-		ccx.setSpatialId("x");
+		ccx.setSpatialId("coordx");
 		ccx.setType(CoordinateKind.cartesianX);
 		if(unit != null) ccx.setUnits(unit);
 		setCoordinateBoundary(ccx, "X", 0, width, delta.x);
 		CoordinateComponent ccy = geometry.createCoordinateComponent();
-		ccy.setSpatialId("y");
+		ccy.setSpatialId("coordy");
 		ccy.setType(CoordinateKind.cartesianY);
 		if(unit != null)  ccy.setUnits(unit);
 		setCoordinateBoundary(ccy, "Y", 0, height, delta.y);
 		if (depth > 1) {
 			CoordinateComponent ccz = geometry.createCoordinateComponent();
-			ccz.setSpatialId("z");
+			ccz.setSpatialId("coordz");
 			ccz.setType(CoordinateKind.cartesianZ);
 			if(unit != null) ccz.setUnits(unit);
 			setCoordinateBoundary(ccz, "Z", 0, depth, delta.z);
@@ -407,6 +402,10 @@ public class SpatialSBMLExporter{
 			p.setId(cc.getSpatialId());
 			p.setConstant(true);
 			p.setValue(0d);
+			SpatialParameterPlugin spp = (SpatialParameterPlugin) p.getPlugin("spatial");
+			SpatialSymbolReference ssr = new SpatialSymbolReference();
+			ssr.setSpatialRef(cc.getSpatialId());
+			spp.setParamType(ssr);
 		}
 	}
   
@@ -432,9 +431,11 @@ public class SpatialSBMLExporter{
 	 * Adds the units.
 	 */
 	public void addUnits(){
-		if(unit == null) return; 
+		if(unit == null) 
+			return; 
 		UnitDefinition ud = model.createUnitDefinition();
-		ud.setId(unit);
+		//ud.setId(unit);
+		ud.setId("length");
 		Unit u = ud.createUnit();
 		u.setKind(Kind.METRE);
 		u.setExponent(1d);
@@ -442,7 +443,8 @@ public class SpatialSBMLExporter{
 		u.setMultiplier(getUnitMultiplier(unit));
 	
 		ud = model.createUnitDefinition();
-		ud.setId(unit+"2");
+		//ud.setId(unit+"2");
+		ud.setId("area");
 		u = ud.createUnit();
 		u.setKind(Kind.METRE);
 		u.setExponent(2d);
@@ -450,7 +452,8 @@ public class SpatialSBMLExporter{
 		u.setMultiplier(getUnitMultiplier(unit));
 		
 		ud = model.createUnitDefinition();
-		ud.setId(unit+"3");
+		//ud.setId(unit+"3");
+		ud.setId("volume");
 		u = ud.createUnit();
 		u.setKind(Kind.METRE);
 		u.setExponent(3d);
@@ -469,7 +472,4 @@ public class SpatialSBMLExporter{
 		return 1.0;
 	}
 	
-	public static void main(String[] args){
-		SpatialSBMLExporter sse = new SpatialSBMLExporter();
-	}
 }
