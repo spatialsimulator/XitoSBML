@@ -139,7 +139,7 @@ public class SpatialSBMLExporter{
 		SBasePlugin basePlugin = (model.getPlugin("spatial"));
 		spatialplugin = (SpatialModelPlugin) basePlugin;
 		if (spatialplugin == null) {
-			System.err.println("[Fatal Error] Layout Extension Level "
+			System.err.println("[Fatal Error] Spatial Extension Level "
 					+ spatialns.getLevel() + " Version "
 					+ spatialns.getVersion() + " package version "
 					+ spatialns.getPackageVersion() + " is not registered.");
@@ -212,7 +212,7 @@ public class SpatialSBMLExporter{
 		sf.setNumSamples2(height);
 		// if(depth > 1)
 		sf.setNumSamples3(depth);
-		sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR);
+		sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_LINEAR);
 
 		// byte[] compressed = compressRawData(raw);
 		// if (compressed != null)
@@ -545,7 +545,8 @@ public class SpatialSBMLExporter{
 	public void addUnits(){
 		if(unit == null) return; 
 		UnitDefinition ud = model.createUnitDefinition();
-		ud.setId(unit);
+		//ud.setId(unit);
+		ud.setId("length");
 		Unit u = ud.createUnit();
 		u.setKind(libsbmlConstants.UNIT_KIND_METRE);
 		u.setExponent(1);
@@ -553,7 +554,8 @@ public class SpatialSBMLExporter{
 		u.setMultiplier(getUnitMultiplier(unit));
 	
 		ud = model.createUnitDefinition();
-		ud.setId(unit+"2");
+		//ud.setId(unit+"2");
+		ud.setId("area");
 		u = ud.createUnit();
 		u.setKind(libsbmlConstants.UNIT_KIND_METRE);
 		u.setExponent(2);
@@ -561,7 +563,8 @@ public class SpatialSBMLExporter{
 		u.setMultiplier(getUnitMultiplier(unit));
 		
 		ud = model.createUnitDefinition();
-		ud.setId(unit+"3");
+		//ud.setId(unit+"3");
+		ud.setId("volume");
 		u = ud.createUnit();
 		u.setKind(libsbmlConstants.UNIT_KIND_METRE);
 		u.setExponent(3);
