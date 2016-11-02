@@ -145,8 +145,9 @@ public class ImageTable extends JTable implements MouseListener{
 		boolean height = compoImg.getHeight() == img.getHeight();
 		boolean depth = compoImg.getStackSize() == img.getStackSize();
 		FileInfo imgInfo = img.getFileInfo();
+		compoInfo = compoImg.getFileInfo();
 		boolean voxx, voxy, voxz;
-		
+	
 		try {
 			voxx = cmpsize(compoInfo.pixelWidth, imgInfo.pixelWidth);
 			voxy = cmpsize(compoInfo.pixelHeight, imgInfo.pixelHeight);

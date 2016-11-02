@@ -167,7 +167,10 @@ public class ImageExplorer extends JFrame implements ActionListener{
 	 * @return the file info
 	 */
 	public FileInfo getFileInfo(){
-		return compoInfo;
+		if(compoInfo != null)
+			return compoInfo;
+		else
+		return null;
 	}
 	
 	/* (non-Javadoc)

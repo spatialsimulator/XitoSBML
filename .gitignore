@@ -20,3 +20,5 @@ source/
 doc/
 
 /target/
+.project
+.settings/

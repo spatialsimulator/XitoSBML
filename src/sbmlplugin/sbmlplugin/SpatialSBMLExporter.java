@@ -166,9 +166,9 @@ public class SpatialSBMLExporter{
 //TODO determine to use compressed or uncompressed data
 	public void addGeometryDefinitions() {
 		SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();
-		sfg.setSpatialId("mySampledField");
+		sfg.setSpatialId("mySampledFieldGeometry");
 		sfg.setIsActive(true);
-		sfg.setSampledField("img");
+		sfg.setSampledField("mySampledField");
 		for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
 			// if ((e.getValue() == 3 && depth > 2) || (e.getValue() == 2 &&
 			// depth == 1)) {
@@ -181,7 +181,7 @@ public class SpatialSBMLExporter{
 			}
 		}
 		SampledField sf = geometry.createSampledField();
-		sf.setSpatialId("imgtest");
+		sf.setSpatialId("mySampledField");
 		sf.setDataType(DataKind.UINT8);
 		// sf.setCompression(jsbmlConstants.SPATIAL_COMPRESSIONKIND_DEFLATED);
 		sf.setCompression(CompressionKind.uncompressed);
@@ -195,7 +195,6 @@ public class SpatialSBMLExporter{
 		// if (compressed != null)
 		// sf.setSamples(byteArrayToIntArray(compressed),compressed.length);
 		
-		//sf.setSamples(byteArrayToIntArray(raw), raw.length);
 		String s = Arrays.toString(byteArrayToIntArray(raw));
 		s = s.replace("[", "");
 		s = s.replace("]", "");
