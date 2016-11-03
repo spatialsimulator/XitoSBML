@@ -1,5 +1,7 @@
 package sbmlplugin.sbmlplugin;
 
+import javax.xml.stream.XMLStreamException;
+
 import sbmlplugin.util.ModelValidator;
 
 // TODO: Auto-generated Javadoc
@@ -22,6 +24,9 @@ public class MainModelValidator extends MainSBaseSpatial {
 		} catch (NullPointerException e){
 			e.getStackTrace();
 			return;
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	
 		checkSBMLDocument(document);

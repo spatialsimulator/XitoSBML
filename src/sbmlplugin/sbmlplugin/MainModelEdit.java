@@ -1,5 +1,7 @@
 package sbmlplugin.sbmlplugin;
 
+import javax.xml.stream.XMLStreamException;
+
 import sbmlplugin.geometry.GeometryDatas;
 import sbmlplugin.util.ModelSaver;
 
@@ -23,6 +25,9 @@ public class MainModelEdit extends MainSBaseSpatial {
 		} catch (NullPointerException e){
 			e.getStackTrace();
 			return;
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		checkSBMLDocument(document);
@@ -34,6 +39,6 @@ public class MainModelEdit extends MainSBaseSpatial {
 		GeometryDatas gData = new GeometryDatas(model);
 		visualize(gData.getSpImgList());
 		
-		
+		print();
 	}
 }

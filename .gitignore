@@ -24,4 +24,7 @@ doc/
 /target/
 .project
 .settings/
+<<<<<<< HEAD
 .externalToolBuilders/
+=======
+>>>>>>> garuda

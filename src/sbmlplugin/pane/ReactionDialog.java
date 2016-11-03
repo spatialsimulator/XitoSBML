@@ -5,15 +5,16 @@ import ij.gui.GenericDialog;
 import java.awt.Checkbox;
 import java.util.Vector;
 
-import org.sbml.libsbml.KineticLaw;
-import org.sbml.libsbml.ListOfSpecies;
-import org.sbml.libsbml.ListOfSpeciesReferences;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.ModifierSpeciesReference;
-import org.sbml.libsbml.Reaction;
-import org.sbml.libsbml.SpatialReactionPlugin;
-import org.sbml.libsbml.SpeciesReference;
-import org.sbml.libsbml.libsbml;
+import org.sbml.jsbml.ASTNode;
+import org.sbml.jsbml.KineticLaw;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.ModifierSpeciesReference;
+import org.sbml.jsbml.Reaction;
+import org.sbml.jsbml.Species;
+import org.sbml.jsbml.SpeciesReference;
+import org.sbml.jsbml.ext.spatial.SpatialReactionPlugin;
+import org.sbml.jsbml.text.parser.ParseException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -38,7 +39,7 @@ public class ReactionDialog {
 	private Model model;
 	
 	/** The los. */
-	private ListOfSpecies los;
+	private ListOf<Species> los;
 	
 	/**
 	 * Instantiates a new reaction dialog.
@@ -53,14 +54,16 @@ public class ReactionDialog {
 	 * Show dialog.
 	 *
 	 * @return the reaction
+
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws ParseException the parse exception
 	 */
-	public Reaction showDialog(){
+	public Reaction showDialog() throws IllegalArgumentException, ParseException{
 		this.los = model.getListOfSpecies();
 		gd = new GenericDialog("Add Reaction");
 		gd.setResizable(true);
 		gd.pack();
 	
-
 		gd.addStringField("id:", null);
 		gd.addRadioButtonGroup("fast:", bool, 1, 2, "true");
 		gd.addRadioButtonGroup("reversible:", bool, 1, 2, "true");
@@ -89,8 +92,10 @@ public class ReactionDialog {
 	 *
 	 * @param reaction the reaction
 	 * @return the reaction
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws ParseException the parse exception
 	 */
-	public Reaction showDialog(Reaction reaction){
+	public Reaction showDialog(Reaction reaction) throws IllegalArgumentException, ParseException{
 		this.los = model.getListOfSpecies();
 		this.reaction = reaction;
 		SpatialReactionPlugin srp = (SpatialReactionPlugin) reaction.getPlugin("spatial");
@@ -102,13 +107,13 @@ public class ReactionDialog {
 		gd.addRadioButtonGroup("fast", bool, 1, 2, String.valueOf(reaction.getFast()));
 		gd.addRadioButtonGroup("reversible", bool, 1, 2, String.valueOf(reaction.getReversible()));
 		gd.addRadioButtonGroup("isLocal", bool, 1, 2, String.valueOf(srp.getIsLocal()));
-		gd.addStringField("kinetic law", reaction.getKineticLaw().getFormula());
+		gd.addStringField("kinetic law", reaction.getKineticLaw().getMathMLString());
 		gd.addMessage("reactant:");
 		gd.addCheckboxGroup((int) los.size() / 3 + 1, 3, SBMLProcessUtil.listIdToStringArray(los), boolSpeciesInSReference(los, reaction.getListOfReactants()));
 		gd.addMessage("product:");
 		gd.addCheckboxGroup((int) los.size() / 3 + 1, 3, SBMLProcessUtil.listIdToStringArray(los), boolSpeciesInSReference(los, reaction.getListOfProducts()));
 		gd.addMessage("modifier:");
-		gd.addCheckboxGroup((int) los.size() / 3 + 1, 3, SBMLProcessUtil.listIdToStringArray(los), boolSpeciesInSReference(los, reaction.getListOfModifiers()));
+		gd.addCheckboxGroup((int) los.size() / 3 + 1, 3, SBMLProcessUtil.listIdToStringArray(los), boolSpeciesInModifierSReference(los, reaction.getListOfModifiers()));
 		
 		gd.showDialog();
 		if(gd.wasCanceled())
@@ -126,7 +131,25 @@ public class ReactionDialog {
 	 * @param losr the losr
 	 * @return the boolean[]
 	 */
-	private boolean[] boolSpeciesInSReference(ListOfSpecies los, ListOfSpeciesReferences losr){
+	private boolean[] boolSpeciesInSReference(ListOf<Species> los, ListOf<SpeciesReference> losr){
+		boolean[] bool = new boolean[(int)los.size()];
+		
+		for(int i = 0; i < los.size(); i++)
+			for(int j = 0; j < losr.size(); j++)
+				if(los.get(i).getId().equals(losr.get(j).getSpecies()))
+					bool[i] = true;
+			
+		return bool;
+	}
+	
+	/**
+	 * Bool species in modifier S reference.
+	 *
+	 * @param los the los
+	 * @param losr the losr
+	 * @return the boolean[]
+	 */
+	private boolean[] boolSpeciesInModifierSReference(ListOf<Species> los, ListOf<ModifierSpeciesReference> losr){
 		boolean[] bool = new boolean[(int)los.size()];
 		
 		for(int i = 0; i < los.size(); i++)
@@ -139,8 +162,10 @@ public class ReactionDialog {
 	
 	/**
 	 * Sets the reaction data.
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws ParseException the parse exception
 	 */
-	private void setReactionData(){
+	private void setReactionData() throws IllegalArgumentException, ParseException{
 		String str = gd.getNextString();
 		if (str.indexOf(' ')!=-1)
 				str = str.replace(' ', '_');
@@ -151,16 +176,17 @@ public class ReactionDialog {
 		srp.setIsLocal(Boolean.getBoolean(gd.getNextRadioButton()));
 		KineticLaw kl = reaction.isSetKineticLaw() ? reaction.getKineticLaw() : reaction.createKineticLaw();
 		String formula = gd.getNextString();
-		kl.setMath(libsbml.parseFormula(formula));
+		if(formula != null)
+			kl.setMath(ASTNode.parseFormula(formula));
 		
 		@SuppressWarnings("unchecked")
 		Vector<Checkbox> v = gd.getCheckboxes();
-		ListOfSpeciesReferences losr = reaction.getListOfReactants();
+		ListOf<SpeciesReference> losr = reaction.getListOfReactants();
 		int size = (int) los.size();
 		
 		for (int i = 0; i < size; i++) {
 			Checkbox cb = v.get(i);
-			String label = cb.getLabel();
+			String label = cb.getLabel().trim();
 			if (label.indexOf(' ') != -1)
 					label = label.replace(' ', '_');
 			if (cb.getState()) {
@@ -189,24 +215,18 @@ public class ReactionDialog {
 			}
 		}
 		
-		losr = reaction.getListOfModifiers();
+		ListOf<ModifierSpeciesReference> lom = reaction.getListOfModifiers();
 		for (int i = size * 2; i < v.size(); i++) {
 			Checkbox cb = v.get(i);
 			String label = cb.getLabel();
 			if (label.indexOf(' ') != -1)
 					label = label.replace(' ', '_');
 			if (cb.getState()) {
-				ModifierSpeciesReference sr = (ModifierSpeciesReference) (losr.get(label) != null ? losr.get(label) : reaction.createModifier());				
+				ModifierSpeciesReference sr = (ModifierSpeciesReference) (lom.get(label) != null ? losr.get(label) : reaction.createModifier());				
 				sr.setSpecies(label);
 			} else {
 				losr.remove(label);
 			}
 		}
-<<<<<<< HEAD
-		
-		System.out.println(reaction.toSBML());
-=======
-
->>>>>>> develop
 	}
 }

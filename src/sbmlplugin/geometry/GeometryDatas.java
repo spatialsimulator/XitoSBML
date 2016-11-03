@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 import javax.vecmath.Point3f;
 
-import org.sbml.libsbml.CoordinateComponent;
-import org.sbml.libsbml.DomainType;
-import org.sbml.libsbml.Geometry;
-import org.sbml.libsbml.GeometryDefinition;
-import org.sbml.libsbml.ListOfCoordinateComponents;
-import org.sbml.libsbml.ListOfDomainTypes;
-import org.sbml.libsbml.ListOfGeometryDefinitions;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.SpatialModelPlugin;
-import org.sbml.libsbml.libsbmlConstants;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.ext.spatial.AnalyticGeometry;
+import org.sbml.jsbml.ext.spatial.CoordinateComponent;
+import org.sbml.jsbml.ext.spatial.DomainType;
+import org.sbml.jsbml.ext.spatial.Geometry;
+import org.sbml.jsbml.ext.spatial.GeometryDefinition;
+import org.sbml.jsbml.ext.spatial.ParametricGeometry;
+import org.sbml.jsbml.ext.spatial.SampledFieldGeometry;
+import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
 
 import sbmlplugin.image.SpatialImage;
 
@@ -71,7 +71,7 @@ public class GeometryDatas {
 	 * Createsp img list.
 	 */
 	protected void createspImgList(){
-		ListOfGeometryDefinitions logd = geometry.getListOfGeometryDefinitions();
+		ListOf<GeometryDefinition> logd = geometry.getListOfGeometryDefinitions();
 		SpatialImage spImg; 
 		for(int i = 0 ; i < logd.size() ; i++){
 			GeometryDefinition gd = logd.get(i);
@@ -90,13 +90,13 @@ public class GeometryDatas {
 	protected SpatialImage getSpImgFromGeo(GeometryDefinition gd){
 		if(gd.isSetIsActive() && !gd.getIsActive()) return null;			//if isactive set and is false
 
-		if(gd.isSampledFieldGeometry()){
+		if(gd instanceof SampledFieldGeometry){
 			SampledFieldGeometryData sfgd = new SampledFieldGeometryData(gd, geometry);
 			return sfgd.getSpatialImage();
-		}else if(gd.isAnalyticGeometry()){
+		}else if(gd instanceof AnalyticGeometry){
 			AnalyticGeometryData agd = new AnalyticGeometryData(gd, geometry, minCoord, maxCoord, dispCoord);
 			return agd.getSpatialImage();
-		}else if(gd.isParametricGeometry()){
+		}else if(gd instanceof ParametricGeometry){
 				//TODO 
 		}else{
 			System.err.println("Not able to obtain geometry \n"
@@ -112,19 +112,19 @@ public class GeometryDatas {
 	 * @return the coordinates
 	 */
 	protected void getCoordinates(){
-		ListOfCoordinateComponents locc = geometry.getListOfCoordinateComponents();
+		ListOf<CoordinateComponent> locc = geometry.getListOfCoordinateComponents();
 		dimension = (int) locc.size();
 		for(int i = 0 ; i < locc.size(); i++){
 			CoordinateComponent cc = locc.get(i);
 			switch (cc.getType()){
-			case libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_X:
-				minCoord.setX((float) cc.getBoundaryMin().getValue()); maxCoord.setX((float) cc.getBoundaryMax().getValue());
+			case cartesianX:
+				minCoord.setX((float) cc.getBoundaryMinimum().getValue()); maxCoord.setX((float) cc.getBoundaryMaximum().getValue());
 				break;
-			case libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Y:
-				minCoord.setY((float) cc.getBoundaryMin().getValue()); maxCoord.setY((float) cc.getBoundaryMax().getValue());
+			case cartesianY:
+				minCoord.setY((float) cc.getBoundaryMinimum().getValue()); maxCoord.setY((float) cc.getBoundaryMaximum().getValue());
 				break;
-			case libsbmlConstants.SPATIAL_COORDINATEKIND_CARTESIAN_Z:
-				minCoord.setZ((float) cc.getBoundaryMin().getValue()); maxCoord.setZ((float) cc.getBoundaryMax().getValue());
+			case cartesianZ:
+				minCoord.setZ((float) cc.getBoundaryMinimum().getValue()); maxCoord.setZ((float) cc.getBoundaryMaximum().getValue());
 				break;
 			}
 		}
@@ -165,11 +165,11 @@ public class GeometryDatas {
 	 * @return the domain types
 	 */
 	protected void getDomainTypes(){
-		ListOfDomainTypes lodt = geometry.getListOfDomainTypes();
+		ListOf<DomainType> lodt = geometry.getListOfDomainTypes();
 		for(int i = 0 ; i < lodt.size(); i++){
 			DomainType d = lodt.get(i);
 			if(d.getSpatialDimensions() == dimension)
-				domList.add(d.getId());
+				domList.add(d.getSpatialId());
 		}
 	}
 

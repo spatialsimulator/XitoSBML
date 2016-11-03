@@ -2,12 +2,11 @@ package sbmlplugin.pane;
 
 import ij.gui.GenericDialog;
 
-import org.sbml.libsbml.AdvectionCoefficient;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.Parameter;
-import org.sbml.libsbml.SpatialParameterPlugin;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.ext.spatial.AdvectionCoefficient;
+import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
-// TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.
  *
@@ -69,11 +68,12 @@ public class AdvectionDialog {
 	 *
 	 * @param parameter the parameter
 	 * @return the parameter
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
-	public Parameter showDialog(Parameter parameter){
+	public Parameter showDialog(Parameter parameter) throws IllegalArgumentException{
 		this.parameter = parameter;
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
-		AdvectionCoefficient ac = sp.getAdvectionCoefficient();
+		AdvectionCoefficient ac = (AdvectionCoefficient) sp.getParamType();
 		gd = new GenericDialog("Edit Advection Coefficient");
 		gd.setResizable(true);
 		gd.pack();
@@ -95,8 +95,10 @@ public class AdvectionDialog {
 		
 	/**
 	 * Sets the parameter data.
+	 *
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
-	private void setParameterData(){
+	private void setParameterData() throws IllegalArgumentException{
 		String str = gd.getNextString();
 		if (str.indexOf(' ')!=-1)
 				str = str.replace(' ', '_');
@@ -104,9 +106,11 @@ public class AdvectionDialog {
 		parameter.setValue(gd.getNextNumber());
 		parameter.setConstant(Boolean.getBoolean(gd.getNextRadioButton()));
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
-		AdvectionCoefficient ac = sp.isSetAdvectionCoefficient() ? sp.getAdvectionCoefficient() : sp.createAdvectionCoefficient();
+		AdvectionCoefficient ac = (AdvectionCoefficient) (sp.isSetParamType() ? sp.getParamType() : new AdvectionCoefficient());
 		String var = gd.getNextChoice();
 		ac.setVariable(var);
-		ac.setCoordinate(gd.getNextChoice());
-	}
+		ac.setCoordinate(SBMLProcessUtil.StringToCoordinateKind(gd.getNextChoice()));
+		if(!ac.isSetParentSBMLObject())
+			sp.setParamType(ac);
+	}	
 }

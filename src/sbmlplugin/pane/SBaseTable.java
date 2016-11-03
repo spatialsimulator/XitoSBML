@@ -1,21 +1,20 @@
 package sbmlplugin.pane;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import org.sbml.libsbml.ListOf;
-import org.sbml.libsbml.SBase;
+import org.sbml.jsbml.IdentifierException;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.SBase;
+import org.sbml.jsbml.text.parser.ParseException;
 
-// TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.
  *
@@ -36,22 +35,27 @@ public abstract class SBaseTable {
 	protected Color gray = new Color(169, 169, 169);
 	
 	/** The member list. */
-	protected ArrayList<SBase> memberList = new ArrayList<SBase>();
+	protected ListOf<SBase> memberList = new ListOf<SBase>(3,1);
 	
 	/** The list. */
-	protected ListOf list;
+	protected ListOf<?> list;
 	
 	/**
 	 * Adds the.
+	 *
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws ParseException 
 	 */
-	abstract void add();
+	abstract void add() throws IllegalArgumentException, ParseException,IdentifierException;
 
 	/**
 	 * Edits the.
 	 *
 	 * @param index the index
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws ParseException 
 	 */
-	abstract void edit(int index);
+	abstract void edit(int index) throws IllegalArgumentException, ParseException, IdentifierException;
 	
 	/**
 	 * Removes the from list.
@@ -60,10 +64,8 @@ public abstract class SBaseTable {
 	 */
 	void removeFromList(int index){
 		if(index == -1) return;
-		String id = memberList.get(index).getId();
-		for(int i = 0; i < list.size(); i++)
-			if(list.get(i).getId().equals(id)) 
-				list.remove(i);
+		SBase id = memberList.get(index);
+		list.remove(id);
 		memberList.remove(index);
 	}
 	
@@ -86,31 +88,7 @@ public abstract class SBaseTable {
 	JScrollPane getPane(){
 		return pane;
 	}
-	
-	/**
-	 * Contains duplicate id.
-	 *
-	 * @param sbase the sbase
-	 * @return true, if successful
-	 */
-	boolean containsDuplicateId(SBase sbase){
-		Boolean bool = false;
 		
-		for(SBase s: memberList)
-			if(s != sbase && s.getId().equals(sbase.getId())) bool = true;
-
-		return bool;
-	}
-
-	/**
-	 * Err dup ID.
-	 *
-	 * @param table the table
-	 */
-	void errDupID(JTable table){
-		JOptionPane.showMessageDialog(table, "Duplicate id", "Error", JOptionPane.PLAIN_MESSAGE);	
-	}
-	
 	/**
 	 * Sets the table properties.
 	 *

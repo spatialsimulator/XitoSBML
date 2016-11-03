@@ -4,9 +4,10 @@ import java.util.Vector;
 
 import javax.swing.JTable;
 
-import org.sbml.libsbml.ListOfSpecies;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.Species;
+
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Species;
 
 
 // TODO: Auto-generated Javadoc
@@ -36,7 +37,7 @@ public class SpeciesTable extends SBaseTable{
 	 *
 	 * @param los the los
 	 */
-	SpeciesTable(ListOfSpecies los){
+	SpeciesTable(ListOf<Species> los){
 		this.model = los.getModel();
 		list = los;
 		setSpeciesToList(los);
@@ -51,11 +52,11 @@ public class SpeciesTable extends SBaseTable{
 	 *
 	 * @param los the new species to list
 	 */
-	private void setSpeciesToList(ListOfSpecies los){
+	private void setSpeciesToList(ListOf<Species> los){
 		long max = los.size();
 		for(int i = 0; i < max; i++){
-			Species s = los.get(i);
-			memberList.add(s);
+			Species s = los.get(i).clone();
+			memberList.add(s.clone());
 		}
 	}
 	
@@ -65,7 +66,7 @@ public class SpeciesTable extends SBaseTable{
 	 * @param los the los
 	 * @return the table model with species
 	 */
-	private MyTableModel getTableModelWithSpecies(ListOfSpecies los){
+	private MyTableModel getTableModelWithSpecies(ListOf<Species> los){
 		int max = memberList.size();
 		Object[][] data  = new Object[max][header.length];
 		for(int i = 0; i < max; i++){
@@ -141,26 +142,21 @@ public class SpeciesTable extends SBaseTable{
 	 * @see sbmlplugin.pane.SBaseTable#add()
 	 */
 	@Override
-	void add() {
+	void add() throws IllegalArgumentException{
 		if(sd == null)
 			sd = new SpeciesDialog(model);
 		Species s = sd.showDialog();
 		if(s == null) return;
-		
-		if(containsDuplicateId(s)){
-			errDupID(table);
-			return;
-		}
 			
-		memberList.add(s);
-		((MyTableModel)table.getModel()).addRow(speciesToVector(s));
+		memberList.add(s.clone());
+		((MyTableModel)table.getModel()).addRow(speciesToVector(s.clone()));
 	}
 
 	/* (non-Javadoc)
 	 * @see sbmlplugin.pane.SBaseTable#edit(int)
 	 */
 	@Override
-	void edit(int index) {
+	void edit(int index) throws IllegalArgumentException{
 		if(index == -1 ) return ;
 		if(sd == null)
 			sd = new SpeciesDialog(model);
@@ -168,11 +164,6 @@ public class SpeciesTable extends SBaseTable{
 		
 		if(s == null) return;
 		
-		if(containsDuplicateId(s)){
-			errDupID(table);
-			return;
-		}
-			
 		memberList.set(index, s);
 		((MyTableModel)table.getModel()).updateRow(index, speciesToVector(s));
 		

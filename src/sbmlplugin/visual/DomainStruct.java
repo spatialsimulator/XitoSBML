@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.sbml.libsbml.AdjacentDomains;
-import org.sbml.libsbml.AnalyticGeometry;
-import org.sbml.libsbml.AnalyticVolume;
-import org.sbml.libsbml.Domain;
-import org.sbml.libsbml.Geometry;
-import org.sbml.libsbml.GeometryDefinition;
-import org.sbml.libsbml.ListOfAdjacentDomains;
-import org.sbml.libsbml.ListOfAnalyticVolumes;
-import org.sbml.libsbml.ListOfDomains;
-import org.sbml.libsbml.ListOfSampledVolumes;
-import org.sbml.libsbml.SampledFieldGeometry;
-import org.sbml.libsbml.SampledVolume;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.ext.spatial.AdjacentDomains;
+import org.sbml.jsbml.ext.spatial.AnalyticGeometry;
+import org.sbml.jsbml.ext.spatial.AnalyticVolume;
+import org.sbml.jsbml.ext.spatial.Domain;
+import org.sbml.jsbml.ext.spatial.Geometry;
+import org.sbml.jsbml.ext.spatial.GeometryDefinition;
+import org.sbml.jsbml.ext.spatial.SampledFieldGeometry;
+import org.sbml.jsbml.ext.spatial.SampledVolume;
 
 
 // TODO: Auto-generated Javadoc
@@ -27,14 +24,13 @@ public class DomainStruct {
 	/** The geometry. */
 	Geometry geometry;
 	
-	/** The lod. */
-	ListOfDomains lod;
+	ListOf<Domain> lod;
 	
 	/** The load. */
-	ListOfAdjacentDomains load;
+	ListOf<AdjacentDomains> load;
 	
 	/** The losv. */
-	ListOfSampledVolumes losv;
+	ListOf<SampledVolume> losv;
 	
 	/** The ordered list. */
 	List<String> orderedList = new ArrayList<String>();
@@ -50,32 +46,32 @@ public class DomainStruct {
 		this.load = geometry.getListOfAdjacentDomains();
 		GraphStruct GraphStruct = new GraphStruct();
 		vertex(GraphStruct);
-		GeometryDefinition gd = geometry.getGeometryDefinition(0);				// multiple geometry
+		GeometryDefinition gd = geometry.getListOfGeometryDefinitions().get(0); 	//TODO multiple definitions
 		
-		if(gd.isSampledFieldGeometry()){
+		if(gd instanceof SampledFieldGeometry){
 			SampledFieldGeometry sfg = (SampledFieldGeometry) gd;
-			createDomainOrder(sfg.getListOfSampledVolumes());
+			createSampledDomainOrder(sfg.getListOfSampledVolumes());
 
-		} else if(gd.isAnalyticGeometry()){
-			AnalyticGeometry ag = (AnalyticGeometry) gd;	
-			createDomainOrder(ag.getListOfAnalyticVolumes());
+		} else if(gd instanceof AnalyticGeometry){
+			AnalyticGeometry ag = (AnalyticGeometry) gd;
+			createAnalyticDomainOrder(ag.getListOfAnalyticVolumes());
 		}
 		edge(GraphStruct);
 		GraphStruct.visualize();
 	}
 
 	/**
-	 * Creates the domain order.
+	 * Creates the analytic domain order.
 	 *
-	 * @param loav the loav
+	 * @param listOf the list of
 	 */
-	private void createDomainOrder(ListOfAnalyticVolumes loav){
-		int numDom = (int) loav.size();
+	private void createAnalyticDomainOrder(ListOf<AnalyticVolume> listOf){
+		int numDom = (int) listOf.size();
 		
 		for(int i = 0 ; i < numDom ; i++){
 			AnalyticVolume av;
 			for(int j = 0; j < numDom ; j++){
-				av = loav.get(j);
+				av = listOf.get(j);
 				if(av.getOrdinal() == i){
 					orderedList.add(av.getDomainType());
 				}
@@ -84,11 +80,11 @@ public class DomainStruct {
 	}
 	
 	/**
-	 * Creates the domain order.
+	 * Creates the sampled domain order.
 	 *
 	 * @param losv the losv
 	 */
-	private void createDomainOrder(ListOfSampledVolumes losv){
+	private void createSampledDomainOrder(ListOf<SampledVolume> losv){
 		int numDom = (int) losv.size();
 		List<Double> sampleList = new ArrayList<Double>();
 		for(int i = 0; i < numDom ; i++){
@@ -114,8 +110,8 @@ public class DomainStruct {
 		Domain dom;
 		for (int i = 0; i < lod.size(); i++) {
 			dom = lod.get(i);
-			if(!dom.getId().contains("membrane"))
-				GraphStruct.addVertex(dom.getId());
+			if(!dom.getSpatialId().contains("membrane"))
+				GraphStruct.addVertex(dom.getSpatialId());
 		}
 	}
 	

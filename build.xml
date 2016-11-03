@@ -47,10 +47,11 @@
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 			</manifest>
-		</jar>
-		<copy file="Spatial_SBML.jar" toDir="${destDir}" overwrite="true" />
+    </jar>
+    <copy file="Spatial_SBML.jar" toDir="${destDir}" overwrite="true" />
+    <copy file="Spatial_SBML.jar" toDir="${pluginsDir}" overwrite="true" />
 		<copy file="Spatial_SBML.jar" toDir="${basedir}" overwrite="true" />
-	</target>
+</target>
 
 	<target name="mv" depends="mvMacLib, mvWindowsLib, mvLinuxLib" description="move library">
 		<echo>Moving jgraph library</echo>

@@ -15,7 +15,6 @@ import java.util.Vector;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
-import javax.vecmath.Point3f;
 
 import sbmlplugin.image.SpatialImage;
 import customnode.CustomMesh;
@@ -52,7 +51,7 @@ public class Viewer {
 	private byte[] rawMat;
 	
 	/** The hash vertices. */
-	private HashMap<String, List<Point3f>> hashVertices = new HashMap<String, List<Point3f>>();
+	private HashMap<String, List<Point3d>> hashVertices = new HashMap<String, List<Point3d>>();
 	
 	/** The hash bound. */
 	private HashMap<String, Point3d> hashBound = new HashMap<String, Point3d>();
@@ -98,7 +97,7 @@ public class Viewer {
 			if (node instanceof MeshGroup) {
 				CustomMesh cm = ((MeshGroup) node).getMesh();
 				@SuppressWarnings("unchecked")
-				List<Point3f> vertices = cm.getMesh();
+				List<Point3d> vertices = cm.getMesh();
 				hashVertices.put(c.getName(), vertices);
 			}
 			// get min max coordinates
@@ -227,7 +226,7 @@ public class Viewer {
 	 *
 	 * @return the hash vertices
 	 */
-	public HashMap<String, List<Point3f>> gethashVertices(){
+	public HashMap<String, List<Point3d>> gethashVertices(){
 		return hashVertices;
 	}
 

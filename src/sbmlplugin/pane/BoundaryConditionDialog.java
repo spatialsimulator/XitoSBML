@@ -3,12 +3,10 @@ package sbmlplugin.pane;
 import ij.gui.GenericDialog;
 
 import java.util.Arrays;
-
-import org.sbml.libsbml.BoundaryCondition;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.Parameter;
-import org.sbml.libsbml.SpatialParameterPlugin;
-// TODO: Auto-generated Javadoc
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.ext.spatial.BoundaryCondition;
+import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
 /**
  * Spatial SBML Plugin for ImageJ.
@@ -44,8 +42,9 @@ public class BoundaryConditionDialog {
 	 * Show dialog.
 	 *
 	 * @return the parameter
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
-	public Parameter showDialog(){
+	public Parameter showDialog() throws IllegalArgumentException{
 		gd = new GenericDialog("Add Boundary Condition");
 		gd.setResizable(true);
 		gd.pack();
@@ -72,11 +71,12 @@ public class BoundaryConditionDialog {
 	 *
 	 * @param parameter the parameter
 	 * @return the parameter
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
-	public Parameter showDialog(Parameter parameter){
+	public Parameter showDialog(Parameter parameter) throws IllegalArgumentException{
 		this.parameter = parameter;
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
-		BoundaryCondition bc = sp.getBoundaryCondition();
+		BoundaryCondition bc = (BoundaryCondition) sp.getParamType();
 		gd = new GenericDialog("Edit Parameter");
 		gd.setResizable(true);
 		gd.pack();
@@ -99,8 +99,10 @@ public class BoundaryConditionDialog {
 		
 	/**
 	 * Sets the parameter data.
+	 *
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
-	private void setParameterData(){
+	private void setParameterData() throws IllegalArgumentException{
 		String str = gd.getNextString();
 		if (str.indexOf(' ')!=-1)
 				str = str.replace(' ', '_');
@@ -108,7 +110,7 @@ public class BoundaryConditionDialog {
 		parameter.setValue(gd.getNextNumber());
 		parameter.setConstant(Boolean.getBoolean(gd.getNextRadioButton()));
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
-		BoundaryCondition bc = sp.isSetBoundaryCondition() ? sp.getBoundaryCondition() : sp.createBoundaryCondition();
+		BoundaryCondition bc = (BoundaryCondition) (sp.isSetParamType() ? sp.getParamType() : new BoundaryCondition());
 		bc.setVariable(gd.getNextChoice());
 		bc.setType(gd.getNextChoice());
 		String bound = gd.getNextChoice();
@@ -116,7 +118,9 @@ public class BoundaryConditionDialog {
 			bc.setCoordinateBoundary(bound);
 		else
 			bc.setBoundaryDomainType(bound);
-		System.out.println(bc.toSBML());
+
+		if(!bc.isSetParentSBMLObject())
+			sp.setParamType(bc);
 	} 
 	
 	/**

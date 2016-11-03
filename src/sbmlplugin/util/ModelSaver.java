@@ -1,17 +1,23 @@
 package sbmlplugin.util;
 
+import ij.IJ;
+import ij.io.SaveDialog;
+
+import java.io.File;
+import java.io.IOException;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import ij.IJ;
-import ij.io.SaveDialog;
+import javax.xml.stream.XMLStreamException;
 
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.SBMLDocument;
-import org.sbml.libsbml.libsbml;
-
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.SBMLDocument;
+import org.sbml.jsbml.SBMLException;
+import org.sbml.jsbml.SBMLWriter;
+import org.sbml.jsbml.TidySBMLWriter;
 // TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.
@@ -60,13 +66,22 @@ public class ModelSaver {
 		try {		
 			if(name.contains(".xml"))	
 				name = name.substring(0, name.indexOf('.'));
-			document.getModel().setId(name);	
-			libsbml.writeSBMLToFile(document, path + "/" + name + ".xml"); 			
+			SBMLWriter.write(document, new File(path + "/" + name + ".xml"), ' ', (short) 2); 
+			String docStr = new TidySBMLWriter().writeSBMLToString(document); 
+	        IJ.log(docStr);
 		} catch(NullPointerException e) {
 			System.out.println("SBML document was not saved");
+		} catch (SBMLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}	
-		
-        IJ.log(document.toSBML());
+
 	}
 
 	/**
@@ -88,10 +103,15 @@ public class ModelSaver {
 		Calendar date = new GregorianCalendar();
 		annot = annot.concat(" in " + date.getTime());
 		
-//		document.setAnnotation(annot);
-//		
-//		model.setAnnotation("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
-//				+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
+
+		try {
+			document.setNotes(annot);
+			model.setNotes("This model has been built using Spatial SBML Plugin created by Kaito Ii and Akira Funahashi "
+					+ "from Funahashi Lab. Keio University, Japan with substantial contributions from Kota Mashimo, Mitunori Ozeki, and Noriko Hiroi");
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

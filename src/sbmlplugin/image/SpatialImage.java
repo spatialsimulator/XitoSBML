@@ -7,10 +7,8 @@ import ij.io.FileSaver;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import math3d.Point3d;
+import javax.vecmath.Point3d;
 
-
-// TODO: Auto-generated Javadoc
 /**
  * The Class SpatialImage.
  */

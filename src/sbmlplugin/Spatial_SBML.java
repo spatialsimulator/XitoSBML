@@ -1,7 +1,7 @@
 package sbmlplugin;
-import sbmlplugin.util.PluginConstants;
 import ij.IJ;
 import ij.plugin.PlugIn;
+import sbmlplugin.util.PluginConstants;
 
 
 // TODO: Auto-generated Javadoc

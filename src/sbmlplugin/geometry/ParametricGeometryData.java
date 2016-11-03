@@ -1,6 +1,6 @@
 package sbmlplugin.geometry;
 
-import org.sbml.libsbml.GeometryDefinition;
+import org.sbml.jsbml.ext.spatial.GeometryDefinition;
 
 // TODO: Auto-generated Javadoc
 /**

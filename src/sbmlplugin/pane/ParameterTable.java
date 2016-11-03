@@ -4,10 +4,11 @@ import java.util.Vector;
 
 import javax.swing.JTable;
 
-import org.sbml.libsbml.ListOfParameters;
-import org.sbml.libsbml.Model;
-import org.sbml.libsbml.Parameter;
-import org.sbml.libsbml.SpatialParameterPlugin;
+import org.sbml.jsbml.IdentifierException;
+import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
 
 // TODO: Auto-generated Javadoc
@@ -37,7 +38,7 @@ public class ParameterTable extends SBaseTable {
 	 *
 	 * @param lop the lop
 	 */
-	ParameterTable(ListOfParameters lop){
+	ParameterTable(ListOf<Parameter> lop){
 		this.model = lop.getModel();
 		list = lop;
 		setParameterToList(lop);
@@ -52,13 +53,14 @@ public class ParameterTable extends SBaseTable {
 	 *
 	 * @param lop the new parameter to list
 	 */
-	private void setParameterToList(ListOfParameters lop){
+	private void setParameterToList(ListOf<Parameter> lop){
 		long max = lop.size();
 		for(int i = 0; i < max; i++){
 			Parameter p = lop.get(i);
 			SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
-			if( sp.isSetAdvectionCoefficient() || sp.isSetBoundaryCondition() || sp.isSetDiffusionCoefficient() ) continue;
-			memberList.add(p);
+	
+			if( sp.isSetParamType() ) continue;
+			memberList.add(p.clone());
 		}
 	}
 	
@@ -68,7 +70,7 @@ public class ParameterTable extends SBaseTable {
 	 * @param lop the lop
 	 * @return the table model with parameters
 	 */
-	private MyTableModel getTableModelWithParameters(ListOfParameters lop){
+	private MyTableModel getTableModelWithParameters(ListOf<Parameter> lop){
 		int max = memberList.size();
 		Object[][] data  = new Object[max][header.length];
 		for(int i = 0; i < max; i++){
@@ -123,7 +125,7 @@ public class ParameterTable extends SBaseTable {
 	 * @see sbmlplugin.pane.SBaseTable#add()
 	 */
 	@Override
-	void add() {
+	void add() throws IllegalArgumentException , IdentifierException{
 		if(pd == null)
 			pd = new ParameterDialog(model);
 		
@@ -131,20 +133,15 @@ public class ParameterTable extends SBaseTable {
 		
 		if(p == null) return;
 		
-		if(containsDuplicateId(p)){
-			errDupID(table);
-			return;
-		}
-			
-		memberList.add(p);
-		((MyTableModel)table.getModel()).addRow(parameterToVector(p));
+		memberList.add(p.clone());
+		((MyTableModel)table.getModel()).addRow(parameterToVector(p.clone()));
 	}
 
 	/* (non-Javadoc)
 	 * @see sbmlplugin.pane.SBaseTable#edit(int)
 	 */
 	@Override
-	void edit(int index) {
+	void edit(int index) throws IllegalArgumentException, IdentifierException{
 		if(index == -1 ) return ;
 		if(pd == null)
 			pd = new ParameterDialog(model);
@@ -152,12 +149,6 @@ public class ParameterTable extends SBaseTable {
 		Parameter p = pd.showDialog((Parameter) memberList.get(index));
 		
 		if(p == null) return;
-		
-		if(containsDuplicateId(p)){
-			errDupID(table);
-			return;
-		}
-			
 		memberList.set(index, p);
 		((MyTableModel)table.getModel()).updateRow(index,parameterToVector(p));
 	

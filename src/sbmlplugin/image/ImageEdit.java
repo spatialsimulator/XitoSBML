@@ -9,9 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import math3d.Point3d;
+import javax.vecmath.Point3d;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class ImageEdit.
  */
@@ -453,7 +452,7 @@ public class ImageEdit {
 	 * Creates the dom interior pt.
 	 */
 	private void createDomInteriorPt(){
-		for(Entry<Integer,Point3D> e : hashLabelPt.entrySet()){
+		for(Entry<Integer,Point3d> e : hashLabelPt.entrySet()){
 			int pixelVal = hashPix.get(e.getKey());
 			String domName = getKeyFromValue(hashSampledValue, pixelVal) + getIndexLabel(e.getKey());
 			hashDomInteriorPt.put(domName, e.getValue());

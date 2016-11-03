@@ -79,6 +79,13 @@
       <systemPath>${basedir}/lib/jgraph-5.13.0.0.jar</systemPath>
     </dependency>
     <dependency>
+      <groupId>garuda</groupId>
+      <artifactId>garuda</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/GarudaSDK2.0src.jar</systemPath>
+    </dependency>
+    <dependency>
       <groupId>3dviewer</groupId>
       <artifactId>3dviewer</artifactId>
       <version>1.0.0</version>
@@ -105,13 +112,6 @@
       <version>1.0.0</version>
       <scope>system</scope>
       <systemPath>${basedir}/lib/jgrapht-ext-0.9.0-uber.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>garuda</groupId>
-      <artifactId>garuda</artifactId>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/GarudaSDK2.0src.jar</systemPath>
     </dependency>
     <dependency>
     	<groupId>javax.vecmath</groupId>

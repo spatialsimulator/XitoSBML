@@ -1,5 +1,7 @@
 package sbmlplugin.sbmlplugin;
 
+import ij.IJ;
+
 import javax.swing.JOptionPane;
 
 import sbmlplugin.util.ModelSaver;
@@ -43,6 +45,6 @@ public class MainImgSpatial extends MainSpatial {
 		
 		ModelValidator validator = new ModelValidator(document);
 		validator.validate();
-	
+		print();
 	}
 }
