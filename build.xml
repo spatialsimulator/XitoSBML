@@ -17,6 +17,7 @@
 	<property name="dylib_linux" value="libsbml.5.11.4.so" />
 	<property name="jnilib" value="libsbmlj.jnilib" />
 	<property name="sbmljar" value="libsbmlj.jar" />
+  <property name="sbmllib" value="${basedir}/lib" />
 
 	<condition property="isMac">
 		<os family="mac" />
