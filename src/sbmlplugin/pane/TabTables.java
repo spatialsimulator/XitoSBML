@@ -83,7 +83,11 @@ public class TabTables extends JFrame implements ActionListener {
 		BoundaryConditionTable bctable = new BoundaryConditionTable(lop);
 		DiffusionTable dtable = new DiffusionTable(lop);
 		ReactionTable rtable = new ReactionTable(lor);
+<<<<<<< HEAD
 	//	UnitDefinitionTable udtable = new UnitDefinitionTable(loud);
+=======
+		UnitDefinitionTable udtable = new UnitDefinitionTable(loud);
+>>>>>>> develop
 		
 		sbaseList.add(stable);
 		sbaseList.add(ptable);
@@ -91,7 +95,11 @@ public class TabTables extends JFrame implements ActionListener {
 		sbaseList.add(bctable);
 		sbaseList.add(dtable);
 		sbaseList.add(rtable);
+<<<<<<< HEAD
 	//	sbaseList.add(udtable);
+=======
+		sbaseList.add(udtable);
+>>>>>>> develop
 		
 		tabbedpane.addTab("Species", stable.getPane());
 		tabbedpane.addTab("Parameter", ptable.getPane());
@@ -99,7 +107,11 @@ public class TabTables extends JFrame implements ActionListener {
 		tabbedpane.addTab("Boundary Condition", bctable.getPane());
 		tabbedpane.addTab("Diffusion", dtable.getPane());
 		tabbedpane.addTab("Reaction", rtable.getPane());
+<<<<<<< HEAD
 		//tabbedpane.addTab("Unit Definition", udtable.getPane());
+=======
+		tabbedpane.addTab("Unit Definition", udtable.getPane());
+>>>>>>> develop
 		
 		// button
 		JButton ok = new JButton("OK"), add = new JButton("add"), del = new JButton("delete"), edit = new JButton("edit");
@@ -184,7 +196,11 @@ public class TabTables extends JFrame implements ActionListener {
 		}
 
 		if (input.equals("OK")) {
+<<<<<<< HEAD
 			//addAllSBase();
+=======
+			addAllSBase();
+>>>>>>> develop
 			isRunning = false;
 			dispose();
 			return;

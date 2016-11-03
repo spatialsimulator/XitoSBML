@@ -7,8 +7,7 @@ import ij.io.FileSaver;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Point3f;
+import math3d.Point3d;
 
 
 // TODO: Auto-generated Javadoc
@@ -51,7 +50,7 @@ public class SpatialImage {
 	private String unit;
 	
 	/** The hash dom interior pt. */
-	private HashMap<String,Point3f> hashDomInteriorPt;
+	private HashMap<String,Point3d> hashDomInteriorPt;
 	
 	/** The delta. */
 	private Point3d delta = new Point3d();
@@ -368,7 +367,7 @@ public class SpatialImage {
 	 *
 	 * @return the hash dom interior pt
 	 */
-	public HashMap<String,Point3f> getHashDomInteriorPt() {
+	public HashMap<String,Point3d> getHashDomInteriorPt() {
 		return hashDomInteriorPt;
 	}
 
@@ -377,7 +376,7 @@ public class SpatialImage {
 	 *
 	 * @param hashDomInteriorPt the hash dom interior pt
 	 */
-	public void setHashDomInteriorpt(HashMap<String,Point3f> hashDomInteriorPt) {
+	public void setHashDomInteriorpt(HashMap<String,Point3d> hashDomInteriorPt) {
 		this.hashDomInteriorPt = hashDomInteriorPt;
 	}
 

@@ -2,14 +2,14 @@ package sbmlplugin.image;
 
 import ij.ImagePlus;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.vecmath.Point3f;
-
+import math3d.Point3d;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -54,10 +54,10 @@ public class ImageEdit {
 	private HashMap<Integer, Integer>  hashPix = new HashMap<Integer,Integer>(); //label + pixel vlaue
 	
 	/** The hash label pt. */
-	private HashMap<Integer, Point3f> hashLabelPt = new HashMap<Integer,Point3f>();  //label + coordinates
+	private HashMap<Integer, Point3d> hashLabelPt = new HashMap<Integer,Point3d>();  //label + coordinates
     
     /** The hash dom interior pt. */
-    private HashMap<String, Point3f> hashDomInteriorPt = new HashMap<String,Point3f>();  //domain name + coordinates
+    private HashMap<String, Point3d> hashDomInteriorPt = new HashMap<String,Point3d>();  //domain name + coordinates
 	
     /**
      * Instantiates a new image edit.
@@ -206,7 +206,7 @@ public class ImageEdit {
 		
 		if(adjVal.isEmpty()){
 			hashPix.put(labelCount, pixVal);
-			hashLabelPt.put(labelCount, new Point3f(w,h,d));
+			hashLabelPt.put(labelCount, new Point3d(w,h,d));
 			return labelCount++;
 		}
 			
@@ -453,7 +453,7 @@ public class ImageEdit {
 	 * Creates the dom interior pt.
 	 */
 	private void createDomInteriorPt(){
-		for(Entry<Integer,Point3f> e : hashLabelPt.entrySet()){
+		for(Entry<Integer,Point3D> e : hashLabelPt.entrySet()){
 			int pixelVal = hashPix.get(e.getKey());
 			String domName = getKeyFromValue(hashSampledValue, pixelVal) + getIndexLabel(e.getKey());
 			hashDomInteriorPt.put(domName, e.getValue());

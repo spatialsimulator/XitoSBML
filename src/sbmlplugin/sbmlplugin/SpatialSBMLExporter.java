@@ -11,8 +11,7 @@ import java.util.Map.Entry;
 import java.util.WeakHashMap;
 import java.util.zip.Deflater;
 
-import javax.vecmath.Point3d;
-import javax.vecmath.Point3f;
+import math3d.Point3d;
 
 import org.sbml.libsbml.AdjacentDomains;
 import org.sbml.libsbml.Boundary;
@@ -47,7 +46,6 @@ import org.sbml.libsbml.UnitDefinition;
 import org.sbml.libsbml.libsbmlConstants;
 
 import sbmlplugin.image.SpatialImage;
-import sun.misc.FloatingDecimal;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -87,7 +85,7 @@ public class SpatialSBMLExporter{
   private HashMap<String, Integer> hashDomainNum;
   
   /** The hash dom interior pt. */
-  private HashMap<String,Point3f> hashDomInteriorPt;
+  private HashMap<String,Point3d> hashDomInteriorPt;
   
   /** The adjacents list. */
   private ArrayList<ArrayList<String>> adjacentsList;
@@ -124,7 +122,7 @@ public class SpatialSBMLExporter{
 		SBasePlugin basePlugin = (model.getPlugin("spatial"));
 		spatialplugin = (SpatialModelPlugin) basePlugin;
 		if (spatialplugin == null) {
-			System.err.println("[Fatal Error] Layout Extension Level "
+			System.err.println("[Fatal Error] Spatial Extension Level "
 					+ spatialns.getLevel() + " Version "
 					+ spatialns.getVersion() + " package version "
 					+ spatialns.getPackageVersion() + " is not registered.");
@@ -171,7 +169,7 @@ public class SpatialSBMLExporter{
 	/**
 	 * Adds the geometry definitions.
 	 */
-//TODO determine to use compressed or uncompressed data
+	//TODO determine to use compressed or uncompressed data
 	public void addGeometryDefinitions() {
 		SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();
 		sfg.setId("mySampledField");
@@ -197,7 +195,7 @@ public class SpatialSBMLExporter{
 		sf.setNumSamples2(height);
 		// if(depth > 1)
 		sf.setNumSamples3(depth);
-		sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_NEARESTNEIGHBOR);
+		sf.setInterpolationType(libsbmlConstants.SPATIAL_INTERPOLATIONKIND_LINEAR);
 
 		// byte[] compressed = compressRawData(raw);
 		// if (compressed != null)
@@ -281,6 +279,7 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
+>>>>>>> develop
 	 * Adds the domains.
 	 */
 	public void addDomains() {
@@ -293,7 +292,7 @@ public class SpatialSBMLExporter{
 			dom.setDomainType(dt.getId());
 			if (!dt.getId().matches(".*membrane")) {
 				  InteriorPoint ip = dom.createInteriorPoint();
-				  Point3f p = hashDomInteriorPt.get(id);
+				  Point3d p = hashDomInteriorPt.get(id);
 				  ip.setId(id + " point");
 				  ip.setCoord1(p.x);
 				  ip.setCoord2(p.y);
@@ -407,7 +406,7 @@ public class SpatialSBMLExporter{
 	 * @param hashVertices the hash vertices
 	 * @param hashBound the hash bound
 	 */
-	public void createParametric(HashMap<String, List<Point3f>> hashVertices, HashMap<String, Point3d> hashBound) {
+	public void createParametric(HashMap<String, List<Point3d>> hashVertices, HashMap<String, Point3d> hashBound) {
 	    geometry = spatialplugin.createGeometry();
 	    geometry.setCoordinateSystem("Cartesian");
 	    addCoordinates(hashBound);                        
@@ -423,14 +422,14 @@ public class SpatialSBMLExporter{
 	 * @param hashVertices the hash vertices
 	 * @param hashBound the hash bound
 	 */
-	public void addParaGeoDefinitions(HashMap<String, List<Point3f>> hashVertices, HashMap<String, Point3d> hashBound) {
+	public void addParaGeoDefinitions(HashMap<String, List<Point3d>> hashVertices, HashMap<String, Point3d> hashBound) {
 		ParametricGeometry pg = geometry.createParametricGeometry();
 		pg.setIsActive(true);
 		pg.setId("ParametricGeometry");
 		
-		for (Entry<String, List<Point3f>> e : hashVertices.entrySet()) {
-			List<Point3f> list = e.getValue();
-			ArrayList<Point3f> uniquePointSet = new ArrayList<Point3f>(new LinkedHashSet<Point3f>(list));
+		for (Entry<String, List<Point3d>> e : hashVertices.entrySet()) {
+			List<Point3d> list = e.getValue();
+			ArrayList<Point3d> uniquePointSet = new ArrayList<Point3d>(new LinkedHashSet<Point3d>(list));
 			SpatialPoints sp = pg.createSpatialPoints();
 			sp.setId(e.getKey() + "_vertices");
 			sp.setCompression(libsbmlConstants.SPATIAL_COMPRESSIONKIND_UNCOMPRESSED);
@@ -452,16 +451,16 @@ public class SpatialSBMLExporter{
 	 * @param sp the sp
 	 * @param uniquePointSet the unique point set
 	 */
-	public void addUniqueVertices(SpatialPoints sp, ArrayList<Point3f> uniquePointSet){
-		Iterator<Point3f> pIt = uniquePointSet.iterator();
+	public void addUniqueVertices(SpatialPoints sp, ArrayList<Point3d> uniquePointSet){
+		Iterator<Point3d> pIt = uniquePointSet.iterator();
 		int count = 0;
 		double[] d = new double[uniquePointSet.size() *3];
 		
 		while(pIt.hasNext()){
-			Point3f point = pIt.next();
-			d[count++] = new FloatingDecimal(point.x).doubleValue();
-			d[count++] = new FloatingDecimal(point.y).doubleValue();
-			d[count++] = new FloatingDecimal(point.z).doubleValue();
+			Point3d point = pIt.next();
+			d[count++] = point.x;
+			d[count++] = point.y;
+			d[count++] = point.z;
 		}	
 		sp.setArrayData(d, uniquePointSet.size());
 	}
@@ -473,7 +472,7 @@ public class SpatialSBMLExporter{
 	 * @param list the list
 	 * @param uniquePointSet the unique point set
 	 */
-	public void setPointIndex(ParametricObject po, List<Point3f> list, ArrayList<Point3f> uniquePointSet) {
+	public void setPointIndex(ParametricObject po, List<Point3d> list, ArrayList<Point3d> uniquePointSet) {
 		int size = list.size();
 		int[] points = new int[list.size()];
 		
@@ -530,7 +529,7 @@ public class SpatialSBMLExporter{
 	public void addUnits(){
 		if(unit == null) return; 
 		UnitDefinition ud = model.createUnitDefinition();
-		ud.setId(unit);
+		ud.setId("length");
 		Unit u = ud.createUnit();
 		u.setKind(libsbmlConstants.UNIT_KIND_METRE);
 		u.setExponent(1);
@@ -538,7 +537,7 @@ public class SpatialSBMLExporter{
 		u.setMultiplier(getUnitMultiplier(unit));
 	
 		ud = model.createUnitDefinition();
-		ud.setId(unit+"2");
+		ud.setId("area");
 		u = ud.createUnit();
 		u.setKind(libsbmlConstants.UNIT_KIND_METRE);
 		u.setExponent(2);
@@ -546,7 +545,7 @@ public class SpatialSBMLExporter{
 		u.setMultiplier(getUnitMultiplier(unit));
 		
 		ud = model.createUnitDefinition();
-		ud.setId(unit+"3");
+		ud.setId("volume");
 		u = ud.createUnit();
 		u.setKind(libsbmlConstants.UNIT_KIND_METRE);
 		u.setExponent(3);

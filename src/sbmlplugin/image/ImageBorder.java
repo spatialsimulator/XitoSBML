@@ -119,24 +119,24 @@ public class ImageBorder {
 		
 	}
 	
-//	/**
-//	 * Creates the new stack.
-//	 */
-//	private void createNewStack(){
-//		altStack = new ImageStack(width, height);
-//		for (int h = 0; h < height; h++) {
-//			for (int w = 0; w < width; w++) {
-//				raw[ h * width + w] = 0;
-//				raw[(depth - 1) * height * width + h * width + w] = 0;
-//			}
-//		}
-//
-//		for(int i = 1 ; i <= depth ; i++){
-//			byte[] slice = new byte[height * width];
-//			System.arraycopy(raw, (i-1) * height * width, slice, 0, height * width);
-//			altStack.addSlice(new ByteProcessor(width,height,slice,null));
-//    	} 
-//	}
+	/**
+	 * Creates the new stack.
+	 */
+	private void createNewStack(){
+		altStack = new ImageStack(width, height);
+		for (int h = 0; h < height; h++) {
+			for (int w = 0; w < width; w++) {
+				raw[h * width + w] = 0;
+				raw[(depth - 1) * height * width + h * width + w] = 0;
+			}
+		}
+
+		for(int i = 1 ; i <= depth ; i++){
+			byte[] slice = new byte[height * width];
+			System.arraycopy(raw, (i-1) * height * width, slice, 0, height * width);
+			altStack.addSlice(new ByteProcessor(width,height,slice,null));
+    	} 
+	}
 	
 	/**
 	 * Adds the black slice.

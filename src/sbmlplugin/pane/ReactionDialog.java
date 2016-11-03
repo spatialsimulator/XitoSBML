@@ -202,7 +202,11 @@ public class ReactionDialog {
 				losr.remove(label);
 			}
 		}
+<<<<<<< HEAD
 		
 		System.out.println(reaction.toSBML());
+=======
+
+>>>>>>> develop
 	}
 }
