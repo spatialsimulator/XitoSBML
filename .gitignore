@@ -24,3 +24,4 @@ doc/
 /target/
 .project
 .settings/
+.externalToolBuilders/
