@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2015 Kaito Ii
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *******************************************************************************/
 package sbmlplugin.geometry;
 
 import ij.ImageStack;
@@ -7,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.vecmath.Point3f;
+import math3d.Point3d;
 
 import org.sbml.jsbml.ASTNode;
 import org.sbml.jsbml.ASTNode.Type;
@@ -19,6 +34,7 @@ import org.sbml.jsbml.ext.spatial.GeometryDefinition;
 
 import sbmlplugin.image.SpatialImage;
 
+// TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.
  *
@@ -32,13 +48,13 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	private AnalyticGeometry ag;
 	
 	/** The min coord. */
-	protected Point3f minCoord = new Point3f();
+	protected Point3d minCoord = new Point3d();
 	
 	/** The max coord. */
-	protected Point3f maxCoord = new Point3f();
+	protected Point3d maxCoord = new Point3d();
 	
 	/** The disp coord. */
-	protected Point3f dispCoord = new Point3f();
+	protected Point3d dispCoord = new Point3d();
 	
 	/** The width. */
 	private int width = 32; //TODO find better way to determine image size
@@ -50,7 +66,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	private int depth;
 	
 	/** The delta. */
-	private Point3f delta = new Point3f();
+	private Point3d delta = new Point3d();
 	
 	/**
 	 * Instantiates a new analytic geometry data.
@@ -61,7 +77,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	 * @param maxCoord the max coord
 	 * @param dispCoord the disp coord
 	 */
-	AnalyticGeometryData(GeometryDefinition gd, Geometry g, Point3f minCoord, Point3f maxCoord, Point3f dispCoord) {
+	AnalyticGeometryData(GeometryDefinition gd, Geometry g, Point3d minCoord, Point3d maxCoord, Point3d dispCoord) {
 		super(gd, g);
 		this.minCoord = minCoord;
 		this.maxCoord = maxCoord;
@@ -233,11 +249,11 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		} else {// variable		
 			String var = ast.getName();
 			if (var.equals("x")) {
-				return x * delta.getX() - dispCoord.getX();
+				return x * delta.x - dispCoord.x;
 			} else if (var.equals("y")) {
-				return y * delta.getY() - dispCoord.getY();
+				return y * delta.y - dispCoord.y;
 			} else if (var.equals("z")) {
-				return z * delta.getZ() - dispCoord.getZ();
+				return z * delta.z - dispCoord.z;
 			} else {
 				System.err.println("can't find name");
 				return 0;
@@ -246,7 +262,14 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		
 		return 0;
 	}
-
+	
+	/**
+	 * Order volume.
+	 *
+	 * @param orderedList the ordered list
+	 * @param loav the loav
+	 * @return the array list
+	 */
 	private ArrayList<AnalyticVolume> orderVolume(ArrayList<AnalyticVolume> orderedList, ListOf<AnalyticVolume> loav){
 		int numDom = (int) loav.size();
 		
@@ -331,7 +354,6 @@ public class AnalyticGeometryData extends ImageGeometryData {
 					ast_one.setValue(1);
 					ast.addChild(ast_one);
 				} else {
-					//TODO find a way in JSBML
 					//ast.reduceToBinary();
 				}
 			} else { 
@@ -361,13 +383,13 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	 * @return the size
 	 */
 	private void getSize(){
-		height = (int) (width * maxCoord.getY() / maxCoord.getX());
-		depth = (int) (width * maxCoord.getZ() / maxCoord.getX());
+		height = (int) (width * maxCoord.y / maxCoord.x);
+		depth = (int) (width * maxCoord.z / maxCoord.x);
 		if(depth == 0) depth = 1;
 	
-		delta.setX(maxCoord.getX() / width);
-		delta.setY(maxCoord.getY() / height);
-		delta.setZ(maxCoord.getZ() / depth);	
+		delta.x = (maxCoord.x / width);
+		delta.y = (maxCoord.y / height);
+		delta.z = (maxCoord.z / depth);	
 	}
 	
 	/**

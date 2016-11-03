@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 import java.util.WeakHashMap;
 import java.util.zip.Deflater;
 
-import javax.vecmath.Point3d; 
+import javax.vecmath.Point3d;
 
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.ListOf;

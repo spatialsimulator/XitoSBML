@@ -1,7 +1,5 @@
 package sbmlplugin.sbmlplugin;
 
-import ij.IJ;
-
 import javax.swing.JOptionPane;
 
 import sbmlplugin.util.ModelSaver;

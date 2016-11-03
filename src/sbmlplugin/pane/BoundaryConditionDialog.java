@@ -3,6 +3,7 @@ package sbmlplugin.pane;
 import ij.gui.GenericDialog;
 
 import java.util.Arrays;
+
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.ext.spatial.BoundaryCondition;

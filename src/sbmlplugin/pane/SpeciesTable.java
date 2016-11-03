@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import javax.swing.JTable;
 
-
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Species;

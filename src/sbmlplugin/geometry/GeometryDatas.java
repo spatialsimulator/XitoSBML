@@ -2,7 +2,7 @@ package sbmlplugin.geometry;
 
 import java.util.ArrayList;
 
-import javax.vecmath.Point3f;
+import math3d.Point3d;
 
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
@@ -37,13 +37,13 @@ public class GeometryDatas {
 	protected Geometry geometry;
 	
 	/** The min coord. */
-	protected Point3f minCoord = new Point3f();
+	protected Point3d minCoord = new Point3d();
 	
 	/** The max coord. */
-	protected Point3f maxCoord = new Point3f();
+	protected Point3d maxCoord = new Point3d();
 	
 	/** The disp coord. */
-	protected Point3f dispCoord = new Point3f();		//displacement from original coordinates to modified coordinate
+	protected Point3d dispCoord = new Point3d();		//displacement from original coordinates to modified coordinate
 	
 	/** The dimension. */
 	protected int dimension;
@@ -118,13 +118,13 @@ public class GeometryDatas {
 			CoordinateComponent cc = locc.get(i);
 			switch (cc.getType()){
 			case cartesianX:
-				minCoord.setX((float) cc.getBoundaryMinimum().getValue()); maxCoord.setX((float) cc.getBoundaryMaximum().getValue());
+				minCoord.x = ( cc.getBoundaryMinimum().getValue()); maxCoord.x = ( cc.getBoundaryMaximum().getValue());
 				break;
 			case cartesianY:
-				minCoord.setY((float) cc.getBoundaryMinimum().getValue()); maxCoord.setY((float) cc.getBoundaryMaximum().getValue());
+				minCoord.y = ( cc.getBoundaryMinimum().getValue()); maxCoord.y = ( cc.getBoundaryMaximum().getValue());
 				break;
 			case cartesianZ:
-				minCoord.setZ((float) cc.getBoundaryMinimum().getValue()); maxCoord.setZ((float) cc.getBoundaryMaximum().getValue());
+				minCoord.z = ( cc.getBoundaryMinimum().getValue()); maxCoord.z = ( cc.getBoundaryMaximum().getValue());
 				break;
 			}
 		}
@@ -138,22 +138,22 @@ public class GeometryDatas {
 	protected void adjustAxis(){
 		switch(dimension){
 		case 3:
-			if(minCoord.getZ() < 0){
-				dispCoord.setZ(-1 * minCoord.getZ());
-				maxCoord.setZ(maxCoord.getZ() - minCoord.getZ());
-				minCoord.setZ(0);
+			if(minCoord.z < 0){
+				dispCoord.z = (-1 * minCoord.z);
+				maxCoord.z = (maxCoord.z - minCoord.z);
+				minCoord.z = (0);
 			}
 		case 2:
-			if(minCoord.getX() < 0){
-				dispCoord.setX(-1 * minCoord.getX());
-				maxCoord.setX(maxCoord.getX() - minCoord.getX());
-				minCoord.setX(0);
+			if(minCoord.x < 0){
+				dispCoord.x = (-1 * minCoord.x);
+				maxCoord.x = (maxCoord.x - minCoord.x);
+				minCoord.x = (0);
 			}
 			
-			if(minCoord.getY() < 0){
-				dispCoord.setY(-1 * minCoord.getY());
-				maxCoord.setY(maxCoord.getY() - minCoord.getY());
-				minCoord.setY(0);
+			if(minCoord.y < 0){
+				dispCoord.y = (-1 * minCoord.y);
+				maxCoord.y = (maxCoord.y - minCoord.y);
+				minCoord.y = (0);
 			}
 			break;
 		}

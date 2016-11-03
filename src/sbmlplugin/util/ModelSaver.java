@@ -5,7 +5,6 @@ import ij.io.SaveDialog;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Calendar;

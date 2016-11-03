@@ -1,12 +1,12 @@
 package sbmlplugin.image;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileInfo;
 import ij.process.ByteProcessor;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 
 // TODO: Auto-generated Javadoc

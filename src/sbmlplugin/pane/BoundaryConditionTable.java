@@ -3,6 +3,7 @@ package sbmlplugin.pane;
 import java.util.Vector;
 
 import javax.swing.JTable;
+
 import org.sbml.jsbml.IdentifierException;
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;

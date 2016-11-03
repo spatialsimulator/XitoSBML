@@ -2,7 +2,6 @@ package sbmlplugin.image;
 
 import ij.ImagePlus;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

@@ -30,21 +30,33 @@ import org.sbml.jsbml.ext.spatial.SampledVolume;
 import sbmlplugin.image.SpatialImage;
 
 
+// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ
+ * Spatial SBML Plugin for ImageJ.
+ *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 26, 2015
  */
 public class SampledFieldGeometryData extends ImageGeometryData {
+	
+	/** The sfg. */
 	private SampledFieldGeometry sfg;
+	
+	/** The width. */
 	private int width;
+	
+	/** The height. */
 	private int height;
+	
+	/** The depth. */
 	private int depth;
 	
 	/**
-	 * @param gd
-	 * @param g
+	 * Instantiates a new sampled field geometry data.
+	 *
+	 * @param gd the gd
+	 * @param g the g
 	 */
 	public SampledFieldGeometryData(GeometryDefinition gd, Geometry g) {
 		super(gd, g);
@@ -67,6 +79,9 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	}
 
 	
+	/* (non-Javadoc)
+	 * @see sbmlplugin.geometry.ImageGeometryData#createImage()
+	 */
 	@Override
 	protected void createImage(){
 		ListOf<SampledField> losf = g.getListOfSampledFields();
@@ -85,6 +100,11 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 		img.setTitle(title);
 	}
 	
+	/**
+	 * Creates the stack.
+	 *
+	 * @return the image stack
+	 */
 	private ImageStack createStack(){
 		ImageStack stack = new ImageStack(width, height);
 		byte[] slice;   
@@ -97,6 +117,12 @@ public class SampledFieldGeometryData extends ImageGeometryData {
     	return stack;
     }
 	
+	/**
+	 * Gets the size.
+	 *
+	 * @param sf the sf
+	 * @return the size
+	 */
 	private void getSize(SampledField sf){
 		width = sf.getNumSamples1();
 		height = sf.getNumSamples2();
@@ -104,7 +130,14 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 		else					  depth = 1;
 	}
 	
-	private void getArray(SampledField sf){
+	
+	/**
+	 * Gets the array.
+	 *
+	 * @param sf the sf
+	 * @return the array
+	 */
+	private void getArray(SampledField sf){ //TODO string to byte array
 		int length = height * width * depth;
 		raw = new byte[length];
 		int array[] = new int[length];
@@ -118,6 +151,12 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	}
 	
 	
+	/**
+	 * Int to byte.
+	 *
+	 * @param array the array
+	 * @param raw the raw
+	 */
 	private void intToByte(int[] array, byte[] raw){		
 		//TODO need to resolve when original image data is not 8 bit
 		for(int i = 0, length = array.length; i < length;i++){
