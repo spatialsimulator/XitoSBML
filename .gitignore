@@ -13,12 +13,14 @@ bin/ij/
 src/ij/
 zip/
 META-INF/
-.DS_STORE
+.DS_Store
 TAGS
 util/*.py
 source/
 doc/
 
+.project
+.classpath
 /target/
 .project
 .settings/
