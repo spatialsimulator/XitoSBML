@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import javax.vecmath.Point3d;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class SpatialImage.
  */

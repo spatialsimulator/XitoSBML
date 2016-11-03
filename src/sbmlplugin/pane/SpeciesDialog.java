@@ -49,6 +49,7 @@ public class SpeciesDialog {
 	 *
 	 * @return the species
 	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IdentifierException the identifier exception
 	 */
 	public Species showDialog()throws IllegalArgumentException, IdentifierException{
 		gd = new GenericDialog("Add Species");
@@ -79,6 +80,7 @@ public class SpeciesDialog {
 	 * @param species the species
 	 * @return the species
 	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IdentifierException the identifier exception
 	 */
 	public Species showDialog(Species species)throws IllegalArgumentException, IdentifierException{
 		this.species = species;
@@ -113,6 +115,7 @@ public class SpeciesDialog {
 	 * Sets the species data.
 	 *
 	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IdentifierException the identifier exception
 	 */
 	private void setSpeciesData() throws IllegalArgumentException, IdentifierException{
 		String str = gd.getNextString();

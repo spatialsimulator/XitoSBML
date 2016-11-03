@@ -8,6 +8,7 @@ import org.sbml.jsbml.ext.spatial.DiffusionCoefficient;
 import org.sbml.jsbml.ext.spatial.DiffusionKind;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
+// TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.
  *

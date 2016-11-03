@@ -295,6 +295,12 @@ public class SpatialSBMLExporter{
      	}   
 	}	
 
+	/**
+	 * Gets the domain type.
+	 *
+	 * @param id the id
+	 * @return the domain type
+	 */
 	// since the listOf getter refers to the id not spatial id for domain type
 	public DomainType getDomainType(String id){
 	   	 for(DomainType d: geometry.getListOfDomainTypes()){
@@ -451,8 +457,10 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * @param unit2
-	 * @return
+	 * Gets the unit multiplier.
+	 *
+	 * @param unit the unit
+	 * @return the unit multiplier
 	 */
 	private double getUnitMultiplier(String unit) {
 		if(unit.equals("um")) return 0.000001;

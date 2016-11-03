@@ -3,6 +3,10 @@ package sbmlplugin;
 
 import sbmlplugin.sbmlplugin.MainImgSpatial;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Spatial_Img_SBML.
+ */
 public class Spatial_Img_SBML extends Spatial_SBML {
 
 	/* (non-Javadoc)

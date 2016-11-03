@@ -24,6 +24,7 @@ public class DomainStruct {
 	/** The geometry. */
 	Geometry geometry;
 	
+	/** The lod. */
 	ListOf<Domain> lod;
 	
 	/** The load. */

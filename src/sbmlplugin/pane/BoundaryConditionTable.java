@@ -11,6 +11,7 @@ import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.ext.spatial.BoundaryCondition;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
+// TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.
  *

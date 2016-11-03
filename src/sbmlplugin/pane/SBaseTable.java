@@ -15,6 +15,7 @@ import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.SBase;
 import org.sbml.jsbml.text.parser.ParseException;
 
+// TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.
  *
@@ -44,7 +45,8 @@ public abstract class SBaseTable {
 	 * Adds the.
 	 *
 	 * @throws IllegalArgumentException the illegal argument exception
-	 * @throws ParseException 
+	 * @throws ParseException the parse exception
+	 * @throws IdentifierException the identifier exception
 	 */
 	abstract void add() throws IllegalArgumentException, ParseException,IdentifierException;
 
@@ -53,7 +55,8 @@ public abstract class SBaseTable {
 	 *
 	 * @param index the index
 	 * @throws IllegalArgumentException the illegal argument exception
-	 * @throws ParseException 
+	 * @throws ParseException the parse exception
+	 * @throws IdentifierException the identifier exception
 	 */
 	abstract void edit(int index) throws IllegalArgumentException, ParseException, IdentifierException;
 	

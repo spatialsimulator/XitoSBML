@@ -146,6 +146,9 @@ public abstract class MainSpatial implements PlugIn{
 		visualize(spImg);
 	}
 
+	/**
+	 * Prints the.
+	 */
 	protected void print(){
 		String docStr;
 		try {

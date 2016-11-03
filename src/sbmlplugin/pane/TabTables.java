@@ -34,6 +34,7 @@ import org.sbml.jsbml.Species;
 import org.sbml.jsbml.UnitDefinition;
 import org.sbml.jsbml.text.parser.ParseException;
 
+// TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.
  *
@@ -52,6 +53,7 @@ public class TabTables extends JFrame implements ActionListener {
 	/** The is running. */
 	private boolean isRunning = true;	
 
+	/** The model. */
 	private Model model;
 	
 	/**

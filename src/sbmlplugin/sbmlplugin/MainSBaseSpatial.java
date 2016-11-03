@@ -53,7 +53,7 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	 *
 	 * @return the document
 	 * @throws NullPointerException the null pointer exception
-	 * @throws XMLStreamException 
+	 * @throws XMLStreamException the XML stream exception
 	 */
 	protected SBMLDocument getDocument() throws NullPointerException, XMLStreamException{
 		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());

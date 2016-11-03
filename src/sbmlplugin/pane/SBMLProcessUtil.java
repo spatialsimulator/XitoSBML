@@ -7,6 +7,7 @@ import org.sbml.jsbml.ext.spatial.BoundaryConditionKind;
 import org.sbml.jsbml.ext.spatial.CoordinateKind;
 import org.sbml.jsbml.ext.spatial.DiffusionKind;
 
+// TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.
  *
@@ -190,6 +191,12 @@ public class SBMLProcessUtil {
 		return null;
 	}
 
+	/**
+	 * String to unit.
+	 *
+	 * @param s the s
+	 * @return the kind
+	 */
 	//TODO use jsbml method
 	@SuppressWarnings("deprecation")
 	public static Kind StringToUnit(String s){
