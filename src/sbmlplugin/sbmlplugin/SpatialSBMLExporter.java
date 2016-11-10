@@ -43,6 +43,7 @@ import org.sbml.jsbml.ext.spatial.SampledField;
 import org.sbml.jsbml.ext.spatial.SampledFieldGeometry;
 import org.sbml.jsbml.ext.spatial.SampledVolume;
 import org.sbml.jsbml.ext.spatial.SpatialCompartmentPlugin;
+import org.sbml.jsbml.ext.spatial.SpatialConstants;
 import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialPoints;
@@ -107,10 +108,10 @@ public class SpatialSBMLExporter{
 	public SpatialSBMLExporter() {
 		document = new SBMLDocument(3,1);
 		document.setPackageRequired("req", false);
-		document.setPackageRequired("spatial", true);
+		document.setPackageRequired(SpatialConstants.namespaceURI, true);
 		model = document.createModel();
 
-		SBasePlugin basePlugin = (model.getPlugin("spatial"));
+		SBasePlugin basePlugin = (model.getPlugin(SpatialConstants.namespaceURI));
 		spatialplugin = (SpatialModelPlugin) basePlugin;
 		if (spatialplugin == null) {
 			System.exit(1);
@@ -135,7 +136,7 @@ public class SpatialSBMLExporter{
 		this.adjacentsList = spImg.getAdjacentsList();
 		this.delta = spImg.getDelta();
 		model = document.getModel();
-		spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial");
+		spatialplugin = (SpatialModelPlugin) model.getPlugin(SpatialConstants.namespaceURI);
 		unit = spImg.getUnit();
 	}
 
@@ -397,10 +398,10 @@ public class SpatialSBMLExporter{
 		for (int i = 0; i < lcc.size(); i++) {
 			cc = (CoordinateComponent) lcc.get(i);
 			p = model.createParameter();
-			p.setId(cc.getSpatialId());
+			p.setId("coordinate" + cc.getSpatialId());
 			p.setConstant(true);
 			p.setValue(0d);
-			SpatialParameterPlugin spp = (SpatialParameterPlugin) p.getPlugin("spatial");
+			SpatialParameterPlugin spp = (SpatialParameterPlugin) p.getPlugin(SpatialConstants.namespaceURI);
 			SpatialSymbolReference ssr = new SpatialSymbolReference();
 			ssr.setSpatialRef(cc.getSpatialId());
 			spp.setParamType(ssr);
