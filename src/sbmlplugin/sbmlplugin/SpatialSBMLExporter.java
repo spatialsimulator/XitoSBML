@@ -164,16 +164,14 @@ public class SpatialSBMLExporter{
 		sfg.setIsActive(true);
 		sfg.setSampledField("mySampledField");
 		for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
-			// if ((e.getValue() == 3 && depth > 2) || (e.getValue() == 2 &&
-			// depth == 1)) {
-			if (e.getValue() == 3) {
+			 if (e.getValue() == 3 || (e.getValue() == 2 && depth == 1)) {
 				SampledVolume sv = sfg.createSampledVolume();
 				sv.setSpatialId(e.getKey());
 				sv.setDomainType(e.getKey());
 				sv.setSampledValue(hashSampledValue.get(e.getKey()));
-				// sv.setMinValue(0); sv.setMaxValue(0);
 			}
 		}
+		
 		SampledField sf = geometry.createSampledField();
 		sf.setSpatialId("mySampledField");
 		sf.setDataType(DataKind.UINT8);
@@ -187,7 +185,6 @@ public class SpatialSBMLExporter{
 		// byte[] compressed = compressRawData(raw);
 		// if (compressed != null)
 		// sf.setSamples(byteArrayToIntArray(compressed),compressed.length);
-		
 		String s = Arrays.toString(byteArrayToIntArray(raw));
 		s = s.replace("[", "");
 		s = s.replace("]", "");

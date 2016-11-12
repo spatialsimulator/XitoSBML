@@ -401,11 +401,10 @@ public class ImageEdit {
 		adjacentsList.add(adjacentDom);
 
 		if(!hashDomainTypes.containsKey(buf)){
-//			if(depth > 1) hashDomainTypes.put(buf,2);
-//			else hashDomainTypes.put(buf,1);
-			hashDomainTypes.put(buf,2);
+			if(depth > 1) hashDomainTypes.put(buf,2);
+			else hashDomainTypes.put(buf,1);
 			hashDomainNum.put(buf,1);
-		}else{
+		} else{
 			int temp = hashDomainNum.get(buf);
 			hashDomainNum.put(buf,++temp);
 		}

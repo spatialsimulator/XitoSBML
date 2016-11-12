@@ -18,15 +18,7 @@ import org.sbml.jsbml.SBMLReader;
  * The Class ModelValidator.
  */
 public class ModelValidator {
-	static {
-		try {
-			System.loadLibrary("sbmlj");
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-	}
-	
+
 	/** The document. */
 	private SBMLDocument document;
 	
