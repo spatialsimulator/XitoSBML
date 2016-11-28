@@ -51,6 +51,7 @@
     <copy file="Spatial_SBML.jar" toDir="${destDir}" overwrite="true" />
     <copy file="Spatial_SBML.jar" toDir="${pluginsDir}" overwrite="true" />
 		<copy file="Spatial_SBML.jar" toDir="${basedir}" overwrite="true" />
+		<copy file="Spatial_SBML.jar" toDir="/Users/ii/Documents/workspace/CellDesigner-ImageJ/plugin" overwrite="true" />
 </target>
 
 	<target name="mv" depends="mvMacLib, mvWindowsLib, mvLinuxLib" description="move library">
