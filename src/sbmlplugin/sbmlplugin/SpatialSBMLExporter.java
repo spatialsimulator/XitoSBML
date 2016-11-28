@@ -107,7 +107,6 @@ public class SpatialSBMLExporter{
 	 */
 	public SpatialSBMLExporter() {
 		document = new SBMLDocument(3,1);
-		document.setPackageRequired("req", false);
 		document.setPackageRequired(SpatialConstants.namespaceURI, true);
 		model = document.createModel();
 
@@ -182,7 +181,7 @@ public class SpatialSBMLExporter{
 		// if(depth > 1)
 		sf.setNumSamples3(depth);
 		sf.setInterpolation(InterpolationKind.nearestneighbor);
-		// byte[] compressed = compressRawData(raw);
+		//byte[] compressed = compressRawData(raw);
 		// if (compressed != null)
 		// sf.setSamples(byteArrayToIntArray(compressed),compressed.length);
 		String s = Arrays.toString(byteArrayToIntArray(raw));
