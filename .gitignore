@@ -10,7 +10,6 @@ original/
 plug/
 plugins/
 bin/
-src/ij/
 zip/
 META-INF/
 .DS_Store
@@ -19,9 +18,6 @@ util/*.py
 source/
 doc/
 
-.project
-.classpath
 /target/
 .project
-.settings/
 .externalToolBuilders/
