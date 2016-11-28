@@ -18,10 +18,6 @@ TAGS
 util/*.py
 source/
 doc/
-
-.project
-.classpath
 /target/
 .project
-.settings/
 .externalToolBuilders/
