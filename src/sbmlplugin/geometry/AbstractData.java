@@ -1,6 +1,6 @@
 package sbmlplugin.geometry;
 
-import org.sbml.jsbml.ext.spatial.GeometryDefinition;
+import org.sbml.libsbml.GeometryDefinition;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -25,6 +25,6 @@ public abstract class AbstractData {
 	 */
 	AbstractData(GeometryDefinition gd){
 		this.gd = gd;
-		title = gd.getSpatialId();
+		title = gd.getId();
 	}	
 }

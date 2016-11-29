@@ -19,5 +19,4 @@ util/*.py
 source/
 doc/
 /target/
-.project
 .externalToolBuilders/

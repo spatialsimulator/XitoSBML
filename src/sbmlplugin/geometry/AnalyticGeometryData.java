@@ -7,15 +7,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.sbml.libsbml.ASTNode;
+import org.sbml.libsbml.AnalyticGeometry;
+import org.sbml.libsbml.AnalyticVolume;
+import org.sbml.libsbml.Geometry;
+import org.sbml.libsbml.GeometryDefinition;
+import org.sbml.libsbml.ListOfAnalyticVolumes;
+
 import math3d.Point3d;
 
-import org.sbml.jsbml.ASTNode;
-import org.sbml.jsbml.ASTNode.Type;
-import org.sbml.jsbml.ListOf;
-import org.sbml.jsbml.ext.spatial.AnalyticGeometry;
-import org.sbml.jsbml.ext.spatial.AnalyticVolume;
-import org.sbml.jsbml.ext.spatial.Geometry;
-import org.sbml.jsbml.ext.spatial.GeometryDefinition;
+
 
 import sbmlplugin.image.SpatialImage;
 
@@ -77,7 +78,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	 */
 	@Override
 	void getSampledValues() {
-		ListOf<AnalyticVolume> loav = ag.getListOfAnalyticVolumes();
+		ListOfAnalyticVolumes loav = ag.getListOfAnalyticVolumes();
 		int numDom = (int) loav.size();
 		int intervalVal = (int) Math.floor(255 / (numDom - 1));		//divide 255 by num of domains excluding EC
 		
@@ -94,7 +95,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	void createImage() {
 		getSize();
 		getArray();
-		ListOf<AnalyticVolume> loav = ag.getListOfAnalyticVolumes();
+		ListOfAnalyticVolumes loav = ag.getListOfAnalyticVolumes();
 		ArrayList<AnalyticVolume> orderedList = new ArrayList<AnalyticVolume>();
 		orderedList = orderVolume(orderedList, loav);
 		setVolumeToArray(orderedList);	
