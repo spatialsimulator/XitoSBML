@@ -165,7 +165,7 @@ public class SpatialSBMLExporter{
 		for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
 			 if (e.getValue() == 3 || (e.getValue() == 2 && depth == 1)) {
 				SampledVolume sv = sfg.createSampledVolume();
-				sv.setSpatialId(e.getKey());
+				sv.setSpatialId(e.getKey() + "_volume");
 				sv.setDomainType(e.getKey());
 				sv.setSampledValue(hashSampledValue.get(e.getKey()));
 			}

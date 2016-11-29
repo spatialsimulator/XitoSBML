@@ -4,13 +4,11 @@ import ij.IJ;
 
 import java.util.List;
 
-import javax.xml.stream.XMLStreamException;
-
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLError;
 import org.sbml.jsbml.SBMLErrorLog;
-import org.sbml.jsbml.SBMLReader;
+import org.sbml.jsbml.validator.SBMLValidator.CHECK_CATEGORY;
 
 
 // TODO: Auto-generated Javadoc
@@ -58,8 +56,6 @@ public class ModelValidator {
 		if(!document.getPackageRequired("spatial"))
 			IJ.log("model missing extension spatial");
 		
-//		if(!document.getPackageRequired("req"))
-//			IJ.log("model missing extension req");
 		
 		return document.getPackageRequired("spatial"); //&& document.getPackageRequired("req");
 	}
@@ -73,6 +69,7 @@ public class ModelValidator {
 		if(!hasRequiredAttribute)
 			return;
 		
+		document.setConsistencyChecks(CHECK_CATEGORY.MODELING_PRACTICE, false);
 		document.checkConsistency();
 		SBMLErrorLog errorLog = document.getListOfErrors();
 		List<SBMLError> errorList = errorLog.getValidationErrors();
@@ -81,23 +78,4 @@ public class ModelValidator {
 		}
 	}
 	
-	
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
-		SBMLDocument d;
-		try {
-			d = SBMLReader.read("sampledfield_3d.xml");
-			ModelValidator mv = new ModelValidator(d);
-			mv.validate();
-		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
 }

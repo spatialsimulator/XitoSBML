@@ -27,12 +27,14 @@ public class MainImgSpatial extends MainSpatial {
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg);
 		model = sbmlexp.getModel();
 		sbmlexp.createGeometryElements();
-		visualize(spImg);
+		//TODO comment in when 3D viewer can be used in Java 8
+		//visualize(spImg);
 		
 		//add species and parameter here
-		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species", JOptionPane.YES_NO_CANCEL_OPTION);
-		if(reply == JOptionPane.YES_OPTION)
-			addSBases();
+		// do it at CellDesigner
+//		int reply = JOptionPane.showConfirmDialog(null, "Do you want to add Parameters or Species to the model?", "Adding Parameters and species", JOptionPane.YES_NO_CANCEL_OPTION);
+//		if(reply == JOptionPane.YES_OPTION)
+//			addSBases();
 		
 		sbmlexp.addCoordParameter();
 		document = sbmlexp.getDocument();
