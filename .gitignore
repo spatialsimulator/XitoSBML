@@ -19,5 +19,4 @@ source/
 doc/
 
 /target/
-.project
 .externalToolBuilders/
