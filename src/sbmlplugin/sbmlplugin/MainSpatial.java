@@ -70,7 +70,7 @@ public abstract class MainSpatial implements PlugIn{
 		hashDomainTypes = new HashMap<String, Integer>();
 		hashSampledValue = new HashMap<String, Integer> ();
 		imgexp = new ImageExplorer(hashDomainTypes,hashSampledValue);
-		while (hashDomainTypes.isEmpty() && hashSampledValue.isEmpty()) {
+		while (imgexp.isVisible()) {
 			synchronized (hashDomainTypes) {
 				synchronized (hashSampledValue) {
 					
