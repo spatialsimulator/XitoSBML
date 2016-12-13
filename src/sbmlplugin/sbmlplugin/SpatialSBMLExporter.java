@@ -14,6 +14,7 @@ import java.util.zip.Deflater;
 
 import javax.vecmath.Point3d;
 
+import org.apache.logging.log4j.core.config.plugins.processor.PluginCache;
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
@@ -23,6 +24,7 @@ import org.sbml.jsbml.Unit;
 import org.sbml.jsbml.Unit.Kind;
 import org.sbml.jsbml.UnitDefinition;
 import org.sbml.jsbml.ext.SBasePlugin;
+import org.sbml.jsbml.ext.spatial.AbstractSpatialNamedSBase;
 import org.sbml.jsbml.ext.spatial.AdjacentDomains;
 import org.sbml.jsbml.ext.spatial.Boundary;
 import org.sbml.jsbml.ext.spatial.CompartmentMapping;
@@ -45,11 +47,13 @@ import org.sbml.jsbml.ext.spatial.SampledVolume;
 import org.sbml.jsbml.ext.spatial.SpatialCompartmentPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialConstants;
 import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
+import org.sbml.jsbml.ext.spatial.SpatialNamedSBase;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialPoints;
 import org.sbml.jsbml.ext.spatial.SpatialSymbolReference;
 
 import sbmlplugin.image.SpatialImage;
+import sbmlplugin.util.PluginConstants;
 import sbmlplugin.util.PluginInfo;
 
 // TODO: Auto-generated Javadoc
@@ -68,7 +72,6 @@ public class SpatialSBMLExporter{
   private SpatialModelPlugin spatialplugin;
   
   /** The spatialcompplugin. */
-  //private ReqSBasePlugin reqplugin;
   private SpatialCompartmentPlugin spatialcompplugin;
   
   /** The geometry. */
@@ -151,6 +154,7 @@ public class SpatialSBMLExporter{
 		addAdjacentDomains();
 		addGeometryDefinitions();
 		addUnits();
+		addOutside();
 	}
 
 	/**
@@ -249,7 +253,7 @@ public class SpatialSBMLExporter{
 			String two = e.get(1).substring(0, e.get(1).length());
 			two = two.replaceAll("[0-9]", "");
 			//DomainType dt = geometry.getListOfDomainTypes().get(one + "_" + two + "_membrane");
-			 DomainType dt = getDomainType(one + "_" + two + "_membrane");
+			 DomainType dt = (DomainType) getFromSpatialList(geometry.getListOfDomainTypes(), one + "_" + two + "_membrane");
 			 
 			if (hashMembrane.containsKey(dt.getSpatialId())) {
 				hashMembrane.put(dt.getSpatialId(), hashMembrane.get(dt.getSpatialId()) + 1);
@@ -273,9 +277,8 @@ public class SpatialSBMLExporter{
 	public void addDomains() {
      for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    			//add domains to corresponding domaintypes
     	 //DomainType dt = geometry.getListOfDomainTypes().get(e.getKey());
-    	 DomainType dt = getDomainType(e.getKey());
+    	 DomainType dt = (DomainType) getFromSpatialList(geometry.getListOfDomainTypes(),e.getKey());
  
- 		
  		for (int i = 0; i < hashDomainNum.get(e.getKey()); i++) { // add each domain
 			Domain dom = geometry.createDomain();
 			String id = dt.getSpatialId() + i;
@@ -291,20 +294,14 @@ public class SpatialSBMLExporter{
 			}
      	}   
 	}	
-
-	/**
-	 * Gets the domain type.
-	 *
-	 * @param id the id
-	 * @return the domain type
-	 */
-	// since the listOf getter refers to the id not spatial id for domain type
-	public DomainType getDomainType(String id){
-	   	 for(DomainType d: geometry.getListOfDomainTypes()){
-    		 if(d.getSpatialId().equals(id)){
-    			 return d;
-    		 }
-    	 }
+	
+	public SpatialNamedSBase getFromSpatialList(ListOf<?> list, String id){
+		for(Object o : list){
+			SpatialNamedSBase sbase = (SpatialNamedSBase) o;
+			if(sbase.getSpatialId().equals(id))
+				return sbase;
+		}
+		
 		return null;
 	}
 	
@@ -577,4 +574,5 @@ public class SpatialSBMLExporter{
 		s = s.replace(",", "");
 		po.setPointIndex(s);
 	}
+	
 }
