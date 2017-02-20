@@ -154,7 +154,6 @@ public class SpatialSBMLExporter{
 		addAdjacentDomains();
 		addGeometryDefinitions();
 		addUnits();
-		addOutside();
 	}
 
 	/**

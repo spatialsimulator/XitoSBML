@@ -29,6 +29,7 @@ import ij.plugin.AVI_Reader;
 import ij.plugin.DICOM;
 import ij.plugin.HyperStackConverter;
 import ij.plugin.LutLoader;
+import ij.plugin.PluginInstaller;
 import ij.plugin.frame.Editor;
 import ij.plugin.frame.Recorder;
 import ij.plugin.frame.RoiManager;
