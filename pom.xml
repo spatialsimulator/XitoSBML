@@ -1,13 +1,134 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+  http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>SBMLPlugin</groupId>
-  <artifactId>SBMLPlugin</artifactId>
-  <version>1.0.0</version>
+
+  <parent>
+    <groupId>org.scijava</groupId>
+    <artifactId>pom-scijava</artifactId>
+    <version>12.0.0</version>
+    <relativePath />
+  </parent>
+
+  <groupId>jp.ac.keio.bio.fun</groupId>
+  <artifactId>Xito_SBML</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+
+  <name>XitoSBML</name>
+  <description>A plugin to create SBML model from microscopic images</description>
+  <url>http://github.com/spatialsimulator/XitoSBML</url>
+  <inceptionYear>2017</inceptionYear>
+  <organization>
+    <name>Funahashi Lab.</name>
+    <url>http://fun.bio.keio.ac.jp/</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>funasoul</id>
+      <name>Akira Funahashi</name>
+      <url>https://fun.bio.keio.ac.jp/~funa/</url>
+      <roles>
+        <role>lead</role>
+        <role>developer</role>
+        <role>debugger</role>
+        <role>reviewer</role>
+        <role>support</role>
+        <role>maintainer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>kaitoii11</id>
+      <name>Kaito Ii</name>
+      <url>http://github.com/kaitoii11</url>
+      <roles>
+        <role>lead</role>
+        <role>developer</role>
+        <role>debugger</role>
+        <role>reviewer</role>
+        <role>support</role>
+        <role>maintainer</role>
+      </roles>
+    </developer>
+  </developers>
+  <contributors>
+    <contributor>
+      <name>Johannes Schindelin</name>
+      <url>http://imagej.net/User:Schindelin</url>
+      <roles>
+        <role>founder</role>
+      </roles>
+      <properties>
+        <id>dscho</id>
+      </properties>
+    </contributor>
+    <contributor>
+      <name>Olivier Burri</name>
+      <url>http://imagej.net/User:Oburri</url>
+      <properties>
+        <id>lacan</id>
+      </properties>
+    </contributor>
+    <contributor>
+      <name>Mark Hiner</name>
+      <url>http://imagej.net/User:Hinerm</url>
+      <properties>
+        <id>hinerm</id>
+      </properties>
+    </contributor>
+    <contributor>
+      <name>Jules Maselbas</name>
+    </contributor>
+    <contributor>
+      <name>Kota Miura</name>
+      <url>http://imagej.net/User:Miura</url>
+      <properties>
+        <id>cmci</id>
+      </properties>
+    </contributor>
+    <contributor>
+      <name>Yili Zhao</name>
+      <url>http://imagej.net/User:Panovr</url>
+      <properties>
+        <id>panovr</id>
+      </properties>
+    </contributor>
+  </contributors>
+
+  <mailingLists>
+    <mailingList>
+      <name>ImageJ Forum</name>
+      <archive>http://forum.imagej.net/</archive>
+    </mailingList>
+  </mailingLists>
+
+  <scm>
+    <connection>scm:git:git://github.com/spatialsimulator/XitoSBML</connection>
+    <developerConnection>scm:git:git@github.com:spatialsimulator/XitoSBML</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/spatialsimulator/XitoSBML</url>
+  </scm>
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/spatialsimulator/XitoSBML/issues</url>
+  </issueManagement>
+  <ciManagement>
+    <system>None</system>
+  </ciManagement>
+
   <build>
-    <sourceDirectory>src</sourceDirectory>
+    <sourceDirectory>src/main/java</sourceDirectory>
     <resources>
       <resource>
-        <directory>${basedir}</directory>
+        <directory>src/main/java</directory>
         <includes>
           <include>*.config</include>
         </includes>
@@ -24,18 +145,13 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
-          <archive>
-            <manifest>
-              <mainClass></mainClass>
-            </manifest>
-          </archive>
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
@@ -52,26 +168,68 @@
       </plugin>
     </plugins>
   </build>
+
   <properties>
+    <package-name>jp.ac.keio.bio.fun.xitosbml</package-name>
+    <license.licenseName>Apache License, Version 2.0</license.licenseName>
+    <license.copyrightOwners>Funahashi Lab.</license.copyrightOwners>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <downloadSources>true</downloadSources>
-    <downloadJavadocs>true</downloadJavadocs>
-       <jsbml.version>1.3-SNAPSHOT</jsbml.version>
+    <jsbml.version>1.3-SNAPSHOT</jsbml.version>
   </properties>
+
   <repositories>
     <repository>
       <id>ebi-repo</id>
       <name>The EBI repository</name>
       <url>http://www.ebi.ac.uk/~maven/m2repo</url>
-      <releases><enabled>true</enabled></releases>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
     </repository>
-        <repository>
+    <repository>
       <id>JSBML-SNAPSHOT</id>
       <name>The JSBML Snapshot repository</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     </repository>
+    <repository>
+      <id>imagej.public</id>
+      <url>http://maven.imagej.net/content/groups/public</url>
+    </repository>
   </repositories>
+
   <dependencies>
+    <dependency>
+      <groupId>net.imagej</groupId>
+      <artifactId>ij</artifactId>
+      <version>1.51h</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>sc.fiji</groupId>
+      <artifactId>3D_Viewer</artifactId>
+      <version>4.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.scijava</groupId>
+      <artifactId>j3dcore</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.scijava</groupId>
+      <artifactId>j3dutils</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.scijava</groupId>
+      <artifactId>vecmath</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>sc.fiji</groupId>
+      <artifactId>VIB-lib</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.sbml.jsbml</groupId>
       <artifactId>jsbml-core</artifactId>
@@ -84,60 +242,21 @@
       <version>${jsbml.version}</version>
     </dependency>
 
- <dependency>
+    <dependency>
       <groupId>org.sbml.jsbml.modules</groupId>
       <artifactId>jsbml-tidy</artifactId>
       <version>${jsbml.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>3dviewer</groupId>
-      <artifactId>3dviewer</artifactId>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/ImageJ_3D_Viewer.jar</systemPath>
-    </dependency>
-    <!--
-        <dependency>
-      <groupId>jgrapht</groupId>
-      <artifactId>jgrapht</artifactId>
-      <version>0.7.3</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/jgraph-5.13.0.0.jar</systemPath>
+      <groupId>org.jgrapht</groupId>
+      <artifactId>jgrapht-core</artifactId>
+      <version>0.9.0</version>
     </dependency>
     <dependency>
-      <groupId>jgraph-core</groupId>
-      <artifactId>jraph-core</artifactId>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/jgrapht-core-0.9.0.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>jgraphx</groupId>
-      <artifactId>jgraphx</artifactId>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/jgraphx-1.10.4.1.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>jgrapht-ext</groupId>
+      <groupId>org.jgrapht</groupId>
       <artifactId>jgrapht-ext</artifactId>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/jgrapht-ext-0.9.0-uber.jar</systemPath>
+      <version>0.9.0</version>
     </dependency>
--->
-    <dependency>
-    	<groupId>org.jgrapht</groupId>
-    	<artifactId>jgrapht-core</artifactId>
-    	<version>0.9.0</version>
-    </dependency>
-   <dependency>
-    	<groupId>org.jgrapht</groupId>
-    	<artifactId>jgrapht-ext</artifactId>
-    	<version>0.9.0</version>
-    </dependency>
-
-
   </dependencies>
 </project>
