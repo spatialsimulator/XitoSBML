@@ -14,7 +14,6 @@ import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.TidySBMLWriter;
-import org.sbml.jsbml.ext.req.ReqSBasePlugin;
 import org.sbml.jsbml.ext.spatial.Geometry;
 import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
 
@@ -44,10 +43,7 @@ public abstract class MainSpatial implements PlugIn{
 	
 	/** The spatialplugin. */
 	protected SpatialModelPlugin spatialplugin;
-	
-	/** The reqplugin. */
-	protected ReqSBasePlugin reqplugin;
-	
+
 	/** The imgexp. */
 	private ImageExplorer imgexp;
 	
