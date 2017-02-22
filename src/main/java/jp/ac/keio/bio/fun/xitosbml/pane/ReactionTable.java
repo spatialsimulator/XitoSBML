@@ -22,7 +22,7 @@ import org.sbml.jsbml.text.parser.ParseException;
 public class ReactionTable extends SBaseTable {
 
 	/** The header. */
-	private final String[] header = { "id","fast","reversible","islocal","kinetic law","reactant","product","modifier"};
+	private final String[] header = { "id","reversible","islocal","kinetic law","reactant","product","modifier"};
 	
 	/** The table. */
 	private JTable table;
@@ -73,13 +73,12 @@ public class ReactionTable extends SBaseTable {
 			Reaction r = (Reaction) memberList.get(i);
 			SpatialReactionPlugin srp = (SpatialReactionPlugin) r.getPlugin("spatial");
 			data[i][0] = r.getId();
-			data[i][1] = r.getFast();
-			data[i][2] = r.getReversible();
-			data[i][3] = srp.getIsLocal();
-			data[i][4] = r.isSetKineticLaw() ? r.getKineticLaw().getMathMLString() : "";
-			data[i][5] = listMemberToString(r.getListOfReactants());
-			data[i][6] = listMemberToString(r.getListOfProducts());
-			data[i][7] = listMemberToString(r.getListOfModifiers());
+			data[i][1] = r.getReversible();
+			data[i][2] = srp.getIsLocal();
+			data[i][3] = r.isSetKineticLaw() ? r.getKineticLaw().getMathMLString() : "";
+			data[i][4] = listMemberToString(r.getListOfReactants());
+			data[i][5] = listMemberToString(r.getListOfProducts());
+			data[i][6] = listMemberToString(r.getListOfModifiers());
 		}
 		
 		MyTableModel tm = new MyTableModel(data, header) {
@@ -89,13 +88,12 @@ public class ReactionTable extends SBaseTable {
 			public Class<?> getColumnClass(int Column) {
 				switch (Column) {
 				case 0: // id
-				case 1: // fast
-				case 2: // reversible
-				case 3:	// islocal
-				case 4: // kinetic law
-				case 5: // reactant
-				case 6: // product
-				case 7: // modifier
+				case 1: // reversible
+				case 2:	// islocal
+				case 3: // kinetic law
+				case 4: // reactant
+				case 5: // product
+				case 6: // modifier
 					return String.class;
 				default:
 					return String.class;
@@ -132,7 +130,6 @@ public class ReactionTable extends SBaseTable {
 		SpatialReactionPlugin srp = (SpatialReactionPlugin) r.getPlugin("spatial");
 		Vector<Object> v = new Vector<Object>();
 		v.add(r.getId());
-		v.add(r.getFast());
 		v.add(r.getReversible());
 		v.add(srp.getIsLocal());
 		v.add(r.getKineticLaw().getMathMLString());

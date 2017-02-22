@@ -65,7 +65,6 @@ public class ReactionDialog {
 		gd.pack();
 	
 		gd.addStringField("id:", null);
-		gd.addRadioButtonGroup("fast:", bool, 1, 2, "true");
 		gd.addRadioButtonGroup("reversible:", bool, 1, 2, "true");
 		gd.addRadioButtonGroup("isLocal:", bool, 1, 2, "true");
 		gd.addStringField("kinetic law", null);
@@ -104,7 +103,6 @@ public class ReactionDialog {
 		gd.pack();
 		
 		gd.addStringField("id:", reaction.getId());
-		gd.addRadioButtonGroup("fast", bool, 1, 2, String.valueOf(reaction.getFast()));
 		gd.addRadioButtonGroup("reversible", bool, 1, 2, String.valueOf(reaction.getReversible()));
 		gd.addRadioButtonGroup("isLocal", bool, 1, 2, String.valueOf(srp.getIsLocal()));
 		gd.addStringField("kinetic law", reaction.getKineticLaw().getMathMLString());
@@ -170,7 +168,6 @@ public class ReactionDialog {
 		if (str.indexOf(' ')!=-1)
 				str = str.replace(' ', '_');
 		reaction.setId(str);
-		reaction.setFast(Boolean.getBoolean(gd.getNextRadioButton()));
 		reaction.setReversible(Boolean.getBoolean(gd.getNextRadioButton()));
 		SpatialReactionPlugin srp = (SpatialReactionPlugin) reaction.getPlugin("spatial");
 		srp.setIsLocal(Boolean.getBoolean(gd.getNextRadioButton()));

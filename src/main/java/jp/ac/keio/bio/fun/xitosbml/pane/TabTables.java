@@ -79,7 +79,7 @@ public class TabTables extends JFrame implements ActionListener {
 		ListOf<Parameter> lop = model.getListOfParameters();
 		ListOf<Species> los = model.getListOfSpecies();
 		ListOf<Reaction> lor = model.getListOfReactions();
-		ListOf<UnitDefinition> loud = model.getListOfUnitDefinitions();
+//		ListOf<UnitDefinition> loud = model.getListOfUnitDefinitions();
 		
 		SpeciesTable stable = new SpeciesTable(los);		
 		ParameterTable ptable = new ParameterTable(lop);		

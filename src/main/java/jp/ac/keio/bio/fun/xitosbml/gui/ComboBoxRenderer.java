@@ -14,7 +14,7 @@ import javax.swing.ListCellRenderer;
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Aug 30, 2015
  */
-public class ComboBoxRenderer extends JLabel implements ListCellRenderer {
+public class ComboBoxRenderer extends JLabel implements ListCellRenderer<Object> {
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -35,7 +35,7 @@ public class ComboBoxRenderer extends JLabel implements ListCellRenderer {
      * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
      */
     @Override
-    public Component getListCellRendererComponent(JList list, Object value,
+    public Component getListCellRendererComponent(JList<?> list, Object value,
             int index, boolean isSelected, boolean hasFocus){
         if (index == -1 && value == null) setText(title);
         else setText(value.toString());

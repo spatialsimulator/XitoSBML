@@ -24,10 +24,10 @@ public class MenuColumn extends AbstractCellEditor implements TableCellRenderer,
 	JTable table;
 	
 	/** The edit button. */
-	JComboBox editButton;
+	JComboBox<?> editButton;
 	
 	/** The render button. */
-	JComboBox renderButton;
+	JComboBox<?> renderButton;
 
 	
 	/**
