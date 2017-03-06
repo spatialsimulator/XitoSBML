@@ -110,6 +110,7 @@ public class SpatialSBMLExporter{
 	public SpatialSBMLExporter() {
 		document = new SBMLDocument(3,1);
 		document.setPackageRequired(SpatialConstants.namespaceURI, true);
+		document.addDeclaredNamespace(PluginConstants.TAG_CELLDESIGNER_PREFIX, PluginConstants.CDNAMESPACE);
 		model = document.createModel();
 
 		SBasePlugin basePlugin = (model.getPlugin(SpatialConstants.namespaceURI));
