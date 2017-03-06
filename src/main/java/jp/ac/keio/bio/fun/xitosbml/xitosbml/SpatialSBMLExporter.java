@@ -12,7 +12,10 @@ import java.util.Map.Entry;
 import java.util.WeakHashMap;
 import java.util.zip.Deflater;
 
+import javax.xml.stream.XMLStreamException;
+
 import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
+import jp.ac.keio.bio.fun.xitosbml.util.PluginConstants;
 import jp.ac.keio.bio.fun.xitosbml.util.PluginInfo;
 
 import org.sbml.jsbml.Compartment;
@@ -150,6 +153,7 @@ public class SpatialSBMLExporter{
 		addAdjacentDomains();
 		addGeometryDefinitions();
 		addUnits();
+		addOutside();
 	}
 
 	/**
@@ -570,6 +574,69 @@ public class SpatialSBMLExporter{
 		s = s.replace("]", "");
 		s = s.replace(",", "");
 		po.setPointIndex(s);
+	}
+	
+	/**
+	 * void
+	 * Add Outside annotation for celldesigner.
+	 */
+	private void addOutside() {
+		//one = inner domain, two = outer domain
+		for (ArrayList<String> e : adjacentsList) {
+			String one = e.get(0).substring(0, e.get(0).length());
+			one = one.replaceAll("[0-9]", "");
+			String two = e.get(1).substring(0, e.get(1).length());
+			two = two.replaceAll("[0-9]", "");
+			String mem = one + "_" + two + "_membrane";
+			Compartment com1 = getMappedCompartment(one);
+			Compartment com2 = getMappedCompartment(two);
+			Compartment commem = getMappedCompartment(mem);
+			if(!com1.isSetAnnotation()){
+				String str = createOutsideAnnotationString(commem.getId());
+				try {
+					com1.setAnnotation(PluginConstants.addCellDesignerAnnotationTag(str));
+				} catch (XMLStreamException ex) {
+					ex.printStackTrace();
+				}
+			}
+			
+			if(!commem.isSetAnnotation()){
+				String str = createOutsideAnnotationString(com2.getId());
+				try {
+					commem.setAnnotation(PluginConstants.addCellDesignerAnnotationTag(str));
+				} catch (XMLStreamException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Gets the mapped compartment.
+	 *
+	 * @param id the id
+	 * @return the mapped compartment
+	 */
+	private Compartment getMappedCompartment(String id){
+		ListOf<Compartment> cList = model.getListOfCompartments();
+		
+		for(Compartment c : cList){
+			CompartmentMapping cm = ((SpatialCompartmentPlugin)c.getPlugin(SpatialConstants.shortLabel)).getCompartmentMapping();
+			if(cm.getDomainType().equals(id))
+				return c;
+		}		
+		
+		return null;
+	}
+	
+	/**
+	 * Creates the outside annotation.
+	 *
+	 * @param outside the outside
+	 * @return the XML node
+	 */
+	private String createOutsideAnnotationString(String outside){
+		return "<celldesigner:outside>" + outside + "</celldesigner:outside>\n";
 	}
 	
 }

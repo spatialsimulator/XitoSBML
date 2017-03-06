@@ -24,4 +24,28 @@ public class PluginConstants {
 	
 	/** The Constant LOWERSBMLVERSION. */
 	public static final int LOWERSBMLVERSION = 4;
+	
+	/** The Constant CDNAMESPACE. */
+	public static final String CDNAMESPACE = "http://www.sbml.org/2001/ns/celldesigner";
+
+	/** The Constant CDURI. */
+	public static final String TAG_CELLDESIGNER_PREFIX = "celldesigner";
+
+	/** The Constant TAG_START_ANNOTATION. */
+	public static final String TAG_START_ANNOTATION = "<annotation xmlns:" + TAG_CELLDESIGNER_PREFIX + "=\"" + "http://www.sbml.org/2001/ns/celldesigner" + "\">";
+
+	/** The Constant TAG_START_CELLDESIGNER. */
+	public static final String TAG_START_CELLDESIGNER = "<" + TAG_CELLDESIGNER_PREFIX + ":";
+
+	/** The Constant OUTSIDE. */
+	public static final String OUTSIDE = "outside";
+
+	/** The Constant TAG_END_ANNOTATION. */
+	public final static String TAG_END_ANNOTATION = "</annotation>";
+
+	/** The Constant TAG_END_CELLDESIGNER. */
+	public final static String TAG_END_CELLDESIGNER = "</" + TAG_CELLDESIGNER_PREFIX + ":";
+
+	public final static String TAG_CELLDESIGNER_EXTENSIONTOPLEVEL  = "extension";
+	  
 }
