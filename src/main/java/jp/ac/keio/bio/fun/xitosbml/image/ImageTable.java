@@ -212,7 +212,6 @@ public class ImageTable extends JTable implements MouseListener{
 			new MessageDialog(new Frame(), "Error", "Image size must be same for all input image");
 			return;
 		}
-			
 		setValueAt(img.getTitle(), row, colImgName);
 		hashDomFile.put(getValueAt(row, colDomType).toString(), img);	
 	}

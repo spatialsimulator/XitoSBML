@@ -255,10 +255,14 @@ public class SpatialImage {
 	public void createHashDomainTypes() {
 		hashDomainTypes = new HashMap<String, Integer>();
 		for (String s : hashSampledValue.keySet()) {
-			if (s.contains("membrane"))
+			if (s.contains("membrane") && depth > 1)
 				hashDomainTypes.put(s, 2);
-			else
+			else if(s.contains("membrane"))
+				hashDomainTypes.put(s, 1);
+			else if(depth > 1)
 				hashDomainTypes.put(s, 3);
+			else
+				hashDomainTypes.put(s, 2);
 		}
 	}
 	

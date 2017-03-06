@@ -122,7 +122,6 @@ public class ImageExplorer extends JFrame implements ActionListener{
 			}
 		}
 		hashSampledValues.put("Extracellular", 0);
-		System.out.println(hashSampledValues.toString());
 		return hashSampledValues;
 	}
 
@@ -155,7 +154,7 @@ public class ImageExplorer extends JFrame implements ActionListener{
 		if(compoInfo != null)
 			return compoInfo;
 		else
-		return null;
+			return null;
 	}
 	
 	/* (non-Javadoc)

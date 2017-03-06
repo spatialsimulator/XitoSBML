@@ -33,6 +33,8 @@ public class Interpolater {
 	/** The height. */
 	private int height;
 	
+	private int depth;
+	
 	/** The altz. */
 	private int altz;
 	
@@ -84,9 +86,8 @@ public class Interpolater {
 	private void getInfo(ImagePlus imgPlus){
 		width = imgPlus.getWidth();
 		height = imgPlus.getHeight();
-		imgPlus.getImageStackSize();
+		depth = imgPlus.getImageStackSize();
 		info = image.getOriginalFileInfo();
-		
 		voxx = info.pixelWidth;
 		voxy = info.pixelHeight;
 		voxz = info.pixelDepth;
@@ -163,6 +164,7 @@ public class Interpolater {
 	 * @return true, if successful
 	 */
 	private boolean needInterpolate(){
+		if(depth == 1) return false;
 		if(voxz > voxx || voxz > voxy)
 			return true;
 		

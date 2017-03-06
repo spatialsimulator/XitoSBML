@@ -174,12 +174,12 @@ public class SpatialSBMLExporter{
 		sf.setDataType(DataKind.UINT8);
 		sf.setNumSamples1(width);
 		sf.setNumSamples2(height);
-		// if(depth > 1)
+		//if(depth > 1)
 		sf.setNumSamples3(depth);
 		sf.setInterpolation(InterpolationKind.nearestneighbor);
 		byte[] compressed = compressRawData(raw);
 		String s;
-		if (compressed != null){
+		if (compressed == null){
 			sf.setCompression(CompressionKind.uncompressed);
 			s = Arrays.toString(byteArrayToIntArray(raw));
 		}else{

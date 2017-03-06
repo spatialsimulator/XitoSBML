@@ -87,7 +87,7 @@ public class ImageBorder {
 	 */
 	private boolean isBorderSafe(){
 		boolean safez = true;
-		if(depth != 1)	safez = checkTopBottom();
+		if(depth > 1)	safez = checkTopBottom();
 		return safez;
 	}
 	

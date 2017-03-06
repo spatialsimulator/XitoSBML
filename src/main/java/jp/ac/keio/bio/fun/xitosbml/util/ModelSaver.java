@@ -65,6 +65,7 @@ public class ModelSaver {
 		try {		
 			if(name.contains(".xml"))	
 				name = name.substring(0, name.indexOf('.'));
+			document.getModel().setId(name);
 			SBMLWriter.write(document, new File(path + "/" + name + ".xml"), ' ', (short) 2); 
 			String docStr = new TidySBMLWriter().writeSBMLToString(document); 
 	        IJ.log(docStr);
