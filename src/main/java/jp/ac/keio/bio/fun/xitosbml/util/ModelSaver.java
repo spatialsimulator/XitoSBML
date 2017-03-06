@@ -67,8 +67,6 @@ public class ModelSaver {
 				name = name.substring(0, name.indexOf('.'));
 			document.getModel().setId(name);
 			SBMLWriter.write(document, new File(path + "/" + name + ".xml"), ' ', (short) 2); 
-			String docStr = new TidySBMLWriter().writeSBMLToString(document); 
-	        IJ.log(docStr);
 		} catch(NullPointerException e) {
 			System.out.println("SBML document was not saved");
 		} catch (SBMLException e) {
@@ -81,6 +79,17 @@ public class ModelSaver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
+
+		try {
+			String docStr = new TidySBMLWriter().writeSBMLToString(document);
+	        IJ.log(docStr);
+		} catch (SBMLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 
 	}
 
