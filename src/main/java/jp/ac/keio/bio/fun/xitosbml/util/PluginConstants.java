@@ -47,5 +47,21 @@ public class PluginConstants {
 	public final static String TAG_END_CELLDESIGNER = "</" + TAG_CELLDESIGNER_PREFIX + ":";
 
 	public final static String TAG_CELLDESIGNER_EXTENSIONTOPLEVEL  = "extension";
-	  
+
+	public static String addCellDesignerAnnotationTag(String str){
+		
+		String rtn =	TAG_START_ANNOTATION			+
+		    	TAG_START_CELLDESIGNER					+
+		    	TAG_CELLDESIGNER_EXTENSIONTOPLEVEL	 	+
+		    	">"										+
+		    	str										+
+		    	TAG_END_CELLDESIGNER					+
+		    	TAG_CELLDESIGNER_EXTENSIONTOPLEVEL	 	+
+		    	">"										+
+		    	TAG_END_ANNOTATION;
+		
+		return rtn;
+	}
+
+	
 }
