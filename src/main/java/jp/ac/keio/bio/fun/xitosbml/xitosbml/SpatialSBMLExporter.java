@@ -181,15 +181,15 @@ public class SpatialSBMLExporter{
 		//if(depth > 1)
 		sf.setNumSamples3(depth);
 		sf.setInterpolation(InterpolationKind.nearestneighbor);
-		byte[] compressed = compressRawData(raw);
+//		byte[] compressed = compressRawData(raw);
 		String s;
-		if (compressed == null){
+//		if (compressed == null){
 			sf.setCompression(CompressionKind.uncompressed);
 			s = Arrays.toString(byteArrayToIntArray(raw));
-		}else{
-			sf.setCompression(CompressionKind.deflated);
-			s = Arrays.toString(byteArrayToIntArray(compressed));
-		}
+//		}else{
+//			sf.setCompression(CompressionKind.deflated);
+//			s = Arrays.toString(byteArrayToIntArray(compressed));
+//		}
 		s = s.replace("[", "");
 		s = s.replace("]", "");
 		s = s.replace(",", "");
