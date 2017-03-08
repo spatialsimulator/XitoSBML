@@ -86,8 +86,15 @@ public class DiffusionDialog {
 		gd.addRadioButtonGroup("constant:", bool, 1, 2, String.valueOf(parameter.getConstant()));
 		gd.addChoice("species:", SBMLProcessUtil.listIdToStringArray(model.getListOfSpecies()), dc.getVariable());
 		gd.addChoice("type:", SBMLProcessUtil.diffType, SBMLProcessUtil.diffTypeIndexToString(dc.getDiffusionKind()));
-		gd.addChoice("coordinate1:", SBMLProcessUtil.lcoord, SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference1()));
-		gd.addChoice("coordinate2:", SBMLProcessUtil.lcoord, SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference2()));
+		if(dc.isSetCoordinateReference1())
+			gd.addChoice("coordinate1:", SBMLProcessUtil.lcoord, SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference1()));
+		else
+			gd.addChoice("coordinate1:", SBMLProcessUtil.lcoord, SBMLProcessUtil.lcoord[0]);
+
+		if(dc.isSetCoordinateReference2())
+			gd.addChoice("coordinate2:", SBMLProcessUtil.lcoord, SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference2()));
+		else
+			gd.addChoice("coordinate2:", SBMLProcessUtil.lcoord, SBMLProcessUtil.lcoord[0]);
 	
 		gd.showDialog();
 		if(gd.wasCanceled())

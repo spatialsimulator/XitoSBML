@@ -95,7 +95,7 @@ public class SBMLProcessUtil {
 		if(index == CoordinateKind.cartesianX) return SBMLProcessUtil.lcoord[0];
 		if(index == CoordinateKind.cartesianY) return SBMLProcessUtil.lcoord[1];
 		if(index == CoordinateKind.cartesianZ) return SBMLProcessUtil.lcoord[2];
-		return null;
+		return "";
 	}
 	
 	/**
@@ -143,7 +143,6 @@ public class SBMLProcessUtil {
 	}
 	
 	/**
->>>>>>> garuda
 	 * Unit index to string.
 	 *
 	 * @param index the index
