@@ -3,12 +3,9 @@ package jp.ac.keio.bio.fun.xitosbml.pane;
 import java.util.Vector;
 
 import javax.swing.JTable;
-import javax.xml.stream.XMLStreamException;
 
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
-import org.sbml.jsbml.SBMLException;
-import org.sbml.jsbml.SBMLWriter;
 import org.sbml.jsbml.Species;
 
 
