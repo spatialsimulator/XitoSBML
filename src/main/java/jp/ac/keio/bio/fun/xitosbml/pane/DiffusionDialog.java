@@ -114,7 +114,7 @@ public class DiffusionDialog {
 				str = str.replace(' ', '_');
 		parameter.setId(str);
 		parameter.setValue(gd.getNextNumber());
-		parameter.setConstant(Boolean.getBoolean(gd.getNextRadioButton()));
+		parameter.setConstant(Boolean.valueOf(gd.getNextRadioButton()));
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
 		
 		DiffusionCoefficient dc = (DiffusionCoefficient) (sp.isSetParamType() ? sp.getParamType() : new DiffusionCoefficient());

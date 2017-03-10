@@ -105,7 +105,7 @@ public class AdvectionDialog {
 				str = str.replace(' ', '_');
 		parameter.setId(str);
 		parameter.setValue(gd.getNextNumber());
-		parameter.setConstant(Boolean.getBoolean(gd.getNextRadioButton()));
+		parameter.setConstant(Boolean.valueOf(gd.getNextRadioButton()));
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
 		AdvectionCoefficient ac = (AdvectionCoefficient) (sp.isSetParamType() ? sp.getParamType() : new AdvectionCoefficient());
 		String var = gd.getNextChoice();

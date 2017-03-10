@@ -135,7 +135,7 @@ public class SpeciesDialog {
 			species.setHasOnlySubstanceUnits(true);
 		else
 			species.setHasOnlySubstanceUnits(false);
-		species.setBoundaryCondition(Boolean.parseBoolean(gd.getNextRadioButton()));
-		species.setConstant(Boolean.parseBoolean(gd.getNextRadioButton()));
+		species.setBoundaryCondition(Boolean.valueOf(gd.getNextRadioButton()));
+		species.setConstant(Boolean.valueOf(gd.getNextRadioButton()));
 	}
 }

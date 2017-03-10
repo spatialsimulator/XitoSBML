@@ -100,7 +100,7 @@ public class ParameterDialog {
 		parameter.setId(str);
 		parameter.setValue(gd.getNextNumber());
 		parameter.setUnits(SBMLProcessUtil.StringToUnit(gd.getNextChoice()));
-		parameter.setConstant(Boolean.getBoolean(gd.getNextRadioButton()));
+		parameter.setConstant(Boolean.valueOf(gd.getNextRadioButton()));
 		
 	}
 }
