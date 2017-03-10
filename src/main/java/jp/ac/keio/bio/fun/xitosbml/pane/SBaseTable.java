@@ -65,11 +65,11 @@ public abstract class SBaseTable {
 	 *
 	 * @param index the index
 	 */
-	void removeFromList(int index){
-		if(index == -1) return;
+	SBase removeFromList(int index){
+		if(index == -1) return null;
 		SBase id = memberList.get(index);
 		list.remove(id);
-		memberList.remove(index);
+		return memberList.remove(index);
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public abstract class SBaseTable {
 	 *
 	 * @param table the table
 	 */
-	void removeSelectedFromTable(JTable table) {
+	void removeSelectedRowFromTable(JTable table) {
 		int row = table.getSelectedRow();
 		if(row == -1) return;
 		((DefaultTableModel) table.getModel()).removeRow(row);

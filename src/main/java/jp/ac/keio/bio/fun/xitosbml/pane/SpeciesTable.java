@@ -3,9 +3,12 @@ package jp.ac.keio.bio.fun.xitosbml.pane;
 import java.util.Vector;
 
 import javax.swing.JTable;
+import javax.xml.stream.XMLStreamException;
 
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
+import org.sbml.jsbml.SBMLException;
+import org.sbml.jsbml.SBMLWriter;
 import org.sbml.jsbml.Species;
 
 
@@ -144,6 +147,7 @@ public class SpeciesTable extends SBaseTable{
 	void add() throws IllegalArgumentException{
 		if(sd == null)
 			sd = new SpeciesDialog(model);
+	
 		Species s = sd.showDialog();
 		if(s == null) return;
 			

@@ -30,6 +30,7 @@ import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.SBMLReader;
 import org.sbml.jsbml.SBMLWriter;
+import org.sbml.jsbml.SBase;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.UnitDefinition;
 import org.sbml.jsbml.text.parser.ParseException;
@@ -128,16 +129,6 @@ public class TabTables extends JFrame implements ActionListener {
 	}
 	
 	/**
-	 * Adds the all S base.
-	 */
-	private void addAllSBase() {
-//		for (Component c : tabbedpane.getComponents()) {
-//			JViewport viewport = ((JScrollPane) c).getViewport();
-//			JTable table = (JTable) viewport.getView();
-//		}
-	}
-
-	/**
 	 * The main method.
 	 *
 	 * @param args the arguments
@@ -145,13 +136,11 @@ public class TabTables extends JFrame implements ActionListener {
 	public static void main(String[] args) {
 		SBMLDocument d;
 		try {
-			d = SBMLReader.read(new File("sample/prob.xml"));
+			d = SBMLReader.read(new File("/Users/ii/Desktop/sam2d.xml"));
 			new TabTables(d.getModel());
 		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -185,8 +174,9 @@ public class TabTables extends JFrame implements ActionListener {
 			}else if (input.contentEquals("edit")) {
 				sbaseList.get(paneIndex).edit(table.getSelectedRow());
 			}else if (input.contentEquals("delete")) {
-				sbaseList.get(paneIndex).removeFromList(table.getSelectedRow());
-				sbaseList.get(paneIndex).removeSelectedFromTable(table);
+				SBase sbase = sbaseList.get(paneIndex).removeFromList(table.getSelectedRow());
+				sbaseList.get(paneIndex).removeSelectedRowFromTable(table);
+				model.unregister(sbase);
 			}
 		} catch(IllegalArgumentException ex){
 			if(ex.getCause() == null){
@@ -194,25 +184,19 @@ public class TabTables extends JFrame implements ActionListener {
 			} else {
 				JOptionPane.showMessageDialog(this, "Duplicate Id");
 			}
-			//JOptionPane.showMessageDialog(this, ex.getMessage());
 			ex.printStackTrace();
 		} catch (IdentifierException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
 		if (input.equals("OK")) {
-			addAllSBase();
 			try {
 				SBMLWriter.write(model.getSBMLDocument(), System.out, ' ', (short)2);
 			} catch (SBMLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} catch (XMLStreamException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			
