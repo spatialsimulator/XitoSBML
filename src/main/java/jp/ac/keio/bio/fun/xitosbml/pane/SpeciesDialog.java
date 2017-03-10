@@ -5,6 +5,8 @@ import ij.gui.GenericDialog;
 import org.sbml.jsbml.IdentifierException;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Species;
+import org.sbml.jsbml.ext.spatial.SpatialConstants;
+import org.sbml.jsbml.ext.spatial.SpatialSpeciesPlugin;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -137,5 +139,8 @@ public class SpeciesDialog {
 			species.setHasOnlySubstanceUnits(false);
 		species.setBoundaryCondition(Boolean.valueOf(gd.getNextRadioButton()));
 		species.setConstant(Boolean.valueOf(gd.getNextRadioButton()));
+		
+		SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) species.getPlugin(SpatialConstants.shortLabel);
+		ssp.setSpatial(true);
 	}
 }
