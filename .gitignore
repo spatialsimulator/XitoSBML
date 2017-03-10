@@ -20,3 +20,8 @@ doc/
 
 /target/
 .externalToolBuilders/
+
+# Eclipse related files.
+.classpath
+.project
+.settings/
