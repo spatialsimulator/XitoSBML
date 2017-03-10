@@ -1,11 +1,11 @@
-Spatial SBML Plugin
+XitoSBML: Spatial SBML Plugin for ImageJ
 ======================
-This program is a plugin for ImageJ which creates an Spatial SBML Model with segmented images
+XitoSBML is a plugin for ImageJ which creates an Spatial SBML Model with segmented images
 
 How to Compile
 ------------------
 ### Dependencies ###
-Spatial SBML Plugin requires the following third-party application.
+XitoSBML requires the following third-party application.
 
 + [JSBML](http://sbml.org/Software/JSBML"JSBML")
 + [Fiji Is Just ImageJ](http://fiji.sc/Fiji "Fiji Is Just ImageJ")
@@ -20,5 +20,6 @@ Spatial SBML Plugin requires the following third-party application.
 How to Use
 -------------------
 
-License
+Licensing
 ------------------
+XitoSBML is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/spatialsimulator/XitoSBML/blob/master/LICENSE-2.0.txt) for the full license text.
