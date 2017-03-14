@@ -165,6 +165,18 @@ public class SpeciesTable extends SBaseTable{
 		if(s == null) return;
 		
 		memberList.set(index, s);
+
+		// copy contents of Species(JTable) to Species(Model)
+		Species memberSp = (Species)memberList.get(index);
+		Species sp = (Species) list.getElementBySId(memberSp.getId());
+		if (memberSp.isSetInitialAmount()) sp.setInitialAmount(memberSp.getInitialAmount());
+		if (memberSp.isSetInitialConcentration()) sp.setInitialConcentration(memberSp.getInitialConcentration());
+		sp.setCompartment(memberSp.getCompartment());
+		sp.setUnits(memberSp.getUnits());
+		sp.setBoundaryCondition(memberSp.getBoundaryCondition());
+		sp.setConstant(memberSp.getConstant());
+		sp.setHasOnlySubstanceUnits(memberSp.getHasOnlySubstanceUnits());
+
 		((MyTableModel)table.getModel()).updateRow(index, speciesToVector(s));
 		
 	}
