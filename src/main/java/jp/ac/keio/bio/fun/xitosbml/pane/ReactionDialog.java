@@ -65,7 +65,7 @@ public class ReactionDialog {
 		gd.pack();
 	
 		gd.addStringField("id:", null);
-		gd.addRadioButtonGroup("reversible:", bool, 1, 2, "true");
+		gd.addRadioButtonGroup("reversible:", bool, 1, 2, "false");
 		gd.addRadioButtonGroup("isLocal:", bool, 1, 2, "true");
 		gd.addStringField("kinetic law", null);
 		gd.addMessage("reactant:");
