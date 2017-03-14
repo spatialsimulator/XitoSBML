@@ -187,13 +187,28 @@ public class SBMLProcessUtil {
 	 * @param dst
 	 * @return
 	 */
-	public static Reaction copyReactionContents(Reaction src, Reaction dst) {
+	@SuppressWarnings("deprecation")
+  public static Reaction copyReactionContents(Reaction src, Reaction dst) {
 		SpatialReactionPlugin srcSrp = (SpatialReactionPlugin) src.getPlugin("spatial");
 		SpatialReactionPlugin dstSrp = (SpatialReactionPlugin) dst.getPlugin("spatial");
 	  dst.setReversible(src.getReversible());
+	  dst.setFast(src.getFast());
 	  dstSrp.setIsLocal(srcSrp.getIsLocal());
+	  dst.unsetKineticLaw();
 	  if (src.isSetKineticLaw()) {
 	    dst.setKineticLaw(src.getKineticLaw().clone());
+	  }
+	  dst.unsetListOfReactants();
+	  if (src.isSetListOfReactants()) {
+	    dst.setListOfReactants(src.getListOfReactants().clone());
+	  }
+	  dst.unsetListOfProducts();
+	  if (src.isSetListOfProducts()) {
+	    dst.setListOfProducts(src.getListOfProducts().clone());
+	  }
+	  dst.unsetListOfModifiers();
+	  if (src.isSetListOfModifiers()) {
+	    dst.setListOfModifiers(src.getListOfModifiers().clone());
 	  }
 	  return dst;
 	}
