@@ -6,6 +6,7 @@ import org.sbml.jsbml.Species;
 import org.sbml.jsbml.Symbol;
 import org.sbml.jsbml.Unit.Kind;
 import org.sbml.jsbml.ext.spatial.AdvectionCoefficient;
+import org.sbml.jsbml.ext.spatial.BoundaryCondition;
 import org.sbml.jsbml.ext.spatial.BoundaryConditionKind;
 import org.sbml.jsbml.ext.spatial.CoordinateKind;
 import org.sbml.jsbml.ext.spatial.DiffusionKind;
@@ -191,6 +192,29 @@ public class SBMLProcessUtil {
 	  dst.setConstant(src.getConstant());
 		dstAc.setVariable(srcAc.getVariable());
 		dstAc.setCoordinate(srcAc.getCoordinate());
+	  return dst;
+	}
+
+	/**
+	 * Copy contents of BoundaryCondition from src to dst.
+	 * @param src
+	 * @param dst
+	 * @return
+	 */
+	public static Parameter copyBoundaryConditionContents(Parameter src, Parameter dst) {
+	  SpatialParameterPlugin srcSp = (SpatialParameterPlugin) src.getPlugin("spatial");
+		BoundaryCondition srcBc = (BoundaryCondition) (srcSp.isSetParamType() ? srcSp.getParamType() : new BoundaryCondition());
+	  SpatialParameterPlugin dstSp = (SpatialParameterPlugin) dst.getPlugin("spatial");
+		BoundaryCondition dstBc = (BoundaryCondition) (dstSp.isSetParamType() ? dstSp.getParamType() : new BoundaryCondition());
+	  dst.setValue(src.getValue());
+	  dst.setConstant(src.getConstant());
+		dstBc.setVariable(srcBc.getVariable());
+		dstBc.setType(srcBc.getType());
+		if (srcBc.isSetCoordinateBoundary()) {
+		  dstBc.setCoordinateBoundary(srcBc.getCoordinateBoundary());
+		} else if (srcBc.isSetBoundaryDomainType()) {
+		  dstBc.setBoundaryDomainType(srcBc.getBoundaryDomainType());
+		}
 	  return dst;
 	}
 

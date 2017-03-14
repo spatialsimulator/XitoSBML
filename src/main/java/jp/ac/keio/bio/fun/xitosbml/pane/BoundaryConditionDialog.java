@@ -79,7 +79,7 @@ public class BoundaryConditionDialog {
 		this.parameter = parameter;
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
 		BoundaryCondition bc = (BoundaryCondition) sp.getParamType();
-		gd = new GenericDialog("Edit Parameter");
+		gd = new GenericDialog("Edit BoundaryCondition");
 		gd.setResizable(true);
 		gd.pack();
 		
