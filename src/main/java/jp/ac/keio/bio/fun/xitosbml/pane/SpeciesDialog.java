@@ -63,8 +63,8 @@ public class SpeciesDialog {
 		gd.addNumericField("quantity:", 0, 1);
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), null);
 		gd.addChoice("substanceUnit:", units, null);
-		gd.addRadioButtonGroup("boundaryCondition:",bool,1,2,"true");
-		gd.addRadioButtonGroup("constant:",bool,1,2,"true");
+		gd.addRadioButtonGroup("boundaryCondition:",bool,1,2,"false");
+		gd.addRadioButtonGroup("constant:",bool,1,2,"false");
 		
 		gd.showDialog();
 		if(gd.wasCanceled())
@@ -100,9 +100,9 @@ public class SpeciesDialog {
 		}
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), species.getCompartment());
 		gd.addChoice("substanceUnit:", units, species.getUnits());			
-		gd.addRadioButtonGroup("hasOnlySubstnaceUnit:", bool, 1, 2, String.valueOf(species.getHasOnlySubstanceUnits()));
 		gd.addRadioButtonGroup("boundaryCondition:",bool,1, 2, String.valueOf(species.getBoundaryCondition()));
 		gd.addRadioButtonGroup("constant:",bool,1,2, String.valueOf(species.getConstant()));
+		gd.addRadioButtonGroup("hasOnlySubstnaceUnit:", bool, 1, 2, String.valueOf(species.getHasOnlySubstanceUnits()));
 		
 		gd.showDialog();
 		if(gd.wasCanceled())
@@ -110,7 +110,7 @@ public class SpeciesDialog {
 				
 		setSpeciesData();
 		
-		return species;
+		return this.species;
 	}
 	
 	/**
