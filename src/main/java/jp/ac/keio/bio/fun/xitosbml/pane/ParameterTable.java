@@ -150,6 +150,14 @@ public class ParameterTable extends SBaseTable {
 		
 		if(p == null) return;
 		memberList.set(index, p);
+
+		// copy contents of Parameter(JTable) to Parameter(Model)
+		Parameter memberParam = (Parameter)memberList.get(index);
+		Parameter param = (Parameter) list.getElementBySId(memberParam.getId());
+		param.setValue(memberParam.getValue());
+		param.setUnits(memberParam.getUnits());
+		param.setConstant(memberParam.getConstant());
+
 		((MyTableModel)table.getModel()).updateRow(index,parameterToVector(p));
 	
 	}
