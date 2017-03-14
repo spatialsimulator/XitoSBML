@@ -75,7 +75,7 @@ public class ReactionTable extends SBaseTable {
 			data[i][0] = r.getId();
 			data[i][1] = r.getReversible();
 			data[i][2] = srp.getIsLocal();
-			data[i][3] = r.isSetKineticLaw() ? r.getKineticLaw().getMathMLString() : "";
+			data[i][3] = r.isSetKineticLaw() ? r.getKineticLaw().getMath().toFormula() : "";
 			data[i][4] = listMemberToString(r.getListOfReactants());
 			data[i][5] = listMemberToString(r.getListOfProducts());
 			data[i][6] = listMemberToString(r.getListOfModifiers());
@@ -132,7 +132,7 @@ public class ReactionTable extends SBaseTable {
 		v.add(r.getId());
 		v.add(r.getReversible());
 		v.add(srp.getIsLocal());
-		v.add(r.getKineticLaw().getMathMLString());
+		v.add(r.getKineticLaw().getMath().toFormula());
 		v.add(listMemberToString(r.getListOfReactants()));
 		v.add(listMemberToString(r.getListOfProducts()));
 		v.add(listMemberToString(r.getListOfModifiers()));

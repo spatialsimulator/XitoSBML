@@ -105,7 +105,7 @@ public class ReactionDialog {
 		gd.addStringField("id:", reaction.getId());
 		gd.addRadioButtonGroup("reversible", bool, 1, 2, String.valueOf(reaction.getReversible()));
 		gd.addRadioButtonGroup("isLocal", bool, 1, 2, String.valueOf(srp.getIsLocal()));
-		gd.addStringField("kinetic law", reaction.getKineticLaw().getMathMLString());
+		gd.addStringField("kinetic law", reaction.getKineticLaw().getMath().toFormula());
 		gd.addMessage("reactant:");
 		gd.addCheckboxGroup((int) los.size() / 3 + 1, 3, SBMLProcessUtil.listIdToStringArray(los), boolSpeciesInSReference(los, reaction.getListOfReactants()));
 		gd.addMessage("product:");
