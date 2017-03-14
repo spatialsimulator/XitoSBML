@@ -156,6 +156,12 @@ public class AdvectionTable extends SBaseTable {
 		if(p == null) return;
 
 		memberList.set(index, p);
+
+		// copy contents of AdvectionCoefficient(JTable) to AdvectionCoefficient(Model)
+		Parameter memberAdv = (Parameter)memberList.get(index);
+		Parameter adv = (Parameter)list.getElementBySId(memberAdv.getId());
+		SBMLProcessUtil.copyAdvectionCoefficientContents(memberAdv, adv);
+
 		((MyTableModel)table.getModel()).updateRow(index, parameterToVector(p));	
 	}
 }

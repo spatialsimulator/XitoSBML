@@ -1,11 +1,15 @@
 package jp.ac.keio.bio.fun.xitosbml.pane;
 
 import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.Species;
 import org.sbml.jsbml.Symbol;
 import org.sbml.jsbml.Unit.Kind;
+import org.sbml.jsbml.ext.spatial.AdvectionCoefficient;
 import org.sbml.jsbml.ext.spatial.BoundaryConditionKind;
 import org.sbml.jsbml.ext.spatial.CoordinateKind;
 import org.sbml.jsbml.ext.spatial.DiffusionKind;
+import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -142,6 +146,54 @@ public class SBMLProcessUtil {
 			return DiffusionKind.tensor;
 	}
 	
+	/**
+	 * Copy contents of Species from src to dst.
+	 * @param src
+	 * @param dst
+	 * @return
+	 */
+	public static Species copySpeciesContents(Species src, Species dst) {
+		if (src.isSetInitialAmount()) dst.setInitialAmount(src.getInitialAmount());
+		if (src.isSetInitialConcentration()) dst.setInitialConcentration(src.getInitialConcentration());
+		dst.setCompartment(src.getCompartment());
+		dst.setUnits(src.getUnits());
+		dst.setBoundaryCondition(src.getBoundaryCondition());
+		dst.setConstant(src.getConstant());
+		dst.setHasOnlySubstanceUnits(src.getHasOnlySubstanceUnits());
+	  return dst;
+	}
+
+	/**
+	 * Copy contents of Parameter from src to dst.
+	 * @param src
+	 * @param dst
+	 * @return
+	 */
+	public static Parameter copyParameterContents(Parameter src, Parameter dst) {
+		dst.setValue(src.getValue());
+		dst.setUnits(src.getUnits());
+		dst.setConstant(src.getConstant());
+	  return dst;
+	}
+
+	/**
+	 * Copy contents of AdvenctionCoefficient from src to dst.
+	 * @param src
+	 * @param dst
+	 * @return
+	 */
+	public static Parameter copyAdvectionCoefficientContents(Parameter src, Parameter dst) {
+	  SpatialParameterPlugin srcSp = (SpatialParameterPlugin) src.getPlugin("spatial");
+		AdvectionCoefficient srcAc = (AdvectionCoefficient) (srcSp.isSetParamType() ? srcSp.getParamType() : new AdvectionCoefficient());
+	  SpatialParameterPlugin dstSp = (SpatialParameterPlugin) dst.getPlugin("spatial");
+		AdvectionCoefficient dstAc = (AdvectionCoefficient) (dstSp.isSetParamType() ? dstSp.getParamType() : new AdvectionCoefficient());
+	  dst.setValue(src.getValue());
+	  dst.setConstant(src.getConstant());
+		dstAc.setVariable(srcAc.getVariable());
+		dstAc.setCoordinate(srcAc.getCoordinate());
+	  return dst;
+	}
+
 	/**
 	 * Unit index to string.
 	 *
