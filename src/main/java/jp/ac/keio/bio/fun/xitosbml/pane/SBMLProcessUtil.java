@@ -9,6 +9,7 @@ import org.sbml.jsbml.ext.spatial.AdvectionCoefficient;
 import org.sbml.jsbml.ext.spatial.BoundaryCondition;
 import org.sbml.jsbml.ext.spatial.BoundaryConditionKind;
 import org.sbml.jsbml.ext.spatial.CoordinateKind;
+import org.sbml.jsbml.ext.spatial.DiffusionCoefficient;
 import org.sbml.jsbml.ext.spatial.DiffusionKind;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
@@ -214,6 +215,32 @@ public class SBMLProcessUtil {
 		  dstBc.setCoordinateBoundary(srcBc.getCoordinateBoundary());
 		} else if (srcBc.isSetBoundaryDomainType()) {
 		  dstBc.setBoundaryDomainType(srcBc.getBoundaryDomainType());
+		}
+	  return dst;
+	}
+
+	/**
+	 * Copy contents of DiffusionCoefficient from src to dst.
+	 * @param src
+	 * @param dst
+	 * @return
+	 */
+	public static Parameter copyDiffusionCoefficientContents(Parameter src, Parameter dst) {
+	  SpatialParameterPlugin srcSp = (SpatialParameterPlugin) src.getPlugin("spatial");
+		DiffusionCoefficient srcDiff = (DiffusionCoefficient) (srcSp.isSetParamType() ? srcSp.getParamType() : new DiffusionCoefficient());
+	  SpatialParameterPlugin dstSp = (SpatialParameterPlugin) dst.getPlugin("spatial");
+		DiffusionCoefficient dstDiff = (DiffusionCoefficient) (dstSp.isSetParamType() ? dstSp.getParamType() : new DiffusionCoefficient());
+	  dst.setValue(src.getValue());
+	  dst.setConstant(src.getConstant());
+		dstDiff.setVariable(srcDiff.getVariable());
+		dstDiff.setDiffusionKind(srcDiff.getDiffusionKind());
+		switch (srcDiff.getDiffusionKind()) {
+		case tensor:
+		  dstDiff.setCoordinateReference2(srcDiff.getCoordinateReference2());
+		case anisotropic:
+		  dstDiff.setCoordinateReference1(srcDiff.getCoordinateReference1());
+		case isotropic:
+		  break;
 		}
 	  return dst;
 	}

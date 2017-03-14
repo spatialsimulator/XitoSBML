@@ -162,6 +162,12 @@ public class DiffusionTable extends SBaseTable {
 		if(p == null) return;		
 			
 		memberList.set(index, p);
+
+		// copy contents of DiffusionCoefficient(JTable) to DiffusionCoefficient(Model)
+		Parameter memberDiffusion = (Parameter)memberList.get(index);
+		Parameter diffusion = (Parameter)list.getElementBySId(memberDiffusion.getId());
+		SBMLProcessUtil.copyDiffusionCoefficientContents(memberDiffusion, diffusion);
+
 		((MyTableModel)table.getModel()).updateRow(index,parameterToVector(p));
 		
 	}
