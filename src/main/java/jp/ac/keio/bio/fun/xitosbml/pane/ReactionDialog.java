@@ -98,7 +98,7 @@ public class ReactionDialog {
 		this.los = model.getListOfSpecies();
 		this.reaction = reaction;
 		SpatialReactionPlugin srp = (SpatialReactionPlugin) reaction.getPlugin("spatial");
-		gd = new GenericDialog("Edit Parameter");
+		gd = new GenericDialog("Edit Reaction");
 		gd.setResizable(true);
 		gd.pack();
 		
