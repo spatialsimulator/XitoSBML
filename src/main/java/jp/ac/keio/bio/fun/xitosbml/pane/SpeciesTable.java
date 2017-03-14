@@ -167,9 +167,8 @@ public class SpeciesTable extends SBaseTable{
 		memberList.set(index, s);
 
 		// copy contents of Species(JTable) to Species(Model)
-		Species memberSp = (Species)memberList.get(index);
-		Species sp = (Species) list.getElementBySId(memberSp.getId());
-		SBMLProcessUtil.copySpeciesContents(memberSp, sp);
+		Species sp = (Species) list.getElementBySId(s.getId());
+		SBMLProcessUtil.copySpeciesContents(s, sp);
 
 		((MyTableModel)table.getModel()).updateRow(index, speciesToVector(s));
 		

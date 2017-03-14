@@ -160,9 +160,8 @@ public class BoundaryConditionTable extends SBaseTable {
 		memberList.set(index, p);
 
 		// copy contents of BoundaryCondition(JTable) to BoundaryCondition(Model)
-		Parameter memberBc = (Parameter)memberList.get(index);
-		Parameter bc = (Parameter)list.getElementBySId(memberBc.getId());
-		SBMLProcessUtil.copyBoundaryConditionContents(memberBc, bc);
+		Parameter bc = (Parameter)list.getElementBySId(p.getId());
+		SBMLProcessUtil.copyBoundaryConditionContents(p, bc);
 
 		((MyTableModel)table.getModel()).updateRow(index,parameterToVector(p));
 	}
