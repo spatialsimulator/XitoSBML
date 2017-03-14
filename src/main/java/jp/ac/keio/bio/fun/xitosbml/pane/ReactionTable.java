@@ -170,6 +170,12 @@ public class ReactionTable extends SBaseTable {
 		if(r == null) return;
 			
 		memberList.set(index, r);
+
+		// copy contents of AdvectionCoefficient(JTable) to AdvectionCoefficient(Model)
+		Reaction memberReaction = (Reaction)memberList.get(index);
+		Reaction reaction = (Reaction)list.getElementBySId(memberReaction.getId());
+		SBMLProcessUtil.copyReactionContents(memberReaction, reaction);
+
 		((MyTableModel)table.getModel()).updateRow(index, reactionToVector(r));
 	
 	}

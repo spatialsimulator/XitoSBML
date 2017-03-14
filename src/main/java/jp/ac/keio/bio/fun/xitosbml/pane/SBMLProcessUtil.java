@@ -2,6 +2,7 @@ package jp.ac.keio.bio.fun.xitosbml.pane;
 
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.Reaction;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.Symbol;
 import org.sbml.jsbml.Unit.Kind;
@@ -12,6 +13,7 @@ import org.sbml.jsbml.ext.spatial.CoordinateKind;
 import org.sbml.jsbml.ext.spatial.DiffusionCoefficient;
 import org.sbml.jsbml.ext.spatial.DiffusionKind;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
+import org.sbml.jsbml.ext.spatial.SpatialReactionPlugin;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -175,6 +177,24 @@ public class SBMLProcessUtil {
 		dst.setValue(src.getValue());
 		dst.setUnits(src.getUnits());
 		dst.setConstant(src.getConstant());
+	  return dst;
+	}
+
+	/**
+	 * Copy contents of Reaction from src to dst.
+	 * KineticLaw is replaced by deep-copied src.kineticLaw.
+	 * @param src
+	 * @param dst
+	 * @return
+	 */
+	public static Reaction copyReactionContents(Reaction src, Reaction dst) {
+		SpatialReactionPlugin srcSrp = (SpatialReactionPlugin) src.getPlugin("spatial");
+		SpatialReactionPlugin dstSrp = (SpatialReactionPlugin) dst.getPlugin("spatial");
+	  dst.setReversible(src.getReversible());
+	  dstSrp.setIsLocal(srcSrp.getIsLocal());
+	  if (src.isSetKineticLaw()) {
+	    dst.setKineticLaw(src.getKineticLaw().clone());
+	  }
 	  return dst;
 	}
 
