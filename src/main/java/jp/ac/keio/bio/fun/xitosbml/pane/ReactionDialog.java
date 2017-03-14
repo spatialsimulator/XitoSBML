@@ -103,9 +103,13 @@ public class ReactionDialog {
 		gd.pack();
 		
 		gd.addStringField("id:", reaction.getId());
-		gd.addRadioButtonGroup("reversible", bool, 1, 2, String.valueOf(reaction.getReversible()));
-		gd.addRadioButtonGroup("isLocal", bool, 1, 2, String.valueOf(srp.getIsLocal()));
-		gd.addStringField("kinetic law", reaction.getKineticLaw().getMath().toFormula());
+		gd.addRadioButtonGroup("reversible:", bool, 1, 2, String.valueOf(reaction.getReversible()));
+		gd.addRadioButtonGroup("isLocal:", bool, 1, 2, String.valueOf(srp.getIsLocal()));
+		if (reaction.isSetKineticLaw()) {
+		  gd.addStringField("kinetic law", reaction.getKineticLaw().getMath().toFormula());
+		} else {
+		  gd.addStringField("kinetic law", "");
+		}
 		gd.addMessage("reactant:");
 		gd.addCheckboxGroup((int) los.size() / 3 + 1, 3, SBMLProcessUtil.listIdToStringArray(los), boolSpeciesInSReference(los, reaction.getListOfReactants()));
 		gd.addMessage("product:");
@@ -163,18 +167,21 @@ public class ReactionDialog {
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws ParseException the parse exception
 	 */
-	private void setReactionData() throws IllegalArgumentException, ParseException{
+	@SuppressWarnings("deprecation")
+  private void setReactionData() throws IllegalArgumentException, ParseException{
 		String str = gd.getNextString();
 		if (str.indexOf(' ')!=-1)
 				str = str.replace(' ', '_');
 		reaction.setId(str);
-		reaction.setReversible(Boolean.getBoolean(gd.getNextRadioButton()));
+		reaction.setReversible(Boolean.valueOf(gd.getNextRadioButton()));
+		reaction.setFast(false); // I know it is deprecated, but we are using L3v1, so "fast" is required.
 		SpatialReactionPlugin srp = (SpatialReactionPlugin) reaction.getPlugin("spatial");
-		srp.setIsLocal(Boolean.getBoolean(gd.getNextRadioButton()));
-		KineticLaw kl = reaction.isSetKineticLaw() ? reaction.getKineticLaw() : reaction.createKineticLaw();
+		srp.setIsLocal(Boolean.valueOf(gd.getNextRadioButton()));
 		String formula = gd.getNextString();
-		if(formula != null)
+		if(formula != null && !formula.equals("")) {
+		  KineticLaw kl = reaction.isSetKineticLaw() ? reaction.getKineticLaw() : reaction.createKineticLaw();
 			kl.setMath(ASTNode.parseFormula(formula));
+		}
 		
 		@SuppressWarnings("unchecked")
 		Vector<Checkbox> v = gd.getCheckboxes();

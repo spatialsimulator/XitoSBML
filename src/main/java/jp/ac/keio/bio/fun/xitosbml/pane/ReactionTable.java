@@ -40,6 +40,7 @@ public class ReactionTable extends SBaseTable {
 	 */
 	ReactionTable(ListOf<Reaction> lor){
 		this.model = lor.getModel();
+		list = lor;
 		setReactionToList(lor);
 		MyTableModel tm = getTableModelWithReaction(lor);
 		table = new JTable(tm);
@@ -132,7 +133,11 @@ public class ReactionTable extends SBaseTable {
 		v.add(r.getId());
 		v.add(r.getReversible());
 		v.add(srp.getIsLocal());
-		v.add(r.getKineticLaw().getMath().toFormula());
+		if (r.isSetKineticLaw()) {
+		  v.add(r.getKineticLaw().getMath().toFormula());
+		} else {
+		  v.addElement("");
+		}
 		v.add(listMemberToString(r.getListOfReactants()));
 		v.add(listMemberToString(r.getListOfProducts()));
 		v.add(listMemberToString(r.getListOfModifiers()));
@@ -172,9 +177,8 @@ public class ReactionTable extends SBaseTable {
 		memberList.set(index, r);
 
 		// copy contents of AdvectionCoefficient(JTable) to AdvectionCoefficient(Model)
-		Reaction memberReaction = (Reaction)memberList.get(index);
-		Reaction reaction = (Reaction)list.getElementBySId(memberReaction.getId());
-		SBMLProcessUtil.copyReactionContents(memberReaction, reaction);
+		Reaction dstr = (Reaction)list.getElementBySId(r.getId());
+		SBMLProcessUtil.copyReactionContents(r, dstr);
 
 		((MyTableModel)table.getModel()).updateRow(index, reactionToVector(r));
 	
