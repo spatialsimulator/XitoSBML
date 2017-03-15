@@ -191,15 +191,17 @@ public class ReactionDialog {
 		for (int i = 0; i < size; i++) {
 			Checkbox cb = v.get(i);
 			String label = cb.getLabel().trim();
-			if (label.indexOf(' ') != -1)
+			if (label.indexOf(' ') != -1) {
 					label = label.replace(' ', '_');
+			}
+			String id = "sr_reac_" + label;
 			if (cb.getState()) {
-				SpeciesReference sr = (SpeciesReference) (losr.get(label) != null ? losr.get(label) : reaction.createReactant());
+				SpeciesReference sr = (SpeciesReference) (losr.get(id) != null ? losr.get(id) : reaction.createReactant(id));
 				sr.setSpecies(label);
 				sr.setConstant(true);
 				sr.setStoichiometry(1);
 			} else {
-				losr.remove(label);
+				losr.remove(id);
 			}
 		}
 		
@@ -207,15 +209,17 @@ public class ReactionDialog {
 		for (int i = size; i < size * 2; i++) {
 			Checkbox cb = v.get(i);
 			String label = cb.getLabel();
-			if (label.indexOf(' ') != -1)
+			if (label.indexOf(' ') != -1) {
 					label = label.replace(' ', '_');
+			}
+			String id = "sr_prod_" + label;
 			if (cb.getState()) {
-				SpeciesReference sr = (SpeciesReference) (losr.get(label) != null ? losr.get(label) : reaction.createProduct());
+				SpeciesReference sr = (SpeciesReference) (losr.get(id) != null ? losr.get(id) : reaction.createProduct(id));
 				sr.setSpecies(label);
 				sr.setConstant(true);
 				sr.setStoichiometry(1);
 			} else {
-				losr.remove(label);
+				losr.remove(id);
 			}
 		}
 		
@@ -223,13 +227,15 @@ public class ReactionDialog {
 		for (int i = size * 2; i < v.size(); i++) {
 			Checkbox cb = v.get(i);
 			String label = cb.getLabel();
-			if (label.indexOf(' ') != -1)
+			if (label.indexOf(' ') != -1) {
 					label = label.replace(' ', '_');
+			}
+			String id = "sr_mod_" + label;
 			if (cb.getState()) {
-				ModifierSpeciesReference sr = (ModifierSpeciesReference) (lom.get(label) != null ? losr.get(label) : reaction.createModifier());				
+				ModifierSpeciesReference sr = (ModifierSpeciesReference) (lom.get(id) != null ? lom.get(id) : reaction.createModifier(id));
 				sr.setSpecies(label);
 			} else {
-				losr.remove(label);
+				lom.remove(id);
 			}
 		}
 	}
