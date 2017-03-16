@@ -65,7 +65,7 @@ public class ReactionDialog {
 		gd.pack();
 	
 		gd.addStringField("id:", null);
-		gd.addRadioButtonGroup("reversible:", bool, 1, 2, "true");
+		gd.addRadioButtonGroup("reversible:", bool, 1, 2, "false");
 		gd.addRadioButtonGroup("isLocal:", bool, 1, 2, "true");
 		gd.addStringField("kinetic law", null);
 		gd.addMessage("reactant:");
@@ -98,14 +98,18 @@ public class ReactionDialog {
 		this.los = model.getListOfSpecies();
 		this.reaction = reaction;
 		SpatialReactionPlugin srp = (SpatialReactionPlugin) reaction.getPlugin("spatial");
-		gd = new GenericDialog("Edit Parameter");
+		gd = new GenericDialog("Edit Reaction");
 		gd.setResizable(true);
 		gd.pack();
 		
 		gd.addStringField("id:", reaction.getId());
-		gd.addRadioButtonGroup("reversible", bool, 1, 2, String.valueOf(reaction.getReversible()));
-		gd.addRadioButtonGroup("isLocal", bool, 1, 2, String.valueOf(srp.getIsLocal()));
-		gd.addStringField("kinetic law", reaction.getKineticLaw().getMathMLString());
+		gd.addRadioButtonGroup("reversible:", bool, 1, 2, String.valueOf(reaction.getReversible()));
+		gd.addRadioButtonGroup("isLocal:", bool, 1, 2, String.valueOf(srp.getIsLocal()));
+		if (reaction.isSetKineticLaw()) {
+		  gd.addStringField("kinetic law", reaction.getKineticLaw().getMath().toFormula());
+		} else {
+		  gd.addStringField("kinetic law", "");
+		}
 		gd.addMessage("reactant:");
 		gd.addCheckboxGroup((int) los.size() / 3 + 1, 3, SBMLProcessUtil.listIdToStringArray(los), boolSpeciesInSReference(los, reaction.getListOfReactants()));
 		gd.addMessage("product:");
@@ -163,18 +167,21 @@ public class ReactionDialog {
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws ParseException the parse exception
 	 */
-	private void setReactionData() throws IllegalArgumentException, ParseException{
+	@SuppressWarnings("deprecation")
+  private void setReactionData() throws IllegalArgumentException, ParseException{
 		String str = gd.getNextString();
 		if (str.indexOf(' ')!=-1)
 				str = str.replace(' ', '_');
 		reaction.setId(str);
-		reaction.setReversible(Boolean.getBoolean(gd.getNextRadioButton()));
+		reaction.setReversible(Boolean.valueOf(gd.getNextRadioButton()));
+		reaction.setFast(false); // I know it is deprecated, but we are using L3v1, so "fast" is required.
 		SpatialReactionPlugin srp = (SpatialReactionPlugin) reaction.getPlugin("spatial");
-		srp.setIsLocal(Boolean.getBoolean(gd.getNextRadioButton()));
-		KineticLaw kl = reaction.isSetKineticLaw() ? reaction.getKineticLaw() : reaction.createKineticLaw();
+		srp.setIsLocal(Boolean.valueOf(gd.getNextRadioButton()));
 		String formula = gd.getNextString();
-		if(formula != null)
+		if(formula != null && !formula.equals("")) {
+		  KineticLaw kl = reaction.isSetKineticLaw() ? reaction.getKineticLaw() : reaction.createKineticLaw();
 			kl.setMath(ASTNode.parseFormula(formula));
+		}
 		
 		@SuppressWarnings("unchecked")
 		Vector<Checkbox> v = gd.getCheckboxes();
@@ -184,15 +191,17 @@ public class ReactionDialog {
 		for (int i = 0; i < size; i++) {
 			Checkbox cb = v.get(i);
 			String label = cb.getLabel().trim();
-			if (label.indexOf(' ') != -1)
+			if (label.indexOf(' ') != -1) {
 					label = label.replace(' ', '_');
+			}
+			String id = "sr_reac_" + label;
 			if (cb.getState()) {
-				SpeciesReference sr = (SpeciesReference) (losr.get(label) != null ? losr.get(label) : reaction.createReactant());
+				SpeciesReference sr = (SpeciesReference) (losr.get(id) != null ? losr.get(id) : reaction.createReactant(id));
 				sr.setSpecies(label);
 				sr.setConstant(true);
 				sr.setStoichiometry(1);
 			} else {
-				losr.remove(label);
+				losr.remove(id);
 			}
 		}
 		
@@ -200,15 +209,17 @@ public class ReactionDialog {
 		for (int i = size; i < size * 2; i++) {
 			Checkbox cb = v.get(i);
 			String label = cb.getLabel();
-			if (label.indexOf(' ') != -1)
+			if (label.indexOf(' ') != -1) {
 					label = label.replace(' ', '_');
+			}
+			String id = "sr_prod_" + label;
 			if (cb.getState()) {
-				SpeciesReference sr = (SpeciesReference) (losr.get(label) != null ? losr.get(label) : reaction.createProduct());
+				SpeciesReference sr = (SpeciesReference) (losr.get(id) != null ? losr.get(id) : reaction.createProduct(id));
 				sr.setSpecies(label);
 				sr.setConstant(true);
 				sr.setStoichiometry(1);
 			} else {
-				losr.remove(label);
+				losr.remove(id);
 			}
 		}
 		
@@ -216,13 +227,15 @@ public class ReactionDialog {
 		for (int i = size * 2; i < v.size(); i++) {
 			Checkbox cb = v.get(i);
 			String label = cb.getLabel();
-			if (label.indexOf(' ') != -1)
+			if (label.indexOf(' ') != -1) {
 					label = label.replace(' ', '_');
+			}
+			String id = "sr_mod_" + label;
 			if (cb.getState()) {
-				ModifierSpeciesReference sr = (ModifierSpeciesReference) (lom.get(label) != null ? losr.get(label) : reaction.createModifier());				
+				ModifierSpeciesReference sr = (ModifierSpeciesReference) (lom.get(id) != null ? lom.get(id) : reaction.createModifier(id));
 				sr.setSpecies(label);
 			} else {
-				losr.remove(label);
+				lom.remove(id);
 			}
 		}
 	}

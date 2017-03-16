@@ -77,7 +77,7 @@ public class DiffusionDialog {
 		this.parameter = parameter;
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) parameter.getPlugin("spatial");
 		DiffusionCoefficient dc = (DiffusionCoefficient) sp.getParamType();
-		gd = new GenericDialog("Edit Parameter");
+		gd = new GenericDialog("Edit DiffusionCoefficient");
 		gd.setResizable(true);
 		gd.pack();
 		
