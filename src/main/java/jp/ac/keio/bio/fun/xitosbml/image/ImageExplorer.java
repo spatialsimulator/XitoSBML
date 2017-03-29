@@ -97,7 +97,7 @@ public class ImageExplorer extends JFrame implements ActionListener{
 	public HashMap<String, Integer> getDomainTypes(){	
 		int dimension = 3;
 		for(Entry<String, ImagePlus> e : hashDomFile.entrySet()){
-			if(e.getValue().getSlice() == 1) dimension = 2;
+			if(e.getValue().getNSlices() == 1) dimension = 2;
  			hashDomainTypes.put( e.getKey().toString(), dimension);	
 		}
 		hashDomainTypes.put("Extracellular", dimension);
