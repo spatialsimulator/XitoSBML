@@ -160,7 +160,7 @@ public class ImageBorder {
 	 */
 	private void addBlackSlice(ImageStack is){
 		byte[] blackSlice = new byte[width * height];
-		is.addSlice(new ByteProcessor(width, height, blackSlice, null));
+		is.addSlice(new ByteProcessor(width,height,blackSlice,null));
 	}
 	
 	/**
