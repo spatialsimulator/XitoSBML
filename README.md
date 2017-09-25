@@ -6,7 +6,7 @@ XitoSBML is a plugin for [ImageJ](https://imagej.net/Welcome) which creates an S
 
 How to Compile
 ------------------
-### Dependencies ###
+### Dependencies
 XitoSBML requires the following third-party application.
 
 + [JSBML](http://sbml.org/Software/JSBML "JSBML")
@@ -15,9 +15,15 @@ XitoSBML requires the following third-party application.
 + [Maven](https://maven.apache.org/ "Maven")
 
 
-#### Build Spatial SBML Plugin ####
-    % git clone https://github.com/spatialsimulator/XitoSBML.github
-    % mvn install -Dimagej.app.directory=/path/to/ImageJ
+#### Build XitoSBML
+```sh
+% git clone https://github.com/spatialsimulator/XitoSBML.github
+% mvn install -Dimagej.app.directory=/path/to/ImageJ
+```
+For example, if you want to build XitoSBML on Fiji.app(MacOSX), the `mvn` command will be executed as follows:
+```sh
+% mvn install -Dimagej.app.directory=/Applications/Fiji.app/
+```
 
 How to Use
 -------------------
