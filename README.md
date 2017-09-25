@@ -7,7 +7,7 @@ XitoSBML is a plugin for [ImageJ](https://imagej.net/Welcome) which creates an S
 How to Compile
 ------------------
 ### Dependencies
-XitoSBML requires the following third-party application.
+XitoSBML requires the following third-party applications.
 
 + [JSBML](http://sbml.org/Software/JSBML "JSBML")
 + [Fiji Is Just ImageJ](http://fiji.sc/Fiji "Fiji Is Just ImageJ")
