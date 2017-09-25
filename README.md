@@ -35,7 +35,7 @@ How to Use
 4. On [DomainType Namer] dialog, assign an opened image to each organelle (ex. nucleus, cytosol)
 5. XitoSBML will ask whether you want to add SBML objects (Species, Reactions and Parameters) to the converted Spatial SBML model. If you just want to convert your image files to Spatial SBML, then just click [No]
 6. Specify a filename of converted SBML model
-7. XitoSBML will display converted SBML document and Domain Hierarchy of your model to let you confirm the converted result
+7. XitoSBML will display converted Spatial SBML document and Domain Hierarchy of your model to let you confirm the converted result
 8. Exported SBML and merged image will be stored (where you specified in step 6)
 
 Here is a screencast of above procedure.
@@ -57,7 +57,7 @@ Next example will show how to create Spatial SBML model, add SBML objects to the
 7. In [Diffusion] tab, add `Diffusion coefficient` for species `A (Dnuc)` and `B (Dcyt)`
 8. In [Reaction] tab, add a reaction (`A -> B`) and its kinetic law. Please do not forget to assign reactants and products for the reaction
 9. Specify a filename of converted SBML model
-10. XitoSBML will display converted SBML document and Domain Hierarchy of your model to let you confirm the converted result
+10. XitoSBML will display converted Spatial SBML document and Domain Hierarchy of your model to let you confirm the converted result
 11. Exported SBML and merged image will be stored (where you specified in step 9)
 
 Here is a screencast of above procedure.
