@@ -28,7 +28,7 @@ How to Use
 4. On [DomainType Namer] dialog, assign an opened image to each organelle (ex. nucleus, cytosol)
 5. XitoSBML will ask whether you want to add SBML objects (Species, Reactions and Parameters) to your model. If you just want to conver your image files to Spatial SBML, then just click [No]
 6. Save converted SBML model
-7. XitoSBML will display converted SBML document and Domain Hierarcy of your model to let you confirm the converted result
+7. XitoSBML will display converted SBML document and Domain Hierarchy of your model to let you confirm the converted result
 8. Exported SBML and merged image will be stored (where you specified in step 6)
 
 Here is a screencast of above procedure.
