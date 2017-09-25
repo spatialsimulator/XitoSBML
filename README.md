@@ -34,8 +34,8 @@ How to Use
 Here is a screencast of above procedure.
 ![example1](./screenshots/example1.gif "Convert segmented images to Spatial SBML")
 
-### Convert segmented images to Spatial SBML
-Next example will create Spatial SBML model and add SBML objects to the model and make it as a mathematical model. The following figure represents the diagram of this example model.
+### Convert segmented images to Spatial SBML (as a mathematical model)
+Next example will create Spatial SBML model and add SBML objects to the model and make it as a mathematical model. The following figure represents the diagram of this example model. Note that species `A` and `B` diffuses inside nucleus and cytosol with the given diffusion coefficient (`Dnuc` and `Dcyt`) respectively.
 
 ![diagram of example2](./screenshots/example2.png "Diagram of example model 2")
 
@@ -57,7 +57,7 @@ The mathematical (spatial) model created by this example can be executed by spat
 ```sh
 git clone https://github.com/funasoul/docker-spatialsim.git
 cd ./docker-spatialsim/
-# Copy example2.xml to this directory(folder)
+# Copy example2.xml to this directory
 ./docker-spatialsim.sh -t 0.1 -d 0.0001 -o 100 example2.xml
 ```
 
