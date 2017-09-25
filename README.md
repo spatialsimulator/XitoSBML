@@ -1,6 +1,6 @@
 XitoSBML: Spatial SBML Plugin for ImageJ
 ======================
-XitoSBML is an [ImageJ](https://imagej.net/Welcome) plugin which creates an Spatial SBML model from segmented images.
+XitoSBML is an [ImageJ](https://imagej.net/Welcome) plugin which creates an [Spatial SBML](http://sbml.org/Documents/Specifications/SBML_Level_3/Packages/spatial) model from segmented images.
 XitoSBML is not just a converter, but also a spatial model editor so that users can add molecules(species), reactions and advection/diffusion coefficients to the converted Spatial SBML model.
 
 ![XitoSBML](./screenshots/xitosbml.png "XitoSBML: Spatial SBML Plugin for ImageJ")
