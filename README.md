@@ -19,9 +19,21 @@ XitoSBML requires the following third-party application.
     % git clone https://github.com/spatialsimulator/XitoSBML.github
     % mvn install -Dimagej.app.directory=/path/to/ImageJ
 
-How to Use
+### How to Use
 -------------------
+#### Convert segmented images to Spatial SBML
+1. Launch ImageJ (Fiji)
+2. Load original images (not mandatory) and its segmented images
+3. Click [Plugins] -> [XitoSBML] -> [run Spatial Image SBML Plugin]
+4. On [DomainType Namer] dialog, assign an opened image to each organelle (ex. nucleus, cytosol)
+5. XitoSBML will ask whether you want to add SBML objects (Species, Reactions and Parameters) to your model. If you just want to conver your image files to Spatial SBML, then just click [No].
+6. Save converted SBML model
+7. XitoSBML will display converted SBML document and Domain Hierarcy of your model to let you confirm the converted result
+8. Exported SBML and merged image will be stored (where you specified in step 6)
 
-Licensing
+Here is a screencast of above procedure.
+![XitoSBML](./screenshots/example1.gif "Convert segmented images to Spatial SBML")
+
+### Licensing
 ------------------
 XitoSBML is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/spatialsimulator/XitoSBML/blob/master/LICENSE-2.0.txt) for the full license text.
