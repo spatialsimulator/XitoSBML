@@ -62,6 +62,7 @@ cd ./docker-spatialsim/
 ```
 
 SpatialSimulator will generate numbers and images of simulation result.
+
 Species A             |  Species B
 :-------------------------:|:-------------------------:
 ![example2 species A](./screenshots/example2_a.gif "Simulation result of example2.xml (species A)") | ![example2 species B](./screenshots/example2_b.gif "Simulation result of example2.xml (species B)")
