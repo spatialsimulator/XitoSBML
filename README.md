@@ -34,6 +34,8 @@ How to Use
 Here is a screencast of above procedure.
 ![example1](./screenshots/example1.gif "Convert segmented images to Spatial SBML")
 
+You can find example images under `examples` directory.
+
 ### Convert segmented images to Spatial SBML (as a mathematical model)
 Next example will create Spatial SBML model and add SBML objects to the model and make it as a mathematical model. The following figure represents the diagram of this example model. Note that species `A` and `B` diffuses inside nucleus and cytosol with the given diffusion coefficient (`Dnuc` and `Dcyt`) respectively.
 
@@ -51,6 +53,8 @@ Next example will create Spatial SBML model and add SBML objects to the model an
 
 Here is a screencast of above procedure.
 ![example2](./screenshots/example2.gif "Convert segmented images to Spatial SBML")
+
+You can find example images and converted Spatial SBML model under `examples` directory.
 
 The mathematical (spatial) model created by this example can be executed by spatial simulator which supports Spatial SBML. For example, you can use our [SpatialSimulator](https://github.com/spatialsimulator) for executing your model. We have provided [Docker image](https://github.com/funasoul/docker-spatialsim) for SpatialSimulator, so that you can easily install and run SpatialSimulator on your environment.
 
