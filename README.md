@@ -19,9 +19,9 @@ XitoSBML requires the following third-party application.
     % git clone https://github.com/spatialsimulator/XitoSBML.github
     % mvn install -Dimagej.app.directory=/path/to/ImageJ
 
-### How to Use
+How to Use
 -------------------
-#### Convert segmented images to Spatial SBML
+### Convert segmented images to Spatial SBML
 1. Launch ImageJ (Fiji)
 2. Load original images (not mandatory) and its segmented images
 3. Click [Plugins] -> [XitoSBML] -> [run Spatial Image SBML Plugin]
