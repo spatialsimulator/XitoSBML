@@ -23,10 +23,10 @@ How to Use
 -------------------
 ### Convert segmented images to Spatial SBML
 1. Launch ImageJ (Fiji)
-2. Load original images (not mandatory) and its segmented images
+2. Load original images (not mandatory) and their segmented images
 3. Click [Plugins] -> [XitoSBML] -> [run Spatial Image SBML Plugin]
 4. On [DomainType Namer] dialog, assign an opened image to each organelle (ex. nucleus, cytosol)
-5. XitoSBML will ask whether you want to add SBML objects (Species, Reactions and Parameters) to your model. If you just want to conver your image files to Spatial SBML, then just click [No]
+5. XitoSBML will ask whether you want to add SBML objects (Species, Reactions and Parameters) to your model. If you just want to convert your image files to Spatial SBML, then just click [No]
 6. Save converted SBML model
 7. XitoSBML will display converted SBML document and Domain Hierarchy of your model to let you confirm the converted result
 8. Exported SBML and merged image will be stored (where you specified in step 6)
@@ -42,7 +42,7 @@ Next example will create Spatial SBML model and add SBML objects to the model an
 ![diagram of example2](./screenshots/example2.png "Diagram of example model 2")
 
 1. Launch ImageJ (Fiji)
-2. Load original images (not mandatory) and its segmented images
+2. Load original images (not mandatory) and their segmented images
 3. Click [Plugins] -> [XitoSBML] -> [run Spatial Image SBML Plugin]
 4. On [DomainType Namer] dialog, assign an opened image to each organelle (ex. nucleus, cytosol)
 5. XitoSBML will ask whether you want to add SBML objects (Species, Reactions and Parameters) to your model. If you just want to conver your image files to Spatial SBML, then just click [Yes]
