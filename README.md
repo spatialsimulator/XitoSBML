@@ -1,6 +1,7 @@
 XitoSBML: Spatial SBML Plugin for ImageJ
 ======================
-XitoSBML is a plugin for [ImageJ](https://imagej.net/Welcome) which creates an Spatial SBML Model with segmented images
+XitoSBML is an [ImageJ](https://imagej.net/Welcome) plugin which creates an Spatial SBML model from segmented images.
+XitoSBML is not just a converter, but also a spatial model editor so that users can add molecules(species), reactions and advection/diffusion coefficients to the converted Spatial SBML model.
 
 ![XitoSBML](./screenshots/xitosbml.png "XitoSBML: Spatial SBML Plugin for ImageJ")
 
@@ -27,23 +28,23 @@ For example, if you want to build XitoSBML on Fiji.app(MacOSX), the `mvn` comman
 
 How to Use
 -------------------
-### Convert segmented images to Spatial SBML
+### Convert segmented images to Spatial SBML (which contains simulation space only)
 1. Launch ImageJ (Fiji)
 2. Load original images (not mandatory) and their segmented images
 3. Click [Plugins] -> [XitoSBML] -> [run Spatial Image SBML Plugin]
 4. On [DomainType Namer] dialog, assign an opened image to each organelle (ex. nucleus, cytosol)
-5. XitoSBML will ask whether you want to add SBML objects (Species, Reactions and Parameters) to your model. If you just want to convert your image files to Spatial SBML, then just click [No]
-6. Save converted SBML model
+5. XitoSBML will ask whether you want to add SBML objects (Species, Reactions and Parameters) to the converted Spatial SBML model. If you just want to convert your image files to Spatial SBML, then just click [No]
+6. Specify a filename of converted SBML model
 7. XitoSBML will display converted SBML document and Domain Hierarchy of your model to let you confirm the converted result
 8. Exported SBML and merged image will be stored (where you specified in step 6)
 
 Here is a screencast of above procedure.
 ![example1](./screenshots/example1.gif "Convert segmented images to Spatial SBML")
 
-You can find example images under `examples` directory.
+You can find example images under [examples](https://github.com/spatialsimulator/XitoSBML/tree/master/examples) directory.
 
 ### Convert segmented images to Spatial SBML (as a mathematical model)
-Next example will create Spatial SBML model and add SBML objects to the model and make it as a mathematical model. The following figure represents the diagram of this example model. Note that species `A` and `B` diffuses inside nucleus and cytosol with the given diffusion coefficient (`Dnuc` and `Dcyt`) respectively.
+Next example will show how to create Spatial SBML model, add SBML objects to the model and make it as a mathematical model. The following figure represents the diagram of this example model. Note that species `A` and `B` diffuse inside nucleus and cytosol with the given diffusion coefficients (`Dnuc` and `Dcyt`), respectively.
 
 ![diagram of example2](./screenshots/example2.png "Diagram of example model 2")
 
@@ -51,18 +52,20 @@ Next example will create Spatial SBML model and add SBML objects to the model an
 2. Load original images (not mandatory) and their segmented images
 3. Click [Plugins] -> [XitoSBML] -> [run Spatial Image SBML Plugin]
 4. On [DomainType Namer] dialog, assign an opened image to each organelle (ex. nucleus, cytosol)
-5. XitoSBML will ask whether you want to add SBML objects (Species, Reactions and Parameters) to your model. If you just want to conver your image files to Spatial SBML, then just click [Yes]
-6. In [Species] tab, add species `A` and `B`. Note that species `A` will be added to Nucleus and `B` will be added to Cytosol
+5. XitoSBML will ask whether you want to add SBML objects (Species, Reactions and Parameters) to the converted Spatial SBML model. This time, we want to add SBML objects so click [Yes]
+6. In [Species] tab, add species `A` and `B`. Note that we will add species `A` to Nucleus and `B` to Cytosol
 7. In [Diffusion] tab, add `Diffusion coefficient` for species `A (Dnuc)` and `B (Dcyt)`
-8. In [Reaction] tab, add a reaction (`A -> B`) and its kinetic law. Please do not forget to assign reactants and products fot the reaction
-9. Save converted SBML model
+8. In [Reaction] tab, add a reaction (`A -> B`) and its kinetic law. Please do not forget to assign reactants and products for the reaction
+9. Specify a filename of converted SBML model
+10. XitoSBML will display converted SBML document and Domain Hierarchy of your model to let you confirm the converted result
+11. Exported SBML and merged image will be stored (where you specified in step 9)
 
 Here is a screencast of above procedure.
 ![example2](./screenshots/example2.gif "Convert segmented images to Spatial SBML")
 
-You can find example images and converted Spatial SBML model under `examples` directory.
+You can find example images and converted Spatial SBML model under [examples](https://github.com/spatialsimulator/XitoSBML/tree/master/examples) directory.
 
-The mathematical (spatial) model created by this example can be executed by spatial simulator which supports Spatial SBML. For example, you can use our [SpatialSimulator](https://github.com/spatialsimulator) for executing your model. We have provided [Docker image](https://github.com/funasoul/docker-spatialsim) for SpatialSimulator, so that you can easily install and run SpatialSimulator on your environment.
+The mathematical (spatial) model created by this example can be executed by several spatial simulators which support Spatial SBML. For example, you can use our [SpatialSimulator](https://github.com/spatialsimulator) for executing the converted model. We have provided [Docker image](https://github.com/funasoul/docker-spatialsim) for SpatialSimulator, so that you can easily install and run SpatialSimulator on your environment.
 
 ```sh
 git clone https://github.com/funasoul/docker-spatialsim.git
