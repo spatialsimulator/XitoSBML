@@ -23,6 +23,10 @@ public class MainImgSpatial extends MainSpatial {
 	public void run(String arg) {
 
 		gui();
+		// if close button is pressed, then exit this plugin
+		if (imgexp.getDomFile() == null) {
+		  return;
+		}
 		computeImg();
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg);
 		model = sbmlexp.getModel();

@@ -45,7 +45,7 @@ public abstract class MainSpatial implements PlugIn{
 	protected SpatialModelPlugin spatialplugin;
 
 	/** The imgexp. */
-	private ImageExplorer imgexp;
+	protected ImageExplorer imgexp;
 	
 	/** The hash domain types. */
 	private HashMap<String, Integer> hashDomainTypes;
