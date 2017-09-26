@@ -34,7 +34,7 @@ public class GraphStruct extends JFrame{
 	 * Instantiates a new graph struct.
 	 */
 	GraphStruct(){
-		super("Domain Hiearchal Structure");
+		super("Domain Hierarchical Structure");
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());
         setMinimumSize(new Dimension(200,100));
