@@ -71,7 +71,7 @@ The mathematical (spatial) model created by this example can be executed by seve
 git clone https://github.com/funasoul/docker-spatialsim.git
 cd ./docker-spatialsim/
 # Copy example2.xml to this directory
-./docker-spatialsim.sh -t 0.1 -d 0.0001 -o 100 example2.xml
+./docker-spatialsim.sh -t 0.2 -d 0.0001 -o 50 example2.xml
 ```
 
 SpatialSimulator will generate numbers and images of simulation result.
