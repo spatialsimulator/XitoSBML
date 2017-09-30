@@ -18,6 +18,9 @@ public abstract class Spatial_SBML implements PlugIn {
 	/** The title. */
 	String title = "Export segmented image to Spatial SBML";
 	
+	/** Version info. */
+	String version = "1.0.0";
+	
 	/* (non-Javadoc)
 	 * @see ij.plugin.PlugIn#run(java.lang.String)
 	 */

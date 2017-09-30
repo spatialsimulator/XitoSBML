@@ -23,8 +23,10 @@ public class Spatial_Img_SBML extends Spatial_SBML {
 	}
 	
 	public void showAbout() {
-    IJ.showMessage("XitoSBML: Spatial SBML Plugin for ImageJ",
-        "XitoSBML is an ImageJ plugin which creates Spatial SBML model\n"
+    IJ.showMessage("XitoSBML",
+        "XitoSBML " + this.version + ": Spatial SBML Plugin for ImageJ\n"
+        + "Copyright (C) 2014-2017 Funahashi Lab. Keio University.\n \n"
+        + "XitoSBML is an ImageJ plugin which creates Spatial SBML model\n"
         + "from segmented images. XitoSBML is not just a converter,\n"
         + "but also a spatial model editor so that users can add\n"
         + "molecules(species), reactions and advection/diffusion coefficients\n"
