@@ -10,9 +10,9 @@ How to Install
 1. Launch ImageJ (Fiji)
 2. Click [Help] -> [Update...]
 3. Click [Manage update sites] button on [ImageJ Updater] dialog
-4. On [Manage update sites dialog], scroll down the list of update sites and turn on [XitoSBML] checkbox, and press [Close] button
+4. On [Manage update sites dialog], scroll down the list of update sites, turn on [XitoSBML] checkbox and press [Close] button
 5. Click [Apply changes] button on [ImageJ Updater] dialog
-6. ImageJ (Fiji) will download XitoSBML and its dependet libraries
+6. ImageJ (Fiji) will download and install XitoSBML and its dependet libraries
 7. Restart ImageJ (Fiji), then you will find [XitoSBML] plugin under [Plugins] menu
 
 Here is a screencast of above installation procedure.
@@ -74,7 +74,7 @@ Species A             |  Species B
 
 How to Compile
 ------------------
-If you are interested in building XitoSBML on your environment, here is an instruction on how to compile and run XitoSBML.
+To whom might be interested, here is an instruction on how to compile XitoSBML from source code.
 
 ### Dependencies
 XitoSBML requires the following third-party applications.
