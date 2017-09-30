@@ -18,7 +18,7 @@ XitoSBML requires the following third-party applications.
 
 #### Build XitoSBML
 ```sh
-% git clone https://github.com/spatialsimulator/XitoSBML.github
+% git clone https://github.com/spatialsimulator/XitoSBML.git
 % mvn install -Dimagej.app.directory=/path/to/ImageJ
 ```
 For example, if you want to build XitoSBML on Fiji.app(MacOSX), the `mvn` command will be executed as follows:
