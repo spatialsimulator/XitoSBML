@@ -58,7 +58,7 @@ public class ModelSaver {
 		path = sd.getDirectory();
 		name = sd.getFileName();
 			
-		IJ.log(name);
+		IJ.log("filename = " + name);
 		
 		setAnnotation();
 		
@@ -103,11 +103,16 @@ public class ModelSaver {
 		} catch (UnknownHostException e) {
 			System.out.println("Unknown host");
 		}
+		IJ.log("hostname = " + id);
 		
 		String annot = "This " + model.getId() + " model is created";
 		
-		if(!id.equals(""))
-			annot = annot.concat(" by " + id.substring(0, id.indexOf(".")));
+		if(!id.equals("")) {
+		  if (id.contains(".")) {
+		    id = id.substring(0,  id.indexOf("."));
+		  }
+			annot = annot.concat(" by " + id);
+		}
 			
 		Calendar date = new GregorianCalendar();
 		annot = annot.concat(" in " + date.getTime());
