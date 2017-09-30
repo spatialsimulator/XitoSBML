@@ -5,26 +5,18 @@ XitoSBML is not just a converter, but also a spatial model editor so that users 
 
 ![XitoSBML](./screenshots/xitosbml.png "XitoSBML: Spatial SBML Plugin for ImageJ")
 
-How to Compile
+How to Install
 ------------------
-### Dependencies
-XitoSBML requires the following third-party applications.
+1. Launch ImageJ (Fiji)
+2. Click [Help] -> [Update...]
+3. Click [Manage update sites] button on [ImageJ Updater] dialog
+4. On [Manage update sites dialog], scroll down the list of update sites and turn on [XitoSBML] checkbox, and press [Close] button
+5. Click [Apply changes] button on [ImageJ Updater] dialog
+6. ImageJ (Fiji) will download XitoSBML and its dependet libraries
+7. Restart ImageJ (Fiji), then you will find [XitoSBML] plugin under [Plugins] menu
 
-+ [JSBML](http://sbml.org/Software/JSBML "JSBML")
-+ [Fiji Is Just ImageJ](http://fiji.sc/Fiji "Fiji Is Just ImageJ")
-+ [ImageJ 3D Viewer](http://3dviewer.neurofly.de/ "ImageJ 3D Viewer") version 1.5 or higher
-+ [Maven](https://maven.apache.org/ "Maven")
-
-
-#### Build XitoSBML
-```sh
-% git clone https://github.com/spatialsimulator/XitoSBML.git
-% mvn install -Dimagej.app.directory=/path/to/ImageJ
-```
-For example, if you want to build XitoSBML on Fiji.app(MacOSX), the `mvn` command will be executed as follows:
-```sh
-% mvn install -Dimagej.app.directory=/Applications/Fiji.app/
-```
+Here is a screencast of above installation procedure.
+![install-xitosbml](./screenshots/install-xitosbml.gif "Install XitoSBML")
 
 How to Use
 -------------------
@@ -79,6 +71,28 @@ SpatialSimulator will generate numbers and images of simulation result.
 Species A             |  Species B
 :-------------------------:|:-------------------------:
 ![example2 species A](./screenshots/example2_a.gif "Simulation result of example2.xml (species A)") | ![example2 species B](./screenshots/example2_b.gif "Simulation result of example2.xml (species B)")
+
+How to Compile
+------------------
+If you are interested in building XitoSBML on your environment, here is an instruction on how to compile and run XitoSBML.
+
+### Dependencies
+XitoSBML requires the following third-party applications.
+
++ [JSBML](http://sbml.org/Software/JSBML "JSBML")
++ [Fiji Is Just ImageJ](http://fiji.sc/Fiji "Fiji Is Just ImageJ")
++ [ImageJ 3D Viewer](http://3dviewer.neurofly.de/ "ImageJ 3D Viewer") version 1.5 or higher
++ [Maven](https://maven.apache.org/ "Maven")
+
+#### Build XitoSBML
+```sh
+% git clone https://github.com/spatialsimulator/XitoSBML.git
+% mvn install -Dimagej.app.directory=/path/to/ImageJ
+```
+For example, if you want to build XitoSBML on Fiji.app(MacOSX), the `mvn` command will be executed as follows:
+```sh
+% mvn install -Dimagej.app.directory=/Applications/Fiji.app/
+```
 
 ### Licensing
 ------------------
