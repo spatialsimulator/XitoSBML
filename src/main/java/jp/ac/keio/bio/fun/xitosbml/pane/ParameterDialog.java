@@ -4,6 +4,7 @@ import ij.gui.GenericDialog;
 
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.Unit;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -99,7 +100,7 @@ public class ParameterDialog {
 				str = str.replace(' ', '_');
 		parameter.setId(str);
 		parameter.setValue(gd.getNextNumber());
-		parameter.setUnits(SBMLProcessUtil.StringToUnit(gd.getNextChoice()));
+		parameter.setUnits(Unit.Kind.valueOf(gd.getNextChoice()));
 		parameter.setConstant(Boolean.valueOf(gd.getNextRadioButton()));
 		
 	}

@@ -109,7 +109,7 @@ public class UnitDefinitionTable extends SBaseTable {
 			String mul = unit.getMultiplier() == 1 ? "" : String.valueOf(unit.getMultiplier()) + " *";
 			String scale =  unit.getScale() == 0 ? "" : "10^" + unit.getScale() + " *";
 			String exp = unit.getExponent() == 1 ? "" : "^" + String.valueOf(unit.getExponent());
-			String kind = SBMLProcessUtil.unitIndexToString(unit.getKind()); 
+			String kind = unit.getKind().getName(); 
 			sb.append("(" + mul  + scale +  " " + kind + " )" + exp);
 			if(i < lou.size() - 1) 
 				sb.append(" * ");

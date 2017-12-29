@@ -5,6 +5,7 @@ import ij.gui.GenericDialog;
 import org.sbml.jsbml.IdentifierException;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Species;
+import org.sbml.jsbml.Unit;
 import org.sbml.jsbml.ext.spatial.SpatialConstants;
 import org.sbml.jsbml.ext.spatial.SpatialSpeciesPlugin;
 
@@ -131,7 +132,7 @@ public class SpeciesDialog {
 			species.setInitialConcentration(gd.getNextNumber());
 	
 		species.setCompartment(gd.getNextChoice());
-		species.setSubstanceUnits(SBMLProcessUtil.StringToUnit(gd.getNextChoice()));
+		species.setSubstanceUnits(Unit.Kind.valueOf(gd.getNextChoice()));
 
 		if(species.isSetInitialAmount())
 			species.setHasOnlySubstanceUnits(true);
