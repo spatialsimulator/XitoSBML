@@ -2,9 +2,12 @@ package jp.ac.keio.bio.fun.xitosbml.pane;
 
 import ij.gui.GenericDialog;
 
+import java.util.Arrays;
+
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.ext.spatial.AdvectionCoefficient;
+import org.sbml.jsbml.ext.spatial.CoordinateKind;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
 // TODO: Auto-generated Javadoc
@@ -83,7 +86,7 @@ public class AdvectionDialog {
 		gd.addNumericField("value:", parameter.getValue(), 1);
 		gd.addRadioButtonGroup("constant:", bool, 1, 2, String.valueOf(parameter.getConstant()));
 		gd.addChoice("species:", SBMLProcessUtil.listIdToStringArray(model.getListOfSpecies()), ac.getVariable());
-		gd.addChoice("coordinate:", SBMLProcessUtil.lcoord, SBMLProcessUtil.coordinateIndexToString(ac.getCoordinate()));
+		gd.addChoice("coordinate:", SBMLProcessUtil.lcoord, ac.getCoordinate().name());
 	
 		gd.showDialog();
 		if(gd.wasCanceled())
@@ -110,7 +113,7 @@ public class AdvectionDialog {
 		AdvectionCoefficient ac = (AdvectionCoefficient) (sp.isSetParamType() ? sp.getParamType() : new AdvectionCoefficient());
 		String var = gd.getNextChoice();
 		ac.setVariable(var);
-		ac.setCoordinate(SBMLProcessUtil.StringToCoordinateKind(gd.getNextChoice()));
+		ac.setCoordinate(CoordinateKind.valueOf(gd.getNextChoice()));
 		if(!ac.isSetParentSBMLObject())
 			sp.setParamType(ac);
 	}	

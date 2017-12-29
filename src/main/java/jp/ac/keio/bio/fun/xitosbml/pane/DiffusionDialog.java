@@ -4,6 +4,7 @@ import ij.gui.GenericDialog;
 
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.ext.spatial.CoordinateKind;
 import org.sbml.jsbml.ext.spatial.DiffusionCoefficient;
 import org.sbml.jsbml.ext.spatial.DiffusionKind;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
@@ -85,14 +86,14 @@ public class DiffusionDialog {
 		gd.addNumericField("value:", parameter.getValue(), 1);
 		gd.addRadioButtonGroup("constant:", bool, 1, 2, String.valueOf(parameter.getConstant()));
 		gd.addChoice("species:", SBMLProcessUtil.listIdToStringArray(model.getListOfSpecies()), dc.getVariable());
-		gd.addChoice("type:", SBMLProcessUtil.diffType, SBMLProcessUtil.diffTypeIndexToString(dc.getDiffusionKind()));
+		gd.addChoice("type:", SBMLProcessUtil.diffType, dc.getDiffusionKind().name());
 		if(dc.isSetCoordinateReference1())
-			gd.addChoice("coordinate1:", SBMLProcessUtil.lcoord, SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference1()));
+			gd.addChoice("coordinate1:", SBMLProcessUtil.lcoord, dc.getCoordinateReference1().name());
 		else
 			gd.addChoice("coordinate1:", SBMLProcessUtil.lcoord, SBMLProcessUtil.lcoord[0]);
 
 		if(dc.isSetCoordinateReference2())
-			gd.addChoice("coordinate2:", SBMLProcessUtil.lcoord, SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference2()));
+			gd.addChoice("coordinate2:", SBMLProcessUtil.lcoord, dc.getCoordinateReference2().name());
 		else
 			gd.addChoice("coordinate2:", SBMLProcessUtil.lcoord, SBMLProcessUtil.lcoord[0]);
 	
@@ -119,16 +120,16 @@ public class DiffusionDialog {
 		
 		DiffusionCoefficient dc = (DiffusionCoefficient) (sp.isSetParamType() ? sp.getParamType() : new DiffusionCoefficient());
 		dc.setVariable(gd.getNextChoice());
-		dc.setDiffusionKind(SBMLProcessUtil.StringToDiffusionKind(gd.getNextChoice()));
+		dc.setDiffusionKind(DiffusionKind.valueOf(gd.getNextChoice()));
 		String coord1 = gd.getNextChoice();
 		String coord2 = gd.getNextChoice();
 		
 		switch (dc.getDiffusionKind()) {
 		case tensor:
-			dc.setCoordinateReference2(SBMLProcessUtil.StringToCoordinateKind(coord2));
+			dc.setCoordinateReference2(CoordinateKind.valueOf(coord2));
 
 		case anisotropic:
-			dc.setCoordinateReference1(SBMLProcessUtil.StringToCoordinateKind(coord1));
+			dc.setCoordinateReference1(CoordinateKind.valueOf(coord1));
 
 		case isotropic:
 			break;

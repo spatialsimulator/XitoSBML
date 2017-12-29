@@ -9,9 +9,7 @@ import org.sbml.jsbml.Unit.Kind;
 import org.sbml.jsbml.ext.spatial.AdvectionCoefficient;
 import org.sbml.jsbml.ext.spatial.BoundaryCondition;
 import org.sbml.jsbml.ext.spatial.BoundaryConditionKind;
-import org.sbml.jsbml.ext.spatial.CoordinateKind;
 import org.sbml.jsbml.ext.spatial.DiffusionCoefficient;
-import org.sbml.jsbml.ext.spatial.DiffusionKind;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialReactionPlugin;
 
@@ -92,50 +90,7 @@ public class SBMLProcessUtil {
 		else
 			return BoundaryConditionKind.Dirichlet;		
 	}
-	
-	/**
-	 * Coordinate index to string.
-	 *
-	 * @param index the index
-	 * @return the string
-	 */
-	public static String coordinateIndexToString(CoordinateKind index){
-		if(index == CoordinateKind.cartesianX) return SBMLProcessUtil.lcoord[0];
-		if(index == CoordinateKind.cartesianY) return SBMLProcessUtil.lcoord[1];
-		if(index == CoordinateKind.cartesianZ) return SBMLProcessUtil.lcoord[2];
-		return "";
-	}
-	
-	/**
-	 * String to coordinate kind.
-	 *
-	 * @param kind the kind
-	 * @return the coordinate kind
-	 */
-	public static CoordinateKind StringToCoordinateKind(String kind){
-		if(SBMLProcessUtil.lcoord[0].equals(kind))
-			return CoordinateKind.cartesianX;
-		else if(SBMLProcessUtil.lcoord[1].equals(kind))
-			return CoordinateKind.cartesianY;
-		else
-			return CoordinateKind.cartesianZ; 
-	}
-	
-	/**
-	 * String to diffusion kind.
-	 *
-	 * @param kind the kind
-	 * @return the diffusion kind
-	 */
-	public static DiffusionKind StringToDiffusionKind(String kind){
-		if(SBMLProcessUtil.diffType[0].equals(kind))
-			return DiffusionKind.isotropic;
-		else if(SBMLProcessUtil.diffType[1].equals(kind))
-			return DiffusionKind.anisotropic;
-		else
-			return DiffusionKind.tensor;
-	}
-	
+
 	/**
 	 * Copy contents of Species from src to dst.
 	 * @param src
