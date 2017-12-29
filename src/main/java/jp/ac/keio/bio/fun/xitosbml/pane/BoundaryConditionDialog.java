@@ -87,7 +87,7 @@ public class BoundaryConditionDialog {
 		gd.addNumericField("value:", parameter.getValue(), 1);
 		gd.addRadioButtonGroup("constant:", bool, 1, 2, String.valueOf(parameter.getConstant()));
 		gd.addChoice("species:", SBMLProcessUtil.listIdToStringArray(model.getListOfSpecies()), bc.getVariable());
-		gd.addChoice("type:", SBMLProcessUtil.boundType, SBMLProcessUtil.boundaryIndexToString(bc.getType()));
+		gd.addChoice("type:", SBMLProcessUtil.boundType, bc.getType().name());
 		gd.addChoice("boundary:", getAllBoundAsString(), bc.isSetCoordinateBoundary() ? bc.getCoordinateBoundary(): bc.getBoundaryDomainType());
 	
 		gd.showDialog();

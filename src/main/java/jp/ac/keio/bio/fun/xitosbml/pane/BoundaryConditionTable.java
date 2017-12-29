@@ -80,7 +80,7 @@ public class BoundaryConditionTable extends SBaseTable {
 			data[i][1] = p.isSetValue() ? p.getValue(): null;			
 			data[i][2] = p.getConstant();
 			data[i][3] = bc.getVariable();
-			data[i][4] = SBMLProcessUtil.boundaryIndexToString(bc.getType());
+			data[i][4] = bc.getType().name();
 			data[i][5] = bc.isSetCoordinateBoundary() ? bc.getCoordinateBoundary() : bc.getBoundaryDomainType();
 		}
 		
@@ -123,7 +123,7 @@ public class BoundaryConditionTable extends SBaseTable {
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
 		BoundaryCondition bc = (BoundaryCondition) sp.getParamType();
 		v.add(bc.getVariable());
-		v.add(SBMLProcessUtil.boundaryIndexToString(bc.getType()));
+		v.add(bc.getType().name());
 		v.add(bc.isSetCoordinateBoundary() ? bc.getCoordinateBoundary() : bc.getBoundaryDomainType());
 		return v;
 	}

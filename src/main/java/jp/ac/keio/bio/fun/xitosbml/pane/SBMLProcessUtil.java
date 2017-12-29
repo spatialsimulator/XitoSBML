@@ -8,7 +8,6 @@ import org.sbml.jsbml.Symbol;
 import org.sbml.jsbml.Unit.Kind;
 import org.sbml.jsbml.ext.spatial.AdvectionCoefficient;
 import org.sbml.jsbml.ext.spatial.BoundaryCondition;
-import org.sbml.jsbml.ext.spatial.BoundaryConditionKind;
 import org.sbml.jsbml.ext.spatial.DiffusionCoefficient;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialReactionPlugin;
@@ -49,46 +48,6 @@ public class SBMLProcessUtil {
 			str[i] = ((Symbol)lo.get(i)).getId();
 		
 		return str;
-	}
-
-	/**
-	 * Boundary index to string.
-	 *
-	 * @param index the index
-	 * @return the string
-	 */
-	public static String boundaryIndexToString(BoundaryConditionKind index){
-		if(index == BoundaryConditionKind.Robin_valueCoefficient)
-			return boundType[0]; 
-		else if(index == BoundaryConditionKind.Robin_inwardNormalGradientCoefficient)
-			return boundType[1];
-		else if(index == BoundaryConditionKind.Robin_sum)
-			return boundType[2];
-		else if(index == BoundaryConditionKind.Neumann)
-			return boundType[3];
-		else if(index == BoundaryConditionKind.Dirichlet)
-			return boundType[4];
-		else 
-			return null;
-	}
-	
-	/**
-	 * String to boundary kind.
-	 *
-	 * @param kind the kind
-	 * @return the boundary condition kind
-	 */
-	public static BoundaryConditionKind StringToBoundaryKind(String kind){
-		if(SBMLProcessUtil.boundType[0].equals(kind))
-			return BoundaryConditionKind.Robin_valueCoefficient;
-		else if(SBMLProcessUtil.boundType[1].equals(kind))
-			return BoundaryConditionKind.Robin_inwardNormalGradientCoefficient;
-		else if(SBMLProcessUtil.boundType[2].equals(kind))
-			return BoundaryConditionKind.Robin_sum;
-		else if(SBMLProcessUtil.boundType[3].equals(kind))
-			return BoundaryConditionKind.Neumann;
-		else
-			return BoundaryConditionKind.Dirichlet;		
 	}
 
 	/**
