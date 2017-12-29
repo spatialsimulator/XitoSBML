@@ -23,16 +23,16 @@ import org.sbml.jsbml.ext.spatial.SpatialReactionPlugin;
 public class SBMLProcessUtil {
 	
 	/** The Constant lcoord. */
-	public static final String[] lcoord = {/*"UNKNOWN",*/"cartesianX","cartesianY","cartesianZ"};
+	public static final String[] lcoord = {"cartesianX","cartesianY","cartesianZ"};
 	
 	/** The Constant bounds. */
 	public static final String[] bounds = {"Xmax","Xmin","Ymax","Ymin","Zmax","Zmin"};
 	
 	/** The Constant boundType. */
-	public static final String[] boundType = {/*"UNKNOWN",*/"Robin_valueCoefficient","Robin_inwardNormalGradientCoefficient","Robin_sum","Neumann","Dirichlet"};
+	public static final String[] boundType = {"Robin_valueCoefficient","Robin_inwardNormalGradientCoefficient","Robin_sum","Neumann","Dirichlet"};
 	
 	/** The Constant diffType. */
-	public static final String[] diffType = {/*"UNKNOWN", */"isotropic","anisotropic","tensor"};
+	public static final String[] diffType = {"isotropic","anisotropic","tensor"};
 
 	
 	/**
