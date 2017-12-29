@@ -23,7 +23,7 @@ public class ParameterDialog {
 	private GenericDialog gd;
 	
 	/** The units. */
-	private final String[] units = {"substance","mole","item","gram","kilogram","dimensionless"};
+	private final String[] units = {"mole","item","gram","kilogram","dimensionless"};
 	
 	/** The bool. */
 	private final String[] bool = {"true","false"};
@@ -100,7 +100,7 @@ public class ParameterDialog {
 				str = str.replace(' ', '_');
 		parameter.setId(str);
 		parameter.setValue(gd.getNextNumber());
-		parameter.setUnits(Unit.Kind.valueOf(gd.getNextChoice()));
+		parameter.setUnits(Unit.Kind.valueOf(gd.getNextChoice().toUpperCase()));
 		parameter.setConstant(Boolean.valueOf(gd.getNextRadioButton()));
 		
 	}

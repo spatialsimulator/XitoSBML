@@ -29,7 +29,7 @@ public class SpeciesDialog {
 	private final String[] initial = {"amount","concentration"};
 	
 	/** The units. */
-	private final String[] units = {"substance","mole","item","gram","kilogram","dimensionless"};
+	private final String[] units = {"mole","item","gram","kilogram","dimensionless"};
 	
 	/** The bool. */
 	private final String[] bool = {"true","false"};
@@ -132,7 +132,7 @@ public class SpeciesDialog {
 			species.setInitialConcentration(gd.getNextNumber());
 	
 		species.setCompartment(gd.getNextChoice());
-		species.setSubstanceUnits(Unit.Kind.valueOf(gd.getNextChoice()));
+		species.setSubstanceUnits(Unit.Kind.valueOf(gd.getNextChoice().toUpperCase()));
 
 		if(species.isSetInitialAmount())
 			species.setHasOnlySubstanceUnits(true);
