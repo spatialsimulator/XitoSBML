@@ -80,9 +80,9 @@ public class DiffusionTable extends SBaseTable {
 			data[i][1] = p.isSetValue() ? p.getValue(): null;			
 			data[i][2] = p.getConstant();
 			data[i][3] = dc.getVariable();
-			data[i][4] = SBMLProcessUtil.diffTypeIndexToString(dc.getDiffusionKind());
-			data[i][5] = dc.isSetCoordinateReference1() ? SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference1()) : "";
-			data[i][6] = dc.isSetCoordinateReference2() ? SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference2()) : "";
+			data[i][4] = dc.getDiffusionKind().name();
+			data[i][5] = dc.isSetCoordinateReference1() ? dc.getCoordinateReference1().name() : "";
+			data[i][6] = dc.isSetCoordinateReference2() ? dc.getCoordinateReference2().name() : "";
 		}
 		
 		MyTableModel tm = new MyTableModel(data, header) {
@@ -125,9 +125,9 @@ public class DiffusionTable extends SBaseTable {
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
 		DiffusionCoefficient dc = (DiffusionCoefficient) sp.getParamType();
 		v.add(dc.getVariable());
-		v.add(SBMLProcessUtil.diffTypeIndexToString(dc.getDiffusionKind()));
-		v.add(dc.isSetCoordinateReference1() ? SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference1()) : "");
-		v.add(dc.isSetCoordinateReference2() ? SBMLProcessUtil.coordinateIndexToString(dc.getCoordinateReference2()) : "");
+		v.add(dc.getDiffusionKind().name());
+		v.add(dc.isSetCoordinateReference1() ? dc.getCoordinateReference1().name() : "");
+		v.add(dc.isSetCoordinateReference2() ? dc.getCoordinateReference2().name() : "");
 		
 		return v;
 	}

@@ -122,20 +122,6 @@ public class SBMLProcessUtil {
 	}
 	
 	/**
-	 * Diff type index to string.
-	 *
-	 * @param index the index
-	 * @return the string
-	 */
-	public static String diffTypeIndexToString(DiffusionKind index){
-		if(index == DiffusionKind.isotropic) return diffType[0];
-		if(index == DiffusionKind.anisotropic) return diffType[1];
-		if(index == DiffusionKind.tensor) return diffType[2];
-		
-		return null;
-	}
-	
-	/**
 	 * String to diffusion kind.
 	 *
 	 * @param kind the kind
