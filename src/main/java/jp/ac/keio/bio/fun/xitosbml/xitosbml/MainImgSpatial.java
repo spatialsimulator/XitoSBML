@@ -45,8 +45,9 @@ public class MainImgSpatial extends MainSpatial {
 		spImg.saveAsImage(saver.getPath(), saver.getName());
 		showDomainStructure();
 		
+
+		print();
 		ModelValidator validator = new ModelValidator(document);
 		validator.validate();
-		print();
 	}	
 }

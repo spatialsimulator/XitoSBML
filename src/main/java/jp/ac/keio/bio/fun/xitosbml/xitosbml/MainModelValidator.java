@@ -1,5 +1,7 @@
 package jp.ac.keio.bio.fun.xitosbml.xitosbml;
 
+import java.io.IOException;
+
 import javax.xml.stream.XMLStreamException;
 
 import jp.ac.keio.bio.fun.xitosbml.util.ModelValidator;
@@ -25,6 +27,9 @@ public class MainModelValidator extends MainSBaseSpatial {
 			e.getStackTrace();
 			return;
 		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

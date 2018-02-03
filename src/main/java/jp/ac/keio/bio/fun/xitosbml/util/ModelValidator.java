@@ -71,12 +71,14 @@ public class ModelValidator {
 		if(!hasRequiredAttribute)
 			return;
 		
-		document.setConsistencyChecks(CHECK_CATEGORY.MODELING_PRACTICE,false);
+		document.setConsistencyChecks(CHECK_CATEGORY.GENERAL_CONSISTENCY, true);
+		document.setConsistencyChecks(CHECK_CATEGORY.IDENTIFIER_CONSISTENCY, true);
+		document.setConsistencyChecks(CHECK_CATEGORY.MODELING_PRACTICE, true);
 		document.checkConsistency();
 		SBMLErrorLog errorLog = document.getListOfErrors();
 		List<SBMLError> errorList = errorLog.getValidationErrors();
 		for (SBMLError e : errorList) {
-			IJ.log(e.getLine() + " " + e.getMessage());
+			IJ.log("Line " + e.getLine() + ": " + e.getMessage());
 		}
 	}
 
