@@ -5,6 +5,7 @@ import ij.io.OpenDialog;
 import ij.plugin.PlugIn;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -54,8 +55,9 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	 * @return the document
 	 * @throws NullPointerException the null pointer exception
 	 * @throws XMLStreamException the XML stream exception
+	 * @throws IOException 
 	 */
-	protected SBMLDocument getDocument() throws NullPointerException, XMLStreamException{
+	protected SBMLDocument getDocument() throws NullPointerException, XMLStreamException, IOException{
 		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setMultiSelectionEnabled(false);
@@ -65,7 +67,7 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		if (returnVal != JFileChooser.APPROVE_OPTION)
 			throw new NullPointerException();
 		File f = chooser.getSelectedFile();
-		return SBMLReader.read(f.getAbsolutePath());
+		return SBMLReader.read(f);
 	}
 
 	/**
