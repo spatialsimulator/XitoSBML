@@ -52,16 +52,12 @@ public class ModelValidator {
 	 * @return true, if successful
 	 */
 	private boolean checkExtension(){
-		
 		if(!document.getPackageRequired("spatial"))
 			IJ.log("model missing extension spatial");
 		
-//		if(!document.getPackageRequired("req"))
-//			IJ.log("model missing extension req");
-		
-		return document.getPackageRequired("spatial"); //&& document.getPackageRequired("req");
+		return document.getPackageRequired("spatial");
 	}
-
+	
 	/**
 	 * Validate.
 	 */
