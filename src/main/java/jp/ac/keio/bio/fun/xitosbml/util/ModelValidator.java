@@ -122,9 +122,18 @@ public class ModelValidator {
 			if( speciesBoundSet.containsKey(s.getId()) && speciesBoundSet.get(s.getId()).size() == maxBoundaryCondition)
 				continue;
 			
-			Set<String> speciesBound = speciesBoundSet.get(s.getId());
 			StringBuilder errorStr = new StringBuilder();
 			errorStr.append("Warning missing boundary condition for Species " + s.getId() + " on boundaries:");
+
+			if(!speciesBoundSet.containsKey(s.getId())) {
+				for(String str : coordSet)
+						errorStr.append(" " + str);
+
+				errorStr.append(" " + s.getCompartment());
+
+			} else {
+
+			Set<String> speciesBound = speciesBoundSet.get(s.getId());
 			
 			for(String str : coordSet) {
 				if(!speciesBound.contains(str))
@@ -133,6 +142,7 @@ public class ModelValidator {
 
 			if(!speciesBound.contains(s.getCompartment()))
 				errorStr.append(" " + s.getCompartment());
+			}
 			
 			IJ.log(errorStr.toString());
 		}
@@ -164,7 +174,7 @@ public class ModelValidator {
 	public static void main(String[] args) {
 		SBMLDocument d;
 			try {
-				d = SBMLReader.read(new File("/Users/ii/Desktop/model/analytic_3d.xml"));
+				d = SBMLReader.read(new File("/Users/ii/Desktop/model/test.xml"));
 				new ModelValidator(d).validate();
 			} catch (XMLStreamException | IOException e) {
 				// TODO Auto-generated catch block
