@@ -98,8 +98,6 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		if(!document.getPackageRequired("spatial"))
 			IJ.error("Could not find spatial extension");
 
-		if(!document.getPackageRequired("req")) 
-			IJ.error("Could not find req extension");
 	}
 
 }
