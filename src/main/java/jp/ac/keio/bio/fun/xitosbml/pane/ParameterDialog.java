@@ -1,10 +1,10 @@
 package jp.ac.keio.bio.fun.xitosbml.pane;
 
-import ij.gui.GenericDialog;
-
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.Unit;
+
+import ij.gui.GenericDialog;
 
 // TODO: Auto-generated Javadoc
 /**

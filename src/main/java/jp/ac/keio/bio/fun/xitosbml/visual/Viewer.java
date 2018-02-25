@@ -1,5 +1,14 @@
 package jp.ac.keio.bio.fun.xitosbml.visual;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Vector;
+
+import org.scijava.vecmath.Color3f;
+import org.scijava.vecmath.Point3d;
+
+import customnode.CustomMesh;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
@@ -7,18 +16,7 @@ import ij3d.Content;
 import ij3d.ContentNode;
 import ij3d.Image3DUniverse;
 import isosurface.MeshGroup;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Vector;
-
 import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
-
-import org.scijava.vecmath.Color3f;
-import org.scijava.vecmath.Point3d;
-
-import customnode.CustomMesh;
 
 
 // TODO: Auto-generated Javadoc

@@ -1,13 +1,12 @@
 package jp.ac.keio.bio.fun.xitosbml.geometry;
 
-import ij.ImagePlus;
-
 import java.util.HashMap;
-
-import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
 
 import org.sbml.jsbml.ext.spatial.Geometry;
 import org.sbml.jsbml.ext.spatial.GeometryDefinition;
+
+import ij.ImagePlus;
+import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
 
 // TODO: Auto-generated Javadoc
 /**

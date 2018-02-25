@@ -1,9 +1,6 @@
 package jp.ac.keio.bio.fun.xitosbml.xitosbml;
 
-import java.io.IOException;
-
-import javax.xml.stream.XMLStreamException;
-
+import ij.IJ;
 import jp.ac.keio.bio.fun.xitosbml.geometry.GeometryDatas;
 import jp.ac.keio.bio.fun.xitosbml.util.ModelSaver;
 import jp.ac.keio.bio.fun.xitosbml.util.ModelValidator;
@@ -28,12 +25,9 @@ public class MainModelEdit extends MainSBaseSpatial {
 		} catch (NullPointerException e){
 			e.getStackTrace();
 			return;
-		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			IJ.error("Error: File is not an SBML Model");
+			return;
 		}
 		
 		checkSBMLDocument(document);

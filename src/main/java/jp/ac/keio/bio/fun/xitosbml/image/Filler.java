@@ -1,14 +1,14 @@
 package jp.ac.keio.bio.fun.xitosbml.image;
 
-import ij.ImagePlus;
-import ij.ImageStack;
-import ij.process.ByteProcessor;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
+import ij.ImagePlus;
+import ij.ImageStack;
+import ij.process.ByteProcessor;
 
 
 // TODO: Auto-generated Javadoc

@@ -1,7 +1,5 @@
 package jp.ac.keio.bio.fun.xitosbml.util;
 
-import ij.IJ;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,6 +25,8 @@ import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialSpeciesPlugin;
 import org.sbml.jsbml.validator.SBMLValidator.CHECK_CATEGORY;
+
+import ij.IJ;
 
 
 // TODO: Auto-generated Javadoc
@@ -176,6 +176,7 @@ public class ModelValidator {
 			try {
 				d = SBMLReader.read(new File("/Users/ii/Desktop/model/test.xml"));
 				new ModelValidator(d).validate();
+
 			} catch (XMLStreamException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

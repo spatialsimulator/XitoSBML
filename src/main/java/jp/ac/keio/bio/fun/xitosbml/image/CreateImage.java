@@ -1,11 +1,11 @@
 package jp.ac.keio.bio.fun.xitosbml.image;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
-
-import java.util.HashMap;
-import java.util.Iterator;
 
 // TODO: Auto-generated Javadoc
 /**

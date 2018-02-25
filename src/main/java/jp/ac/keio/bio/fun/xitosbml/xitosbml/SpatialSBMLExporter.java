@@ -14,10 +14,6 @@ import java.util.zip.Deflater;
 
 import javax.xml.stream.XMLStreamException;
 
-import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
-import jp.ac.keio.bio.fun.xitosbml.util.PluginConstants;
-import jp.ac.keio.bio.fun.xitosbml.util.PluginInfo;
-
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
@@ -54,6 +50,10 @@ import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialPoints;
 import org.sbml.jsbml.ext.spatial.SpatialSymbolReference;
 import org.scijava.vecmath.Point3d;
+
+import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
+import jp.ac.keio.bio.fun.xitosbml.util.PluginConstants;
+import jp.ac.keio.bio.fun.xitosbml.util.PluginInfo;
 
 // TODO: Auto-generated Javadoc
 /**

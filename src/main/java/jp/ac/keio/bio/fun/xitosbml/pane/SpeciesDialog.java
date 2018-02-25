@@ -1,13 +1,13 @@
 package jp.ac.keio.bio.fun.xitosbml.pane;
 
-import ij.gui.GenericDialog;
-
 import org.sbml.jsbml.IdentifierException;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.Unit;
 import org.sbml.jsbml.ext.spatial.SpatialConstants;
 import org.sbml.jsbml.ext.spatial.SpatialSpeciesPlugin;
+
+import ij.gui.GenericDialog;
 
 // TODO: Auto-generated Javadoc
 /**
