@@ -144,9 +144,12 @@
   <dependencies>
     <dependency>
       <groupId>net.imagej</groupId>
-      <artifactId>ij</artifactId>
-      <version>1.51h</version><!--$NO-MVN-MAN-VER$-->
+      <artifactId>ij</artifactId><!--$NO-MVN-MAN-VER$-->
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>sc.fiji</groupId>
+      <artifactId>fiji-lib</artifactId>
     </dependency>
     <dependency>
       <groupId>sc.fiji</groupId>
