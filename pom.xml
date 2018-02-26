@@ -13,7 +13,7 @@
 
   <groupId>jp.ac.keio.bio.fun</groupId>
   <artifactId>Xito_SBML</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 
   <name>XitoSBML</name>
   <description>A plugin to create SBML model from microscopic images</description>
