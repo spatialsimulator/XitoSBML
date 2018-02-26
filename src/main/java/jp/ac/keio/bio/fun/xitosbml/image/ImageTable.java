@@ -1,9 +1,5 @@
 package jp.ac.keio.bio.fun.xitosbml.image;
 
-import ij.ImagePlus;
-import ij.gui.MessageDialog;
-import ij.io.FileInfo;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Frame;
@@ -19,6 +15,9 @@ import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import ij.ImagePlus;
+import ij.gui.MessageDialog;
+import ij.io.FileInfo;
 import jp.ac.keio.bio.fun.xitosbml.gui.AddingColumn;
 import jp.ac.keio.bio.fun.xitosbml.gui.ArrowColumn;
 

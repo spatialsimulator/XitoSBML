@@ -1,8 +1,5 @@
 package jp.ac.keio.bio.fun.xitosbml.util;
 
-import ij.IJ;
-import ij.io.SaveDialog;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -17,6 +14,9 @@ import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
 import org.sbml.jsbml.SBMLWriter;
 import org.sbml.jsbml.TidySBMLWriter;
+
+import ij.IJ;
+import ij.io.SaveDialog;
 // TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.

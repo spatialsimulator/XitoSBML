@@ -1,7 +1,5 @@
 package jp.ac.keio.bio.fun.xitosbml.image;
 
-import ij.ImagePlus;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,6 +7,8 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.scijava.vecmath.Point3d;
+
+import ij.ImagePlus;
 
 
 // TODO: Auto-generated Javadoc

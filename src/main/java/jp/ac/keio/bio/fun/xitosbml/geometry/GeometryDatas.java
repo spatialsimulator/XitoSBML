@@ -2,9 +2,6 @@ package jp.ac.keio.bio.fun.xitosbml.geometry;
 
 import java.util.ArrayList;
 
-import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
-import math3d.Point3d;
-
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.ext.spatial.AnalyticGeometry;
@@ -15,6 +12,9 @@ import org.sbml.jsbml.ext.spatial.GeometryDefinition;
 import org.sbml.jsbml.ext.spatial.ParametricGeometry;
 import org.sbml.jsbml.ext.spatial.SampledFieldGeometry;
 import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
+
+import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
+import math3d.Point3d;
 
 // TODO: Auto-generated Javadoc
 /**

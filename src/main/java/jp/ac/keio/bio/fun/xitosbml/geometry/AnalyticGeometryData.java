@@ -1,14 +1,8 @@
 package jp.ac.keio.bio.fun.xitosbml.geometry;
 
-import ij.ImageStack;
-import ij.process.ByteProcessor;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
-
-import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
-import math3d.Point3d;
 
 import org.sbml.jsbml.ASTNode;
 import org.sbml.jsbml.ASTNode.Type;
@@ -17,6 +11,11 @@ import org.sbml.jsbml.ext.spatial.AnalyticGeometry;
 import org.sbml.jsbml.ext.spatial.AnalyticVolume;
 import org.sbml.jsbml.ext.spatial.Geometry;
 import org.sbml.jsbml.ext.spatial.GeometryDefinition;
+
+import ij.ImageStack;
+import ij.process.ByteProcessor;
+import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
+import math3d.Point3d;
 
 // TODO: Auto-generated Javadoc
 /**

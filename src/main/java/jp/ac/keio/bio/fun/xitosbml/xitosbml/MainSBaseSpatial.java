@@ -1,23 +1,21 @@
 package jp.ac.keio.bio.fun.xitosbml.xitosbml;
 
-import ij.IJ;
-import ij.io.OpenDialog;
-import ij.plugin.PlugIn;
-
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.stream.XMLStreamException;
-
-import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
-import jp.ac.keio.bio.fun.xitosbml.util.PluginConstants;
-import jp.ac.keio.bio.fun.xitosbml.visual.Viewer;
 
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLReader;
+
+import fiji.util.gui.GenericDialogPlus;
+import ij.IJ;
+import ij.plugin.PlugIn;
+import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
+import jp.ac.keio.bio.fun.xitosbml.util.PluginConstants;
+import jp.ac.keio.bio.fun.xitosbml.visual.Viewer;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -54,18 +52,19 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	 * @return the document
 	 * @throws NullPointerException the null pointer exception
 	 * @throws XMLStreamException the XML stream exception
+	 * @throws IOException 
 	 */
-	protected SBMLDocument getDocument() throws NullPointerException, XMLStreamException{
-		JFileChooser chooser = new JFileChooser(OpenDialog.getLastDirectory());
-		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		chooser.setMultiSelectionEnabled(false);
-		chooser.setFileFilter(new FileNameExtensionFilter("SBML File(*.xml)", "xml"));
-		int returnVal = chooser.showOpenDialog(null);
+	protected SBMLDocument getDocument() throws NullPointerException, XMLStreamException, IOException{
 
-		if (returnVal != JFileChooser.APPROVE_OPTION)
+		GenericDialogPlus gd = new GenericDialogPlus("File Explorer");
+		gd.addFileField("Target Model", "");
+		gd.showDialog();
+		if(gd.wasCanceled())
 			throw new NullPointerException();
-		File f = chooser.getSelectedFile();
-		return SBMLReader.read(f.getAbsolutePath());
+
+		String dir = gd.getNextString();
+
+		return SBMLReader.read(new File(dir));
 	}
 
 	/**
@@ -96,8 +95,17 @@ public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 		if(!document.getPackageRequired("spatial"))
 			IJ.error("Could not find spatial extension");
 
-		if(!document.getPackageRequired("req")) 
-			IJ.error("Could not find req extension");
 	}
 
+	public static void main(String[] args) {
+		GenericDialogPlus gd = new GenericDialogPlus("Count Files");
+		gd.addDirectoryField("Directory", "");
+		gd.showDialog();
+		if(gd.wasCanceled())
+			return;
+		String dir = gd.getNextString();
+
+		new File(dir);
+	}
+	
 }

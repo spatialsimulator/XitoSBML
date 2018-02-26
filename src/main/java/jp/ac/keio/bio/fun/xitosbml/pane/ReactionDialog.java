@@ -1,7 +1,5 @@
 package jp.ac.keio.bio.fun.xitosbml.pane;
 
-import ij.gui.GenericDialog;
-
 import java.awt.Checkbox;
 import java.util.Vector;
 
@@ -15,6 +13,8 @@ import org.sbml.jsbml.Species;
 import org.sbml.jsbml.SpeciesReference;
 import org.sbml.jsbml.ext.spatial.SpatialReactionPlugin;
 import org.sbml.jsbml.text.parser.ParseException;
+
+import ij.gui.GenericDialog;
 
 // TODO: Auto-generated Javadoc
 /**

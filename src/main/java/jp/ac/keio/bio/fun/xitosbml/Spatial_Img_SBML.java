@@ -1,8 +1,8 @@
 package jp.ac.keio.bio.fun.xitosbml;
 
-import jp.ac.keio.bio.fun.xitosbml.xitosbml.MainImgSpatial;
 import ij.IJ;
 import ij.ImageJ;
+import jp.ac.keio.bio.fun.xitosbml.xitosbml.MainImgSpatial;
 
 // TODO: Auto-generated Javadoc
 /**

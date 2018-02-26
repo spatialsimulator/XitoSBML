@@ -1,22 +1,8 @@
 package jp.ac.keio.bio.fun.xitosbml.xitosbml;
-import ij.ImagePlus;
-import ij.plugin.PlugIn;
-
 import java.util.HashMap;
 import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
-
-import jp.ac.keio.bio.fun.xitosbml.image.CreateImage;
-import jp.ac.keio.bio.fun.xitosbml.image.Filler;
-import jp.ac.keio.bio.fun.xitosbml.image.ImageBorder;
-import jp.ac.keio.bio.fun.xitosbml.image.ImageEdit;
-import jp.ac.keio.bio.fun.xitosbml.image.ImageExplorer;
-import jp.ac.keio.bio.fun.xitosbml.image.Interpolater;
-import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
-import jp.ac.keio.bio.fun.xitosbml.pane.TabTables;
-import jp.ac.keio.bio.fun.xitosbml.visual.DomainStruct;
-import jp.ac.keio.bio.fun.xitosbml.visual.Viewer;
 
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
@@ -27,6 +13,19 @@ import org.sbml.jsbml.Species;
 import org.sbml.jsbml.TidySBMLWriter;
 import org.sbml.jsbml.ext.spatial.Geometry;
 import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
+
+import ij.ImagePlus;
+import ij.plugin.PlugIn;
+import jp.ac.keio.bio.fun.xitosbml.image.CreateImage;
+import jp.ac.keio.bio.fun.xitosbml.image.Filler;
+import jp.ac.keio.bio.fun.xitosbml.image.ImageBorder;
+import jp.ac.keio.bio.fun.xitosbml.image.ImageEdit;
+import jp.ac.keio.bio.fun.xitosbml.image.ImageExplorer;
+import jp.ac.keio.bio.fun.xitosbml.image.Interpolater;
+import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
+import jp.ac.keio.bio.fun.xitosbml.pane.TabTables;
+import jp.ac.keio.bio.fun.xitosbml.visual.DomainStruct;
+import jp.ac.keio.bio.fun.xitosbml.visual.Viewer;
 
 
 // TODO: Auto-generated Javadoc

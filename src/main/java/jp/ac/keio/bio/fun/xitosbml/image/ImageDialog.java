@@ -1,13 +1,5 @@
 package jp.ac.keio.bio.fun.xitosbml.image;
 
-import ij.ImagePlus;
-import ij.WindowManager;
-import ij.gui.GenericDialog;
-import ij.gui.MessageDialog;
-import ij.io.OpenDialog;
-import ij.io.Opener;
-import ij.plugin.FolderOpener;
-
 import java.awt.Choice;
 import java.awt.Frame;
 import java.awt.event.ItemEvent;
@@ -16,6 +8,14 @@ import java.io.File;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
+
+import ij.ImagePlus;
+import ij.WindowManager;
+import ij.gui.GenericDialog;
+import ij.gui.MessageDialog;
+import ij.io.OpenDialog;
+import ij.io.Opener;
+import ij.plugin.FolderOpener;
 
 
 // TODO: Auto-generated Javadoc

@@ -80,7 +80,7 @@ public class AdvectionTable extends SBaseTable {
 			data[i][1] = p.isSetValue() ? p.getValue(): null;			
 			data[i][2] = p.getConstant();
 			data[i][3] = ac.getVariable();
-			data[i][4] = SBMLProcessUtil.coordinateIndexToString(ac.getCoordinate());
+			data[i][4] = ac.getCoordinate().name();
 		}
 		
 		MyTableModel tm = new MyTableModel(data, header) {
@@ -121,7 +121,7 @@ public class AdvectionTable extends SBaseTable {
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
 		AdvectionCoefficient ac = (AdvectionCoefficient) sp.getParamType();
 		v.add(ac.getVariable());
-		v.add(SBMLProcessUtil.coordinateIndexToString(ac.getCoordinate()));
+		v.add(ac.getCoordinate().name());
 		
 		return v;
 	}

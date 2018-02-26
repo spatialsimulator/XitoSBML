@@ -1,12 +1,13 @@
 package jp.ac.keio.bio.fun.xitosbml.pane;
 
-import ij.gui.GenericDialog;
-
 import org.sbml.jsbml.IdentifierException;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Species;
+import org.sbml.jsbml.Unit;
 import org.sbml.jsbml.ext.spatial.SpatialConstants;
 import org.sbml.jsbml.ext.spatial.SpatialSpeciesPlugin;
+
+import ij.gui.GenericDialog;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -28,7 +29,7 @@ public class SpeciesDialog {
 	private final String[] initial = {"amount","concentration"};
 	
 	/** The units. */
-	private final String[] units = {"substance","mole","item","gram","kilogram","dimensionless"};
+	private final String[] units = {"mole","item","gram","kilogram","dimensionless"};
 	
 	/** The bool. */
 	private final String[] bool = {"true","false"};
@@ -131,7 +132,7 @@ public class SpeciesDialog {
 			species.setInitialConcentration(gd.getNextNumber());
 	
 		species.setCompartment(gd.getNextChoice());
-		species.setSubstanceUnits(SBMLProcessUtil.StringToUnit(gd.getNextChoice()));
+		species.setSubstanceUnits(Unit.Kind.valueOf(gd.getNextChoice().toUpperCase()));
 
 		if(species.isSetInitialAmount())
 			species.setHasOnlySubstanceUnits(true);

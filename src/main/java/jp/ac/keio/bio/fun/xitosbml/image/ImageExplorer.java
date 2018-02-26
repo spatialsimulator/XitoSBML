@@ -1,9 +1,5 @@
 package jp.ac.keio.bio.fun.xitosbml.image;
 
-import ij.ImagePlus;
-import ij.gui.MessageDialog;
-import ij.io.FileInfo;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -19,6 +15,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
+
+import ij.ImagePlus;
+import ij.gui.MessageDialog;
+import ij.io.FileInfo;
 
 // TODO: Auto-generated Javadoc
 /**

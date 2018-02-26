@@ -1,9 +1,5 @@
 package jp.ac.keio.bio.fun.xitosbml.geometry;
 
-import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
-import ij.ImageStack;
-import ij.process.ByteProcessor;
-
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.ext.spatial.CompressionKind;
 import org.sbml.jsbml.ext.spatial.DataKind;
@@ -12,6 +8,10 @@ import org.sbml.jsbml.ext.spatial.GeometryDefinition;
 import org.sbml.jsbml.ext.spatial.SampledField;
 import org.sbml.jsbml.ext.spatial.SampledFieldGeometry;
 import org.sbml.jsbml.ext.spatial.SampledVolume;
+
+import ij.ImageStack;
+import ij.process.ByteProcessor;
+import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
 
 
 // TODO: Auto-generated Javadoc
@@ -79,7 +79,7 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 		getSize(sf);
 		getArray(sf);
 
-		ImageStack is = createStack();
+		ImageStack is = createStack(); 
 		img.setStack(is);
 		img.setTitle(title);
 	}
@@ -121,17 +121,15 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	 * @param sf the sf
 	 * @return the array
 	 */
-	private void getArray(SampledField sf){ //TODO string to byte array
-		int length = height * width * depth;
-		raw = new byte[length];
-		int array[] = new int[length];
-		String data;
+	private void getArray(SampledField sf){
+		String[] data;
 		if(sf.getCompression() == CompressionKind.uncompressed)
-			data = sf.getDataString();
+			data = sf.getSamples().split(" ");
 		else
-			data = sf.getSamples();
-
-		intToByte(array, raw);
+			//TODO add uncompression for sample array
+			data = sf.getSamples().split(" ");
+		
+		raw = stringToByte(data);
 	}
 	
 	
@@ -141,11 +139,15 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	 * @param array the array
 	 * @param raw the raw
 	 */
-	private void intToByte(int[] array, byte[] raw){		
+	private byte[] stringToByte(String[] data){		
+		raw = new byte[data.length];
+		
 		//TODO need to resolve when original image data is not 8 bit
-		for(int i = 0, length = array.length; i < length;i++){
-			raw[i] = (byte) array[i];
+		for(int i = 0, length = data.length; i < length;i++){
+			raw[i] = (byte) Integer.parseInt(data[i]);
 		}	
+		
+		return raw;
 	}
 
 	/* (non-Javadoc)
