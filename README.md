@@ -12,7 +12,7 @@ How to Install
 3. Click [Manage update sites] button on [ImageJ Updater] dialog
 4. On [Manage update sites dialog], scroll down the list of update sites, turn on [XitoSBML] checkbox and press [Close] button
 5. Click [Apply changes] button on [ImageJ Updater] dialog
-6. ImageJ (Fiji) will download and install XitoSBML and its dependet libraries
+6. ImageJ (Fiji) will download and install XitoSBML and its dependent libraries
 7. Restart ImageJ (Fiji), then you will find [XitoSBML] plugin under [Plugins] menu
 
 Here is a screencast of above installation procedure.
