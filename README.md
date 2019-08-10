@@ -15,7 +15,8 @@ How to Install
 6. ImageJ (Fiji) will download and install XitoSBML and its dependent libraries
 7. Restart ImageJ (Fiji), then you will find [XitoSBML] plugin under [Plugins] menu
 
-Here is a screencast of above installation procedure.
+Here is a screencast of above installation procedure (screencast is also
+available as an [MP4 file](./screenshots/install-xitosbml.mp4)).
 ![install-xitosbml](./screenshots/install-xitosbml.gif "Install XitoSBML")
 
 How to Use
@@ -30,7 +31,9 @@ How to Use
 7. XitoSBML will display converted Spatial SBML document and Domain Hierarchy of your model to let you confirm the converted result
 8. Exported SBML and merged image will be stored (where you specified in step 6)
 
-Here is a screencast of above procedure.
+Here is a screencast of above procedure (screencast is also
+available as an [MP4 file](./screenshots/example1.mp4)).
+
 ![example1](./screenshots/example1.gif "Convert segmented images to Spatial SBML")
 
 You can find example images under [examples](https://github.com/spatialsimulator/XitoSBML/tree/master/examples) directory.
@@ -52,7 +55,9 @@ Next example will show how to create Spatial SBML model, add SBML objects to the
 10. XitoSBML will display converted Spatial SBML document and Domain Hierarchy of your model to let you confirm the converted result
 11. Exported SBML and merged image will be stored (where you specified in step 9)
 
-Here is a screencast of above procedure.
+Here is a screencast of above procedure (screencast is also
+available as an [MP4 file](./screenshots/example2.mp4)).
+
 ![example2](./screenshots/example2.gif "Convert segmented images to Spatial SBML")
 
 You can find example images and converted Spatial SBML model under [examples](https://github.com/spatialsimulator/XitoSBML/tree/master/examples) directory.
