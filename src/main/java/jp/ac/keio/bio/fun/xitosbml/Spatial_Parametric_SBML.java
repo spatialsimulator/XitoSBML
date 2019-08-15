@@ -19,9 +19,10 @@ public class Spatial_Parametric_SBML extends Spatial_SBML{
   /**
    * Launch XitoSBML as ImageJ plugin.
    * See {@link jp.ac.keio.bio.fun.xitosbml.xitosbml.MainParametricSpatial#run(java.lang.String)} for implementation.
+   * @param arg name of the method defined in plugins.config
    */
 	@Override
-	public void run(String args) {
-			new MainParametricSpatial().run(args);	
+	public void run(String arg) {
+		new MainParametricSpatial().run(arg);
 	}
 }

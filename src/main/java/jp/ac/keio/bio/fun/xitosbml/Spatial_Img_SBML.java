@@ -21,13 +21,14 @@ public class Spatial_Img_SBML extends Spatial_SBML {
   /**
    * Launch XitoSBML as ImageJ plugin.
    * See {@link jp.ac.keio.bio.fun.xitosbml.xitosbml.MainImgSpatial#run(java.lang.String)} for implementation.
+   * @param args name of the method defined in plugins.config
    */
 	public void run(String args) {   
 	  if (args.equals("about")) {
 	    showAbout();
 	    return;
 	  } else {
-			new MainImgSpatial().run(args);	
+		  new MainImgSpatial().run(args);
 	  }
 	}
 	
@@ -50,7 +51,7 @@ public class Spatial_Img_SBML extends Spatial_SBML {
 
 	/**
 	 * Example main() method which will launch ImageJ and call "run Spatial Image SBML plugin".
-	 * @param args
+	 * @param args an array of command-line arguments for the application
 	 */
 	public static void main(String[] args) {
 		// set the plugins.dir property to make the plugin appear in the Plugins menu
