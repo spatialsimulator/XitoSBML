@@ -29,6 +29,8 @@ public abstract class Spatial_SBML implements PlugIn {
    * Launch XitoSBML as ImageJ plugin.
    * The methods implemented by this plugin and their implementations are
    * described in src/main/resources/plugins.config.
+   *
+   * @param arg name of the method defined in plugins.config
    */
 	@Override
 	public abstract void run(String arg);

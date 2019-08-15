@@ -75,7 +75,13 @@ public abstract class MainSpatial implements PlugIn{
 	}
 	
 	/**
-	 * Compute img.
+	 * Following process is performed to an image by this method.
+	 *
+	 * 1. Interpolate an image if it is a Z-stack image (3D image)
+	 * 2. Fill holes (blank pixels) in the image by morphology operation if exists
+	 *
+	 * The converted image will be generated as {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage}, which is a
+	 * base class for representing spatial image in XitoSBML.
 	 */
 	protected void computeImg(){
 		Interpolater interpolater = new Interpolater();
@@ -99,7 +105,7 @@ public abstract class MainSpatial implements PlugIn{
 	/**
 	 * Visualize.
 	 *
-	 * @param spImg the sp img
+	 * @param spImg the spatial img
 	 */
 	protected void visualize (SpatialImage spImg){
 		viewer = new Viewer();

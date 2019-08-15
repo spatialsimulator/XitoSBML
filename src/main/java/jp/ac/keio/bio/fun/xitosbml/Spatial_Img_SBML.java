@@ -11,7 +11,7 @@ import jp.ac.keio.bio.fun.xitosbml.xitosbml.MainImgSpatial;
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 17, 2015
  * 
- * The Class Spatial_Img_SBML, which calls "Images to SBML converter" from ImageJ (XitoSBML).
+ * The Class Spatial_Img_SBML, which calls "run Spatial Image SBML plugin" from ImageJ (XitoSBML).
  * This class is an implementation of XitoSBML as an ImageJ plugin.
  * The run(String) method will call jp.ac.keio.bio.fun.xitosbml.xitosbml.MainImgSpatial#run(java.lang.String).
  * Once registered in src/main/resources/plugins.config, the run() method can be called from the ImageJ menu.
