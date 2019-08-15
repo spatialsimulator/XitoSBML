@@ -7,13 +7,15 @@ import jp.ac.keio.bio.fun.xitosbml.xitosbml.MainImgSpatial;
 /**
  * The Class Spatial_Img_SBML.
  * This class has several methods which will be able to launch from * 'Plugins' -> 'XitoSBML'.
- * List of ImageJ plugins which XitoSBML provieds is described in src/main/resources/plugins.config.
+ * The methods implemented by this plugin and their implementations are
+ * described in src/main/resources/plugins.config.
  */
 public class Spatial_Img_SBML extends Spatial_SBML {
 
   /**
    * Launch XitoSBML as ImageJ plugin.
-   * List of ImageJ plugins which XitoSBML provieds is described in src/main/resources/plugins.config.
+   * The methods implemented by this plugin and their implementations are
+   * described in src/main/resources/plugins.config.
    */
 	public void run(String args) {   
 	  if (args.equals("about")) {
