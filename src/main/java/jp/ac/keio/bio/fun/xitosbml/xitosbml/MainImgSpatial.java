@@ -6,7 +6,6 @@ import jp.ac.keio.bio.fun.xitosbml.util.ModelSaver;
 import jp.ac.keio.bio.fun.xitosbml.util.ModelValidator;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.
  *
@@ -49,5 +48,5 @@ public class MainImgSpatial extends MainSpatial {
 		print();
 		ModelValidator validator = new ModelValidator(document);
 		validator.validate();
-	}	
+	}
 }

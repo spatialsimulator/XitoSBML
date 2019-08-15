@@ -5,17 +5,22 @@ import ij.ImageJ;
 import jp.ac.keio.bio.fun.xitosbml.xitosbml.MainImgSpatial;
 
 /**
- * The Class Spatial_Img_SBML.
- * This class has several methods which will be able to launch from * 'Plugins' -> 'XitoSBML'.
- * The methods implemented by this plugin and their implementations are
- * described in src/main/resources/plugins.config.
+ * Spatial SBML Plugin for ImageJ.
+ *
+ * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
+ * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * Date Created: Jun 17, 2015
+ * 
+ * The Class Spatial_Img_SBML, which calls "Images to SBML converter" from ImageJ (XitoSBML).
+ * This class is an implementation of XitoSBML as an ImageJ plugin.
+ * The run(String) method will call jp.ac.keio.bio.fun.xitosbml.xitosbml.MainImgSpatial#run(java.lang.String).
+ * Once registered in src/main/resources/plugins.config, the run() method can be called from the ImageJ menu.
  */
 public class Spatial_Img_SBML extends Spatial_SBML {
 
   /**
    * Launch XitoSBML as ImageJ plugin.
-   * The methods implemented by this plugin and their implementations are
-   * described in src/main/resources/plugins.config.
+   * See {@link jp.ac.keio.bio.fun.xitosbml.xitosbml.MainImgSpatial#run(java.lang.String)} for implementation.
    */
 	public void run(String args) {   
 	  if (args.equals("about")) {
@@ -44,7 +49,7 @@ public class Spatial_Img_SBML extends Spatial_SBML {
   }
 
 	/**
-	 * Example main() method which will launch ImageJ and call XitoSBML.
+	 * Example main() method which will launch ImageJ and call "run Spatial Image SBML plugin".
 	 * @param args
 	 */
 	public static void main(String[] args) {

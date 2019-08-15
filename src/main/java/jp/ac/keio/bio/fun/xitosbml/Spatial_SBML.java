@@ -11,8 +11,8 @@ import ij.plugin.PlugIn;
  * 
  * The base class of this plugin (XitoSBML).
  * It inherits from the ImageJ Plugin class.
- * The methods implemented by this plugin and their implementations are
- * described in src/main/resources/plugins.config.
+ * This class has run method which will be able to launch from * 'Plugins' -> 'XitoSBML'.
+ * The methods implemented by this plugin are described in src/main/resources/plugins.config.
  */
 public abstract class Spatial_SBML implements PlugIn {
 	
