@@ -6,18 +6,27 @@ import javax.xml.stream.XMLStreamException;
 
 import jp.ac.keio.bio.fun.xitosbml.util.ModelValidator;
 
-// TODO: Auto-generated Javadoc
 /**
  * Spatial SBML Plugin for ImageJ.
  *
  * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
  * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Oct 1, 2015
+ *
+ * The Class MainModelValidator, which implements "run Model Validation" function.
  */
 public class MainModelValidator extends MainSBaseSpatial {
 
-	/* (non-Javadoc)
-	 * @see ij.plugin.PlugIn#run(java.lang.String)
+	/**
+	 * Overrides ij.plugin.PlugIn#run(java.lang.String)
+	 * A file dialog for validating the model will be displayed.
+	 * Users will select a model (SBML file) through the graphical user interface,
+	 * and then XitoSBML will will check whether the SBML document has correct
+	 * level, version and extension. Moreover, if XitoSBML is connected to an internet,
+	 * then it will send the model to the online SBML validator, which will run
+	 * a semantic validation, and show the validation result.
+	 *
+	 * @param arg name of the method defined in plugins.config
 	 */
 	@Override
 	public void run(String arg) {
@@ -26,14 +35,10 @@ public class MainModelValidator extends MainSBaseSpatial {
 		} catch (NullPointerException e){
 			e.getStackTrace();
 			return;
-		} catch (XMLStreamException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (XMLStreamException | IOException e) {
 			e.printStackTrace();
 		}
-	
+
 		checkSBMLDocument(document);
 		ModelValidator validator = new ModelValidator(document);
 		validator.validate();
