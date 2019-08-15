@@ -55,22 +55,28 @@ import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
 import jp.ac.keio.bio.fun.xitosbml.util.PluginConstants;
 import jp.ac.keio.bio.fun.xitosbml.util.PluginInfo;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SpatialSBMLExporter.
+ * Spatial SBML Plugin for ImageJ.
+ *
+ * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
+ * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * Date Created: Feb 21, 2017
+ *
+ * The Class SpatialSBMLExporter, which converts a spatial model generated from
+ * microscopic images to an SBML model.
  */
 public class SpatialSBMLExporter{
 
-  /** The document. */
+  /** The SBML document. */
   private SBMLDocument document;
   
-  /** The model. */
+  /** The SBML model. */
   private Model model;
   
-  /** The spatialplugin. */
+  /** The SBML spatialplugin. */
   private SpatialModelPlugin spatialplugin;
   
-  /** The spatialcompplugin. */
+  /** The SBML spatialcompplugin. */
   private SpatialCompartmentPlugin spatialcompplugin;
   
   /** The geometry. */
@@ -86,19 +92,18 @@ public class SpatialSBMLExporter{
   private HashMap<String, Integer> hashDomainNum;
   
   /** The hash dom interior pt. */
-
   private HashMap<String,Point3d> hashDomInteriorPt;
   
   /** The adjacents list. */
   private ArrayList<ArrayList<String>> adjacentsList;
   
-  /** The raw. */
+  /** The raw data. */
   private byte[] raw;
   
-  /** The depth. */
+  /** The size of an image (width, height and depth). */
   private int width, height, depth;
   
-  /** The unit. */
+  /** The unit of a CoordinateComponent */
   private String unit;
   
   /** The delta. */
@@ -121,9 +126,9 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * Instantiates a new spatial SBML exporter.
+	 * Instantiates a new spatial SBML exporter with given SpatialImage.
 	 *
-	 * @param spImg the sp img
+	 * @param spImg the {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage}
 	 */
 	public SpatialSBMLExporter(SpatialImage spImg) {
 		this();
@@ -144,6 +149,20 @@ public class SpatialSBMLExporter{
 
 	/**
 	 * Creates the geometry elements.
+	 * This method will create following objects:
+	 *  - Geometry
+	 *  - CoordinateComponent
+	 *  - DomainType
+	 *  - Domain
+     *  - AdjacentDomains
+	 *  - Compartment
+	 *  - CompartmentMapping
+     *  - SampledFieldGeometry
+	 *  - SampledField
+	 *  - UnitDefinition
+	 *  - Unit
+     * CellDesigner annotation will be added in addOutside() method to support
+	 * spatial modeling on CellDesigner.
 	 */
 	public void createGeometryElements() {
 		geometry = spatialplugin.createGeometry();
@@ -159,6 +178,9 @@ public class SpatialSBMLExporter{
 
 	/**
 	 * Adds the geometry definitions.
+	 * This method supports creating both 2D and 3D space (by looking into DomainType).
+     * Each element in SampledField will store unsigned int 8 bit (uint8) value.
+     * Data compression is currently disabled.
 	 */
 	public void addGeometryDefinitions() {
 		SampledFieldGeometry sfg = geometry.createSampledFieldGeometry();
@@ -199,10 +221,10 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * Compress raw data.
+	 * Compress raw data of spatial image in 1D array.
 	 *
-	 * @param raw the raw
-	 * @return the byte[]
+	 * @param raw the raw data of spatial image in 1D array
+	 * @return byte[] the byte array
 	 */
 	public byte[] compressRawData(byte[] raw) {
 		Deflater compresser = new Deflater();
@@ -231,10 +253,10 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * Byte array to int array.
+	 * Convert byte array to int array.
 	 *
-	 * @param compressed the compressed
-	 * @return the int[]
+	 * @param compressed the compressed 1D byte array
+	 * @return int[] the 1D integer array
 	 */
 	public int[] byteArrayToIntArray(byte[] compressed) {
 		int[] intArray = new int[compressed.length];
@@ -308,8 +330,8 @@ public class SpatialSBMLExporter{
 	}
 	
   	/**
-	   * Adds the domain types.
-	   */
+	 * Adds the domain types.
+	 */
 	public void addDomainTypes() {
 		for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
 			// DomainTypes
@@ -363,24 +385,26 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * Sets the coordinate boundary.
+     * Sets the minimum and maximum values of the coordinate axis (boundary) to
+	 * a CoordinateComponent object which explicitly defines a coordinate component of
+	 * the coordinate axes.
 	 *
-	 * @param cc the cc
-	 * @param s the s
-	 * @param min the min
-	 * @param max the max
-	 * @param delta the delta
+	 * @param coordinateComponent the CoordinateComponent object
+	 * @param spId the spatialId as String
+	 * @param min the minimum value of the coordinate axis
+	 * @param max the maximum value of the coordinate axis
+	 * @param delta the delta (just kept for backward compatibility)
 	 */
 	//TODO fix bound?
-	public void setCoordinateBoundary(CoordinateComponent cc, String s, double min, double max, double delta) { 
+	public void setCoordinateBoundary(CoordinateComponent coordinateComponent, String spId, double min, double max, double delta) {
 	  Boundary bmin = new Boundary();
-	  //bmin.setId(s + "min"); bmin.setValue(min * delta);
-	  bmin.setSpatialId(s + "min"); bmin.setValue(min);
+	  //bmin.setId(spId + "min"); bmin.setValue(min * delta);
+	  bmin.setSpatialId(spId + "min"); bmin.setValue(min);
 	  Boundary bmax = new Boundary();
-	  //bmax.setId(s + "max"); bmax.setValue(max * delta);
-	  bmax.setSpatialId(s + "max"); bmax.setValue(max);
-	  cc.setBoundaryMaximum(bmax);
-	  cc.setBoundaryMinimum(bmin);
+	  //bmax.setId(spId + "max"); bmax.setValue(max * delta);
+	  bmax.setSpatialId(spId + "max"); bmax.setValue(max);
+	  coordinateComponent.setBoundaryMaximum(bmax);
+	  coordinateComponent.setBoundaryMinimum(bmin);
 	}
   
 	/**
@@ -404,18 +428,18 @@ public class SpatialSBMLExporter{
 	}
   
 	/**
-	 * Gets the model.
+	 * Gets the SBML model.
 	 *
-	 * @return the model
+	 * @return the SBML model
 	 */
 	public Model getModel(){
 		return model;
 	}
 	
 	/**
-	 * Gets the document.
+	 * Gets the SBML document.
 	 *
-	 * @return the document
+	 * @return the SBML document
 	 */
 	public SBMLDocument getDocument(){
 		return document;
@@ -578,7 +602,6 @@ public class SpatialSBMLExporter{
 	}
 	
 	/**
-	 * void
 	 * Add Outside annotation for celldesigner.
 	 */
 	private void addOutside() {

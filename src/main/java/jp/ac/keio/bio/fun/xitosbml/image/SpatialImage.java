@@ -9,57 +9,66 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class SpatialImage.
+ * Spatial SBML Plugin for ImageJ.
+ *
+ * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
+ * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * Date Created: Feb 21, 2017
+ *
+ * The Class SpatialImage, which is a class for handling spatial image in XitoSBML.
  */
 public class SpatialImage {
 	
-	/** The raw. */
+	/** The raw data of spatial image in 1D array. */
 	private byte[] raw;
 	
-	/** The width. */
+	/** The width of an image. */
 	private int width;
 	
-	/** The height. */
+	/** The height of an image. */
 	private int height;
 	
-	/** The depth. */
+	/** The depth of an image. */
 	private int depth;
 	
-	/** The img. */
+	/** The img as an ImageJ object. */
 	private ImagePlus img;
 	
-	/** The hash domain types. */
+	/** The hash map of domain types. */
 	private HashMap<String, Integer> hashDomainTypes;
 	
-	/** The hash sampled value. */
+	/** The hash map of sampled value. */
 	private HashMap<String, Integer> hashSampledValue;
 	
-	/** The hash domain num. */
+	/** The hash map of domain num. */
 	private HashMap<String,Integer> hashDomainNum;
 	
 	/** The adjacents list. */
 	private ArrayList<ArrayList<String>> adjacentsList;
 	
-	/** The title. */
+	/** The title of the image. */
 	public String title;
 	
-	/** The unit. */
+	/** The unit of a CoordinateComponent */
 	private String unit;
 	
-	/** The hash dom interior pt. */
+	/** The hash domain InteriorPoint. */
 	private HashMap<String,Point3d> hashDomInteriorPt;
 	
 	/** The delta. */
 	private Point3d delta = new Point3d();
 	
 	/**
-	 * Instantiates a new spatial image.
+	 * Instantiates a new spatial image given image object.
+     * SpatialImage object is generated with given image, sampled value
+	 * (pixel value of a SampledVolume) and domain types.
+	 * Unit of spatial image will be adjusted by reading file information from
+	 * given image.
 	 *
-	 * @param hashSampledValue the hash sampled value
-	 * @param hashDomainTypes the hash domain types
-	 * @param img the img
+	 * @param hashSampledValue the hash map of sampled value, that is a pixel value of a SampledVolume
+	 * @param hashDomainTypes the hash map of domain types
+	 * @param img the image as an ImageJ object
 	 */
 	public SpatialImage(HashMap<String, Integer> hashSampledValue, HashMap<String, Integer> hashDomainTypes, ImagePlus img){
 		this.setWidth(img.getWidth());
@@ -78,10 +87,14 @@ public class SpatialImage {
 	}	
 	
 	/**
-	 * Instantiates a new spatial image.
+	 * Instantiates a new spatial image given image object.
+	 * SpatialImage object is generated with given image and sampled value
+	 * (pixel value of a SampledVolume).
+	 * Unit of spatial image will be adjusted by reading file information from
+	 * given image.
 	 *
-	 * @param hashSampledValue the hash sampled value
-	 * @param img the img
+	 * @param hashSampledValue the hash map of sampled value, that is a pixel value of a SampledVolume
+	 * @param img the image as an ImageJ object
 	 */
 	public SpatialImage(HashMap<String, Integer> hashSampledValue, ImagePlus img){	//only for model editing
 		this.setWidth(img.getWidth());
@@ -99,7 +112,8 @@ public class SpatialImage {
 	}	
 	
 	/**
-	 * Sets the raw image.
+	 * Converts image object to an 1D array (raw data).
+     * Z-stack images (3D image) will also be converted to an 1D array.
 	 */
 	private void setRawImage(){
 		byte[] slice = null;   
@@ -114,7 +128,7 @@ public class SpatialImage {
 	/**
 	 * Sets the image.
 	 *
-	 * @param image the new image
+	 * @param image the new image as an ImageJ object
 	 */
 	public void setImage(ImagePlus image){
 		this.img = image;
@@ -124,7 +138,7 @@ public class SpatialImage {
 	/**
 	 * Gets the image.
 	 *
-	 * @return the image
+	 * @return the image as an ImageJ object
 	 */
 	public ImagePlus getImage(){
 		return img;
@@ -133,7 +147,7 @@ public class SpatialImage {
 	/**
 	 * Update image.
 	 *
-	 * @param imStack the im stack
+	 * @param imStack the image stack (ImageStack) object
 	 */
 	public void updateImage(ImageStack imStack){
 		depth = imStack.getSize();
@@ -142,115 +156,117 @@ public class SpatialImage {
 	}
 
 	/**
-	 * Gets the width.
+	 * Gets the width of spatial image.
 	 *
-	 * @return the width
+	 * @return the width of spatial image
 	 */
 	public int getWidth() {
 		return width;
 	}
 
 	/**
-	 * Sets the width.
+	 * Sets the width of spatial image.
 	 *
-	 * @param width the new width
+	 * @param width the new width of spatial image
 	 */
 	public void setWidth(int width) {
 		this.width = width;
 	}
 
 	/**
-	 * Gets the height.
+	 * Gets the height of spatial image.
 	 *
-	 * @return the height
+	 * @return the height of spatial image
 	 */
 	public int getHeight() {
 		return height;
 	}
 
 	/**
-	 * Sets the height.
+	 * Sets the height of spatial image.
 	 *
-	 * @param height the new height
+	 * @param height the new height of spatial image
 	 */
 	public void setHeight(int height) {
 		this.height = height;
 	}
 
 	/**
-	 * Gets the depth.
+	 * Gets the depth of spatial image.
 	 *
-	 * @return the depth
+	 * @return the depth of spatial image
 	 */
 	public int getDepth() {
 		return depth;
 	}
 
 	/**
-	 * Sets the depth.
+	 * Sets the depth of spatial image.
 	 *
-	 * @param depth the new depth
+	 * @param depth the new depth of spatial image
 	 */
 	public void setDepth(int depth) {
 		this.depth = depth;
 	}
 
 	/**
-	 * Gets the hash sampled value.
+	 * Gets the hash sampled value of spatial image.
 	 *
-	 * @return the hash sampled value
+	 * @return the hash sampled value of spatial image
 	 */
 	public HashMap<String, Integer> getHashSampledValue() {
 		return hashSampledValue;
 	}
 
 	/**
-	 * Sets the hash sampled value.
+	 * Sets the hash sampled value of spatial image.
 	 *
-	 * @param hashSampledValue the hash sampled value
+	 * @param hashSampledValue the hash sampled value of spatial image
 	 */
 	public void setHashSampledValue(HashMap<String, Integer> hashSampledValue) {
 		this.hashSampledValue = hashSampledValue;
 	}
 
 	/**
-	 * Gets the raw.
+	 * Gets the raw data of spatial image in 1D array.
 	 *
-	 * @return the raw
+	 * @return the raw of spatial image
 	 */
 	public byte[] getRaw() {
 		return raw;
 	}
 
 	/**
-	 * Sets the raw.
+	 * Sets the raw data of spatial image in 1D array.
 	 *
-	 * @param raw the new raw
+	 * @param raw the new raw data of spatial image in 1D array
 	 */
 	public void setRaw(byte[] raw) {
 		this.raw = raw;
 	}
 
 	/**
-	 * Gets the hash domain types.
+	 * Gets the hash map of domain types of spatial image.
 	 *
-	 * @return the hash domain types
+	 * @return the hash map of domain types of spatial image
 	 */
 	public HashMap<String, Integer> getHashDomainTypes() {
 		return hashDomainTypes;
 	}
 
 	/**
-	 * Sets the hash domain types.
+	 * Sets the hash map of domain types of spatial image.
 	 *
-	 * @param hashDomainTypes the hash domain types
+	 * @param hashDomainTypes the hash map of domain types of spatial image
 	 */
 	public void setHashDomainTypes(HashMap<String, Integer> hashDomainTypes) {
 		this.hashDomainTypes =  hashDomainTypes;
 	}
 	
 	/**
-	 * Creates the hash domain types.
+	 * Creates the hash map of domain types of spatial image.
+	 * The value of domain type (spatialDimensions) will be set depending on
+	 * the value of spatial ID reference (SpIdRef).
 	 */
 	public void createHashDomainTypes() {
 		hashDomainTypes = new HashMap<String, Integer>();
@@ -267,46 +283,46 @@ public class SpatialImage {
 	}
 	
 	/**
-	 * Gets the hash domain num.
+	 * Gets the hash map of domain num of spatial image.
 	 *
-	 * @return the hash domain num
+	 * @return the hash map of domain num of spatial image
 	 */
 	public HashMap<String, Integer> getHashDomainNum() {
 		return hashDomainNum;
 	}
 	
 	/**
-	 * Sets the hash domain num.
+	 * Sets the hash map of domain num of spatial image.
 	 *
-	 * @param hashDomainNum the hash domain num
+	 * @param hashDomainNum the hash map of domain num of spatial image
 	 */
 	public void setHashDomainNum(HashMap<String,Integer> hashDomainNum) {
 		this.hashDomainNum = hashDomainNum;
 	}
 
 	/**
-	 * Gets the adjacents list.
+	 * Gets the adjacents list of spatial image.
 	 *
-	 * @return the adjacents list
+	 * @return the adjacents list of spatial image
 	 */
 	public ArrayList<ArrayList<String>> getAdjacentsList() {
 		return adjacentsList;
 	}
 
 	/**
-	 * Sets the adjacents list.
+	 * Sets the adjacents list of spatial image.
 	 *
-	 * @param adjacentsList the new adjacents list
+	 * @param adjacentsList the new adjacents list of spatial image
 	 */
 	public void setAdjacentsList(ArrayList<ArrayList<String>> adjacentsList) {
 		this.adjacentsList = adjacentsList;
 	}
 
 	/**
-	 * Save as image.
+	 * Save image as TIFF file.
 	 *
-	 * @param path the path
-	 * @param name the name
+	 * @param path the path to the directory
+	 * @param name the name of TIFF file
 	 */
 	public void saveAsImage(String path, String name){
 		FileSaver fs = new FileSaver(img);
@@ -318,25 +334,25 @@ public class SpatialImage {
 	}
 
 	/**
-	 * Gets the unit.
+	 * Gets the unit of a CoordinateComponent.
 	 *
-	 * @return the unit
+	 * @return the unit of a CoordinateComponent
 	 */
 	public String getUnit() {
 		return unit;
 	}
 	
 	/**
-	 * Sets the unit.
+	 * Sets the unit of a CoordinateComponent.
 	 */
 	public void setUnit() {
 		this.unit = "um";
 	}
 
 	/**
-	 * Adjust unit.
+	 * Adjust unit of a CoordinateComponent.
 	 *
-	 * @param unit the unit
+	 * @param unit the unit of a CoodinateComponent
 	 */
 	//adjust img info to um
 	private void adjustUnit(String unit){
@@ -348,36 +364,36 @@ public class SpatialImage {
 	}
 	
 	/**
-	 * Gets the delta.
+	 * Gets the delta of spatial image.
 	 *
-	 * @return the delta
+	 * @return the delta of spatial image
 	 */
 	public Point3d getDelta(){
 		return delta;
 	}
 	
 	/**
-	 * Sets the delta.
+	 * Sets the delta of spatial image.
 	 *
-	 * @param delta the new delta
+	 * @param delta the new delta of spatial image
 	 */
 	public void setDelta(Point3d delta) {
 		this.delta = delta;
 	}
 	
 	/**
-	 * Gets the hash dom interior pt.
+	 * Gets the hash map of domain InteriorPoint of spatial image.
 	 *
-	 * @return the hash dom interior pt
+	 * @return the hash map of domain InteriorPoint of spatial image
 	 */
 	public HashMap<String, org.scijava.vecmath.Point3d> getHashDomInteriorPt() {
 		return hashDomInteriorPt;
 	}
 
 	/**
-	 * Sets the hash dom interiorpt.
+	 * Sets the hash map of domain InteriorPoint of spatial image.
 	 *
-	 * @param hashDomInteriorPt the hash dom interior pt
+	 * @param hashDomInteriorPt the hash dom InteriorPoint of spatial image
 	 */
 	public void setHashDomInteriorpt(HashMap<String,Point3d> hashDomInteriorPt) {
 		this.hashDomInteriorPt = hashDomInteriorPt;
