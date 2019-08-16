@@ -1,32 +1,27 @@
-/*******************************************************************************
- * Copyright 2015 Kaito Ii
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *******************************************************************************/
 package jp.ac.keio.bio.fun.xitosbml.xitosbml;
 import javax.swing.JOptionPane;
 
 import jp.ac.keio.bio.fun.xitosbml.util.ModelSaver;
 
-
-// TODO: Auto-generated Javadoc
 /**
- * The Class MainParametricSpatial.
+ * The class MainParametricSpatial, which implements "run Spatial Parametric SBML plugin" function.
+ * Date Created: Feb 21, 2017
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class MainParametricSpatial extends MainSpatial{
 	
-	/* (non-Javadoc)
-	 * @see ij.plugin.PlugIn#run(java.lang.String)
+	/**
+	 * Overrides ij.plugin.PlugIn#run(java.lang.String)
+	 * A dialog for specifying the correspondence between the image and the region in the cell will be displayed.
+	 * The specified image is read and the following process is performed.
+	 *
+	 * 1. Interpolate an image if it is a Z-stack image (3D image)
+	 * 2. Fill holes (blank pixels) in the image by morphology operation if exists
+	 * 3. Export generated image to spatial parametric SBML
+	 *
+	 * @param arg name of the method defined in plugins.config
 	 */
 	@Override
 	public void run(String arg) {
