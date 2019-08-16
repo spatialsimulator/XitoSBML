@@ -42,7 +42,7 @@ public class MenuColumn extends AbstractCellEditor implements TableCellRenderer,
 		this.table = table;
 		String[] s = {"From image","From file"};
 		renderButton = new JComboBox();
-		editButton = new JComboBox(s);
+		editButton = new JComboBox<>(s);
 		editButton.setName("getimage");
 		editButton.setFocusable(true);
 		editButton.addActionListener(this);
