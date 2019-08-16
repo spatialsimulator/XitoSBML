@@ -28,38 +28,42 @@ import jp.ac.keio.bio.fun.xitosbml.visual.DomainStruct;
 import jp.ac.keio.bio.fun.xitosbml.visual.Viewer;
 
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class MainSpatial.
+ * The class MainSpatial, which creates a GUI for XitoSBML.
+ * Date Created: Feb 21, 2017
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public abstract class MainSpatial implements PlugIn{
 
-	/** The document. */
+	/** The SBML document. */
 	protected SBMLDocument document;
 	
-	/** The model. */
+	/** The SBML model. */
 	protected Model model;
 	
-	/** The spatialplugin. */
+	/** The SBML spatialplugin. */
 	protected SpatialModelPlugin spatialplugin;
 
-	/** The imgexp. */
+	/** The ImageExplorer. */
 	protected ImageExplorer imgexp;
 	
-	/** The hash domain types. */
+	/** The hash map of domain types. */
 	private HashMap<String, Integer> hashDomainTypes;
 	
-	/** The hash sampled value. */
+	/** The hash map of sampled value. */
 	protected HashMap<String, Integer> hashSampledValue;
 	
 	/** The viewer. */
 	protected Viewer viewer;
 	
-	/** The sp img. */
+	/** The SpatialImage, which is a class for handling spatial image in XitoSBML. */
 	protected SpatialImage spImg;
 	
 	/**
-	 * Gui.
+	 * Create a GUI which allows users to specify the correspondence between each image
+	 * and the region in the cell.
 	 */
 	protected void gui() {
 		hashDomainTypes = new HashMap<String, Integer>();
@@ -75,13 +79,14 @@ public abstract class MainSpatial implements PlugIn{
 	}
 	
 	/**
-	 * Following process is performed to an image by this method.
+	 * Following process is performed to an image:
+	 * <ol>
+	 * <li>Interpolate an image if it is a Z-stack image (3D image)</li>
+	 * <li>Fill holes (blank pixels) in the image by morphology operation if exists</li>
+	 * </ol>
 	 *
-	 * 1. Interpolate an image if it is a Z-stack image (3D image)
-	 * 2. Fill holes (blank pixels) in the image by morphology operation if exists
-	 *
-	 * The converted image will be generated as {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage}, which is a
-	 * base class for representing spatial image in XitoSBML.
+	 * The converted image will be generated as {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage},
+	 * which is a base class for representing spatial image in XitoSBML.
 	 */
 	protected void computeImg(){
 		Interpolater interpolater = new Interpolater();
@@ -103,9 +108,9 @@ public abstract class MainSpatial implements PlugIn{
 	}
 	
 	/**
-	 * Visualize.
+	 * Visualize the spatial model with ImageJ 3D Viewer.
 	 *
-	 * @param spImg the spatial img
+	 * @param spImg the SpatialImage, which is a class for handling spatial image in XitoSBML.
 	 */
 	protected void visualize (SpatialImage spImg){
 		viewer = new Viewer();
@@ -113,7 +118,7 @@ public abstract class MainSpatial implements PlugIn{
 	}
 	
 	/**
-	 * Adds the S bases.
+	 * Create a tabbed table which allows users to add the SBases to the model through GUI.
 	 */
 	protected void addSBases(){
 		ListOf<Parameter> lop = model.getListOfParameters();
@@ -130,7 +135,7 @@ public abstract class MainSpatial implements PlugIn{
 	}
 	
 	/**
-	 * Show domain structure.
+	 * Show inclusion relationship of domains as a graph.
 	 */
 	protected void showDomainStructure(){
 		spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial");
@@ -139,16 +144,16 @@ public abstract class MainSpatial implements PlugIn{
 	}
 	
 	/**
-	 * Show step.
+	 * Visualize SpatialImage.
 	 *
-	 * @param spImg the sp img
+	 * @param spImg the SpatialImage, which is a class for handling spatial image in XitoSBML.
 	 */
 	protected void showStep(SpatialImage spImg){
 		visualize(spImg);
 	}
 
 	/**
-	 * Prints the.
+	 * Prints the SBML document to stdout.
 	 */
 	protected void print(){
 		String docStr;
