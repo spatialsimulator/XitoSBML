@@ -7,13 +7,11 @@ import javax.xml.stream.XMLStreamException;
 import jp.ac.keio.bio.fun.xitosbml.util.ModelValidator;
 
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class MainModelValidator, which implements "run Model Validation" function.
  * Date Created: Oct 1, 2015
  *
- * The Class MainModelValidator, which implements "run Model Validation" function.
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class MainModelValidator extends MainSBaseSpatial {
 

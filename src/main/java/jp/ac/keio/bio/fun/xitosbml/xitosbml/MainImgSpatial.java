@@ -7,13 +7,11 @@ import jp.ac.keio.bio.fun.xitosbml.util.ModelValidator;
 
 
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class MainImgSpatial, which implements "run Spatial Image SBML plugin" function.
  * Date Created: May 12, 2015
  *
- * The Class MainImgSpatial, which implements "run Spatial Image SBML plugin" function.
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class MainImgSpatial extends MainSpatial {
 

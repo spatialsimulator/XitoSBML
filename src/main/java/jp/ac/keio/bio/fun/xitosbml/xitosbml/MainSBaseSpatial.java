@@ -18,16 +18,18 @@ import jp.ac.keio.bio.fun.xitosbml.util.PluginConstants;
 import jp.ac.keio.bio.fun.xitosbml.visual.Viewer;
 
 /**
- * Spatial SBML Plugin for ImageJ.
+ * The class MainSBaseSpatial.
  *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class MainSBaseSpatial, which is a class for handling spatial model in XitoSBML.
+ * Main functions provided in this class are:
+ * <ul>
+ *  <li>visualization</li>
+ *  <li>validation</li>
+ * </ul>
  * Date Created: Jun 17, 2015
  *
- * The Class MainSBaseSpatial, which is a class for handling spatial model in XitoSBML.
- * Main functions provided in this class are:
- *  - visualization
- *  - validation
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public abstract class MainSBaseSpatial extends MainSpatial implements PlugIn{
 	

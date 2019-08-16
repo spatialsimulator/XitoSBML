@@ -6,13 +6,11 @@ import jp.ac.keio.bio.fun.xitosbml.util.ModelSaver;
 import jp.ac.keio.bio.fun.xitosbml.util.ModelValidator;
 
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class MainModelEdit, which implements "run Model Editor" function.
  * Date Created: Aug 28, 2015
  *
- * The Class MainModelEdit, which implements "run Model Editor" function.
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class MainModelEdit extends MainSBaseSpatial {
 
