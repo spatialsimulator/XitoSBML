@@ -6,13 +6,13 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class ComboBoxRenderer, which renders a combobox.
+ * This class is not used in current implementation of XitoSBML.
  * Date Created: Aug 30, 2015
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class ComboBoxRenderer extends JLabel implements ListCellRenderer<Object> {
 	
@@ -31,8 +31,16 @@ public class ComboBoxRenderer extends JLabel implements ListCellRenderer<Object>
         this.title = title;
     }
 
-    /* (non-Javadoc)
+    /**
+     * Overrides {@link javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)}
      * @see javax.swing.ListCellRenderer#getListCellRendererComponent(javax.swing.JList, java.lang.Object, int, boolean, boolean)
+     *
+     * @param list the JList object
+     * @param value the value returned by list.getModel().getElementAt(index).
+     * @param index cells index
+     * @param isSelected is cell selected
+     * @param hasFocus has focus
+     * @return A component whose paint() method will render the specified value.
      */
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value,

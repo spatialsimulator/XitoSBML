@@ -4,18 +4,19 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.AbstractCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JTable;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class MenuColumn.
+ * The class MenuColumn, which generates a GUI for XitoSBML.
+ * This class is not used in current implementation of XitoSBML.
+ * Date Created: Feb 21, 2017
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 @SuppressWarnings("serial")
 public class MenuColumn extends AbstractCellEditor implements TableCellRenderer, TableCellEditor, ActionListener {
@@ -33,8 +34,8 @@ public class MenuColumn extends AbstractCellEditor implements TableCellRenderer,
 	/**
 	 * Instantiates a new menu column.
 	 *
-	 * @param table the table
-	 * @param column the column
+	 * @param table the JTable object
+	 * @param column the number of columns
 	 */
 	public MenuColumn(JTable table, int column){
 		super();
@@ -50,33 +51,56 @@ public class MenuColumn extends AbstractCellEditor implements TableCellRenderer,
 		columnModel.getColumn(column).setCellEditor(this);
 	}
 	
-	/* (non-Javadoc)
+	/**
+     * Not used in this class
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 * @param arg0 ActionEvent
 	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * Overrides javax.swing.CellEditor#getCellEditorValue()
 	 * @see javax.swing.CellEditor#getCellEditorValue()
+	 * @return the value stored in the editor
 	 */
 	@Override
 	public Object getCellEditorValue() {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Sets an initial value for the editor.
+	 * Overrides {@link javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)}
 	 * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean, int, int)
+	 *
+	 * @param table the JTable object
+	 * @param value the value of the cell to be edited
+	 * @param isSelected is selected
+	 * @param row the row of the cell to be edited
+	 * @param column the column of the cell to be edited
+	 * @return the component for editing
 	 */
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value,
-			boolean isSelected, int hasFocus, int row) {
+			boolean isSelected, int row, int column) {
 		return editButton;
 	}
 
-	/* (non-Javadoc)
+	/**
+     * Returns the component used for drawing the cell.
+	 * Overrides {@link javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)}
 	 * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+     *
+	 * @param table the JTable object
+	 * @param value the value of the cell to be edited
+	 * @param isSelected is selected
+	 * @param hasFocus if true, render cell appropriately.
+	 * @param row the row of the cell to be edited
+	 * @param column the column of the cell to be edited
+	 * @return the component used for drawing the cell.
 	 */
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
@@ -94,8 +118,5 @@ public class MenuColumn extends AbstractCellEditor implements TableCellRenderer,
          }
 		return renderButton;
 	}
-
-
-
 
 }
