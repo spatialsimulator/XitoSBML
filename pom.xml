@@ -134,6 +134,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <locale>en</locale>
+        </configuration>
         <executions>
           <execution>
             <id>attach-javadocs</id>
