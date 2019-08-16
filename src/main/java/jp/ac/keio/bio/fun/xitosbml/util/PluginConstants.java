@@ -1,12 +1,12 @@
 package jp.ac.keio.bio.fun.xitosbml.util;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class PluginConstants, which contains constant values used in XitoSBML.
+ * This class also contains a method to generate CellDesigner annotation string.
  * Date Created: Jun 20, 2015
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class PluginConstants {
 	
@@ -48,13 +48,18 @@ public class PluginConstants {
 
 	public final static String TAG_CELLDESIGNER_EXTENSIONTOPLEVEL  = "extension";
 
-	public static String addCellDesignerAnnotationTag(String str){
+	/**
+	 * Generate CellDesigner annotation with given annotation string.
+	 * @param annotationStr the CellDesigner annotation string
+	 * @return generated CellDesigner annotation string
+	 */
+	public static String addCellDesignerAnnotationTag(String annotationStr){
 		
 		String rtn =	TAG_START_ANNOTATION			+
 		    	TAG_START_CELLDESIGNER					+
 		    	TAG_CELLDESIGNER_EXTENSIONTOPLEVEL	 	+
 		    	">"										+
-		    	str										+
+		    	annotationStr										+
 		    	TAG_END_CELLDESIGNER					+
 		    	TAG_CELLDESIGNER_EXTENSIONTOPLEVEL	 	+
 		    	">"										+

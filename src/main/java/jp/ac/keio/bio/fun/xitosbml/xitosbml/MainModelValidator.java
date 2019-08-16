@@ -20,7 +20,9 @@ public class MainModelValidator extends MainSBaseSpatial {
 	 * A file dialog for validating the model will be displayed.
 	 * Users will select a model (SBML file) through the graphical user interface,
 	 * and then XitoSBML will will check whether the SBML document has correct
-	 * level, version and extension. Moreover, if XitoSBML is connected to an internet,
+	 * level, version and extension. Checking missing boundary conditions for
+	 * Species is also done by this method.
+	 * Moreover, if XitoSBML is connected to an internet,
 	 * then it will send the model to the online SBML validator, which will run
 	 * a semantic validation, and show the validation result.
 	 *
