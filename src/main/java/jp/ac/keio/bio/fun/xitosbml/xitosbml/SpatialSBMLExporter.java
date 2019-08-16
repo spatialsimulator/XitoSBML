@@ -56,14 +56,12 @@ import jp.ac.keio.bio.fun.xitosbml.util.PluginConstants;
 import jp.ac.keio.bio.fun.xitosbml.util.PluginInfo;
 
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class SpatialSBMLExporter, which converts a spatial model generated from
+ * microscopic images to an SBML model.
  * Date Created: Feb 21, 2017
  *
- * The Class SpatialSBMLExporter, which converts a spatial model generated from
- * microscopic images to an SBML model.
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class SpatialSBMLExporter{
 
@@ -82,22 +80,22 @@ public class SpatialSBMLExporter{
   /** The geometry. */
   private Geometry geometry;
   
-  /** The hash domain types. */
+  /** The hash map of domain types. */
   private HashMap<String, Integer> hashDomainTypes;
   
-  /** The hash sampled value. */
+  /** The hash map of sampled value. */
   private HashMap<String, Integer> hashSampledValue;
   
-  /** The hash domain num. */
+  /** The hash map of domain num. */
   private HashMap<String, Integer> hashDomainNum;
   
-  /** The hash dom interior pt. */
+  /** The hash map of domain InteriorPoint of spatial image. */
   private HashMap<String,Point3d> hashDomInteriorPt;
   
-  /** The adjacents list. */
+  /** The adjacents list of spatial image. */
   private ArrayList<ArrayList<String>> adjacentsList;
   
-  /** The raw data. */
+  /** The raw data of spatial image in 1D array. */
   private byte[] raw;
   
   /** The size of an image (width, height and depth). */
@@ -150,17 +148,19 @@ public class SpatialSBMLExporter{
 	/**
 	 * Creates the geometry elements.
 	 * This method will create following objects:
-	 *  - Geometry
-	 *  - CoordinateComponent
-	 *  - DomainType
-	 *  - Domain
-     *  - AdjacentDomains
-	 *  - Compartment
-	 *  - CompartmentMapping
-     *  - SampledFieldGeometry
-	 *  - SampledField
-	 *  - UnitDefinition
-	 *  - Unit
+     * <ul>
+	 *  <li>Geometry</li>
+	 *  <li>CoordinateComponent</li>
+	 *  <li>DomainType</li>
+	 *  <li>Domain</li>
+     *  <li>AdjacentDomains</li>
+	 *  <li>Compartment</li>
+	 *  <li>CompartmentMapping</li>
+     *  <li>SampledFieldGeometry</li>
+	 *  <li>SampledField</li>
+	 *  <li>UnitDefinition</li>
+	 *  <li>Unit</li>
+     * </ul>
      * CellDesigner annotation will be added in addOutside() method to support
 	 * spatial modeling on CellDesigner.
 	 */
@@ -268,6 +268,8 @@ public class SpatialSBMLExporter{
 
 	/**
 	 * Adds the adjacent domains.
+	 * This method adds membrane domains and adjacents to the model.
+     * The membrane domain contains a string "_membrane" in its SpatialId.
 	 */
 	public void addAdjacentDomains() { // adds membrane domains and adjacents
 		WeakHashMap<String, Integer> hashMembrane = new WeakHashMap<String, Integer>();
@@ -277,7 +279,7 @@ public class SpatialSBMLExporter{
 			String two = e.get(1).substring(0, e.get(1).length());
 			two = two.replaceAll("[0-9]", "");
 			//DomainType dt = geometry.getListOfDomainTypes().get(one + "_" + two + "_membrane");
-			 DomainType dt = (DomainType) getFromSpatialList(geometry.getListOfDomainTypes(), one + "_" + two + "_membrane");
+			DomainType dt = (DomainType) getFromSpatialList(geometry.getListOfDomainTypes(), one + "_" + two + "_membrane");
 			 
 			if (hashMembrane.containsKey(dt.getSpatialId())) {
 				hashMembrane.put(dt.getSpatialId(), hashMembrane.get(dt.getSpatialId()) + 1);
@@ -296,10 +298,12 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * Adds the domains.
+	 * Adds domains to corresponding domaintypes.
+	 * If SpatialId contains a string "membrane", it will be handled as membrain domain,
+	 * thus InteriorPoint will not be added to the domain.
 	 */
 	public void addDomains() {
-     for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    			//add domains to corresponding domaintypes
+     for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    	//add domains to corresponding domaintypes
     	 //DomainType dt = geometry.getListOfDomainTypes().get(e.getKey());
     	 DomainType dt = (DomainType) getFromSpatialList(geometry.getListOfDomainTypes(),e.getKey());
  
@@ -317,8 +321,15 @@ public class SpatialSBMLExporter{
 				}
 			}
      	}   
-	}	
-	
+	}
+
+	/**
+     * Returns SpatialNamedSBase object which has SpatialId "id" from given list of Objects.
+     * If there is no object in the list, then returns null.
+	 * @param list list of objects (ex. SpatialNamedSbase)
+	 * @param id SpatialId
+	 * @return SpatialNamedSBase object
+	 */
 	public SpatialNamedSBase getFromSpatialList(ListOf<?> list, String id){
 		for(Object o : list){
 			SpatialNamedSBase sbase = (SpatialNamedSBase) o;
@@ -330,7 +341,9 @@ public class SpatialSBMLExporter{
 	}
 	
   	/**
-	 * Adds the domain types.
+	 * Adds the domain types to the Geometry object.
+     * SpatialId and SpatialDimensions will be set to generated domain type.
+	 * Also, SpatialDimensions, SpatialId and its name will be added to the compartment.
 	 */
 	public void addDomainTypes() {
 		for (Entry<String, Integer> e : hashDomainTypes.entrySet()) {
@@ -362,9 +375,13 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * Adds the coordinates.
+	 * Adds the coordinates to the Geometry object.
+	 * It alsow sets the minimum and maximum values of the coordinate axis (boundary) to
+	 * a CoordinateComponent object which explicitly defines a coordinate component of
+	 * the coordinate axes.
+     * If the image is a 3D image, then coordz (Z axis) will be set.
 	 */
-	public void addCoordinates() { 
+	public void addCoordinates() {
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
 		ccx.setSpatialId("coordx");
 		ccx.setType(CoordinateKind.cartesianX);
@@ -393,7 +410,7 @@ public class SpatialSBMLExporter{
 	 * @param spId the spatialId as String
 	 * @param min the minimum value of the coordinate axis
 	 * @param max the maximum value of the coordinate axis
-	 * @param delta the delta (just kept for backward compatibility)
+	 * @param delta the delta
 	 */
 	//TODO fix bound?
 	public void setCoordinateBoundary(CoordinateComponent coordinateComponent, String spId, double min, double max, double delta) {
@@ -408,7 +425,8 @@ public class SpatialSBMLExporter{
 	}
   
 	/**
-	 * Adds the coord parameter.
+	 * Adds the global Parameter to each CoordinateComponent.
+	 * The id and the value of created will be set as "coordinate"+SpatialId and 0d respectively.
 	 */
 	public void addCoordParameter() {
 		ListOf<CoordinateComponent> lcc = geometry.getListOfCoordinateComponents();
@@ -446,7 +464,7 @@ public class SpatialSBMLExporter{
 	}
 	
 	/**
-	 * Adds the units.
+	 * Adds the units (length, area and volume) to the model.
 	 */
 	public void addUnits(){
 		if(unit == null) 
@@ -478,6 +496,7 @@ public class SpatialSBMLExporter{
 
 	/**
 	 * Gets the unit multiplier.
+	 * Currently, it only supports "um".
 	 *
 	 * @param unit the unit
 	 * @return the unit multiplier
@@ -488,25 +507,40 @@ public class SpatialSBMLExporter{
 	}
 	
 	/**
-	 * Creates the parametric.
+	 * Creates the ParametricGeometry.
+	 * This method will create following objects:
+	 * <ul>
+	 *  <li>Geometry</li>
+	 *  <li>CoordinateComponent</li>
+	 *  <li>DomainType</li>
+	 *  <li>Domain</li>
+	 *  <li>AdjacentDomains</li>
+	 *  <li>Compartment</li>
+	 *  <li>CompartmentMapping</li>
+	 *  <li>SpatialPoints</li>
+	 *  <li>ParametricObject</li>
+	 * </ul>
 	 *
-	 * @param hashMap the hash vertices
-	 * @param hashMap2 the hash bound
+	 * @param hashVertices the hash map of vertices
+	 * @param hathBound the hash map of boundary
 	 */
-	public void createParametric(HashMap<String, List<Point3d>> hashMap, HashMap<String, Point3d> hashMap2) {
+	public void createParametric(HashMap<String, List<Point3d>> hashVertices, HashMap<String, Point3d> hathBound) {
 	    geometry = spatialplugin.createGeometry();
 	    geometry.setCoordinateSystem(GeometryKind.cartesian);
-	    addCoordinates(hashMap2);                        
-	    addDomainTypes();                         
-	    addDomains();                           
-	    addAdjacentDomains();  
-	    addParaGeoDefinitions(hashMap, hashMap2);    
+	    addCoordinates(hathBound);
+	    addDomainTypes();
+	    addDomains();
+	    addAdjacentDomains();
+	    addParaGeoDefinitions(hashVertices, hathBound);
 	  }
-  
+
 	/**
-	 * Adds the coordinates.
+	 * Adds the coordinates to the Geometry object.
+	 * It alsow sets the minimum and maximum values of the coordinate axis (boundary) to
+	 * a CoordinateComponent object which explicitly defines a coordinate component of
+	 * the coordinate axes.
 	 *
-	 * @param hashBound the hash bound
+	 * @param hashBound the hash map of boundary
 	 */
 	public void addCoordinates(HashMap<String, Point3d> hashBound) { 
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
@@ -527,10 +561,13 @@ public class SpatialSBMLExporter{
 	}
 	
 	/**
-	 * Adds the para geo definitions.
+	 * Adds the parametric geometry definitions.
+     * SpatialPoints will be set to ParametricGeometry.
+     * ParametricObject will store double value, and the polygon will be triangle.
+	 * Data compression is currently disabled.
 	 *
-	 * @param hashVertices the hash vertices
-	 * @param hashBound the hash bound
+	 * @param hashVertices the hash map of vertices
+	 * @param hashBound the hash map of boundary
 	 */
 	public void addParaGeoDefinitions(HashMap<String, List<Point3d>> hashVertices, HashMap<String, Point3d> hashBound) {
 		ParametricGeometry pg = geometry.createParametricGeometry();
@@ -557,10 +594,13 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * Adds the unique vertices.
+	 * Adds the unique vertices to the SpatialPoints object.
+	 * The set of unique vertices (an ArrayList of Point3d object: point0(x0, y0, z0),
+	 * point1(x1, y1, z1) will be stored in an 1D array of String as
+	 * ["x0", "y0", "z0", "x1", "y1", "z1", ...].
 	 *
-	 * @param sp the sp
-	 * @param uniquePointSet the unique point set
+	 * @param sp the SpatialPoints of the ParametricGeometry
+	 * @param uniquePointSet the ArrayList of Point3d (unique point set)
 	 */
 	public void addUniqueVertices(SpatialPoints sp, ArrayList<Point3d> uniquePointSet){
 		Iterator<Point3d> pIt = uniquePointSet.iterator();
@@ -582,11 +622,13 @@ public class SpatialSBMLExporter{
 	}
 	
 	/**
-	 * Sets the point index.
+	 * Sets the index of unique vertices to the SpatialPoints object.
+	 * The set of index of unique vertices (an array of indices) will be stored
+	 * in an 1D array of String as ["0", "3", "1", "2", ...].
 	 *
-	 * @param po the po
-	 * @param list the list
-	 * @param uniquePointSet the unique point set
+	 * @param po the ParametricObject
+	 * @param list the list of Point3d
+	 * @param uniquePointSet the ArrayList of Point3d (unique point set)
 	 */
 	public void setPointIndex(ParametricObject po, List<Point3d> list, ArrayList<Point3d> uniquePointSet) {
 		int[] points = new int[list.size()];
@@ -602,7 +644,7 @@ public class SpatialSBMLExporter{
 	}
 	
 	/**
-	 * Add Outside annotation for celldesigner.
+	 * Add the outside annotation to Compartment for CellDesigner.
 	 */
 	private void addOutside() {
 		//one = inner domain, two = outer domain
@@ -636,9 +678,9 @@ public class SpatialSBMLExporter{
 	}
 
 	/**
-	 * Gets the mapped compartment.
+	 * Gets the mapped compartment for given domain type.
 	 *
-	 * @param id the id
+	 * @param id the id of domain type
 	 * @return the mapped compartment
 	 */
 	private Compartment getMappedCompartment(String id){
@@ -654,10 +696,10 @@ public class SpatialSBMLExporter{
 	}
 	
 	/**
-	 * Creates the outside annotation.
+	 * Creates the outside annotation to Compartment for CellDesigner.
 	 *
-	 * @param outside the outside
-	 * @return the XML node
+	 * @param outside the id of outside compartment
+	 * @return the XML node as String
 	 */
 	private String createOutsideAnnotationString(String outside){
 		return "<celldesigner:outside>" + outside + "</celldesigner:outside>\n";
