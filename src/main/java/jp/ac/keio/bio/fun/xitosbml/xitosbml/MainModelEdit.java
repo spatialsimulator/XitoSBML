@@ -18,13 +18,14 @@ public class MainModelEdit extends MainSBaseSpatial {
 	 * Overrides ij.plugin.PlugIn#run(java.lang.String)
 	 * A dialog for editing the model will be displayed.
      * Users can add, modify following SBML elements and save the model through the dialog.
-	 *
-     * - Species
-	 * - Parameter
-	 * - Advection coefficient
-	 * - Diffusion coefficient
-	 * - Boundary condition
-	 * - Reaction
+	 * <ul>
+     * <li>Species</li>
+	 * <li>Parameter</li>
+	 * <li>Advection coefficient</li>
+	 * <li>Diffusion coefficient</li>
+	 * <li>Boundary condition</li>
+	 * <li>Reaction</li>
+	 * </ul>
 	 *
      * Once the model is saved as SBML, XitoSBML will visualize the model in 3D space,
 	 * and execute a syntax validation for both SBML core and spatial extension by using

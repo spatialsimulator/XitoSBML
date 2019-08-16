@@ -19,10 +19,11 @@ public class MainImgSpatial extends MainSpatial {
 	 * Overrides ij.plugin.PlugIn#run(java.lang.String)
      * A dialog for specifying the correspondence between the image and the region in the cell will be displayed.
 	 * The specified image is read and the following process is performed.
-	 *
-     * 1. Interpolate an image if it is a Z-stack image (3D image)
-	 * 2. Fill holes (blank pixels) in the image by morphology operation if exists
-	 * 3. Export generated image to spatial SBML
+	 * <ol>
+     * <li>Interpolate an image if it is a Z-stack image (3D image)</li>
+	 * <li>Fill holes (blank pixels) in the image by morphology operation if exists</li>
+	 * <li>Export generated image to spatial SBML</li>
+	 * </ol>
 	 *
 	 * @param arg name of the method defined in plugins.config
 	 */
