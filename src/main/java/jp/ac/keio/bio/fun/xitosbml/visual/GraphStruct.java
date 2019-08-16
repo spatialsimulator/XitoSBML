@@ -17,21 +17,25 @@ import org.jgrapht.graph.ListenableDirectedGraph;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.swing.mxGraphComponent;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class GraphStruct.
+ * The class GraphStruct, which defines the structure of a graph, and visualize the graph with JGraphX.
+ * The graph used in XitoSBML is an inclusion relationship of domains.
+ * Date Created: Feb 21, 2017
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 @SuppressWarnings("serial")
 public class GraphStruct extends JFrame{
    
-	/** The g. */
+	/** The graph. */
 	ListenableGraph<String, DefaultEdge> g = new ListenableDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
     
-    /** The jgx adapter. */
+    /** The JGraphXAdapter. */
     JGraphXAdapter<String, DefaultEdge>  jgxAdapter = new JGraphXAdapter<String, DefaultEdge>(g);
 
 	/**
-	 * Instantiates a new graph struct.
+	 * Instantiates a new graph structure.
 	 */
 	GraphStruct(){
 		super("Domain Hierarchical Structure");
@@ -43,26 +47,26 @@ public class GraphStruct extends JFrame{
 	}
 	
 	/**
-	 * Adds the vertex.
+	 * Adds a vertex to the graph.
 	 *
-	 * @param name the name
+	 * @param name the name of new vertex
 	 */
 	public void addVertex(String name){
 		g.addVertex(name);
 	}
 	
 	/**
-	 * Adds the edge.
+	 * Adds an edge from vertex1 to vertex2 to the graph.
 	 *
-	 * @param v1 the v 1
-	 * @param v2 the v 2
+	 * @param v1 the name of vertex1
+	 * @param v2 the name of vertex2
 	 */
 	public void addEdge(String v1, String v2){
 		g.addEdge(v1, v2);
 	}
 	
 	/**
-	 * Visualize.
+	 * Visualize the Graph.
 	 */
 	public void visualize(){
 		mxHierarchicalLayout layout = new mxHierarchicalLayout(jgxAdapter);	
@@ -78,9 +82,8 @@ public class GraphStruct extends JFrame{
 	}
 
 	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
+	 * Example main() method which will launch a GUI and draw an inclusion relationship of domains as a graph.
+	 * @param args an array of command-line arguments for the application
 	 */
 	public static void main(String[] args){
 	        GraphStruct graph = new GraphStruct();
@@ -128,5 +131,4 @@ public class GraphStruct extends JFrame{
 	   
 	}
 	
-		
 }

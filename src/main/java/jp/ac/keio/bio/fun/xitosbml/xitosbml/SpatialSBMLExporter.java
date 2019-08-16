@@ -80,16 +80,16 @@ public class SpatialSBMLExporter{
   /** The geometry. */
   private Geometry geometry;
   
-  /** The hash map of domain types. */
+  /** The hashmap of domain types. */
   private HashMap<String, Integer> hashDomainTypes;
   
-  /** The hash map of sampled value. */
+  /** The hashmap of sampled value. */
   private HashMap<String, Integer> hashSampledValue;
   
-  /** The hash map of domain num. */
+  /** The hashmap of domain num. */
   private HashMap<String, Integer> hashDomainNum;
   
-  /** The hash map of domain InteriorPoint of spatial image. */
+  /** The hashmap of domain InteriorPoint of spatial image. */
   private HashMap<String,Point3d> hashDomInteriorPt;
   
   /** The adjacents list of spatial image. */
@@ -521,8 +521,8 @@ public class SpatialSBMLExporter{
 	 *  <li>ParametricObject</li>
 	 * </ul>
 	 *
-	 * @param hashVertices the hash map of vertices
-	 * @param hathBound the hash map of boundary
+	 * @param hashVertices the hashmap of vertices
+	 * @param hathBound the hashmap of boundary
 	 */
 	public void createParametric(HashMap<String, List<Point3d>> hashVertices, HashMap<String, Point3d> hathBound) {
 	    geometry = spatialplugin.createGeometry();
@@ -540,7 +540,7 @@ public class SpatialSBMLExporter{
 	 * a CoordinateComponent object which explicitly defines a coordinate component of
 	 * the coordinate axes.
 	 *
-	 * @param hashBound the hash map of boundary
+	 * @param hashBound the hashmap of boundary
 	 */
 	public void addCoordinates(HashMap<String, Point3d> hashBound) { 
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
@@ -566,8 +566,8 @@ public class SpatialSBMLExporter{
      * ParametricObject will store double value, and the polygon will be triangle.
 	 * Data compression is currently disabled.
 	 *
-	 * @param hashVertices the hash map of vertices
-	 * @param hashBound the hash map of boundary
+	 * @param hashVertices the hashmap of vertices
+	 * @param hashBound the hashmap of boundary
 	 */
 	public void addParaGeoDefinitions(HashMap<String, List<Point3d>> hashVertices, HashMap<String, Point3d> hashBound) {
 		ParametricGeometry pg = geometry.createParametricGeometry();

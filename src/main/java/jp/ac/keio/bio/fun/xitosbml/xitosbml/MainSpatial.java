@@ -49,10 +49,10 @@ public abstract class MainSpatial implements PlugIn{
 	/** The ImageExplorer. */
 	protected ImageExplorer imgexp;
 	
-	/** The hash map of domain types. */
+	/** The hashmap of domain types. */
 	private HashMap<String, Integer> hashDomainTypes;
 	
-	/** The hash map of sampled value. */
+	/** The hashmap of sampled value. */
 	protected HashMap<String, Integer> hashSampledValue;
 	
 	/** The viewer. */

@@ -24,34 +24,39 @@ import org.sbml.jsbml.ext.spatial.SampledVolume;
 import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
 
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class DomainStruct.
+ * The class DomainStruct, which defines the structure of domains, and visualize the graph with JGraphX.
+ * The graph used in XitoSBML is an inclusion relationship of domains.
+ * Date Created: Feb 21, 2017
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class DomainStruct {
 
-	/** The dimension. */
+	/** The dimension of CoordinateComponent. */
 	private int dimension;
 	
-	/** The lodt. */
+	/** The list of DomainTypes. */
 	private ListOf<DomainType> lodt;
 	
-	/** The lod. */
+	/** The list of Domains. */
 	private ListOf<Domain> lod;
 	
-	/** The load. */
+	/** The list of AdjacentDomains. */
 	private ListOf<AdjacentDomains> load;
 		
-	/** The ordered list. */
+	/** The ordered list of DomainTypes. */
 	private List<String> orderedList = new ArrayList<String>();
 	
-	/** The graph struct. */
+	/** The graph structure of an inclusion relationship of domains. */
 	private GraphStruct graphStruct;
 	
 	/**
-	 * Show.
+	 * Visualize the graph structure of an inclusion relationship of domains.
+	 * Currently it supports the domain order of SampledFieldGeometry and AnalyticGeometry.
 	 *
-	 * @param geometry the geometry
+	 * @param geometry the geometry obtained from SBML model
 	 */
 	public void show(Geometry geometry){
 		this.lodt = geometry.getListOfDomainTypes();
@@ -78,7 +83,7 @@ public class DomainStruct {
 	/**
 	 * Creates the analytic domain order.
 	 *
-	 * @param listOf the list of
+	 * @param listOf the list of AnalyticVolume
 	 */
 	private void createAnalyticDomainOrder(ListOf<AnalyticVolume> listOf){
 		int numDom = (int) listOf.size();
@@ -96,7 +101,7 @@ public class DomainStruct {
 	/**
 	 * Creates the sampled domain order.
 	 *
-	 * @param losv the losv
+	 * @param losv the list of SampledVolume
 	 */
 	private void createSampledDomainOrder(ListOf<SampledVolume> losv){
 		int numDom = (int) losv.size();
@@ -116,10 +121,10 @@ public class DomainStruct {
 	}
 		
 	/**
-	 * Edge.
-	 * TODO change to a better algorithm since this assumes the order of load to be specified
+	 * Add edges to the graph structure of an inclusion relationship of domains.
+	 * TODO change to a better algorithm since this assumes the order of list of AdjacentDomains to be specified
 	 *
-	 * @param load the load
+	 * @param load the list of AdjacentDomains
 	 */
 	public void addEdge(ListOf<AdjacentDomains> load){
 		for(int i = 0; i < load.size(); i+=2){
@@ -132,12 +137,11 @@ public class DomainStruct {
 				graphStruct.addEdge(dom2, dom1);
 		}
 	}
-	
-	
+
 	/**
-	 * Vertex.
+	 * Add vertices to the graph structure of an inclusion relationship of domains.
 	 *
-	 * @param lod the lod
+	 * @param lod the list of Domains
 	 */
 	public void addVertex(ListOf<Domain> lod) {
 		Domain dom;
@@ -147,50 +151,62 @@ public class DomainStruct {
 				graphStruct.addVertex(dom.getSpatialId());
 		}
 	}
-	
-	public DomainType getDomainType(String id){
+
+	/**
+	 * Get domain type by given SpatialId.
+	 *
+	 * @param spId the SpatialId of domain type as String
+	 * @return
+	 */
+	public DomainType getDomainType(String spId){
 	   	 for(DomainType d: lodt){
-   		 if(d.getSpatialId().equals(id)){
+   		 if(d.getSpatialId().equals(spId)){
    			 return d;
    		 }
    	 }
 		return null;
 	}
-	
+
 	/**
-	 * Gets the order.
+	 * Compare the order of given DomainType1 and 2, and then returns true if
+	 * the order of DomainType1 is larger than that of DomainType2.
 	 *
-	 * @param dom1 the dom 1
-	 * @param dom2 the dom 2
+	 * @param domType1 the DomainType 1
+	 * @param domType2 the DomainType 2
 	 * @return the order
 	 */
-	boolean getOrder(String dom1, String dom2){
-		 dom1 = dom1.replaceAll("[0-9]","");
-		 dom2 = dom2.replaceAll("[0-9]","");
-		if(orderedList.indexOf(dom1) > orderedList.indexOf(dom2)) 
+	boolean getOrder(String domType1, String domType2){
+		 domType1 = domType1.replaceAll("[0-9]","");
+		 domType2 = domType2.replaceAll("[0-9]","");
+		if(orderedList.indexOf(domType1) > orderedList.indexOf(domType2))
 			return true; 
 		else	
 			return false;
 	}
 
 	/**
-	 * Gets the graph struct.
+	 * Gets the graph structure.
 	 *
-	 * @return the graph struct
+	 * @return the graph structure
 	 */
 	public GraphStruct getGraphStruct() {
 		return graphStruct;
 	}
 
 	/**
-	 * Sets the graph struct.
+	 * Sets the graph structure.
 	 *
-	 * @param graphStruct the new graph struct
+	 * @param graphStruct the new graph structure
 	 */
 	public void setGraphStruct(GraphStruct graphStruct) {
 		this.graphStruct = graphStruct;
 	}
-	
+
+	/**
+	 * Example main() method which will launch a GUI and draw an inclusion relationship of domains as a graph.
+     * This example requires a specific SBML model "analytic_3d.xml" located under the "sample/" directory.
+	 * @param args an array of command-line arguments for the application
+	 */
 	public static void main(String[] args){
 		try {
 			SBMLDocument d = SBMLReader.read(new File("sample/analytic_3d.xml"));

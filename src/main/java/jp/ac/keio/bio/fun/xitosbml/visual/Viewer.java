@@ -19,46 +19,50 @@ import isosurface.MeshGroup;
 import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
 
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Viewer.
+ * The class Viewer, which visualizes a SpatialImage object on ImageJ 3D Viewer.
+ * This class also contains some methods to handle ImageJ image object (ImagePlus).
+ * Date Created: Feb 21, 2017
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class Viewer {
 	
-	/** The univ. */
+	/** The Image3DUniverse, which is used in ImageJ 3D Viewer. */
 	private Image3DUniverse univ;
 	
 	/** The colors. */
 	private Vector<Color3f> colors = new Vector<Color3f>();
 	
-	/** The width. */
+	/** The width of an image. */
 	private int width;
 	
-	/** The height. */
+	/** The height of an image. */
 	private	int height;
 	
-	/** The depth. */
+	/** The depth of an image. */
 	private int depth;
 	
-	/** The hash doms. */
+	/** The hashmap of sampled value of spatial image.  */
 	private HashMap<String, Integer> hashDoms;
 	
-	/** The hash img. */
+	/** The hashmap of ImageJ image object (ImagePlus). */
 	private HashMap<String, ImagePlus> hashImg = new HashMap<String, ImagePlus>();
 	
-	/** The raw mat. */
+	/** The raw data of spatial image in 1D array. */
 	private byte[] rawMat;
 	
-	/** The hash vertices. */
+	/** The hashmap of vertices. */
 	private HashMap<String, List<Point3d>> hashVertices = new HashMap<String, List<Point3d>>();
 	
-	/** The hash bound. */
+	/** The hashmap of boundary. */
 	private HashMap<String, Point3d> hashBound = new HashMap<String, Point3d>();
 	
 	/**
-	 * View.
+	 * Visualize SpatialImage object on ImageJ 3D Viewer
 	 *
-	 * @param spImg the sp img
+	 * @param spImg the The SpatialImage, which is a class for handling spatial image in XitoSBML.
 	 */
 	public void view(SpatialImage spImg){
 		univ = new Image3DUniverse();
@@ -73,7 +77,7 @@ public class Viewer {
 	}
 	
 	/**
-	 * Sets the images.
+	 * Sets images to Image3DUniverse, and show the 3D space with ImageJ 3D Viewer.
 	 */
 	private void setImages(){
 		int i = 0;
@@ -86,7 +90,9 @@ public class Viewer {
 	}
 	
 	/**
-	 * Find points.
+	 * Find points in the 3D universe.
+	 * If the 3D space contains MethGroup, then add all the vertices of the mesh to hashmap of vertices.
+	 * Minimum and Maximum boundary is also assigned as points.
 	 */
 	public void findPoints() {
 		for (Entry<String, ImagePlus> e : hashImg.entrySet()) {
@@ -110,9 +116,9 @@ public class Viewer {
 	}
 	
 	/**
-	 * Sets the max bound.
+	 * Sets the maximum boundary to the hashmap of boundary.
 	 *
-	 * @param p the new max bound
+	 * @param p the new maximum boundary
 	 */
 	private void setMaxBound(Point3d p){
 		if(!hashBound.containsKey("max")) hashBound.put("max", p);
@@ -125,9 +131,9 @@ public class Viewer {
 	}
 	
 	/**
-	 * Sets the min bound.
+	 * Sets the minimum boundary to the hashmap of boundary.
 	 *
-	 * @param p the new min bound
+	 * @param p the new minimum boundary
 	 */
 	private void setMinBound(Point3d p){
 		if(!hashBound.containsKey("min")) hashBound.put("min", p);
@@ -173,7 +179,8 @@ public class Viewer {
 	}
 	
 	/**
-	 * Separate img.
+	 * Split images to each domain images, and then convert it to label image,
+	 * which is a binarised image of each domain.
 	 */
 	private void separateImg(){
 		for(Entry<String, Integer> e : hashDoms.entrySet()){
@@ -187,8 +194,10 @@ public class Viewer {
 
 	/**
 	 * Creates the label image.
+	 * If a pixel contains an identical value with given pixVal, then replace its value to 255.
+	 * This procedure will create a binarised image, which represents the domain with white pixels.
 	 *
-	 * @param pixVal the pix val
+	 * @param pixVal the pixel value of domain
 	 * @return the image stack
 	 */
 	private ImageStack createLabelImage(int pixVal){
@@ -205,15 +214,15 @@ public class Viewer {
 	}
 	
 	/**
-	 * Sets the stack.
+	 * Sets the stack with given 1D array of pixel values.
 	 *
-	 * @param pixels the pixels
+	 * @param pixels the 1D array of pixel values, which represents the 3D space
 	 * @return the image stack
 	 */
 	private ImageStack setStack(byte[] pixels){
 		ImageStack imstack = new ImageStack(width, height);
 		for(int d = 0 ; d < depth ; d++){
-			byte matrix[] = new byte[width * height];
+			byte[] matrix = new byte[width * height];
 			System.arraycopy(pixels, d * height * width, matrix, 0, matrix.length);
 			imstack.addSlice(new ByteProcessor(width,height,matrix,null));
 		}
@@ -221,18 +230,18 @@ public class Viewer {
 	}
 	
 	/**
-	 * Gets the hash vertices.
+	 * Gets the hashmap of vertices.
 	 *
-	 * @return the hash vertices
+	 * @return the hashmap of vertices
 	 */
 	public HashMap<String, List<Point3d>> gethashVertices(){
 		return hashVertices;
 	}
 
 	/**
-	 * Gets the hash bound.
+	 * Gets the hashmap of boundary.
 	 *
-	 * @return the hash bound
+	 * @return the hashmap of boundary
 	 */
 	public HashMap<String, Point3d> gethashBound(){
 		return hashBound;
