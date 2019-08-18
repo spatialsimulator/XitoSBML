@@ -156,7 +156,7 @@ public class DomainStruct {
 	 * Get domain type by given SpatialId.
 	 *
 	 * @param spId the SpatialId of domain type as String
-	 * @return
+	 * @return DomainType object if found, otherwise null
 	 */
 	public DomainType getDomainType(String spId){
 	   	 for(DomainType d: lodt){
