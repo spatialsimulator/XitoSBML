@@ -9,26 +9,26 @@ import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
 import ij.gui.GenericDialog;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class DiffusionDialog, which generates a GUI for creating / editing Diffusion Coefficient.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.pane.DiffusionTable}.
  * Date Created: Jan 20, 2016
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class DiffusionDialog {
 	
-	/** The parameter. */
+	/** The JSBML Parameter object. */
 	private Parameter parameter;
 	
-	/** The gd. */
+	/** The generic dialog. */
 	private GenericDialog gd;
 	
-	/** The bool. */
-	private final String[] bool = {"true","false"};
+	/** The boolean value for isConstant. */
+	private final String[] isConstant = {"true","false"};
 	
-	/** The model. */
+	/** The SBML model. */
 	private Model model;
 	
 	/**
@@ -41,9 +41,11 @@ public class DiffusionDialog {
 	}
 	
 	/**
-	 * Show dialog.
+	 * Create and show a dialog for adding Diffusion Coefficient.
+	 * If a user creates an diffusion coefficient through this dialog,
+	 * then a Parameter object will be returned. If not, null is returned.
 	 *
-	 * @return the parameter
+	 * @return the JSBML Parameter object if a parameter is created
 	 */
 	public Parameter showDialog(){
 		gd = new GenericDialog("Add Diffusion Coeffcient");
@@ -52,7 +54,7 @@ public class DiffusionDialog {
 	
 		gd.addStringField("id:", "");
 		gd.addNumericField("value:", 0, 1);
-		gd.addRadioButtonGroup("constant:", bool, 1,2,"true");
+		gd.addRadioButtonGroup("constant:", isConstant, 1,2,"true");
 		gd.addChoice("species:", SBMLProcessUtil.listIdToStringArray(model.getListOfSpecies()), null);
 		gd.addChoice("type:", SBMLProcessUtil.diffType, null);
 		gd.addChoice("coordinate1:", SBMLProcessUtil.lcoord, null);
@@ -69,10 +71,13 @@ public class DiffusionDialog {
 	}
 
 	/**
-	 * Show dialog.
+	 * Create and show a dialog for adding Diffusion Coefficient with given JSBML Parameter object.
+	 * If a user edits the diffusion coefficient through this dialog,
+	 * then a Parameter object will be returned. If not, null is returned.
 	 *
-	 * @param parameter the parameter
-	 * @return the parameter
+	 * @param parameter the JSBML Parameter object
+	 * @return the JSBML Parameter object if the parameter is edited
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
 	public Parameter showDialog(Parameter parameter){
 		this.parameter = parameter;
@@ -84,7 +89,7 @@ public class DiffusionDialog {
 		
 		gd.addStringField("id:", parameter.getId());
 		gd.addNumericField("value:", parameter.getValue(), 1);
-		gd.addRadioButtonGroup("constant:", bool, 1, 2, String.valueOf(parameter.getConstant()));
+		gd.addRadioButtonGroup("constant:", isConstant, 1, 2, String.valueOf(parameter.getConstant()));
 		gd.addChoice("species:", SBMLProcessUtil.listIdToStringArray(model.getListOfSpecies()), dc.getVariable());
 		gd.addChoice("type:", SBMLProcessUtil.diffType, dc.getDiffusionKind().name());
 		if(dc.isSetCoordinateReference1())
@@ -107,7 +112,17 @@ public class DiffusionDialog {
 	}
 		
 	/**
-	 * Sets the parameter data.
+	 * Sets/updates the following information of the parameter (diffusion coefficient) from the GUI.
+	 * <ul>
+	 *     <li>String:Id</li>
+	 *     <li>double:value</li>
+	 *     <li>boolean:constant</li>
+	 *     <li>String:variable</li>
+	 *     <li>DiffusionKind:diffusion kind</li>
+	 *     <li>CoordinateKind:coordinate kind</li>
+	 * </ul>
+	 *
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
 	private void setParameterData(){
 		String str = gd.getNextString();
@@ -140,5 +155,5 @@ public class DiffusionDialog {
 		
 		if(!dc.isSetParentSBMLObject())
 			sp.setParamType(dc);
-	} 
+	}
 }

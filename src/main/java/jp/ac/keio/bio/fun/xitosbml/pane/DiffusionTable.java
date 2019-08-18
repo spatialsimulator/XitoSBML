@@ -10,47 +10,48 @@ import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.ext.spatial.DiffusionCoefficient;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class DiffusionTable, which inherits SBaseTable and implements add() and edit() method for
+ * adding and editing diffusion coefficient.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.pane.TabTables}.
  * Date Created: Jan 20, 2016
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class DiffusionTable extends SBaseTable {
 
-	/** The header. */
+	/** The header of table. */
 	private final String[] header = { "id", "value", "constant", "species", "type" , "coordinateReference1","coordinateReference2"};
 	
-	/** The table. */
+	/** The JTable object. */
 	private JTable table;
 	
-	/** The model. */
+	/** The SBML model. */
 	private Model model;
 	
-	/** The dd. */
+	/** The DiffusionDialog, which generates a GUI for creating / editing Diffusion Coefficient. */
 	private DiffusionDialog dd;
 	
 	/**
 	 * Instantiates a new diffusion table.
 	 *
-	 * @param lop the lop
+	 * @param lop the list of parameters
 	 */
 	DiffusionTable(ListOf<Parameter> lop){
 		this.model = lop.getModel();
 		list = lop;
 		setParameterToList(lop);
-		MyTableModel tm = getTableModelWithParameter(lop);
+		MyTableModel tm = getTableModelWithParameter();
 		table = new JTable(tm);
 		setTableProperties(table);
 		pane = setTableToScroll("species", table);
 	}
 	
 	/**
-	 * Sets the parameter to list.
+	 * Sets the new parameter (diffusion coefficient) to the list.
 	 *
-	 * @param lop the new parameter to list
+	 * @param lop the new diffusion coefficient to the list
 	 */
 	private void setParameterToList(ListOf<Parameter> lop){
 		long max = lop.size();
@@ -63,12 +64,11 @@ public class DiffusionTable extends SBaseTable {
 	}
 	
 	/**
-	 * Gets the table model with parameter.
+	 * Gets the table model with given parameter (diffusion coefficient).
 	 *
-	 * @param lop the lop
 	 * @return the table model with parameter
 	 */
-	private MyTableModel getTableModelWithParameter(ListOf<Parameter> lop){
+	private MyTableModel getTableModelWithParameter(){
 		int max = memberList.size();
 		Object[][] data  = new Object[(int) max][header.length];
 		for(int i = 0; i < max; i++){
@@ -112,10 +112,18 @@ public class DiffusionTable extends SBaseTable {
 	}
 
 	/**
-	 * Parameter to vector.
+	 * Converts Parameter to a Vector. The converted vector will contain parameter information as follows:
+	 * <ul>
+	 *     <li>String:Id</li>
+	 *     <li>double:value</li>
+	 *     <li>boolean:constant</li>
+	 *     <li>String:variable</li>
+	 *     <li>String:diffusion kind</li>
+	 *     <li>String:coordinate kind</li>
+	 * </ul>
 	 *
-	 * @param p the p
-	 * @return the vector
+	 * @param p the JSBML Parameter object
+	 * @return the converted vector
 	 */
 	private Vector<Object> parameterToVector(Parameter p){
 		Vector<Object> v = new Vector<Object>();
@@ -131,9 +139,14 @@ public class DiffusionTable extends SBaseTable {
 		
 		return v;
 	}
-	
-	/* (non-Javadoc)
-	 * @see sbmlplugin.pane.SBaseTable#add()
+
+	/**
+	 * Adds the Parameter object (diffusion coefficient) to a table.
+	 * This method expects that the SBase object which will be added to a table
+	 * should be created / specified through GUI (ex. DiffusionDialog).
+	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#add()
+	 *
+	 * @throws IllegalArgumentException
 	 */
 	@Override
 	void add() throws IllegalArgumentException{
@@ -148,8 +161,14 @@ public class DiffusionTable extends SBaseTable {
 		((MyTableModel)table.getModel()).addRow(parameterToVector(p.clone()));	
 	}
 
-	/* (non-Javadoc)
-	 * @see sbmlplugin.pane.SBaseTable#edit(int)
+	/**
+	 * Edits the Parameter object (diffusion coefficient) which is specified by the index.
+	 * This method expects that the SBase object which will be edited
+	 * should be modified through GUI (ex. DiffusionDialog).
+	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#edit(int index)
+	 *
+	 * @param index the index of the diffusion coefficient
+	 * @throws IllegalArgumentException
 	 */
 	@Override
 	void edit(int index) throws IllegalArgumentException{
