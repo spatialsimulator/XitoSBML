@@ -34,7 +34,7 @@ public class DiffusionDialog {
 	/**
 	 * Instantiates a new diffusion dialog.
 	 *
-	 * @param model the model
+	 * @param model the SBML model
 	 */
 	public DiffusionDialog(Model model){
 		this.model = model;
@@ -42,7 +42,7 @@ public class DiffusionDialog {
 	
 	/**
 	 * Create and show a dialog for adding Diffusion Coefficient.
-	 * If a user creates an diffusion coefficient through this dialog,
+	 * If a user creates a diffusion coefficient through this dialog,
 	 * then a Parameter object will be returned. If not, null is returned.
 	 *
 	 * @return the JSBML Parameter object if a parameter is created

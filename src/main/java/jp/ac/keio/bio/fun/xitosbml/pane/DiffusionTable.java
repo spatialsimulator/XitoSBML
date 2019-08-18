@@ -64,7 +64,7 @@ public class DiffusionTable extends SBaseTable {
 	}
 	
 	/**
-	 * Gets the table model with given parameter (diffusion coefficient).
+	 * Gets the table model.
 	 *
 	 * @return the table model with parameter
 	 */
@@ -146,7 +146,7 @@ public class DiffusionTable extends SBaseTable {
 	 * should be created / specified through GUI (ex. DiffusionDialog).
 	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#add()
 	 *
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
 	@Override
 	void add() throws IllegalArgumentException{
@@ -168,7 +168,7 @@ public class DiffusionTable extends SBaseTable {
 	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#edit(int index)
 	 *
 	 * @param index the index of the diffusion coefficient
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
 	@Override
 	void edit(int index) throws IllegalArgumentException{

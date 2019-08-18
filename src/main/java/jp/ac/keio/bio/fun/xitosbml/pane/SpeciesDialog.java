@@ -9,38 +9,38 @@ import org.sbml.jsbml.ext.spatial.SpatialSpeciesPlugin;
 
 import ij.gui.GenericDialog;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class SpeciesDialog, which generates a GUI for creating / editing Species.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.pane.SpeciesTable}.
  * Date Created: Jan 20, 2016
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class SpeciesDialog {
 	
-	/** The species. */
+	/** The JSBML Species object. */
 	private Species species;
 	
-	/** The gd. */
+	/** The generic dialog. */
 	private GenericDialog gd;
 	
-	/** The initial. */
+	/** The string value for initial amount/concentration. */
 	private final String[] initial = {"amount","concentration"};
 	
-	/** The units. */
+	/** The string value for units. */
 	private final String[] units = {"mole","item","gram","kilogram","dimensionless"};
 	
-	/** The bool. */
+	/** The boolean value for boundaryCondition, constant and hasOnlySubstanceUnit. */
 	private final String[] bool = {"true","false"};
 	
-	/** The model. */
+	/** The SBML model. */
 	private Model model;
 	
 	/**
 	 * Instantiates a new species dialog.
 	 *
-	 * @param model the model
+	 * @param model the SBML model
 	 */
 	public SpeciesDialog(Model model){
 		this.model = model;
@@ -48,9 +48,11 @@ public class SpeciesDialog {
 	}
 	
 	/**
-	 * Show dialog.
+	 * Create and show a dialog for adding Species.
+	 * If a user creates a species through this dialog,
+	 * then a Species object will be returned. If not, null is returned.
 	 *
-	 * @return the species
+	 * @return the JSBML Species object if a species is created
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws IdentifierException the identifier exception
 	 */
@@ -78,10 +80,12 @@ public class SpeciesDialog {
 	}
 	
 	/**
-	 * Show dialog.
+	 * Create and show a dialog for adding Species with given JSBML Species object.
+	 * If a user edits the species through this dialog,
+	 * then a Species object will be returned. If not, null is returned.
 	 *
-	 * @param species the species
-	 * @return the species
+	 * @param species the JSBML Species object
+	 * @return the JSBML Species object if the parameter is edited
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws IdentifierException the identifier exception
 	 */
@@ -115,7 +119,16 @@ public class SpeciesDialog {
 	}
 	
 	/**
-	 * Sets the species data.
+	 * Sets/updates the following information of the species from the GUI.
+	 * <ul>
+	 *     <li>String:Id</li>
+	 *     <li>double:initialAmount or initialConcentration</li>
+	 *     <li>String:compartment</li>
+	 *     <li>Kind:substance units</li>
+	 *     <li>boolean:has only substance units</li>
+	 *     <li>boolean:boundary condition</li>
+	 *     <li>boolean:constant</li>
+	 * </ul>
 	 *
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws IdentifierException the identifier exception

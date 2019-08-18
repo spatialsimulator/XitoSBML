@@ -15,34 +15,36 @@ import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.SBase;
 import org.sbml.jsbml.text.parser.ParseException;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class SBaseTable, which is an abstract class and be used to
+ * create tables for SBase objects (Species, Reaction, Parameter, etc.).
+ * The inherited class should implement add() and edit() methods.
  * Date Created: Jan 13, 2016
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 @SuppressWarnings("serial")
 public abstract class SBaseTable {
 	
-	/** The pane. */
+	/** The JScrollPane object. */
 	protected JScrollPane pane;
 	
-	/** The panel. */
+	/** The JPanel object. */
 	protected JPanel panel;
 	
-	/** The gray. */
+	/** The gray color. */
 	protected Color gray = new Color(169, 169, 169);
 	
-	/** The member list. */
+	/** The member list of SBML Level 3 Version 1 SBase objects. */
 	protected ListOf<SBase> memberList = new ListOf<SBase>(3,1);
 	
-	/** The list. */
+	/** The list of Object. */
 	protected ListOf<?> list;
 	
 	/**
-	 * Adds the.
+	 * Adds the SBase object to a table. This method expects that the SBase object which will be added to a table
+	 * should be created / specified through GUI (ex. JDialog).
 	 *
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws ParseException the parse exception
@@ -51,9 +53,11 @@ public abstract class SBaseTable {
 	abstract void add() throws IllegalArgumentException, ParseException,IdentifierException;
 
 	/**
-	 * Edits the.
+	 * Edits the SBase object which is specified by the index.
+	 * This method expects that the SBase object which will be edited
+	 * should be modified through GUI (ex. SpeciesDialog, ReactionDialog, ParameterDialog, etc.).
 	 *
-	 * @param index the index
+	 * @param index the index of the SBase object
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws ParseException the parse exception
 	 * @throws IdentifierException the identifier exception
@@ -61,9 +65,9 @@ public abstract class SBaseTable {
 	abstract void edit(int index) throws IllegalArgumentException, ParseException, IdentifierException;
 	
 	/**
-	 * Removes the from list.
+	 * Removes the SBase object specified by an index from the memberlist.
 	 *
-	 * @param index the index
+	 * @param index the index of SBase object
 	 */
 	SBase removeFromList(int index){
 		if(index == -1) return null;
@@ -73,7 +77,7 @@ public abstract class SBaseTable {
 	}
 	
 	/**
-	 * Removes the selected from table.
+	 * Removes the selected row from table.
 	 *
 	 * @param table the table
 	 */
@@ -93,9 +97,14 @@ public abstract class SBaseTable {
 	}
 		
 	/**
-	 * Sets the table properties.
+	 * Sets the table properties. This method will set the following properties.
+	 * <ul>
+	 *     <li>column size</li>
+	 *     <li>background color</li>
+	 *     <li>disable reordering</li>
+	 * </ul>
 	 *
-	 * @param table the new table properties
+	 * @param table the table object
 	 */
 	void setTableProperties(JTable table){
 		setColumnSize(table);
@@ -104,9 +113,9 @@ public abstract class SBaseTable {
 	}
 	
 	/**
-	 * Sets the column size.
+	 * Sets all the column min width to 150.
 	 *
-	 * @param table the new column size
+	 * @param table the table object
 	 */
 	void setColumnSize(JTable table) {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -116,11 +125,11 @@ public abstract class SBaseTable {
 	}
 	
 	/**
-	 * Sets the table to scroll.
+	 * Create scroll pane and sets to the table.
 	 *
-	 * @param name the name
-	 * @param table the table
-	 * @return the j scroll pane
+	 * @param name the name of scroll pane
+	 * @param table the table object
+	 * @return the JCcrollPane object
 	 */
 	JScrollPane setTableToScroll(String name, JTable table){
 		JScrollPane scroll = new JScrollPane(table);
@@ -136,43 +145,46 @@ public abstract class SBaseTable {
 	protected class MyTableModel extends DefaultTableModel {
 		
 		/**
-		 * Instantiates a new my table model.
+		 * Instantiates a new my table model with data and header.
 		 *
-		 * @param data the data
-		 * @param header the header
+		 * @param data the 2D array of Object
+		 * @param header the array of string for header
 		 */
 		public MyTableModel(Object[][] data, String[] header) {
 			super(data, header);
 		}
 
 		/**
-		 * Instantiates a new my table model.
+		 * Instantiates a new my table model with row count and column count.
 		 *
-		 * @param i the i
-		 * @param j the j
+		 * @param rowCount           the number of rows the table holds
+		 * @param columnCount        the number of columns the table holds
 		 */
-		public MyTableModel(int i, int j) {
-			super(i,j);
+		public MyTableModel(int rowCount, int columnCount) {
+			super(rowCount,columnCount);
 		}
 
-		/* (non-Javadoc)
-		 * @see javax.swing.table.DefaultTableModel#isCellEditable(int, int)
+		/**
+         * Returns false regardless of parameter values.
+		 * @param row the row whose value is to be queried
+		 * @param column the column whose value is to be queried
+		 * @return false
 		 */
 		public boolean isCellEditable(int row, int column) {
 			return false;
 		}
 		
         /**
-         * Update row.
+         * Update row. The element number of vector should be identical with column number.
          *
-         * @param index the index
-         * @param vector the vector
+         * @param row the row whose value will be updated
+         * @param vector the data for new row
          */
-        public void updateRow(int index,Vector<Object> vector)
+        public void updateRow(int row,Vector<Object> vector)
         {
             for (int i = 0 ; i < vector.size() ; i++)
             {
-                setValueAt(vector.get(i), index, i);
+                setValueAt(vector.get(i), row, i);
             }
         }
 	}

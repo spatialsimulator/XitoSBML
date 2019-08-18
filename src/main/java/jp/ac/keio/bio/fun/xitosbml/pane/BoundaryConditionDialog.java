@@ -9,41 +9,43 @@ import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
 import ij.gui.GenericDialog;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class BoundaryConditionDialog, which generates a GUI for creating / editing Boundary Condition.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.pane.BoundaryConditionTable}.
  * Date Created: Jan 21, 2016
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class BoundaryConditionDialog {
 	
-	/** The parameter. */
+	/** The JSBML Parameter object. */
 	private Parameter parameter;
 	
-	/** The gd. */
+	/** The generic dialog. */
 	private GenericDialog gd;
 	
-	/** The bool. */
-	private final String[] bool = {"true","false"};
+	/** The boolean value for isConstant. */
+	private final String[] isConstant = {"true","false"};
 	
-	/** The model. */
+	/** The SBML model. */
 	private Model model;
 	
 	/**
 	 * Instantiates a new boundary condition dialog.
 	 *
-	 * @param model the model
+	 * @param model the SBML model
 	 */
 	public BoundaryConditionDialog(Model model){
 		this.model = model;
 	}
 	
 	/**
-	 * Show dialog.
+	 * Create and show a dialog for adding Boundary Condition.
+	 * If a user creates a boundary condition through this dialog,
+	 * then a Parameter object will be returned. If not, null is returned.
 	 *
-	 * @return the parameter
+	 * @return the JSBML Parameter object if a parameter is created
 	 * @throws IllegalArgumentException the illegal argument exception
 	 */
 	public Parameter showDialog() throws IllegalArgumentException{
@@ -53,7 +55,7 @@ public class BoundaryConditionDialog {
 	
 		gd.addStringField("id:", "");
 		gd.addNumericField("value:", 0, 1);
-		gd.addRadioButtonGroup("constant:", bool, 1, 2, "true");
+		gd.addRadioButtonGroup("constant:", isConstant, 1, 2, "true");
 		gd.addChoice("species:", SBMLProcessUtil.listIdToStringArray(model.getListOfSpecies()), null);
 		gd.addChoice("type:", SBMLProcessUtil.boundType, null);
 		gd.addChoice("boundary:", getAllBoundAsString(), null);
@@ -69,10 +71,12 @@ public class BoundaryConditionDialog {
 	}
 
 	/**
-	 * Show dialog.
+	 * Create and show a dialog for adding Boundary Condition with given JSBML Parameter object.
+	 * If a user edits the boundary condition through this dialog,
+	 * then a Parameter object will be returned. If not, null is returned.
 	 *
-	 * @param parameter the parameter
-	 * @return the parameter
+	 * @param parameter the JSBML Parameter object
+	 * @return the JSBML Parameter object if the parameter is edited
 	 * @throws IllegalArgumentException the illegal argument exception
 	 */
 	public Parameter showDialog(Parameter parameter) throws IllegalArgumentException{
@@ -85,7 +89,7 @@ public class BoundaryConditionDialog {
 		
 		gd.addStringField("id:", parameter.getId());
 		gd.addNumericField("value:", parameter.getValue(), 1);
-		gd.addRadioButtonGroup("constant:", bool, 1, 2, String.valueOf(parameter.getConstant()));
+		gd.addRadioButtonGroup("constant:", isConstant, 1, 2, String.valueOf(parameter.getConstant()));
 		gd.addChoice("species:", SBMLProcessUtil.listIdToStringArray(model.getListOfSpecies()), bc.getVariable());
 		gd.addChoice("type:", SBMLProcessUtil.boundType, bc.getType().name());
 		gd.addChoice("boundary:", getAllBoundAsString(), bc.isSetCoordinateBoundary() ? bc.getCoordinateBoundary(): bc.getBoundaryDomainType());
@@ -100,7 +104,15 @@ public class BoundaryConditionDialog {
 	}
 		
 	/**
-	 * Sets the parameter data.
+	 * Sets/updates the following information of the parameter (boundary condition) from the GUI.
+	 * <ul>
+	 *     <li>String:Id</li>
+	 *     <li>double:value</li>
+	 *     <li>boolean:constant</li>
+	 *     <li>String:variable</li>
+	 *     <li>String:type</li>
+	 *     <li>String:boundary or domain type</li>
+	 * </ul>
 	 *
 	 * @throws IllegalArgumentException the illegal argument exception
 	 */
@@ -128,7 +140,7 @@ public class BoundaryConditionDialog {
 	/**
 	 * Gets the all bound as string.
 	 *
-	 * @return the all bound as string
+	 * @return an array of String which contains the all bound as string
 	 */
 	private String[] getAllBoundAsString(){
 		String[] bound = SBMLProcessUtil.bounds;

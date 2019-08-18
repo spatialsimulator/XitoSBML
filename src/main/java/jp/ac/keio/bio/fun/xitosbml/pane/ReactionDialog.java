@@ -16,45 +16,46 @@ import org.sbml.jsbml.text.parser.ParseException;
 
 import ij.gui.GenericDialog;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class ReactionDialog, which generates a GUI for creating / editing a Reaction.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.pane.ReactionTable}.
  * Date Created: Jan 22, 2016
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class ReactionDialog {
 	
-	/** The reaction. */
+	/** The JSBML Reaction object. */
 	private Reaction reaction;
 	
-	/** The gd. */
+	/** The generic dialog. */
 	private GenericDialog gd;
 	
-	/** The bool. */
+	/** The boolean value for reversible and isLocal. */
 	private final String[] bool = {"true","false"};
 	
-	/** The model. */
+	/** The SBML model. */
 	private Model model;
 	
-	/** The los. */
+	/** The list of Species. */
 	private ListOf<Species> los;
 	
 	/**
 	 * Instantiates a new reaction dialog.
 	 *
-	 * @param model the model
+	 * @param model the SBML model
 	 */
 	public ReactionDialog(Model model){
 		this.model = model;
 	}
 	
 	/**
-	 * Show dialog.
+	 * Create and show a dialog for adding Reaction.
+	 * If a user creates a reaction through this dialog,
+	 * then a Reaction object will be returned. If not, null is returned.
 	 *
-	 * @return the reaction
-
+	 * @return the JSBML Reaction object if a reaction is created
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws ParseException the parse exception
 	 */
@@ -87,10 +88,12 @@ public class ReactionDialog {
 	}
 	
 	/**
-	 * Show dialog.
+	 * Create and show a dialog for adding Reaction with given JSBML Reaction object.
+	 * If a user edits the reaction through this dialog,
+	 * then a Reaction object will be returned. If not, null is returned.
 	 *
-	 * @param reaction the reaction
-	 * @return the reaction
+	 * @param reaction the JSBML Reaction object
+	 * @return the JSBML Reaction object if the reaction is edited
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws ParseException the parse exception
 	 */
@@ -127,11 +130,13 @@ public class ReactionDialog {
 	}
 	
 	/**
-	 * Bool species in S reference.
+     * Check whether given species (listOf&lt;Species&gt; los) are included in
+	 * the given list of SpeciesReferences, and returns the array of boolean for all species.
+	 * The list of SpeciesReferences might be listOfReactants or listOfProducts.
 	 *
-	 * @param los the los
-	 * @param losr the losr
-	 * @return the boolean[]
+	 * @param los the list of Species
+	 * @param losr the list of SpeciesReferences (listOfReactants or listOfProducts)
+	 * @return the array of boolean value (boolean[]) which contains whether the species is included in the given list of SpeciesReferences.
 	 */
 	private boolean[] boolSpeciesInSReference(ListOf<Species> los, ListOf<SpeciesReference> losr){
 		boolean[] bool = new boolean[(int)los.size()];
@@ -145,11 +150,12 @@ public class ReactionDialog {
 	}
 	
 	/**
-	 * Bool species in modifier S reference.
+	 * Check whether given species (listOf&lt;Species&gt; los) are included in
+	 * the given list of ModifierSpeciesReferences, and returns the array of boolean for all species.
 	 *
-	 * @param los the los
-	 * @param losr the losr
-	 * @return the boolean[]
+	 * @param los the list of Species
+	 * @param losr the list of ModifierSpeciesReferences
+	 * @return the array of boolean value (boolean[]) which contains whether the species is included in the given list of ModifierSpeciesReferences.
 	 */
 	private boolean[] boolSpeciesInModifierSReference(ListOf<Species> los, ListOf<ModifierSpeciesReference> losr){
 		boolean[] bool = new boolean[(int)los.size()];
@@ -163,7 +169,18 @@ public class ReactionDialog {
 	}
 	
 	/**
-	 * Sets the reaction data.
+	 * Sets/updates the following information of the reaction and the spatial reaction plugin from the GUI.
+	 * <ul>
+	 *     <li>String:Id</li>
+	 *     <li>boolean:reversible</li>
+	 *     <li>boolean:fast</li>
+	 *     <li>boolean:isLocal to SpatialReactionPlugin</li>
+	 *     <li>KineticLaw:kinetic law</li>
+	 *     <li>SpeciesReference:reactants</li>
+	 *     <li>SpeciesReference:products</li>
+	 *     <li>SpeciesReference:modifiers</li>
+	 * </ul>
+	 *
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws ParseException the parse exception
 	 */

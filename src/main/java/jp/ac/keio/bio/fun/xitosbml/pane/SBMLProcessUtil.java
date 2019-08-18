@@ -11,13 +11,12 @@ import org.sbml.jsbml.ext.spatial.DiffusionCoefficient;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialReactionPlugin;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class SBMLProcessUtil, which contains several useful static methods to manipulate SBML objects.
  * Date Created: Jan 20, 2016
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class SBMLProcessUtil {
 	
@@ -35,10 +34,11 @@ public class SBMLProcessUtil {
 
 	
 	/**
-	 * List id to string array.
+	 * Converts list of SBase to a String. The converted array of string will contain the id
+	 * of all SBase included in the list.
 	 *
-	 * @param lo the lo
-	 * @return the string[]
+	 * @param lo the list of Objects (SBase)
+	 * @return the converted array of string (string[])
 	 */
 	public static String[] listIdToStringArray(ListOf<?> lo){
 		String[] str = new String[(int)lo.size()];
@@ -50,10 +50,10 @@ public class SBMLProcessUtil {
 	}
 
 	/**
-	 * Copy contents of Species from src to dst.
-	 * @param src
-	 * @param dst
-	 * @return
+	 * Copy contents of Species from src to dst and returns dst object.
+	 * @param src source Species
+	 * @param dst destination Species
+	 * @return destination Species
 	 */
 	public static Species copySpeciesContents(Species src, Species dst) {
 		if (src.isSetInitialAmount()) dst.setInitialAmount(src.getInitialAmount());
@@ -67,10 +67,10 @@ public class SBMLProcessUtil {
 	}
 
 	/**
-	 * Copy contents of Parameter from src to dst.
-	 * @param src
-	 * @param dst
-	 * @return
+	 * Copy contents of Parameter from src to dst and returns dst object.
+	 * @param src source Parameter
+	 * @param dst destination Parameter
+	 * @return destination Parameter
 	 */
 	public static Parameter copyParameterContents(Parameter src, Parameter dst) {
 		dst.setValue(src.getValue());
@@ -80,43 +80,43 @@ public class SBMLProcessUtil {
 	}
 
 	/**
-	 * Copy contents of Reaction from src to dst.
+	 * Copy contents of Reaction from src to dst and returns dst object.
 	 * KineticLaw is replaced by deep-copied src.kineticLaw.
-	 * @param src
-	 * @param dst
-	 * @return
+	 * @param src source Reaction
+	 * @param dst destination Reaction
+	 * @return destination Reaction
 	 */
 	@SuppressWarnings("deprecation")
-  public static Reaction copyReactionContents(Reaction src, Reaction dst) {
+	public static Reaction copyReactionContents(Reaction src, Reaction dst) {
 		SpatialReactionPlugin srcSrp = (SpatialReactionPlugin) src.getPlugin("spatial");
 		SpatialReactionPlugin dstSrp = (SpatialReactionPlugin) dst.getPlugin("spatial");
-	  dst.setReversible(src.getReversible());
-	  dst.setFast(src.getFast());
-	  dstSrp.setIsLocal(srcSrp.getIsLocal());
-	  dst.unsetKineticLaw();
-	  if (src.isSetKineticLaw()) {
-	    dst.setKineticLaw(src.getKineticLaw().clone());
-	  }
-	  dst.unsetListOfReactants();
-	  if (src.isSetListOfReactants()) {
-	    dst.setListOfReactants(src.getListOfReactants().clone());
-	  }
-	  dst.unsetListOfProducts();
-	  if (src.isSetListOfProducts()) {
-	    dst.setListOfProducts(src.getListOfProducts().clone());
-	  }
-	  dst.unsetListOfModifiers();
-	  if (src.isSetListOfModifiers()) {
-	    dst.setListOfModifiers(src.getListOfModifiers().clone());
-	  }
-	  return dst;
+		dst.setReversible(src.getReversible());
+		dst.setFast(src.getFast());
+		dstSrp.setIsLocal(srcSrp.getIsLocal());
+		dst.unsetKineticLaw();
+		if (src.isSetKineticLaw()) {
+			dst.setKineticLaw(src.getKineticLaw().clone());
+		}
+		dst.unsetListOfReactants();
+		if (src.isSetListOfReactants()) {
+			dst.setListOfReactants(src.getListOfReactants().clone());
+		}
+		dst.unsetListOfProducts();
+		if (src.isSetListOfProducts()) {
+			dst.setListOfProducts(src.getListOfProducts().clone());
+		}
+		dst.unsetListOfModifiers();
+		if (src.isSetListOfModifiers()) {
+			dst.setListOfModifiers(src.getListOfModifiers().clone());
+		}
+		return dst;
 	}
 
 	/**
-	 * Copy contents of AdvenctionCoefficient from src to dst.
-	 * @param src
-	 * @param dst
-	 * @return
+	 * Copy contents of AdvectionCoefficient from src to dst and returns dst object.
+	 * @param src source AdvectionCoefficient
+	 * @param dst destination AdvectionCoefficient
+	 * @return destination AdvectionCoefficient
 	 */
 	public static Parameter copyAdvectionCoefficientContents(Parameter src, Parameter dst) {
 	  SpatialParameterPlugin srcSp = (SpatialParameterPlugin) src.getPlugin("spatial");
@@ -131,10 +131,10 @@ public class SBMLProcessUtil {
 	}
 
 	/**
-	 * Copy contents of BoundaryCondition from src to dst.
-	 * @param src
-	 * @param dst
-	 * @return
+	 * Copy contents of BoundaryCondition from src to dst and returns dst object.
+	 * @param src source BoundaryCondition
+	 * @param dst destination BoundaryCondition
+	 * @return destination BoundaryCondition
 	 */
 	public static Parameter copyBoundaryConditionContents(Parameter src, Parameter dst) {
 	  SpatialParameterPlugin srcSp = (SpatialParameterPlugin) src.getPlugin("spatial");
@@ -154,10 +154,10 @@ public class SBMLProcessUtil {
 	}
 
 	/**
-	 * Copy contents of DiffusionCoefficient from src to dst.
-	 * @param src
-	 * @param dst
-	 * @return
+	 * Copy contents of DiffusionCoefficient from src to dst and returns dst object.
+	 * @param src source DiffusionCoefficient
+	 * @param dst destination DiffusionCoefficient
+	 * @return destination DiffusionCoefficient
 	 */
 	public static Parameter copyDiffusionCoefficientContents(Parameter src, Parameter dst) {
 	  SpatialParameterPlugin srcSp = (SpatialParameterPlugin) src.getPlugin("spatial");

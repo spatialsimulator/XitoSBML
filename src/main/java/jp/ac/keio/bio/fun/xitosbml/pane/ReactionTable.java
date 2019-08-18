@@ -11,47 +11,48 @@ import org.sbml.jsbml.SimpleSpeciesReference;
 import org.sbml.jsbml.ext.spatial.SpatialReactionPlugin;
 import org.sbml.jsbml.text.parser.ParseException;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class ReactionTable, which inherits SBaseTable and implements add() and edit() method for
+ * adding and editing reaction.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.pane.TabTables}.
  * Date Created: Jan 20, 2016
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class ReactionTable extends SBaseTable {
 
-	/** The header. */
+	/** The header of table. */
 	private final String[] header = { "id","reversible","islocal","kinetic law","reactant","product","modifier"};
 	
-	/** The table. */
+	/** The JTable object. */
 	private JTable table;
 	
-	/** The model. */
+	/** The SBML model. */
 	private Model model;
 	
-	/** The rd. */
+	/** The ReactionDialog, which generates a GUI for creating / editing Reaction. */
 	private ReactionDialog rd;
 	
 	/**
 	 * Instantiates a new reaction table.
 	 *
-	 * @param lor the lor
+	 * @param lor the list of reactions
 	 */
 	ReactionTable(ListOf<Reaction> lor){
 		this.model = lor.getModel();
 		list = lor;
 		setReactionToList(lor);
-		MyTableModel tm = getTableModelWithReaction(lor);
+		MyTableModel tm = getTableModelWithReaction();
 		table = new JTable(tm);
 		setTableProperties(table);
 		pane = setTableToScroll("reaction",table);
 	}
 	
 	/**
-	 * Sets the reaction to list.
+	 * Sets the new reaction to the list.
 	 *
-	 * @param lor the new reaction to list
+	 * @param lor the new reaction to the list
 	 */
 	private void setReactionToList(ListOf<Reaction> lor){
 		long max = lor.size();
@@ -62,12 +63,11 @@ public class ReactionTable extends SBaseTable {
 	}
 	
 	/**
-	 * Gets the table model with reaction.
+	 * Gets the table model.
 	 *
-	 * @param lor the lor
 	 * @return the table model with reaction
 	 */
-	private MyTableModel getTableModelWithReaction(ListOf<Reaction> lor){
+	private MyTableModel getTableModelWithReaction(){
 		int max = memberList.size();
 		Object[][] data  = new Object[max][header.length];
 		for(int i = 0; i < max; i++){
@@ -107,10 +107,12 @@ public class ReactionTable extends SBaseTable {
 	}
 	
 	/**
-	 * List member to string.
+	 * Converts Reaction to a String. The converted string will contain the id
+	 * of all species references (SimpleSpeciesReferences) included in the list
+	 * separated with space character.
 	 *
-	 * @param lo the lo
-	 * @return the string
+	 * @param lo the list of SimpleSpeciesReference
+	 * @return the converted string
 	 */
 	private String listMemberToString(ListOf<?> lo){
 		StringBuilder sb = new StringBuilder();
@@ -122,10 +124,19 @@ public class ReactionTable extends SBaseTable {
 	}
 
 	/**
-	 * Reaction to vector.
+	 * Converts Reaction to a Vector. The converted vector will contain reaction information as follows:
+	 * <ul>
+	 *     <li>String:Id</li>
+	 *     <li>boolean:reversible</li>
+	 *     <li>boolean:isLocal to SpatialReactionPlugin</li>
+	 *     <li>KineticLaw:kinetic law</li>
+	 *     <li>String:list of reactants converted to string by listMemberToString(ListOf&lt;?&gt;)</li>
+	 *     <li>String:list of products converted to string by listMemberToString(ListOf&lt;?&gt;)</li>
+	 *     <li>String:list of modifiers converted to string by listMemberToString(ListOf&lt;?&gt;)</li>
+	 * </ul>
 	 *
-	 * @param r the r
-	 * @return the vector
+	 * @param r the JSBML Reaction object
+	 * @return the converted vector
 	 */
 	private Vector<Object> reactionToVector(Reaction r){
 		SpatialReactionPlugin srp = (SpatialReactionPlugin) r.getPlugin("spatial");
@@ -145,8 +156,14 @@ public class ReactionTable extends SBaseTable {
 		return v;
 	}
 	
-	/* (non-Javadoc)
-	 * @see sbmlplugin.pane.SBaseTable#add()
+	/**
+	 * Adds the Reaction object to a table.
+	 * This method expects that the SBase object which will be added to a table
+	 * should be created / specified through GUI (ex. ReactionDialog).
+	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#add()
+	 *
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws ParseException the parse exception
 	 */
 	@Override
 	void add() throws IllegalArgumentException, ParseException{
@@ -161,8 +178,15 @@ public class ReactionTable extends SBaseTable {
 		((MyTableModel)table.getModel()).addRow(reactionToVector(r.clone()));
 	}
 
-	/* (non-Javadoc)
-	 * @see sbmlplugin.pane.SBaseTable#edit(int)
+	/**
+	 * Edits the Reaction object which is specified by the index.
+	 * This method expects that the SBase object which will be edited
+	 * should be modified through GUI (ex. ReactionDialog).
+	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#edit(int index)
+	 *
+	 * @param index the index of the reaction
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws ParseException the parse exception
 	 */
 	@Override
 	void edit(int index) throws IllegalArgumentException, ParseException{

@@ -8,48 +8,48 @@ import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Species;
 
-
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class SpeciesTable, which inherits SBaseTable and implements add() and edit() method for
+ * adding and editing species.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.pane.TabTables}.
  * Date Created: Jan 13, 2016
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class SpeciesTable extends SBaseTable{
 	
-	/** The header. */
+	/** The header of table. */
 	private final String[] header = { "id","initial","quantity", "compartment", "substanceUnits","hasOnlySubstanceUnits","boundaryCondition","constant"};
 	
-	/** The table. */
+	/** The JTable object. */
 	private JTable table;
 	
-	/** The sd. */
+	/** The SpeciesDialog, which generates a GUI for creating / editing Species. */
 	private SpeciesDialog sd;
 	
-	/** The model. */
+	/** The SBML model. */
 	private Model model;
 	
 	/**
 	 * Instantiates a new species table.
 	 *
-	 * @param los the los
+	 * @param los the list of species
 	 */
 	SpeciesTable(ListOf<Species> los){
 		this.model = los.getModel();
 		list = los;
 		setSpeciesToList(los);
-		MyTableModel tm = getTableModelWithSpecies(los);
+		MyTableModel tm = getTableModelWithSpecies();
 		table = new JTable(tm);
 		setTableProperties(table);
 		pane = setTableToScroll("species",table);
 	}
 	
 	/**
-	 * Sets the species to list.
+	 * Sets the new species to the list.
 	 *
-	 * @param los the new species to list
+	 * @param los the new species to the list
 	 */
 	private void setSpeciesToList(ListOf<Species> los){
 		long max = los.size();
@@ -60,12 +60,11 @@ public class SpeciesTable extends SBaseTable{
 	}
 	
 	/**
-	 * Gets the table model with species.
+	 * Gets the table model.
 	 *
-	 * @param los the los
 	 * @return the table model with species
 	 */
-	private MyTableModel getTableModelWithSpecies(ListOf<Species> los){
+	private MyTableModel getTableModelWithSpecies(){
 		int max = memberList.size();
 		Object[][] data  = new Object[max][header.length];
 		for(int i = 0; i < max; i++){
@@ -113,10 +112,19 @@ public class SpeciesTable extends SBaseTable{
 	}
 
 	/**
-	 * Species to vector.
+	 * Converts Species to a Vector. The converted vector will contain species information as follows:
+	 * <ul>
+	 *     <li>String:Id</li>
+	 *     <li>double:initialAmount or initialConcentration</li>
+	 *     <li>String:compartment</li>
+	 *     <li>Kind:substance units</li>
+	 *     <li>boolean:has only substance units</li>
+	 *     <li>boolean:boundary condition</li>
+	 *     <li>boolean:constant</li>
+	 * </ul>
 	 *
-	 * @param s the s
-	 * @return the vector
+	 * @param s the JSBML Species object
+	 * @return the converted vector
 	 */
 	private Vector<Object> speciesToVector(Species s){
 		Vector<Object> v = new Vector<Object>();
@@ -137,8 +145,13 @@ public class SpeciesTable extends SBaseTable{
 		return v;
 	}
 	
-	/* (non-Javadoc)
-	 * @see sbmlplugin.pane.SBaseTable#add()
+	/**
+	 * Adds the Species object to a table.
+	 * This method expects that the SBase object which will be added to a table
+	 * should be created / specified through GUI (ex. SpeciesDialog).
+	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#add()
+	 *
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
 	@Override
 	void add() throws IllegalArgumentException{
@@ -154,6 +167,16 @@ public class SpeciesTable extends SBaseTable{
 
 	/* (non-Javadoc)
 	 * @see sbmlplugin.pane.SBaseTable#edit(int)
+	 */
+
+	/**
+	 * Edits the Species object which is specified by the index.
+	 * This method expects that the SBase object which will be edited
+	 * should be modified through GUI (ex. SpeciesDialog).
+	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#edit(int index)
+	 *
+	 * @param index the index of the species
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
 	@Override
 	void edit(int index) throws IllegalArgumentException{

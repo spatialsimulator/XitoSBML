@@ -11,47 +11,48 @@ import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class ParameterTable, which inherits SBaseTable and implements add() and edit() method for
+ * adding and editing parameters.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.pane.TabTables}.
  * Date Created: Jan 20, 2016
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class ParameterTable extends SBaseTable {
 
-	/** The header. */
+	/** The header of table. */
 	private final String[] header = { "id", "value", "units", "constant" };
 	
-	/** The table. */
+	/** The JTable object. */
 	private JTable table;
 	
-	/** The pd. */
+	/** The ParameterDialog, which generates a GUI for creating / editing Parameters. */
 	private ParameterDialog pd;
 	
-	/** The model. */
+	/** The SBML model. */
 	private Model model;
 	
 	/**
 	 * Instantiates a new parameter table.
 	 *
-	 * @param lop the lop
+	 * @param lop the list of parameters
 	 */
 	ParameterTable(ListOf<Parameter> lop){
 		this.model = lop.getModel();
 		list = lop;
 		setParameterToList(lop);
-		MyTableModel tm = getTableModelWithParameters(lop);
+		MyTableModel tm = getTableModelWithParameters();
 		table = new JTable(tm);
 		setTableProperties(table);
 		pane = setTableToScroll("parameter",table);
 	}
 	
 	/**
-	 * Sets the parameter to list.
+	 * Sets the new parameter to the list.
 	 *
-	 * @param lop the new parameter to list
+	 * @param lop the new parameter to the list
 	 */
 	private void setParameterToList(ListOf<Parameter> lop){
 		long max = lop.size();
@@ -65,12 +66,12 @@ public class ParameterTable extends SBaseTable {
 	}
 	
 	/**
-	 * Gets the table model with parameters.
+	 * Gets the table model.
 	 *
-	 * @param lop the lop
 	 * @return the table model with parameters
+	 *
 	 */
-	private MyTableModel getTableModelWithParameters(ListOf<Parameter> lop){
+	private MyTableModel getTableModelWithParameters(){
 		int max = memberList.size();
 		Object[][] data  = new Object[max][header.length];
 		for(int i = 0; i < max; i++){
@@ -106,10 +107,16 @@ public class ParameterTable extends SBaseTable {
 	}
 
 	/**
-	 * Parameter to vector.
+	 * Converts Parameter to a Vector. The converted vector will contain parameter information as follows:
+	 * <ul>
+	 *     <li>String:Id</li>
+	 *     <li>double:value</li>
+	 *     <li>String:unit</li>
+	 *     <li>boolean:constant</li>
+	 * </ul>
 	 *
-	 * @param p the p
-	 * @return the vector
+	 * @param p the JSBML Parameter object
+	 * @return the converted vector
 	 */
 	private Vector<Object> parameterToVector(Parameter p){
 		Vector<Object> v = new Vector<Object>();
@@ -121,8 +128,14 @@ public class ParameterTable extends SBaseTable {
 		return v;
 	}
 	
-	/* (non-Javadoc)
-	 * @see sbmlplugin.pane.SBaseTable#add()
+	/**
+	 * Adds the Parameter object to a table.
+	 * This method expects that the SBase object which will be added to a table
+	 * should be created / specified through GUI (ex. ParameterDialog).
+	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#add()
+	 *
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IdentifierException the identifier exception
 	 */
 	@Override
 	void add() throws IllegalArgumentException , IdentifierException{
@@ -137,8 +150,15 @@ public class ParameterTable extends SBaseTable {
 		((MyTableModel)table.getModel()).addRow(parameterToVector(p.clone()));
 	}
 
-	/* (non-Javadoc)
-	 * @see sbmlplugin.pane.SBaseTable#edit(int)
+	/**
+	 * Edits the Parameter object which is specified by the index.
+	 * This method expects that the SBase object which will be edited
+	 * should be modified through GUI (ex. ParameterDialog).
+	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#edit(int index)
+	 *
+	 * @param index the index of the advection coefficient
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IdentifierException the identifier exception
 	 */
 	@Override
 	void edit(int index) throws IllegalArgumentException, IdentifierException{

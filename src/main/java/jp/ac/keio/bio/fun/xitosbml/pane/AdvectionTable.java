@@ -64,7 +64,7 @@ public class AdvectionTable extends SBaseTable {
 	}
 	
 	/**
-	 * Gets the table model with given parameter (advection coefficient).
+	 * Gets the table model.
 	 *
 	 * @return the table model with parameter
 	 */
@@ -139,7 +139,7 @@ public class AdvectionTable extends SBaseTable {
 	 * should be created / specified through GUI (ex. AdvectionDialog).
 	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#add()
 	 *
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
 	@Override
 	void add() throws IllegalArgumentException{
@@ -161,7 +161,7 @@ public class AdvectionTable extends SBaseTable {
 	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#edit(int index)
      *
 	 * @param index the index of the advection coefficient
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException the illegal argument exception
 	 */
 	@Override
 	void edit(int index) throws IllegalArgumentException{

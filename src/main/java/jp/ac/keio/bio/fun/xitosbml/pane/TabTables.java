@@ -34,26 +34,28 @@ import org.sbml.jsbml.SBase;
 import org.sbml.jsbml.Species;
 import org.sbml.jsbml.text.parser.ParseException;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
+ * The class TabTables, which inherits JFrame and implements main component of XitoSBML.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.xitosbml.MainSpatial},
+ * which creates a GUI for XitoSBML.
+ * Date Created: Jan 12, 2016
  *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp> Date Created: Jan 12, 2016
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 @SuppressWarnings("serial")
 public class TabTables extends JFrame implements ActionListener {
 
-	/** The tabbedpane. */
+	/** The JTabbedPane object. */
 	private JTabbedPane tabbedpane = new JTabbedPane();
 	
-	/** The sbase list. */
+	/** The list of SBaseTable (SpeciesTable, ReactionTable, ParameterTable, etc.). */
 	private ArrayList<SBaseTable> sbaseList = new ArrayList<SBaseTable>();
 	
-	/** The is running. */
+	/** is running. Set to false when exporting to SBML file is done. */
 	private boolean isRunning = true;	
 
-	/** The model. */
+	/** The SBML model. */
 	private Model model;
 	
 	/**
@@ -69,9 +71,9 @@ public class TabTables extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Instantiates a new tab tables.
+	 * Instantiates a new tab tables with given SBML model.
 	 *
-	 * @param model the model
+	 * @param model the SBML model
 	 */
 	public TabTables(Model model) {
 		this();
@@ -128,9 +130,9 @@ public class TabTables extends JFrame implements ActionListener {
 	}
 	
 	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
+	 * Example main() method which will read an SBML file and create a GUI for editing SBML model.
+	 * This example requires a specific SBML model "sam2d.xml" located under the specific directory.
+	 * @param args an array of command-line arguments for the application
 	 */
 	public static void main(String[] args) {
 		SBMLDocument d;
@@ -146,18 +148,20 @@ public class TabTables extends JFrame implements ActionListener {
 
 	/**
 	 * Checks if is running.
+	 * The isRunning value will be set to false when exporting to SBML file is done.
 	 *
-	 * @return true, if is running
+	 * @return true, if running
 	 */
 	public boolean isRunning(){
 		return isRunning;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	/**
+     * Invoked when an action occurs.
+     * This action listener will handle events when a user pressed
+	 * [add], [edit], [delete] or [OK] button. When an [OK] button is pressed,
+	 * the model will be exported to an SBML document, and sent to stdout.
+	 * @param e the ActionEvent
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {

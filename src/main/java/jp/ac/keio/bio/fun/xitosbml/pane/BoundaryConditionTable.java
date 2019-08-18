@@ -11,32 +11,33 @@ import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.ext.spatial.BoundaryCondition;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class BoundaryConditionTable, which inherits SBaseTable and implements add() and edit() method for
+ * adding and editing boundary condition.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.pane.TabTables}.
  * Date Created: Jan 20, 2016
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class BoundaryConditionTable extends SBaseTable {
 
-	/** The header. */
+	/** The header of table. */
 	private final String[] header =  { "id", "value", "constant","species", "type", "boundary"};
 	
-	/** The table. */
+	/** The JTable object. */
 	private JTable table;
 	
-	/** The model. */
+	/** The SBML model. */
 	private Model model;
 	
-	/** The bcd. */
+ 	/** The BoundaryConditionDialog, which generates a GUI for creating / editing Boundary Condition. */
 	private BoundaryConditionDialog bcd;
 	
 	/**
 	 * Instantiates a new boundary condition table.
 	 *
-	 * @param lop the lop
+	 * @param lop the list of parameters
 	 */
 	BoundaryConditionTable(ListOf<Parameter> lop){
 		this.model = lop.getModel();
@@ -49,9 +50,9 @@ public class BoundaryConditionTable extends SBaseTable {
 	}
 	
 	/**
-	 * Sets the parameter to list.
+	 * Sets the new parameter (boundary condition) to the list.
 	 *
-	 * @param lop the new parameter to list
+	 * @param lop the new boundary condition to the list
 	 */
 	private void setParameterToList(ListOf<Parameter> lop){
 		long max = lop.size();
@@ -64,7 +65,7 @@ public class BoundaryConditionTable extends SBaseTable {
 	}
 	
 	/**
-	 * Gets the table model with parameter.
+	 * Gets the table model
 	 *
 	 * @return the table model with parameter
 	 */
@@ -110,10 +111,18 @@ public class BoundaryConditionTable extends SBaseTable {
 	}
 
 	/**
-	 * Parameter to vector.
+	 * Converts Parameter to a Vector. The converted vector will contain parameter information as follows:
+	 * <ul>
+	 *     <li>String:Id</li>
+	 *     <li>double:value</li>
+	 *     <li>boolean:constant</li>
+	 *     <li>String:variable</li>
+	 *     <li>String:type</li>
+	 *     <li>String:boundary or domain type</li>
+	 * </ul>
 	 *
-	 * @param p the p
-	 * @return the vector
+	 * @param p the JSBML Parameter object
+	 * @return the converted vector
 	 */
 	private Vector<Object> parameterToVector(Parameter p){
 		Vector<Object> v = new Vector<Object>();
@@ -128,8 +137,14 @@ public class BoundaryConditionTable extends SBaseTable {
 		return v;
 	}
 	
-	/* (non-Javadoc)
-	 * @see sbmlplugin.pane.SBaseTable#abcd()
+	/**
+	 * Adds the Parameter object (boundary condition) to a table.
+	 * This method expects that the SBase object which will be added to a table
+	 * should be created / specified through GUI (ex. BoundaryConditionDialog).
+	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#add()
+	 *
+	 * @throws IllegalArgumentException
+	 * @throws IdentifierException
 	 */
 	@Override
 	void add() throws IllegalArgumentException, IdentifierException{
@@ -146,6 +161,17 @@ public class BoundaryConditionTable extends SBaseTable {
 
 	/* (non-Javadoc)
 	 * @see sbmlplugin.pane.SBaseTable#edit(int)
+	 */
+
+	/**
+	 * Edits the Parameter object (boundary condition) which is specified by the index.
+	 * This method expects that the SBase object which will be edited
+	 * should be modified through GUI (ex. BoundaryConditionDialog).
+	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#edit(int index)
+	 *
+	 * @param index the index of the boundary condition
+	 * @throws IllegalArgumentException
+	 * @throws IdentifierException
 	 */
 	@Override
 	void edit(int index) throws IllegalArgumentException, IdentifierException{

@@ -10,32 +10,33 @@ import org.sbml.jsbml.Unit;
 import org.sbml.jsbml.UnitDefinition;
 
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
+ * The class UnitDefinitionTable, which inherits SBaseTable and implements add() and edit() method for
+ * adding and editing unit definition.
+ * This class is not used in the current implementation of XitoSBML.
  *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  * Date Created: Jan 26, 2016
  */
 public class UnitDefinitionTable extends SBaseTable {
 	
-	/** The header. */
+	/** The header of table. */
 	private final String[] header = { "id", "unit"};
 	
-	/** The table. */
+	/** The JTable object. */
 	private JTable table;
 	
-	/** The udd. */
+	/** The UnitDefinitionDialog, which generates a GUI for creating / editing UnitDefinition. */
 	private UnitDefinitionDialog udd;
 	
-	/** The model. */
+	/** The SBML model. */
 	private Model model;
 	
 	/**
 	 * Instantiates a new unit definition table.
 	 *
-	 * @param loud the loud
+	 * @param loud the list of unit definition
 	 */
 	UnitDefinitionTable(ListOf<UnitDefinition> loud){
 		this.model = loud.getModel();
@@ -63,7 +64,7 @@ public class UnitDefinitionTable extends SBaseTable {
 	/**
 	 * Gets the table model with unit definitions.
 	 *
-	 * @param loud the loud
+	 * @param loud the list of unit definition
 	 * @return the table model with unit definitions
 	 */
 	private MyTableModel getTableModelWithUnitDefinitions(ListOf<UnitDefinition> loud){
@@ -96,10 +97,20 @@ public class UnitDefinitionTable extends SBaseTable {
 	}
 
 	/**
-	 * Units to string.
+	 * Converts Unit to a String. The converted string will contain unit information as follows:
+	 * <ul>
+	 *     <li>String:(</li>
+	 *     <li>String:multiplier</li>
+	 *     <li>String:scale</li>
+	 *     <li>String: </li>
+	 *     <li>String:kind</li>
+	 *     <li>String: )</li>
+	 *     <li>String:exponent</li>
+	 *     <li>String: * </li>
+	 * </ul>
 	 *
-	 * @param lou the lou
-	 * @return the string
+	 * @param lou the list of unit
+	 * @return the converted string
 	 */
 	private String unitsToString(ListOf<Unit> lou){
 		StringBuilder sb = new StringBuilder();
@@ -119,10 +130,13 @@ public class UnitDefinitionTable extends SBaseTable {
 	}
 	
 	/**
-	 * Unit definition to vector.
+	 * Converts UnitDefinition to a Vector. The converted vector will contain unit definition information as follows:
+	 * <ul>
+	 *     <li>String:Id</li>
+	 * </ul>
 	 *
-	 * @param ud the ud
-	 * @return the vector
+	 * @param ud the UnitDefinition
+	 * @return the converted vector
 	 */
 	private Vector<Object> unitDefinitionToVector(UnitDefinition ud){
 		Vector<Object> v = new Vector<Object>();
@@ -133,22 +147,32 @@ public class UnitDefinitionTable extends SBaseTable {
 //		
 		return v;
 	}
-	/* (non-Javadoc)
-	 * @see sbmlplugin.pane.SBaseTable#add()
+
+	/**
+	 * Adds the UnitDefinition object to a table.
+	 * This method expects that the SBase object which will be added to a table
+	 * should be created / specified through GUI.
+	 * This method is not yet implemented.
+	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#add()
+	 *
 	 */
 	@Override
 	void add() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
-	/* (non-Javadoc)
-	 * @see sbmlplugin.pane.SBaseTable#edit(int)
+	/**
+	 * Edits the UnitDefinition object which is specified by the index.
+	 * This method expects that the SBase object which will be edited
+	 * should be modified through GUI (ex. UnitDefinisionDialog).
+	 * This method is not yet implemented.
+	 * @see jp.ac.keio.bio.fun.xitosbml.pane.SBaseTable#edit(int index)
+	 *
+	 * @param index the index of the unit definition
 	 */
 	@Override
 	void edit(int index) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 }
