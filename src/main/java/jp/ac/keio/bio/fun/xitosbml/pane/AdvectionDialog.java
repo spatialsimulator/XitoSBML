@@ -8,41 +8,43 @@ import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 
 import ij.gui.GenericDialog;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class AdvectionDialog, which generates a GUI for creating / editing Advection Coefficient.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.pane.AdvectionTable}.
  * Date Created: Jan 21, 2016
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class AdvectionDialog {
 	
-	/** The parameter. */
+	/** The JSBML Parameter object. */
 	private Parameter parameter;
 	
-	/** The gd. */
+	/** The generic dialog. */
 	private GenericDialog gd;
 	
-	/** The bool. */
-	private final String[] bool = {"true","false"};
+	/** The boolean value for isConstant. */
+	private final String[] isConstant = {"true","false"};
 	
-	/** The model. */
+	/** The SBML model. */
 	private Model model;
 	
 	/**
 	 * Instantiates a new advection dialog.
 	 *
-	 * @param model the model
+	 * @param model the SBML model
 	 */
 	public AdvectionDialog(Model model){
 		this.model = model;
 	}
 	
 	/**
-	 * Show dialog.
+	 * Create and show a dialog for adding Advection Coefficient.
+	 * If a user creates an advection coefficient through this dialog,
+	 * then a Parameter object will be returned. If not, null is returned.
 	 *
-	 * @return the parameter
+	 * @return the JSBML Parameter object if a parameter is created
 	 */
 	public Parameter showDialog(){
 		gd = new GenericDialog("Add Advection Coefficient");
@@ -51,7 +53,7 @@ public class AdvectionDialog {
 	
 		gd.addStringField("id:", "");
 		gd.addNumericField("value:", 0, 1);
-		gd.addRadioButtonGroup("constant:", bool, 1, 2, "true");
+		gd.addRadioButtonGroup("constant:", isConstant, 1, 2, "true");
 		gd.addChoice("species:", SBMLProcessUtil.listIdToStringArray(model.getListOfSpecies()), null);
 		gd.addChoice("coordinate:", SBMLProcessUtil.lcoord, null);
 		
@@ -66,10 +68,12 @@ public class AdvectionDialog {
 	}
 
 	/**
-	 * Show dialog.
+	 * Create and show a dialog for adding Advection Coefficient with given JSBML Parameter object.
+	 * If a user edits the advection coefficient through this dialog,
+	 * then a Parameter object will be returned. If not, null is returned.
 	 *
-	 * @param parameter the parameter
-	 * @return the parameter
+	 * @param parameter the JSBML Parameter object
+	 * @return the JSBML Parameter object if the parameter is edited
 	 * @throws IllegalArgumentException the illegal argument exception
 	 */
 	public Parameter showDialog(Parameter parameter) throws IllegalArgumentException{
@@ -82,7 +86,7 @@ public class AdvectionDialog {
 		
 		gd.addStringField("id:", parameter.getId());
 		gd.addNumericField("value:", parameter.getValue(), 1);
-		gd.addRadioButtonGroup("constant:", bool, 1, 2, String.valueOf(parameter.getConstant()));
+		gd.addRadioButtonGroup("constant:", isConstant, 1, 2, String.valueOf(parameter.getConstant()));
 		gd.addChoice("species:", SBMLProcessUtil.listIdToStringArray(model.getListOfSpecies()), ac.getVariable());
 		gd.addChoice("coordinate:", SBMLProcessUtil.lcoord, ac.getCoordinate().name());
 	
@@ -96,7 +100,14 @@ public class AdvectionDialog {
 	}
 		
 	/**
-	 * Sets the parameter data.
+	 * Sets/updates the following information of the parameter (advection coefficient) from the GUI.
+	 * <ul>
+	 *     <li>String:Id</li>
+	 *     <li>double:value</li>
+	 *     <li>boolean:constant</li>
+	 *     <li>String:variable</li>
+	 *     <li>String:name</li>
+	 * </ul>
 	 *
 	 * @throws IllegalArgumentException the illegal argument exception
 	 */

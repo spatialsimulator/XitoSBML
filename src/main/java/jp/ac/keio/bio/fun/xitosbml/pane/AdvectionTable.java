@@ -114,7 +114,7 @@ public class AdvectionTable extends SBaseTable {
 	 *     <li>double:value</li>
 	 *     <li>boolean:constant</li>
 	 *     <li>String:variable</li>
-	 *     <li>String:name</li>
+	 *     <li>String:coordinate name</li>
 	 * </ul>
 	 *
 	 * @param p the JSBML Parameter object
