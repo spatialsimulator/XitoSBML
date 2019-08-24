@@ -18,38 +18,37 @@ package jp.ac.keio.bio.fun.xitosbml.image;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class ImageBorder, which provides several image processing filters.
  * Date Created: Jun 18, 2015
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class ImageBorder {
 	
-	/** The width. */
+	/** The width of an image. */
 	private int width;
 	
-	/** The height. */
+	/** The height of an image. */
 	private int height;
 	
-	/** The depth. */
+	/** The depth of an image. */
 	private int depth;
 	
-	/** The raw. */
+	/** The raw data (1D byte array) of the image. */
 	private byte[] raw;
 	
-	/** The has safe border. */
+	/** The image has safe border. */
 	private boolean hasSafeBorder = true;
 	
-	/** The alt stack. */
+	/** The stack of images which has safe border. */
 	private ImageStack altStack;
 	
 	/**
-	 * Instantiates a new image border.
+	 * Instantiates a new ImageBorder object.
 	 *
-	 * @param spImg the sp img
+	 * @param spImg the SpatialImage object
 	 */
 	public ImageBorder(SpatialImage spImg){
 		this.width = spImg.getWidth();
@@ -64,7 +63,8 @@ public class ImageBorder {
 	}
 	
 	/**
-	 * Fix border.
+	 * Fill with 0 for X and Y border. This method is like a zero-padding, but will not
+	 * extend the image size.
 	 */
 	private void fixBorder() {
 		int init = 0, end = depth;
@@ -81,9 +81,9 @@ public class ImageBorder {
 	}
 
 	/**
-	 * Checks if is border safe.
+	 * Checks if border of Z axis is safe (does not contain non zero value on the border layer).
 	 *
-	 * @return true, if is border safe
+	 * @return true, if border of Z axis is safe
 	 */
 	private boolean isBorderSafe(){
 		boolean safez = true;
@@ -92,9 +92,11 @@ public class ImageBorder {
 	}
 	
 	/**
-	 * Check top bottom.
+	 * Check whether top and bottom z-stack image contains non zero value.
+     * If the z-stack image contains non zero value, this means that the 3D image is not
+	 * surrounded with zero values.
 	 *
-	 * @return true, if successful
+	 * @return true, if the top and bottom z-stack image only contains zero value
 	 */
 	private boolean checkTopBottom(){
 		int bottomSlice = (depth - 1) * width * height;
@@ -110,9 +112,10 @@ public class ImageBorder {
 	}
 	
 	/**
-	 * Creates the new stack.
+	 * Creates the new stack of images. If the border of Z axis is not safe,
+	 * then add a layer which is filled with zero (border layer).
 	 *
-	 * @param hasSafeBorder the has safe border
+	 * @param hasSafeBorder the flag whether the border of Z axis is safe
 	 */
 	private void createNewStack(boolean hasSafeBorder){
 		altStack = new ImageStack(width, height);
@@ -135,7 +138,7 @@ public class ImageBorder {
 	}
 	
 	/**
-	 * Creates the new stack.
+	 * Creates the new stack of images.
 	 */
 	private void createNewStack(){
 		altStack = new ImageStack(width, height);
@@ -154,9 +157,9 @@ public class ImageBorder {
 	}
 	
 	/**
-	 * Adds the black slice.
+	 * Adds a black slice (a layer which is filled with zero (that is, the border layer)) to the stack of images.
 	 *
-	 * @param is the is
+	 * @param is the stack of images
 	 */
 	private void addBlackSlice(ImageStack is){
 		byte[] blackSlice = new byte[width * height];
@@ -164,9 +167,9 @@ public class ImageBorder {
 	}
 	
 	/**
-	 * Gets the stack image.
+	 * Gets the stack of images.
 	 *
-	 * @return the stack image
+	 * @return the stack of images
 	 */
 	public ImageStack getStackImage(){
 		return altStack;
