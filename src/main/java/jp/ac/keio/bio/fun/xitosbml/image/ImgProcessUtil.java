@@ -2,21 +2,21 @@ package jp.ac.keio.bio.fun.xitosbml.image;
 
 import ij.ImagePlus;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class ImgProcessUtil, which contains several useful static methods
+ * which wll convert ImageJ image object (ImagePlus) to raw data (1D byte array).
  * Date Created: Nov 2, 2015
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class ImgProcessUtil {
 
     /**
-     * Copy mat.
+     * Converts given image object (ImagePlus) to a raw data (1D byte array).
      *
-     * @param ip the ip
-     * @return the byte[]
+     * @param ip the ImageJ image object
+     * @return the raw data (1D byte array) of given image object
      */
     public static byte[] copyMat(ImagePlus ip){
 		int width = ip.getWidth();
@@ -31,13 +31,14 @@ public class ImgProcessUtil {
 		return pixels;
     }
 	
-    /**
-     * Gets the raw.
-     *
-     * @param ip the ip
-     * @return the raw
-     */
-    public static byte[] getRaw(ImagePlus ip){
+	/**
+	 * Converts given image object (ImagePlus) to a raw data (1D byte array).
+     * This method is not used in XitoSBML. Use {@link #copyMat(ImagePlus)} instead.
+	 *
+	 * @param ip the ImageJ image object
+	 * @return the raw data (1D byte array) of given image object
+	 */
+	public static byte[] getRaw(ImagePlus ip){
 		int width = ip.getWidth();
 		int height = ip.getHeight();
 		int depth = ip.getStackSize();	
@@ -55,10 +56,11 @@ public class ImgProcessUtil {
     }
 	
     /**
-     * Gets the label mat.
-     *
-     * @param ip the ip
-     * @return the label mat
+     * Gets the label matrix.
+	 * This method is not yet implemented.
+	 *
+	 * @param ip the ImageJ image object
+	 * @return the label matrix (1D byte array) of given image object
      */
     public static byte[] getlabelMat(ImagePlus ip){
 		int width = ip.getWidth();
