@@ -178,7 +178,7 @@ public class SpatialSBMLExporter{
 
 	/**
 	 * Adds the geometry definitions.
-	 * This method supports creating both 2D and 3D space (by looking into DomainType).
+	 * This method supports creating both 2D and 3D spaces (by looking into DomainType).
      * Each element in SampledField will store unsigned int 8 bit (uint8) value.
      * Data compression is currently disabled.
 	 */
@@ -299,7 +299,7 @@ public class SpatialSBMLExporter{
 
 	/**
 	 * Adds domains to corresponding domaintypes.
-	 * If SpatialId contains a string "membrane", it will be handled as membrain domain,
+	 * If SpatialId contains a string "membrane", it will be handled as membrane domain,
 	 * thus InteriorPoint will not be added to the domain.
 	 */
 	public void addDomains() {

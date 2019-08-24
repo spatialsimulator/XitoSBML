@@ -131,7 +131,7 @@ public class CreateImage {
 
    /**
     * Check whether the pixel value of composite image is smaller than the given pixel value.
-	* Both composite image pixel and given pixel value is treated as 8bit value.
+	* Both composite image pixel and given pixel values are treated as 8bit value.
     *
     * @param compoVal the value of a composite image
     * @param pixVal the value of a pixel
