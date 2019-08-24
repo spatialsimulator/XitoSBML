@@ -13,48 +13,53 @@ import ij.process.ByteProcessor;
 
 // TODO: Auto-generated Javadoc
 /**
- * The Class Filler.
+ * The class Filler, which provides several morphological operations for filling holes in the image.
+ * Date Created: Feb 21, 2017
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class Filler {
 	
-	/** The image. */
+	/** The ImageJ image object. */
 	private ImagePlus image;
 	
-	/** The width. */
+	/** The width of an image. */
 	private int width;
 	
-	/** The height. */
+	/** The height of an image. */
 	private int height;
 	
-	/** The depth. */
+	/** The depth of an image. */
 	private int depth;
 	
-	/** The lwidth. */
+	/** The width of an image including padding. */
 	private int lwidth;
 	
-	/** The lheight. */
+	/** The height of an image including padding. */
 	private int lheight;
 	
-	/** The ldepth. */
+	/** The depth of an image including padding. */
 	private int ldepth;
 	
-	/** The mask. */
+	/** The mask which will be used for filling holes. */
 	private int[] mask;
 	
-	/** The hash pix. */
+	/** The hashmap of pixel value. &lt;labelnumber, pixel value&gt;. */
 	private HashMap<Integer, Byte> hashPix = new HashMap<Integer, Byte>();		// label number, pixel value
 	
-	/** The pixels. */
+	/** The raw data (1D byte array) of the image. */
 	private byte[] pixels;
 	
-	/** The invert. */
+	/** The raw data (1D int array) of inverted the image. */
 	private int[] invert;
 	
 	/**
-	 * Fill.
+	 * Fill a hall in the given image (ImagePlus object) by morphology operation,
+	 * and returns the filled image.
 	 *
-	 * @param image the image
-	 * @return the image plus
+	 * @param image the ImageJ image object
+	 * @return the filled image
 	 */
 	public ImagePlus fill(ImagePlus image){
 		this.width = image.getWidth();
@@ -79,10 +84,11 @@ public class Filler {
 	}
 
 	/**
-	 * Fill.
+	 * Fill the given image ({@link SpatialImage} object) by morphology operation,
+	 * and returns the fillled image as ImageJ image object.
 	 *
-	 * @param spImg the sp img
-	 * @return the image plus
+	 * @param spImg the SpatialImage object
+	 * @return the ImageJ image (ImagePlus) object
 	 */
 	public ImagePlus fill(SpatialImage spImg){
 		this.width = spImg.getWidth();
@@ -107,9 +113,10 @@ public class Filler {
 	}
 	
 	/**
-	 * Creates the stack.
+	 * Creates the stack of image from raw data (1D array) of image (pixels[]),
+	 * and returns the stack of image.
 	 *
-	 * @return the image stack
+	 * @return the stack of image
 	 */
 	private ImageStack createStack(){
 		ImageStack altimage = new ImageStack(width, height);
@@ -121,9 +128,12 @@ public class Filler {
 		return altimage;
 	}
 	
-	 /**
- 	 * Invert mat.
- 	 */
+	/**
+	 * TODO:
+	 * Create an inverted 1D array of an image (invert[]) from 1D array of an image (pixels[]).
+	 * Each pixel value will be inverted (0 -> 1, otherwise -> 0). For example, the Black and White
+	 * binary image will be converted to a White and Black binary image.
+	 */
  	private void invertMat(){
 		lwidth = width + 2;
 		lheight = height + 2;
@@ -132,7 +142,7 @@ public class Filler {
 		
 		invert = new int[lwidth * lheight * ldepth]; 
 		mask = new int[lwidth * lheight * ldepth];
-		if (ldepth > depth) {
+		if (ldepth > depth) {  // 3D image
 			for (int d = 0; d < ldepth; d++) {
 				for (int h = 0; h < lheight; h++) {
 					for (int w = 0; w < lwidth; w++) {
@@ -149,7 +159,7 @@ public class Filler {
 					}
 				}
 			}
-		} else {
+		} else { // 2D image
 			for (int d = 0; d < ldepth; d++) {
 				for (int h = 0; h < lheight; h++) {
 					for (int w = 0; w < lwidth; w++) {
@@ -173,6 +183,7 @@ public class Filler {
 	private int labelCount;
 	
 	/**
+	 * TODO:
 	 * Label.
 	 */
 	public void label(){
@@ -206,9 +217,9 @@ public class Filler {
 	}
 	
 	/**
-	 * Check hole.
+	 * Check whether a hole exists in the hashmap of pixels (HashMap&lt;label number, pixel value&gt;).
 	 *
-	 * @return true, if successful
+	 * @return true, if a hole exists
 	 */
 	public boolean checkHole(){
 		if(Collections.frequency(hashPix.values(), (byte) 0) > 1)
@@ -218,23 +229,26 @@ public class Filler {
 	}
 	
 	/**
-	 * Fill hole.
+	 * Fill a hole in the hashmap of pixels (HashMap&lt;label number, pixel value&gt; by morphology operation.
+	 * The fill operation will be applied to each domain (which has unique label number).
 	 */
 	public void fillHole(){
 		for(Entry<Integer, Byte> e : hashPix.entrySet()){
 			if(!e.getKey().equals(1) && e.getValue().equals((byte)0)){
 				fill(e.getKey());
-			}		
+			}
 		}
 	}
 	
 	/**
-	 * Fill.
+	 * TODO:
+	 * Fill a hole in the hashmap of pixels (HashMap&lt;label number, pixel value&gt; by morphology operation.
+     * The hole will be filled with the pixel value of adjacent pixel.
 	 *
 	 * @param index the index
 	 */
 	public void fill(int index){
-		if (ldepth > depth) {
+		if (ldepth > depth) { // 3D image
 			for (int d = 1; d < ldepth; d++) {
 				for (int h = 1; h < lheight - 1; h++) {
 					for (int w = 1; w < lwidth - 1; w++) {
@@ -244,7 +258,7 @@ public class Filler {
 					}
 				}
 			}
-		} else {
+		} else { // 2D image
 			for (int d = 0; d < ldepth; d++) {
 				for (int h = 1; h < lheight - 1; h++) {
 					for (int w = 1; w < lwidth - 1; w++) {
@@ -258,11 +272,12 @@ public class Filler {
 	}
 	
 	/**
+	 * TODO:
 	 * Check adjacents label.
 	 *
-	 * @param w the w
-	 * @param h the h
-	 * @param d the d
+	 * @param w the width of the image
+	 * @param h the height of the image
+	 * @param d the depth of the image
 	 * @param index the index
 	 * @return the byte
 	 */
@@ -318,6 +333,7 @@ public class Filler {
 	}
 	
 	/**
+	 * TODO:
 	 * Sets the label.
 	 *
 	 * @param w the w
@@ -364,6 +380,7 @@ public class Filler {
 
 	
 	/**
+	 * TODO:
 	 * Setback label.
 	 *
 	 * @param w the w
@@ -410,6 +427,7 @@ public class Filler {
 		}
 	
 	/**
+	 * TODO:
 	 * Rewrite label.
 	 *
 	 * @param dEnd the d end
