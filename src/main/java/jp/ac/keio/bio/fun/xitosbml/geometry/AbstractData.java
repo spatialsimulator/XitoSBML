@@ -2,26 +2,34 @@ package jp.ac.keio.bio.fun.xitosbml.geometry;
 
 import org.sbml.jsbml.ext.spatial.GeometryDefinition;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
+ * The class AbstractData, which is an abstract class and be used to
+ * create data objects for geometry objects (AnalyticGeometryData, SampledFieldGeometryData and ParametricGeometryData).
  *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * This class contains following objects which are related to geometry.
+ * <ul>
+ *     <li>GeometryDefinition {@link org.sbml.jsbml.ext.spatial.GeometryDefinition}</li>
+ *     <li>Title (SpatialId as String)</li>
+ * </ul>
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.geometry.ImageGeometryData}.
+ *
  * Date Created: Jun 25, 2015
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public abstract class AbstractData {
 	
-	/** The gd. */
+	/** The GeometryDefinition object. */
 	GeometryDefinition gd;
 	
-	/** The title. */
+	/** The title (SpatialId). */
 	String title;
 	
 	/**
 	 * Instantiates a new abstract data.
 	 *
-	 * @param gd the gd
+	 * @param gd the GeometryDefinition object
 	 */
 	AbstractData(GeometryDefinition gd){
 		this.gd = gd;

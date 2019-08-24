@@ -2,20 +2,23 @@ package jp.ac.keio.bio.fun.xitosbml.geometry;
 
 import org.sbml.jsbml.ext.spatial.GeometryDefinition;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
+ * The class ParametricGeometryData, which inherits ImageGeometryData.
+ * implements getSampledValues() and createImage() methods.
+ * ParametricGeometry is not supported in the current version of XitoSBML,
+ * thus this code is not used anywhere.
  *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 26, 2015
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class ParametricGeometryData extends AbstractData {
 
 	/**
-	 * Instantiates a new parametric geometry data.
+	 * Instantiates a new sampled field geometry data with given GeometryDefinition.
 	 *
-	 * @param gd the gd
+	 * @param gd the GeometryDefinition
 	 */
 	ParametricGeometryData(GeometryDefinition gd) {
 		super(gd);

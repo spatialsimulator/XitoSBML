@@ -14,33 +14,42 @@ import ij.process.ByteProcessor;
 import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
 
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
+ * The class SampledFieldGeometryData, which inherits ImageGeometryData and
+ * implements getSampledValues() and createImage() methods. This class
+ * contains following objects which are related to sampled field geometry.
+ * <ul>
+ *     <li>Geometry {@link org.sbml.jsbml.ext.spatial.SampledFieldGeometry}</li>
+ *     <li>image size</li>
+ * </ul>
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.geometry.GeometryDatas},
+ * to visualize a model in 3D space.
  *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 26, 2015
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class SampledFieldGeometryData extends ImageGeometryData {
 	
-	/** The sfg. */
+	/** The sampled filed geometry object. */
 	private SampledFieldGeometry sfg;
 	
-	/** The width. */
+	/** The width of an image. */
 	private int width;
 	
-	/** The height. */
+	/** The height of an image. */
 	private int height;
 	
-	/** The depth. */
+	/** The depth of an image. */
 	private int depth;
 	
 	/**
-	 * Instantiates a new sampled field geometry data.
+	 * Instantiates a new sampled field geometry data with given GeometryDefinition
+	 * and Geometry.
 	 *
-	 * @param gd the gd
-	 * @param g the g
+	 * @param gd the GeometryDefinition
+	 * @param g the Geometry
 	 */
 	public SampledFieldGeometryData(GeometryDefinition gd, Geometry g) {
 		super(gd, g);
@@ -49,8 +58,9 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 		createImage();
 	}
 
-	/* (non-Javadoc)
-	 * @see sbmlplugin.visual.ImageGeometryData#getSampledValue()
+	/**
+	 * Get sampled value from Geometry (SampledFieldGeometry) and
+	 * sets its value to the hashSampledValue (hashmap of sampled value).
 	 */
 	@Override
 	protected void getSampledValues() {											//may need to use min/max in future
@@ -62,9 +72,10 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 		}
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see sbmlplugin.geometry.ImageGeometryData#createImage()
+	/**
+	 * Create a stacked image from spatial image (3D).
+	 * The value of each pixel corresponds to the domain.
+	 * @see jp.ac.keio.bio.fun.xitosbml.geometry.ImageGeometryData#createImage()
 	 */
 	@Override
 	protected void createImage(){
@@ -85,7 +96,7 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 	}
 	
 	/**
-	 * Creates the stack.
+	 * Creates the stacked image from the raw data (1D array) of spatial image.
 	 *
 	 * @return the image stack
 	 */
@@ -102,10 +113,11 @@ public class SampledFieldGeometryData extends ImageGeometryData {
     }
 	
 	/**
-	 * Gets the size.
-	 *
-	 * @param sf the sf
-	 * @return the size
+	 * Gets the size of geometry, and sets the height, depth
+	 * of the given sampled field. These values will be obtained
+	 * by the size of SampledField object.
+     *
+	 * @param sf the sampled field object
 	 */
 	private void getSize(SampledField sf){
 		width = sf.getNumSamples1();
@@ -114,12 +126,11 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 		else					  depth = 1;
 	}
 	
-	
 	/**
-	 * Gets the array.
+	 * Create a byte array (raw), which will be used to store the value of an image.
+     * Data compression is currently not supported.
 	 *
-	 * @param sf the sf
-	 * @return the array
+	 * @param sf the sampled field object
 	 */
 	private void getArray(SampledField sf){
 		String[] data;
@@ -131,13 +142,14 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 		
 		raw = stringToByte(data);
 	}
-	
-	
+
 	/**
-	 * Int to byte.
+     * Convert String array, which contains pixel values of sampled field as String,
+	 * to 1D byte array. Currently this implementation expects that the String
+	 * array only contains "-255" to "255" values.
 	 *
-	 * @param array the array
-	 * @param raw the raw
+	 * @param data the String array which contains pixel values as String
+	 * @return raw the raw data (1D array) of sampled field.
 	 */
 	private byte[] stringToByte(String[] data){		
 		raw = new byte[data.length];
@@ -150,8 +162,13 @@ public class SampledFieldGeometryData extends ImageGeometryData {
 		return raw;
 	}
 
-	/* (non-Javadoc)
-	 * @see sbmlplugin.visual.ImageGeometryData#getSpatialImage()
+	/**
+	 * Create and return a new spatial image.
+	 * SpatialImage object is generated with the ImagePlus object (img) and the hashmap of sampled value
+	 * (pixel value of a SampledVolume).
+	 * @see jp.ac.keio.bio.fun.xitosbml.geometry.ImageGeometryData#getSpatialImage()
+	 *
+	 * @return spatial image object, which is an object for handling spatial image in XitoSBML.
 	 */
 	@Override
 	public SpatialImage getSpatialImage() {

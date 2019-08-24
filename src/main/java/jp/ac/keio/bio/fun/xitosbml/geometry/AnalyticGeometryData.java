@@ -17,48 +17,61 @@ import ij.process.ByteProcessor;
 import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
 import math3d.Point3d;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
+ * The class AnalyticGeometryData, which inherits ImageGeometryData and
+ * implements getSampledValues() and createImage() methods. This class
+ * contains following objects which are related to analytic geometry.
+ * <ul>
+ *     <li>Geometry {@link org.sbml.jsbml.ext.spatial.AnalyticGeometry}</li>
+ *     <li>coordinates of boundary</li>
+ *     <li>coordinate of displacement</li>
+ *     <li>image size</li>
+ *     <li>delta</li>
+ * </ul>
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.geometry.GeometryDatas},
+ * to visualize a model in 3D space.
  *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 26, 2015
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class AnalyticGeometryData extends ImageGeometryData {
 	
-	/** The ag. */
+	/** The analytic geometry object. */
 	private AnalyticGeometry ag;
 	
-	/** The min coord. */
+	/** The minimum value of the coordinate axis (boundary). */
 	protected Point3d minCoord = new Point3d();
 	
-	/** The max coord. */
+	/** The maximum value of the coordinate axis (boundary). */
 	protected Point3d maxCoord = new Point3d();
 	
-	/** The disp coord. */
+	/** The coordinate of displacement. */
 	protected Point3d dispCoord = new Point3d();
 	
-	/** The width. */
+	/** The width of an image. */
 	private int width = 32; //TODO find better way to determine image size
 	
-	/** The height. */
+	/** The height of an image. */
 	private int height;
 	
-	/** The depth. */
+	/** The depth of an image. */
 	private int depth;
 	
-	/** The delta. */
+	/** The delta (x, y, z) of the 3D space. These values will be calculated
+	 * by the size of 3D space and the width of an image. */
 	private Point3d delta = new Point3d();
 	
 	/**
-	 * Instantiates a new analytic geometry data.
+	 * Instantiates a new analytic geometry data with given GeometryDefinition
+	 * and Geometry.
 	 *
-	 * @param gd the gd
-	 * @param g the g
-	 * @param minCoord the min coord
-	 * @param maxCoord the max coord
-	 * @param dispCoord the disp coord
+	 * @param gd the GeometryDefinition
+	 * @param g the Geometry
+	 * @param minCoord the minimum value of the coordinate axis (boundary)
+	 * @param maxCoord the maximum value of the coordinate axis (boundary)
+	 * @param dispCoord the coordinate of displacement
 	 */
 	AnalyticGeometryData(GeometryDefinition gd, Geometry g, Point3d minCoord, Point3d maxCoord, Point3d dispCoord) {
 		super(gd, g);
@@ -70,8 +83,12 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		createImage();
 	}
 
-	/* (non-Javadoc)
-	 * @see sbmlplugin.visual.ImageGeometryData#getSampledValue()
+	/**
+	 * Get sampled value from Geometry (SampledFieldGeometry or AnalyticGeometry) and
+	 * sets its value to the hashSampledValue (hashmap of sampled value).
+	 * AnalyticGeometry does not contain sampled value, so it will be calculated
+	 * by the ordinal value of each domain.
+	 * @see jp.ac.keio.bio.fun.xitosbml.geometry.ImageGeometryData#getSampledValues()
 	 */
 	@Override
 	void getSampledValues() {
@@ -82,11 +99,13 @@ public class AnalyticGeometryData extends ImageGeometryData {
 		for(int i = 0 ; i < numDom ; i++){
 			AnalyticVolume av = loav.get(i);
 			hashSampledValue.put(av.getDomainType(), av.getOrdinal() * intervalVal);
-		}		
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see sbmlplugin.visual.ImageGeometryData#createImage()
+	/**
+     * Create a stacked image from spatial image (3D).
+	 * The value of each pixel corresponds to the domain.
+	 * @see jp.ac.keio.bio.fun.xitosbml.geometry.ImageGeometryData#createImage()
 	 */
 	@Override
 	void createImage() {
@@ -102,7 +121,7 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	}
 	
 	/**
-	 * Creates the stack.
+	 * Creates the stacked image from the raw data (1D array) of spatial image.
 	 *
 	 * @return the image stack
 	 */
@@ -119,9 +138,14 @@ public class AnalyticGeometryData extends ImageGeometryData {
     }
 	
 	/**
-	 * Sets the volume to array.
+	 * Sets the AnalyticVolume to 1D byte array (raw).
+	 * The sub volume (domain) will written to the array in the specific order
+	 * specified in orderedList.
+	 * As each domain shape is represented as an equation (AST), the AST is
+	 * evaluated in this method by resolveDomain() to calculate the geometry of
+	 * each pixel.
 	 *
-	 * @param orderedList the new volume to array
+	 * @param orderedList the ordered list of AnalyticVolume
 	 */
 	private void setVolumeToArray(ArrayList<AnalyticVolume> orderedList){
 
@@ -140,13 +164,16 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	}
 	
 	/**
-	 * Resolve domain.
+	 * Evaluate AST (Abstract Syntax Tree), which represents the shape of domain
+	 * as an equation. As each domain shape is represented as an equation (AST),
+	 * the AST has to be evaluated to calculate the geometry of each pixel.
 	 *
-	 * @param ast the ast
-	 * @param x the x
-	 * @param y the y
-	 * @param z the z
-	 * @return the double
+	 * @param ast the AST (Abstract Syntax Tree) object, which represents the shape of domain
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 * @param z the z coordinate
+	 * @return the evaluation result as a double value. If the equation is equality or inequality,
+	 * this method will return 1 on true, otherwise 0.
 	 */
 	private double resolveDomain(ASTNode ast, int x, int y, int z) {
 		
@@ -247,11 +274,14 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	}
 	
 	/**
-	 * Order volume.
-	 *
-	 * @param orderedList the ordered list
-	 * @param loav the loav
-	 * @return the array list
+	 * Create ordered list of AnalyticVolume (orderedList) by given list of AnalyticVolume (loav).
+	 * The order of AnalyticVolume is be determined by the value of ordinal assigned to each domain.
+	 * Also, the AST (Abstract Syntax Tree) which represents the analytic geometry will be rearranged
+	 * so that the spatial simulator can easily evaluate AST to create a simulation space.
+     *
+	 * @param orderedList the ordered list of AnalyticVolume
+	 * @param loav list of AnalyticVolume (pre-ordered)
+	 * @return the array list of ordered list of AnalyticVolume (orderedList)
 	 */
 	private ArrayList<AnalyticVolume> orderVolume(ArrayList<AnalyticVolume> orderedList, ListOf<AnalyticVolume> loav){
 		int numDom = (int) loav.size();
@@ -270,9 +300,13 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	}
 	
 	/**
-	 * Rearrange AST.
+	 * Rearrange AST (Abstract Syntax Tree).
+	 * This method will recursively rearrange AST which represents the analytic geometry
+	 * so that the evaluation of AST can easily be handled while creating a simulation space.
+	 * For example, the piecewise function will be replaces with boolean logic
+	 * and expression, "-a" will be transformed to "-1 * a", etc.
 	 *
-	 * @param ast the ast
+	 * @param ast the AST to be rearranged
 	 */
 	private void rearrangeAST(ASTNode ast){
 		Type type = ast.getType();
@@ -361,9 +395,9 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	}
 	
 	/**
-	 * Gets the size.
-	 *
-	 * @return the size
+	 * Gets the size of geometry, and sets the height, depth and
+	 * the delta (x, y, z) of the 3D space. These values will be calculated
+	 * by the size of 3D space and the width of an image.
 	 */
 	private void getSize(){
 		height = (int) (width * maxCoord.y / maxCoord.x);
@@ -376,17 +410,20 @@ public class AnalyticGeometryData extends ImageGeometryData {
 	}
 	
 	/**
-	 * Gets the array.
-	 *
-	 * @return the array
+     * Create a byte array (raw), which will be used to store the value of an image.
 	 */
 	private void getArray(){
 		int length = height * width * depth;
 		raw = new byte[length];
 	}
 	
-	/* (non-Javadoc)
-	 * @see sbmlplugin.visual.ImageGeometryData#getSpatialImage()
+	/**
+	 * Create and return a new spatial image.
+	 * SpatialImage object is generated with the ImagePlus object (img) and the hashmap of sampled value
+	 * (pixel value of a SampledVolume).
+	 * @see jp.ac.keio.bio.fun.xitosbml.geometry.ImageGeometryData#getSpatialImage()
+	 *
+	 * @return spatial image object, which is an object for handling spatial image in XitoSBML.
 	 */
 	@Override
 	public SpatialImage getSpatialImage() {

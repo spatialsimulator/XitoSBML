@@ -16,45 +16,57 @@ import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
 import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
 import math3d.Point3d;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
+ * The class GeometryDatas, which contains following objects which are related to geometry.
+ * <ul>
+ *     <li>SBML model {@link org.sbml.jsbml.Model}</li>
+ *     <li>Geometry {@link org.sbml.jsbml.ext.spatial.Geometry}</li>
+ *     <li>coordinates of boundary</li>
+ *     <li>dimension</li>
+ *     <li>list of domains(String)</li>
+ *     <li>list of {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage}s</li>
+ * </ul>
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.xitosbml.MainSBaseSpatial},
+ * to visualize a model in 3D space.
  *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
  * Date Created: Jun 25, 2015
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class GeometryDatas {
 	
-	/** The model. */
+	/** The SBML model. */
 	protected Model model;
 	
 	/** The spatialplugin. */
 	protected SpatialModelPlugin spatialplugin;
 	
-	/** The geometry. */
+	/** The Geometry object. Geometry might be a SampledFieldGeometry or AnalyticGeometry */
 	protected Geometry geometry;
 	
-	/** The min coord. */
+	/** The minimum value of the coordinate axis (boundary). */
 	protected Point3d minCoord = new Point3d();
 	
-	/** The max coord. */
+	/** The maximum value of the coordinate axis (boundary). */
 	protected Point3d maxCoord = new Point3d();
 	
-	/** The disp coord. */
+	/** The displacement from original coordinates to modified coordinate. */
 	protected Point3d dispCoord = new Point3d();		//displacement from original coordinates to modified coordinate
 	
-	/** The dimension. */
+	/** The dimension of the geometry. */
 	protected int dimension;
 	
-	/** The dom list. */
+	/** The list of domains. */
 	protected ArrayList<String> domList = new ArrayList<String>();
 	
-	/** The sp img list. */
+	/** The list of {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage}. */
 	private ArrayList<SpatialImage> spImgList = new ArrayList<SpatialImage>();
 	
 	/**
-	 * Instantiates a new geometry datas.
+	 * Instantiates a new GeometryDatas object with given SBML model.
+	 * The geometry, minimum values of the coordinate * axis (boundary), domain
+	 * types which are stored in the model will be set to this object.
 	 *
 	 * @param model the model
 	 */
@@ -67,7 +79,8 @@ public class GeometryDatas {
 	}
 	
 	/**
-	 * Createsp img list.
+	 * Create the list of {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage},
+	 * which is a class for handling spatial image in XitoSBML.
 	 */
 	protected void createspImgList(){
 		ListOf<GeometryDefinition> logd = geometry.getListOfGeometryDefinitions();
@@ -81,10 +94,12 @@ public class GeometryDatas {
 	}
 	
 	/**
-	 * Gets the sp img from geo.
+	 * Gets the {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage}
+	 * object from given GeometryDefinition. Currently, this method
+	 * supports AnalyticGeometry and SampledFieldGeometry.
 	 *
-	 * @param gd the gd
-	 * @return the sp img from geo
+	 * @param gd the JSBML GeometryDefinition object
+	 * @return the SpatialImage object
 	 */
 	protected SpatialImage getSpImgFromGeo(GeometryDefinition gd){
 		if(gd.isSetIsActive() && !gd.getIsActive()) return null;			//if isactive set and is false
@@ -99,16 +114,16 @@ public class GeometryDatas {
 				//TODO 
 		}else{
 			System.err.println("Not able to obtain geometry \n"
-					+ "This plugin is only able to visualize AnalyticGeometry SampledFieldGeometry. ");
+					+ "This plugin is only able to visualize AnalyticGeometry and SampledFieldGeometry. ");
 			return null;
 		}
 		return null;
 	}
 	
 	/**
-	 * Gets the coordinates.
+	 * Gets the minimum and maximum values of the coordinate axis (boundary)
+	 * from the geometry, and then adjust the axis (reset to 0 origin).
 	 *
-	 * @return the coordinates
 	 */
 	protected void getCoordinates(){
 		ListOf<CoordinateComponent> locc = geometry.getListOfCoordinateComponents();
@@ -132,7 +147,8 @@ public class GeometryDatas {
 	}
 	
 	/**
-	 * Adjust axis.
+	 * Adjust axis to 0 origin.
+	 * This adjustment is required to properly visualized on ImageJ 3D Viewer.
 	 */
 	protected void adjustAxis(){
 		switch(dimension){
@@ -159,9 +175,9 @@ public class GeometryDatas {
 	}
 	
 	/**
-	 * Gets the domain types.
+	 * Gets the domain types from the geometry object, and then add them
+	 * to the list of domains.
 	 *
-	 * @return the domain types
 	 */
 	protected void getDomainTypes(){
 		ListOf<DomainType> lodt = geometry.getListOfDomainTypes();
@@ -173,9 +189,9 @@ public class GeometryDatas {
 	}
 
 	/**
-	 * Gets the sp img list.
+	 * Gets the list of {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage}.
 	 *
-	 * @return the sp img list
+	 * @return the list of {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage}.
 	 */
 	public ArrayList<SpatialImage> getSpImgList() {
 		createspImgList();
