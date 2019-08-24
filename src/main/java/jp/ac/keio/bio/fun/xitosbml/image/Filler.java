@@ -114,7 +114,7 @@ public class Filler {
 	private ImageStack createStack(){
 		ImageStack altimage = new ImageStack(width, height);
 		for(int d = 0 ; d < depth ; d++){
-			byte matrix[] = new byte[width * height];
+			byte[] matrix = new byte[width * height];
 			System.arraycopy(pixels, d * height * width, matrix, 0, matrix.length);
 			altimage.addSlice(new ByteProcessor(width,height,matrix,null));
 		}
