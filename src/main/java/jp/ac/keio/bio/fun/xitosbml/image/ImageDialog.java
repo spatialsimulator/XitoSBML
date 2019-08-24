@@ -18,26 +18,30 @@ import ij.io.Opener;
 import ij.plugin.FolderOpener;
 
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ImageDialog.
+ * The class ImageDialog, which generates a GUI for importing an image from ImageJ or a file.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.image.ImageTable}.
+ * Date Created: Feb 21, 2017
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class ImageDialog implements ItemListener{
 	
-	/** The img. */
+	/** The ImageJ image object. */
 	private ImagePlus img;
 	
-	/** The gd. */
+	/** The GenericDialog, which is an utility class for creating a Dialog. */
 	private GenericDialog gd;
 	
-	/** The from file. */
+	/** Whether an image will be imported from a file. */
 	private boolean fromFile;
 	
 	
 	/**
 	 * Show dialog.
 	 *
-	 * @return the image plus
+	 * @return the ImageJ image object (ImagePlus)
 	 */
 	public ImagePlus showDialog(){
 		gd = new GenericDialog("Add Image");
@@ -62,9 +66,9 @@ public class ImageDialog implements ItemListener{
 	}
 	
 	/**
-	 * From image.
+	 * Handle importing an image from ImageJ.
 	 *
-	 * @return the image plus
+	 * @return the ImageJ image object (ImagePlus)
 	 */
 	@SuppressWarnings("unchecked")
 	private ImagePlus fromImage(){
@@ -76,7 +80,7 @@ public class ImageDialog implements ItemListener{
 	}
 	
 	/**
-	 * Adds the image choice.
+     * Create and add GUI componet which will let users to choose an image.
 	 */
 	private void addImageChoice(){
 		int numimage = WindowManager.getImageCount();
@@ -100,16 +104,16 @@ public class ImageDialog implements ItemListener{
 		gd.addChoice("Image", images, name);
 	}
 		
-	/** The open img. */
+	/** The FolderOpener object for opening images. */
 	private FolderOpener openImg = new FolderOpener();
 	
-	/** The open. */
+	/** The file opener. */
 	private Opener open = new Opener();
 	
 	/**
-	 * From file.
+	 * Handle importing an image from file.
 	 *
-	 * @return the image plus
+	 * @return the ImageJ image object (ImagePlus)
 	 */
 	public ImagePlus fromFile(){
 		File f = getFile();
@@ -132,9 +136,9 @@ public class ImageDialog implements ItemListener{
 	}
 
 	/**
-	 * Gets the file.
+     * Launches a JFileChooser and let users select a file through the GUI.
 	 *
-	 * @return the file
+	 * @return the selected file
 	 */
 	private File getFile(){
 		fromFile = true;
@@ -150,9 +154,9 @@ public class ImageDialog implements ItemListener{
 	}
 	
 	/**
-	 * Adds the image name.
+	 * Adds the image name with given title string.
 	 *
-	 * @param title the title
+	 * @param title the title of the image
 	 */
 	@SuppressWarnings("unchecked")
 	private void addImageName(String title){
@@ -165,10 +169,10 @@ public class ImageDialog implements ItemListener{
 	}
 
 	/**
-	 * Check image.
+	 * Check whether the given image is 8-bit grayscale image.
 	 *
-	 * @param img the img
-	 * @return true, if successful
+	 * @param img the ImageJ image object
+	 * @return true, if the given image is 8-bit grayscale image
 	 */
 	private boolean checkImage(ImagePlus img){
 		if (img == null)
@@ -181,8 +185,13 @@ public class ImageDialog implements ItemListener{
 		}
 	}
 	
-	/* (non-Javadoc)
+	/**
+	 * Invoked when an item has been selected or deselected by the user.
+     * Switches the import function from "From File" to "From Image" or
+	 * vice versa depending on the selected item.
 	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
+	 *
+	 * @param e the ItemEvent
 	 */
 	@Override
 	public void itemStateChanged(ItemEvent e) {
