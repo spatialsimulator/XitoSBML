@@ -19,7 +19,9 @@ import ij.ImageStack;
 import ij.process.ByteProcessor;
 
 /**
- * The class ImageBorder, which provides several image processing filters.
+ * The class ImageBorder, which provides several image processing functions to handle X-Y and Z border.
+ * The X-Y and Z border should have to be safe to ensure that the filling function (filling holes) will
+ * work correctly.
  * Date Created: Jun 18, 2015
  *
  * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
