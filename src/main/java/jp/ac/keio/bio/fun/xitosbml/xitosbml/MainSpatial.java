@@ -52,7 +52,7 @@ public abstract class MainSpatial implements PlugIn{
 	/** The hashmap of domain types. */
 	private HashMap<String, Integer> hashDomainTypes;
 	
-	/** The hashmap of sampled value. */
+	/** The hashmap of sampled value of spatial image. */
 	protected HashMap<String, Integer> hashSampledValue;
 	
 	/** The viewer. */

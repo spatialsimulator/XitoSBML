@@ -16,31 +16,35 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
-import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.MessageDialog;
 import ij.io.FileInfo;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ImageExplorer.
+ * The class ImageExplorer, which inherits JFrame and implements table component of XitoSBML.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.xitosbml.MainSpatial},
+ * which creates a GUI for XitoSBML.
+ * Date Created: Feb 21, 2017
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 @SuppressWarnings("serial")
 public class ImageExplorer extends JFrame implements ActionListener{
 
-	/** The hash domain types. */
+	/** The hashmap of domain types. HashMap&lt;String, Integer&gt;*/
 	private HashMap<String, Integer> hashDomainTypes;
 	
-	/** The hash sampled values. */
+	/** The hashmap of sampled value of spatial image. HashMap&lt;String, Integer&gt;*/
 	private HashMap<String, Integer> hashSampledValues;
 	
-	/** The hash dom file. */
+	/** The hashmap of domain file. HashMap&lt;String, ImagePlus&gt; */
 	private HashMap<String,ImagePlus> hashDomFile;
 	
-	/** The compo info. */
+	/** The file information of composite image. */
 	private FileInfo compoInfo;
 	
-	/** The scroll. */
+	/** The scrollpane. */
 	private JScrollPane scroll; 
 	
 	/**
@@ -56,10 +60,10 @@ public class ImageExplorer extends JFrame implements ActionListener{
 	}
 	
 	/**
-	 * Instantiates a new image explorer.
+	 * Instantiates a new image explorer with given hashmap of domain types and hashmap of sampled values.
 	 *
-	 * @param hashDomainTypes the hash domain types
-	 * @param hashSampledValues the hash sampled values
+	 * @param hashDomainTypes the hashmap of domain types. HashMap&lt;String, Integer&gt;
+	 * @param hashSampledValues the hashmap of sampled value of spatial image. HashMap&lt;String, Integer&gt;
 	 */
 	public ImageExplorer(HashMap<String, Integer> hashDomainTypes, HashMap<String, Integer> hashSampledValues){
 		this();
@@ -90,12 +94,12 @@ public class ImageExplorer extends JFrame implements ActionListener{
 	}
 
 	/**
-	 * Gets the domain types.
-	 *
-	 * @return the domain types
+	 * Sets the datatable(hashmap of domain file) to the hashmap of domain types
+	 * and returns the hashmap of domain types.
+     *
+	 * @return the hashmap of domain types. HashMap&lt;String, Integer&gt;
 	 */
-	//sets the datatable to the domaintype and return it
-	public HashMap<String, Integer> getDomainTypes(){	
+	public HashMap<String, Integer> getDomainTypes(){
 		int dimension = 3;
 		for(Entry<String, ImagePlus> e : hashDomFile.entrySet()){
 			if(e.getValue().getNSlices() == 1) dimension = 2;
@@ -106,12 +110,12 @@ public class ImageExplorer extends JFrame implements ActionListener{
 	}
 	
 	/**
-	 * Gets the sampled values.
-	 *
-	 * @param table the table
-	 * @return the sampled values
+	 * Sets the hashmap of sampled values and returns the hashmap of sampled values.
+     * The sampled value is calculated by the value of its domain type.
+     *
+	 * @param table the ImageTable object
+	 * @return the hashmap of sampled value of spatial image. HashMap&lt;String, Integer&gt;
 	 */
-	//sets the datatable to the sampledvalue and return it
 	public HashMap<String, Integer> getSampledValues(ImageTable table){
 		int pixel = 255;
 		int interval = 255 / hashDomFile.size();
@@ -127,9 +131,9 @@ public class ImageExplorer extends JFrame implements ActionListener{
 	}
 
 	/**
-	 * The main method.
+	 * Example main() method which will launch a GUI and show this JFrame object.
 	 *
-	 * @param args the arguments
+	 * @param args an array of command-line arguments for the application
 	 */
 	public static void main(String[] args){	
 		HashMap<String, Integer> hashDomainTypes = new HashMap<String, Integer>();
@@ -138,18 +142,18 @@ public class ImageExplorer extends JFrame implements ActionListener{
 	}
 	
 	/**
-	 * Gets the dom file.
+	 * Gets the hashmap of domain file. HashMap&lt;String, ImagePlus&gt;
 	 *
-	 * @return the dom file
+	 * @return the hashmap of domain file.
 	 */
 	public HashMap<String, ImagePlus> getDomFile(){
 		return hashDomFile;
 	}
 	
 	/**
-	 * Gets the file info.
+	 * Gets the file information of composite image.
 	 *
-	 * @return the file info
+	 * @return the file information of composite image
 	 */
 	public FileInfo getFileInfo(){
 		if(compoInfo != null)
@@ -158,8 +162,12 @@ public class ImageExplorer extends JFrame implements ActionListener{
 			return null;
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	/**
+     * The listener interface for receiving action events.
+     * Add a row if "+" is pressed, Remove the selected row if "-" is pressed.
+	 * Import the selected image to the spatial model if "OK" is pressed.
+	 *
+	 * @param e the ActionEvent
 	 */
 	@Override
 	public  void actionPerformed(ActionEvent e) {		
