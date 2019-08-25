@@ -83,6 +83,7 @@ public abstract class MainSpatial implements PlugIn{
 	 * <ol>
 	 * <li>Interpolate an image if it is a Z-stack image (3D image) and the voxel size of each axis (x, y and z) is not equal</li>
 	 * <li>Fill holes (blank pixels) in the image by morphology operation if exists</li>
+	 * <li>Add a membrane between two different domains if exists</li>
 	 * </ol>
 	 *
 	 * The converted image will be generated as {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage},

@@ -11,60 +11,64 @@ import org.scijava.vecmath.Point3d;
 import ij.ImagePlus;
 
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ImageEdit.
+ * The class ImageEdit, which provides several image processing filters to add
+ * a membrane between two different domains if exists.
+ * Date Created: Feb 21, 2017
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class ImageEdit {
 	
-	/** The label list. */
+	/** The list of unique pixel values */
 	private ArrayList<Integer> labelList;
 	
-	/** The hash label num. */
+	/** The hashmap of number of labels. HashMap&lt;Integer, Integer&gt;*/
 	private HashMap<Integer,Integer> hashLabelNum;
 	
-	/** The hash domain types. */
+	/** The hashmap of domain types. HashMap&lt;String, Integer&gt;*/
 	private HashMap<String,Integer> hashDomainTypes;
 	
-	/** The hash sampled value. */
+	/** The hashmap of sampled value. HashMap&lt;String, Integer&gt;*/
 	private HashMap<String,Integer> hashSampledValue;
 	
-	/** The width. */
+	/** The width of an image. */
 	private int width;
 	
-	/** The height. */
+	/** The height of an image. */
 	private int height;
 	
-	/** The depth. */
+	/** The depth of an image. */
 	private int depth;
 	
-	/** The size. */
+	/** The size of an image. */
 	private int size;
 	
-	/** The pixels. */
+	/** The raw data (1D array) of an image. */
 	private byte[] pixels;
 	
-	/** The matrix. */
+	/** The 1D array of labels. */
 	private int[] matrix;	
 	
-	/** The invert. */
+	/** The inverted 1D array of an image */
 	private int[] invert;
 	
-	/** The hash pix. */
-	private HashMap<Integer, Integer>  hashPix = new HashMap<Integer,Integer>(); //label + pixel vlaue
+	/** The hashmap of pixels. HashMap&lt;Integer label, Integer pixel value&gt; */
+	private HashMap<Integer, Integer>  hashPix = new HashMap<Integer,Integer>(); //label + pixel value
 	
-	/** The hash label pt. */
+	/** The hashmap of Point3d objects. HashMap&lt;Integer label, Point3d coordinate&gt; */
 	private HashMap<Integer, Point3d> hashLabelPt = new HashMap<Integer,Point3d>();  //label + coordinates
     
-    /** The hash dom interior pt. */
+	/** The hashmap of domain InteriorPoint of spatial image. HashMap&lt;String domain name, Point3d coordinate&gt; */
     private HashMap<String, Point3d> hashDomInteriorPt = new HashMap<String,Point3d>();  //domain name + coordinates
 	
     /**
-     * Instantiates a new image edit.
+     * Instantiates a new image edit object with given image object and hashmaps of domain types and sampled value.
      *
-     * @param image the image
-     * @param hashDomainTypes the hash domain types
-     * @param hashSampledValue the hash sampled value
+     * @param image the ImageJ image object
+     * @param hashDomainTypes the hashmap of domain types
+     * @param hashSampledValue the hashmap of sampled value of spatial image
      */
     ImageEdit(ImagePlus image,HashMap<String,Integer> hashDomainTypes, HashMap<String,Integer> hashSampledValue){
     	this.width = image.getWidth();
@@ -81,9 +85,9 @@ public class ImageEdit {
     }
     
     /**
-     * Instantiates a new image edit.
+     * Instantiates a new image edit with given spatial image object.
      *
-     * @param spImg the sp img
+     * @param spImg the spatial image object
      */
     public ImageEdit(SpatialImage spImg){
     	spImg.getImage();    	
@@ -106,9 +110,8 @@ public class ImageEdit {
     }
     
     /**
-     * List val.
+	 * Create a new labelList object, which is a list of unique pixel values.
      */
-    //create a list of unique pixel values
     private void listVal(){
     	int temp;
     	labelList = new ArrayList<Integer>();
@@ -122,9 +125,10 @@ public class ImageEdit {
     }
     
     /**
-     * Domtype.
+     * Create hashmap of count number of labels and set the value with given
+	 * hashmap of pixels.
      *
-     * @param num the num
+     * @param num the hashmap of pixels (HashMap&lt;Integer, Integer&gt;).
      */
     public void domtype(HashMap<Integer,Integer> num){
     	hashLabelNum = new HashMap<Integer,Integer>();
@@ -134,9 +138,11 @@ public class ImageEdit {
     	}	
     }
 
-	 /**
- 	 * Invert mat.
- 	 */
+	/**
+	 * Create an inverted 1D array of an image (invert[]) from 1D array of an image (pixels[]).
+	 * Each pixel value will be inverted (0 -> 1, otherwise -> 0). For example, the Black and White
+	 * binary image will be converted to a White and Black binary image.
+	 */
  	private void invertMat(){		
 		invert = new int[width * height * depth]; 
 		matrix = new int[width * height * depth];
@@ -152,11 +158,13 @@ public class ImageEdit {
 			}
 	 }
 	 
-	/** The label count. */
+	/** The count number of labels. */
 	private int labelCount = 1;
 	
 	/**
-	 * Label.
+	 * Set the label of each pixel to the 1D array of labels (matrix).
+	 * After the labels are set to all pixels, then count the number of labels
+	 * and set to the hashmap of count number of labels.
 	 */
 	public void label(){
 			for (int d = 0; d < depth; d++) {
@@ -170,15 +178,16 @@ public class ImageEdit {
 	}
 	
 	/**
-	 * Sets the label.
+	 * Sets the label of the given pixel (x offset, y offset, z offset) with its pixel value.
+     * Checks whether the adjacent pixel has the same pixel value, and its label is already assigned.
 	 *
-	 * @param w the w
-	 * @param h the h
-	 * @param d the d
-	 * @param pixVal the pix val
-	 * @return the int
+	 * @param w the x offset
+	 * @param h the y offset
+	 * @param d the z offset
+	 * @param pixVal the pixel value
+	 * @return the label as integer value
 	 */
-	private int setLabel(int  w , int h, int d, int pixVal){
+	private int setLabel(int w , int h, int d, int pixVal){
 		List<Integer> adjVal = new ArrayList<Integer>();
 		//check left			
 		if(w != 0 && hashPix.get(matrix[d * height * width + h * width + w - 1]).equals(pixVal))
@@ -225,13 +234,13 @@ public class ImageEdit {
 			hashPix.remove(adjVal.get(i));
 			hashLabelPt.remove(adjVal.get(i));
 		}
-			return min;
+		return min;
 	}
 
 	/**
-	 * Rewrite label.
+	 * Replace the label of pixels in the spatial image which has "before" to "after".
 	 *
-	 * @param dEnd the d end
+	 * @param dEnd the end of the depth
 	 * @param after the after
 	 * @param before the before
 	 */
@@ -246,8 +255,7 @@ public class ImageEdit {
 			}
 	}
     
-    /** count number of domains in each domaintypes and add membrane to adjacents. */
-
+    /** count number of domains in each domain types and add membrane to adjacents. */
 	private HashMap<String,Integer> hashDomainNum;
     
     /**
@@ -259,7 +267,8 @@ public class ImageEdit {
     }
 
     /**
-     * Count domain.
+     * Count number of domains in each domain types and store the number to
+	 * the hashmap (hashDomainNum&lt;String domain type, Integer count number&gt;).
      */
     public void countDomain(){
     	hashDomainNum = new HashMap<String,Integer>();
@@ -270,14 +279,14 @@ public class ImageEdit {
 		}
     }
 
-    /** The adjacents pixel. */
+    /** The list of adjacent pixels. */
     private ArrayList<ArrayList<Integer>> adjacentsPixel;
     
-    /** The adjacents list. */
+    /** The list of adjacent domains. */
     private ArrayList<ArrayList<String>> adjacentsList;
     
     /**
-     * Adds the membrane.
+     * Adds a membrane between two different domains.
      */
     public void addMembrane(){
     	adjacentsPixel = new ArrayList<ArrayList<Integer>>();
@@ -322,11 +331,11 @@ public class ImageEdit {
     }
     
     /**
-     * Gets the lower label.
+     * Returns the label from given two labels which has lower pixel value.
      *
-     * @param dom1 the dom 1
-     * @param dom2 the dom 2
-     * @return the lower label
+     * @param dom1 the label of domain 1
+	 * @param dom2 the label of domain 2
+     * @return the label which has lower pixel value
      */
     private int getLowerLabel(int dom1, int dom2){
     	int min = Math.min(hashPix.get(dom1), hashPix.get(dom2));
@@ -337,13 +346,13 @@ public class ImageEdit {
     }
     
     /**
-     * Gets the higher label.
-     *
-     * @param dom1 the dom 1
-     * @param dom2 the dom 2
-     * @return the higher label
-     */
-    private int getHigherLabel(int dom1, int dom2){	
+	 * Returns the label from given two labels which has higher pixel value.
+	 *
+	 * @param dom1 the label of domain 1
+	 * @param dom2 the label of domain 2
+	 * @return the label which has higher pixel value
+	 */
+	private int getHigherLabel(int dom1, int dom2){
     	int max = Math.max(hashPix.get(dom1), hashPix.get(dom2));
     	if(max  == hashPix.get(dom1) )
     		return dom1;
@@ -352,11 +361,11 @@ public class ImageEdit {
     }
 
 	/**
-	 * Checks for label.
+	 * Checks the given two labels are already registered in adjacentsPixel.
 	 *
-	 * @param dom1 the dom 1
-	 * @param dom2 the dom 2
-	 * @return true, if successful
+	 * @param dom1 the label of domain 1
+	 * @param dom2 the label of domain 2
+	 * @return true, if the pixel value of domain 1 has higher value than that of domain 2 in adjacentsPixel
 	 */
 	private boolean hasLabel(int dom1, int dom2) {
 		if(adjacentsPixel.isEmpty()) return false;
@@ -370,24 +379,27 @@ public class ImageEdit {
 	}
     
 	/**
-	 * Check adjacent.
+	 * Check adjacent pixels have different pixel values.
+	 * If the adjacent pixel has different label with origin pixel, and the origin pixel and next pixel
+	 * are already registered in adjacentsPixel.
 	 *
-	 * @param org the org
-	 * @param next the next
-	 * @return true, if successful
+	 * @param org the index of origin pixel in an 1D array
+	 * @param next the index of next pixel in an 1D array
+	 * @return true, if two pixel has different label and both pixels are registered in adjacentsPixel
 	 */
 	private boolean checkAdjacent(int org, int next){
-		if(matrix[org] != matrix[next] && !hasLabel(getHigherLabel(matrix[next], matrix[org]), getLowerLabel(matrix[next], matrix[org])))
+		if(matrix[org] != matrix[next] &&
+				!hasLabel(getHigherLabel(matrix[next], matrix[org]), getLowerLabel(matrix[next], matrix[org])))
 			return true;
 		 else 
 			return false;		
 	}
 
 	/**
-	 * Addmem.
+	 * Add a membrane between given two labels (domains).
 	 *
-	 * @param bignum the bignum
-	 * @param smallnum the smallnum
+	 * @param bignum the label of pixel which has higher value
+	 * @param smallnum the label of pixel which has lower value
 	 */
 	private void addmem(Integer bignum, Integer smallnum){
 		String big ,small;
@@ -412,10 +424,10 @@ public class ImageEdit {
 	}
 
 	/**
-	 * Gets the index label.
+	 * Gets the index of given label as string.
 	 *
-	 * @param label the label
-	 * @return the index label
+	 * @param label the label of the pixel
+	 * @return count.toString() the index of label
 	 */
 	private String getIndexLabel(int label){
 		Integer count = 0;
@@ -431,11 +443,11 @@ public class ImageEdit {
 	}
 	
 	/**
-	 * Gets the key from value.
+	 * Gets the key from given value.
 	 *
-	 * @param hash the hash
-	 * @param val the val
-	 * @return the key from value
+	 * @param hash the hashmap
+	 * @param val the value
+	 * @return str the key which contains the given value as string
 	 */
 	private String getKeyFromValue(HashMap<String, Integer> hash, Integer val){
 		String str = "";
@@ -449,7 +461,7 @@ public class ImageEdit {
 	}
 	
 	/**
-	 * Creates the dom interior pt.
+	 * Creates the hashmap of domain InteriorPoint of spatial image.
 	 */
 	private void createDomInteriorPt(){
 		for(Entry<Integer,Point3d> e : hashLabelPt.entrySet()){
