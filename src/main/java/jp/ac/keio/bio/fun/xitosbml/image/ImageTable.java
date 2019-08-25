@@ -21,46 +21,46 @@ import ij.io.FileInfo;
 import jp.ac.keio.bio.fun.xitosbml.gui.AddingColumn;
 import jp.ac.keio.bio.fun.xitosbml.gui.ArrowColumn;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class ImageTable, which inherits JTable and implements mousePressed()
+ * method for adding images to the spatial model.
+ * This class is used in {@link jp.ac.keio.bio.fun.xitosbml.image.ImageExplorer}.
  * Date Created: Dec 7, 2015
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
-
 @SuppressWarnings("serial")
 public class ImageTable extends JTable implements MouseListener{
 	
 	/** The table model. */
 	private DefaultTableModel tableModel;
 	
-	/** The default domtype. */
+	/** The default domain type. */
 	private final String[] defaultDomtype = {"Nucleus","Mitochondria","Golgi","Cytosol"};
 	
-	/** The column names. */
+	/** The column title. */
 	private final String[] columnNames = {"Domain Type","Image","Add","Up","Down"};
 	
-	/** The col dom type. */
+	/** The column index of domain type. */
 	private final int colDomType = 0;
 	
-	/** The col img name. */
+	/** The column index of image name. */
 	private final int colImgName = 1;
 	
-	/** The col add image. */
+	/** The column index of add image. */
 	private final int colAddImage = 2;
 	
-	/** The col up button. */
+	/** The column index of up button. */
 	private final int colUpButton = 3;
 	
-	/** The col down button. */
+	/** The column index of down button. */
 	private final int colDownButton = 4;
 	
-	/** The hash dom file. */
+	/** The hashmap of domain file. HashMap&lt;String, ImagePlus&gt; */
 	private HashMap<String,ImagePlus> hashDomFile = new HashMap<String, ImagePlus>();
 	
-	/** The compo info. */
+	/** The file information of composite image. */
 	private FileInfo compoInfo;
 	
 	/**
@@ -99,9 +99,9 @@ public class ImageTable extends JTable implements MouseListener{
 	}
 	
 	/**
-	 * The main method.
+	 * Example main() method which will launch a GUI and show this JTable object.
 	 *
-	 * @param args the arguments
+	 * @param args an array of command-line arguments for the application
 	 */
 	public static void main(String[] args){
 		ImageTable table = new ImageTable();
@@ -117,14 +117,15 @@ public class ImageTable extends JTable implements MouseListener{
 	}
 	
 	/**
-	 * Cmpsize.
+	 * Checks whether the size(width, height or depth) of given image (img) is
+	 * same with the size of composite image (compoImg).
 	 *
-	 * @param org the org
-	 * @param in the in
-	 * @return true, if successful
+	 * @param compoImg the original image size (usually, the size of composite image is used)
+	 * @param image the input image size
+	 * @return true, if the size is same
 	 */
-	private boolean cmpsize(double org, double in){
-		double num = org - in;
+	private boolean cmpsize(double compoImg, double image){
+		double num = compoImg - image;
 		
 		if(Math.abs(num) < 0.01)
 			return true;
@@ -133,11 +134,12 @@ public class ImageTable extends JTable implements MouseListener{
 	}	
 	
 	/**
-	 * Comp image.
+	 * Checks whether the size of given image (img) is same with the size of composite image (compoImg).
+	 * new MessageDialog(new Frame(), "Error", "Image size must be same for all input image");
 	 *
-	 * @param compoImg the compo img
-	 * @param img the img
-	 * @return true, if successful
+	 * @param compoImg the composite img
+	 * @param img the given image
+	 * @return true, if the size of given image and the composite image is same
 	 */
 	private boolean compImage(ImagePlus compoImg, ImagePlus img) {
 		boolean width = compoImg.getWidth() == img.getWidth();
@@ -159,14 +161,14 @@ public class ImageTable extends JTable implements MouseListener{
 	}
 	
 	/**
-	 * Adds the row.
+	 * Adds the row to table model.
 	 */
 	void addRow(){
 		tableModel.addRow(new Object[]{"Insert Name","","",""});
 	}
 	
 	/**
-	 * Del row.
+	 * Delete the selected row from table model.
 	 */
 	void delRow(){
 		int selectedRow = getSelectedRow();
@@ -180,7 +182,7 @@ public class ImageTable extends JTable implements MouseListener{
 	}
 	
 	/**
-	 * Move row up.
+	 * Move the selected row up in the table model.
 	 *
 	 * @param selectedRow the selected row
 	 */
@@ -190,7 +192,7 @@ public class ImageTable extends JTable implements MouseListener{
 	}
 	
 	/**
-	 * Move row down.
+	 * Move the selected row down in the table model.
 	 *
 	 * @param selectedRow the selected row
 	 */
@@ -201,10 +203,11 @@ public class ImageTable extends JTable implements MouseListener{
 	
 	
 	/**
-	 * Import file.
+	 * Import a file to the selected row.
+	 * The input image size will be checked to be same with the composite image.
 	 *
-	 * @param row the row
-	 * @param img the img
+	 * @param row the selected row
+	 * @param img the image to be imported
 	 */
 	public void importFile(int row, ImagePlus img){
 		if(!hashDomFile.isEmpty() && !compImage(img, hashDomFile.values().iterator().next())) {
@@ -216,27 +219,27 @@ public class ImageTable extends JTable implements MouseListener{
 	}
 
 	/**
-	 * Gets the hash dom file.
+	 * Gets the hashmap of domain file. HashMap&lt;String, ImagePlus&gt;
 	 *
-	 * @return the hash dom file
+	 * @return the hashmap of domain file
 	 */
 	public HashMap<String,ImagePlus> getHashDomFile(){
 		return hashDomFile;
 	}
 	
 	/**
-	 * Gets the file info.
+	 * Gets the file information of composite image.
 	 *
-	 * @return the file info
+	 * @return the file information of composite image
 	 */
 	public FileInfo getFileInfo(){
 		return compoInfo;
 	}
 	
 	/**
-	 * Gets the img num.
+	 * Gets the number of images, that is, the size of the hashmap of domain file.
 	 *
-	 * @return the img num
+	 * @return the number of images
 	 */
 	public int getImgNum(){
 		return hashDomFile.size();
@@ -269,8 +272,10 @@ public class ImageTable extends JTable implements MouseListener{
 		
 	}
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+	/**
+	 * Invoked when a mouse button has been pressed on a component.
+	 * Adds an image, move selected row up or move selected row down.
+	 * @param e the MouseEvent
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -300,7 +305,8 @@ public class ImageTable extends JTable implements MouseListener{
 	}
 	
 	/**
-	 * The Class MyTableModel.
+	 * The class MyTableModel, which inherits DefaultTableModel and implements
+     * isCellEditable() and getColumnClass() methods.
 	 */
 	public class MyTableModel extends DefaultTableModel {
 
@@ -314,8 +320,12 @@ public class ImageTable extends JTable implements MouseListener{
 			super(data, colName);
 		}
 
-		/* (non-Javadoc)
-		 * @see javax.swing.table.DefaultTableModel#isCellEditable(int, int)
+		/**
+		 * The cells in column 1 is not editable.
+		 *
+		 * @param row the selected row
+		 * @param column the selected column
+		 * @return true if the selected cell is editable
 		 */
 		@Override
 		public boolean isCellEditable(int row, int column) {
@@ -325,8 +335,11 @@ public class ImageTable extends JTable implements MouseListener{
 				return true;
 		}
 
-		/* (non-Javadoc)
-		 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
+		/**
+		 * Get the class of selected cell.
+		 *
+		 * @param Column
+		 * @return the class of selected cell
 		 */
 		@Override
 		public Class<?> getColumnClass(int Column) {
