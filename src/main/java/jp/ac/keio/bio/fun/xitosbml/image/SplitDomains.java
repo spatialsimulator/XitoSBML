@@ -1,18 +1,3 @@
-/*******************************************************************************
- * Copyright 2015 Kaito Ii
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *******************************************************************************/
 package jp.ac.keio.bio.fun.xitosbml.image;
 
 import java.util.ArrayList;
@@ -24,47 +9,47 @@ import java.util.Set;
 import ij.ImageStack;
 import ij.process.ByteProcessor;
 
-// TODO: Auto-generated Javadoc
 /**
- * Spatial SBML Plugin for ImageJ.
- *
- * @author Kaito Ii <ii@fun.bio.keio.ac.jp>
- * @author Akira Funahashi <funa@bio.keio.ac.jp>
+ * The class SplitDomain, which provides several image processing filters to split
+ * domains with given pixel value (sampled value).
  * Date Created: Aug 27, 2015
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
 public class SplitDomains {
 	
-	/** The width. */
+	/** The width of an image. */
 	private int width;
 	
-	/** The height. */
+	/** The height of an image. */
 	private int height;
 	
-	/** The depth. */
+	/** The depth of an image. */
 	private int depth;
 	
-	/** The raw. */
+	/** The raw data of spatial image in 1D array. */
 	private byte[] raw;
 	
-	/** The alt stack. */
+	/** The stack of images which has safe border. */
 	private ImageStack altStack;
 	
-	/** The cyt val. */
+	/** The sampled value of cytosol. */
 	private byte cytVal;
 	
 	/** The del target. */
 	private byte delTarget;
 	
-	/** The adjacent to target set. */
+	/** The hashset of target of adjacent pixels. */
 	private Set<Integer> adjacentToTargetSet = new HashSet<Integer>();
 	
-	/** The adjacent to target. */
+	/** The target of adjacent pixel. */
 	private byte adjacentToTarget;
 	
 	/**
-	 * Instantiates a new split domains.
+	 * Instantiates a new split domains with given SpatialImage.
 	 *
-	 * @param spImg the sp img
+	 * @param spImg the SpatialImage object
 	 * @param targetDomain the target domain
 	 */
 	public SplitDomains(SpatialImage spImg, String targetDomain){
@@ -79,9 +64,9 @@ public class SplitDomains {
 	}
 
 	/**
-	 * Creates the domain to check.
+	 * Creates the domain to be checked. The deletion target and the adjacent pixels will be set.
 	 *
-	 * @param hashSampledValue the hash sampled value
+	 * @param hashSampledValue the hashmap of sampled value. HashMap&lt;String, Integer&gt;
 	 * @param targetDomain the target domain
 	 */
 	private void createDomainToCheck(HashMap<String, Integer> hashSampledValue, String targetDomain){
@@ -93,11 +78,11 @@ public class SplitDomains {
 	}
 	
 	/**
-	 * Gets the smaller dom.
+	 * Gets the domain which has smaller sampled value.
 	 *
-	 * @param domNames the dom names
-	 * @param hashSampledValue the hash sampled value
-	 * @return the smaller dom
+	 * @param domNames the array which contains domain names
+	 * @param hashSampledValue the hashmap of sampled value. HashMap&lt;String, Integer&gt;
+	 * @return the domain which has smaller sampled value.
 	 */
 	private String getSmallerDom(String[] domNames, HashMap<String, Integer> hashSampledValue){
 		String dom1 = domNames[0];
@@ -111,11 +96,11 @@ public class SplitDomains {
 	}
 	
 	/**
-	 * Gets the bigger dom.
+	 * Gets the domain which has bigger sampled value.
 	 *
-	 * @param domNames the dom names
-	 * @param hashSampledValue the hash sampled value
-	 * @return the bigger dom
+	 * @param domNames the array which contains domain names
+	 * @param hashSampledValue the hashmap of sampled value. HashMap&lt;String, Integer&gt;
+	 * @return the domain which has bigger sampled value.
 	 */
 	private String getBiggerDom(String[] domNames, HashMap<String, Integer> hashSampledValue){
 		String dom1 = domNames[0];
@@ -129,7 +114,8 @@ public class SplitDomains {
 	}
 	
 	/**
-	 * Check domain.
+	 * Check domain. If a pixel contain a value of deletion target, then delete the pixel (set to the value of
+	 * cytosol) and add adjacent pixels to the list of target.
 	 */
 	private void checkDomain(){
 		for (int d = 0; d < depth; d++) {
@@ -144,12 +130,15 @@ public class SplitDomains {
 	}
 	
 	/**
-	 * Check adjacents.
+	 * Check adjacent pixel is not a cytosol and has different pixel value with the given pixel value (deletion target).
+	 * If the adjacent pixel has different value, then add the adjacent pixel value to the list of
+	 * target, and update the pixel value of deletion target to the pixel value of cytosol (which means, the pixel will
+	 * be deleted by this process).
 	 *
-	 * @param w the w
-	 * @param h the h
-	 * @param d the d
-	 * @param pixVal the pix val
+	 * @param w the x offset
+	 * @param h the y offset
+	 * @param d the z offset
+	 * @param pixVal the pixel value
 	 */
 	private void checkAdjacents(int w, int h, int d, byte pixVal) {
 		List<Byte> adjVal = new ArrayList<Byte>();
@@ -189,9 +178,9 @@ public class SplitDomains {
 	}
 	
 	/**
-	 * List to set.
+     * Add adjacent pixels to target set.
 	 *
-	 * @param adjVal the adj val
+	 * @param adjVal the list of adjacent pixel values
 	 */
 	private void listToSet(List<Byte> adjVal){
 		for(Byte b : adjVal)
@@ -199,7 +188,7 @@ public class SplitDomains {
 	}
 	
 	/**
-	 * Creates the new stack.
+	 * Creates the new stack of split images.
 	 */
 	private void createNewStack(){
 		altStack = new ImageStack(width, height);
@@ -212,7 +201,7 @@ public class SplitDomains {
 	}
 	
 	/**
-	 * Gets the stack image.
+	 * Gets the stack of split images.
 	 *
 	 * @return the stack image
 	 */
@@ -221,9 +210,9 @@ public class SplitDomains {
 	}
 
 	/**
-	 * Gets the adjacent to target list.
+	 * Gets the hashset of target of adjacent pixels.
 	 *
-	 * @return the adjacent to target list
+	 * @return the hashset of target of adjacent pixels
 	 */
 	public Set<Integer> getAdjacentToTargetList() {
 		return adjacentToTargetSet;
