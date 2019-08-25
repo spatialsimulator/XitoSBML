@@ -241,8 +241,8 @@ public class ImageEdit {
 	 * Replace the label of pixels in the spatial image which has "before" to "after".
 	 *
 	 * @param dEnd the end of the depth
-	 * @param after the after
-	 * @param before the before
+	 * @param after the label to set by this replacement
+	 * @param before the label to be replaced
 	 */
 	private void rewriteLabel(int dEnd, int after, int before){
 		for (int d = 0; d <= dEnd; d++) {
@@ -392,7 +392,7 @@ public class ImageEdit {
 				!hasLabel(getHigherLabel(matrix[next], matrix[org]), getLowerLabel(matrix[next], matrix[org])))
 			return true;
 		 else 
-			return false;		
+			return false;
 	}
 
 	/**

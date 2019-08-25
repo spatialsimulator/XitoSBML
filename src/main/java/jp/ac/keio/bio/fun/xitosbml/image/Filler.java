@@ -11,7 +11,6 @@ import ij.ImageStack;
 import ij.process.ByteProcessor;
 
 
-// TODO: Auto-generated Javadoc
 /**
  * The class Filler, which provides several morphological operations for filling holes in the image.
  * Date Created: Feb 21, 2017
@@ -42,10 +41,13 @@ public class Filler {
 	/** The depth of an image including padding. */
 	private int ldepth;
 	
-	/** The mask which will be used for filling holes. */
+	/** The mask which stores the label of each pixel. */
 	private int[] mask;
 	
-	/** The hashmap of pixel value. &lt;labelnumber, pixel value&gt;. */
+	/**
+	 * The hashmap of pixel value. &lt;labelnumber, pixel value&gt;.
+	 * The domain which has pixel value = 0 will have a label = 1.
+	 */
 	private HashMap<Integer, Byte> hashPix = new HashMap<Integer, Byte>();		// label number, pixel value
 	
 	/** The raw data (1D byte array) of the image. */
@@ -55,11 +57,11 @@ public class Filler {
 	private int[] invert;
 	
 	/**
-	 * Fill a hall in the given image (ImagePlus object) by morphology operation,
+	 * Fill a hole in the given image (ImagePlus object) by morphology operation,
 	 * and returns the filled image.
 	 *
 	 * @param image the ImageJ image object
-	 * @return the filled image
+	 * @return the filled ImageJ image (ImagePlus) object
 	 */
 	public ImagePlus fill(ImagePlus image){
 		this.width = image.getWidth();
@@ -84,11 +86,11 @@ public class Filler {
 	}
 
 	/**
-	 * Fill the given image ({@link SpatialImage} object) by morphology operation,
-	 * and returns the fillled image as ImageJ image object.
+	 * Fill a hole in the given image ({@link SpatialImage} object) by morphology operation,
+	 * and returns the filled image as ImageJ image object.
 	 *
 	 * @param spImg the SpatialImage object
-	 * @return the ImageJ image (ImagePlus) object
+	 * @return the filled ImageJ image (ImagePlus) object
 	 */
 	public ImagePlus fill(SpatialImage spImg){
 		this.width = spImg.getWidth();
@@ -113,10 +115,10 @@ public class Filler {
 	}
 	
 	/**
-	 * Creates the stack of image from raw data (1D array) of image (pixels[]),
-	 * and returns the stack of image.
+	 * Creates the stack of images from raw data (1D array) of image (pixels[]),
+	 * and returns the stack of images.
 	 *
-	 * @return the stack of image
+	 * @return the stack of images
 	 */
 	private ImageStack createStack(){
 		ImageStack altimage = new ImageStack(width, height);
@@ -129,7 +131,6 @@ public class Filler {
 	}
 	
 	/**
-	 * TODO:
 	 * Create an inverted 1D array of an image (invert[]) from 1D array of an image (pixels[]).
 	 * Each pixel value will be inverted (0 -> 1, otherwise -> 0). For example, the Black and White
 	 * binary image will be converted to a White and Black binary image.
@@ -183,8 +184,9 @@ public class Filler {
 	private int labelCount;
 	
 	/**
-	 * TODO:
-	 * Label.
+	 * Assign a label (label number) to each pixel.
+     * The label number will be stored in mask[] array.
+	 * The domain which has pixel value = 0 will have a label = 1.
 	 */
 	public void label(){
 		hashPix.put(1, (byte)0);
@@ -241,19 +243,18 @@ public class Filler {
 	}
 	
 	/**
-	 * TODO:
 	 * Fill a hole in the hashmap of pixels (HashMap&lt;label number, pixel value&gt; by morphology operation.
      * The hole will be filled with the pixel value of adjacent pixel.
 	 *
-	 * @param index the index
+	 * @param labelNum the label number
 	 */
-	public void fill(int index){
+	public void fill(int labelNum){
 		if (ldepth > depth) { // 3D image
 			for (int d = 1; d < ldepth; d++) {
 				for (int h = 1; h < lheight - 1; h++) {
 					for (int w = 1; w < lwidth - 1; w++) {
-						if (mask[d * lheight * lwidth + h * lwidth + w] == index ) {
-							pixels[(d-1) * height * width + (h-1) * width + w - 1] = checkAdjacentsLabel(w, h, d, index);
+						if (mask[d * lheight * lwidth + h * lwidth + w] == labelNum ) {
+							pixels[(d-1) * height * width + (h-1) * width + w - 1] = checkAdjacentsLabel(w, h, d, labelNum);
 						}
 					}
 				}
@@ -262,8 +263,8 @@ public class Filler {
 			for (int d = 0; d < ldepth; d++) {
 				for (int h = 1; h < lheight - 1; h++) {
 					for (int w = 1; w < lwidth - 1; w++) {
-						if (mask[d * lheight * lwidth + h * lwidth + w] == index ) {
-							pixels[d * height * width + (h-1) * width + w - 1] = checkAdjacentsLabel(w, h, d, index);
+						if (mask[d * lheight * lwidth + h * lwidth + w] == labelNum ) {
+							pixels[d * height * width + (h-1) * width + w - 1] = checkAdjacentsLabel(w, h, d, labelNum);
 						}
 					}
 				}
@@ -272,39 +273,41 @@ public class Filler {
 	}
 	
 	/**
-	 * TODO:
-	 * Check adjacents label.
+	 * Check adjacent pixels whether it contains the given label (labelNum).
+     * If all the adjacent pixels have same label with given label, then return 0.
+	 * If the adjacent pixels contain different labels, then returns the pixel
+	 * value of most enclosing adjacent domain.
 	 *
-	 * @param w the width of the image
-	 * @param h the height of the image
-	 * @param d the depth of the image
-	 * @param index the index
-	 * @return the byte
+	 * @param w the x offset
+	 * @param h the y offset
+	 * @param d the z offset
+	 * @param labelNum the label number
+	 * @return the pixel value of most enclosing adjacent domain if different domain exists, otherwise 0
 	 */
-	public byte checkAdjacentsLabel(int w, int h, int d, int index){
+	public byte checkAdjacentsLabel(int w, int h, int d, int labelNum){
 		List<Byte> adjVal = new ArrayList<Byte>();
 			//check right
-			if(mask[d * lheight * lwidth + h * lwidth + w + 1] != index)
+			if(mask[d * lheight * lwidth + h * lwidth + w + 1] != labelNum)
 				adjVal.add(hashPix.get(mask[d * lheight * lwidth + h * lwidth + w + 1]));
 			
 			//check left			
-			if(mask[d * lheight * lwidth + h * lwidth + w - 1] != index)
+			if(mask[d * lheight * lwidth + h * lwidth + w - 1] != labelNum)
 				adjVal.add(hashPix.get(mask[d * lheight * lwidth + h * lwidth + w - 1]));
 			
 			//check down
-			if(mask[d * lheight * lwidth + (h+1) * lwidth + w ] != index)
+			if(mask[d * lheight * lwidth + (h+1) * lwidth + w ] != labelNum)
 				adjVal.add(hashPix.get(mask[d * lheight * lwidth + (h+1) * lwidth + w]));
 
 			//check up
-			if(mask[d * lheight * lwidth + (h-1) * lwidth + w ] != index)
+			if(mask[d * lheight * lwidth + (h-1) * lwidth + w ] != labelNum)
 				adjVal.add(hashPix.get(mask[d * lheight * lwidth + (h-1) * lwidth + w]));
 
 			//check above
-			if(d != depth - 1 && mask[(d+1) * lheight * lwidth + h * lwidth + w] != index)
+			if(d != depth - 1 && mask[(d+1) * lheight * lwidth + h * lwidth + w] != labelNum)
 				adjVal.add(hashPix.get(mask[(d+1) * lheight * lwidth + h * lwidth + w]));
 			
 			//check below
-			if(d != 0 && mask[(d-1) * lheight * lwidth + h * lwidth + w] != index)
+			if(d != 0 && mask[(d-1) * lheight * lwidth + h * lwidth + w] != labelNum)
 				adjVal.add(hashPix.get(mask[(d - 1) * lheight * lwidth + h * lwidth + w]));
 			
 			if(adjVal.isEmpty())
@@ -329,20 +332,20 @@ public class Filler {
 					count = freq;
 				}
 			}
-		return (byte) max;	
+		return (byte) max;
 	}
 	
 	/**
-	 * TODO:
-	 * Sets the label.
+	 * Sets the label of the given pixel (x offset, y offset, z offset) with its pixel value.
+	 * Checks whether the adjacent pixel has the zero pixel value, and its label is already assigned.
 	 *
-	 * @param w the w
-	 * @param h the h
-	 * @param d the d
-	 * @param pixVal the pix val
-	 * @return the int
+	 * @param w the x offset
+	 * @param h the y offset
+	 * @param d the z offset
+	 * @param pixVal the pixel value
+	 * @return the label as integer value
 	 */
-	private int setLabel(int  w , int h, int d, byte pixVal){
+	private int setLabel(int w , int h, int d, byte pixVal){
 		List<Integer> adjVal = new ArrayList<Integer>();
 		//check left			
 		if(mask[d * lheight * lwidth + h * lwidth + w - 1] != 0 && hashPix.get(mask[d * lheight * lwidth + h * lwidth + w - 1]) == (byte)0)
@@ -378,21 +381,19 @@ public class Filler {
 			return min;
 	}
 
-	
 	/**
-	 * TODO:
-	 * Setback label.
+	 * Sets back the label of the given pixel (x offset, y offset, z offset) with its pixel value.
+	 * Checks whether the adjacent pixel has the non-zero pixel value, and its label is already assigned.
 	 *
-	 * @param w the w
-	 * @param h the h
-	 * @param d the d
-	 * @param pixVal the pix val
-	 * @return the int
+	 * @param w the x offset
+	 * @param h the y offset
+	 * @param d the z offset
+	 * @param pixVal the pixel value
+	 * @return the label as integer value
 	 */
-	private int setbackLabel(int  w , int h, int d, byte pixVal){
+	private int setbackLabel(int w , int h, int d, byte pixVal){
 		List<Integer> adjVal = new ArrayList<Integer>();
-
-		//check left			
+		//check left
 		if(mask[d * lheight * lwidth + h * lwidth + w - 1] != 0 && hashPix.get(mask[d * lheight * lwidth + h * lwidth + w - 1]) != (byte)0)
 			adjVal.add(mask[d * lheight * lwidth + h * lwidth + w - 1]);
 
@@ -422,17 +423,16 @@ public class Filler {
 			
 			hashPix.remove(adjVal.get(i));
 			rewriteLabel(d, min, adjVal.get(i));
-		}	
-			return min;
 		}
+		return min;
+	}
 	
 	/**
-	 * TODO:
-	 * Rewrite label.
+	 * Replace the label of pixels in the spatial image which has "before" to "after".
 	 *
-	 * @param dEnd the d end
-	 * @param after the after
-	 * @param before the before
+	 * @param dEnd the end of the depth
+	 * @param after the label to set by this replacement
+	 * @param before the label to be replaced
 	 */
 	private void rewriteLabel(int dEnd, int after, int before){
 		if (ldepth > depth) {
