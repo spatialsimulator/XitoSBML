@@ -338,7 +338,7 @@ public class ImageTable extends JTable implements MouseListener{
 		/**
 		 * Get the class of selected cell.
 		 *
-		 * @param Column
+		 * @param Column the selected column
 		 * @return the class of selected cell
 		 */
 		@Override
