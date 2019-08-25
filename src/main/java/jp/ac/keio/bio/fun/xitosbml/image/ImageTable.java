@@ -117,7 +117,7 @@ public class ImageTable extends JTable implements MouseListener{
 	}
 	
 	/**
-	 * Checks whether the size(width, height or depth) of given image (img) is
+	 * Checks whether the pixel size(width, height or depth) of given image (img) is
 	 * same with the size of composite image (compoImg).
 	 *
 	 * @param compoImg the original image size (usually, the size of composite image is used)
@@ -134,7 +134,7 @@ public class ImageTable extends JTable implements MouseListener{
 	}	
 	
 	/**
-	 * Checks whether the size of given image (img) is same with the size of composite image (compoImg).
+	 * Checks whether the size (both image and pixel) of given image (img) is same with that of composite image (compoImg).
 	 * new MessageDialog(new Frame(), "Error", "Image size must be same for all input image");
 	 *
 	 * @param compoImg the composite img

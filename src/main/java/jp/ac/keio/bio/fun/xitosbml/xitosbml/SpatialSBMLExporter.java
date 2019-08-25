@@ -86,7 +86,7 @@ public class SpatialSBMLExporter{
   /** The hashmap of sampled value. */
   private HashMap<String, Integer> hashSampledValue;
   
-  /** The hashmap of domain num. */
+  /** The hashmap of the count number of domains in each domaintypes. */
   private HashMap<String, Integer> hashDomainNum;
   
   /** The hashmap of domain InteriorPoint of spatial image. */
