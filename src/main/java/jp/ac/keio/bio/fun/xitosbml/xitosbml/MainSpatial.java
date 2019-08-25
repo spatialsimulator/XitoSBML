@@ -21,7 +21,7 @@ import jp.ac.keio.bio.fun.xitosbml.image.Filler;
 import jp.ac.keio.bio.fun.xitosbml.image.ImageBorder;
 import jp.ac.keio.bio.fun.xitosbml.image.ImageEdit;
 import jp.ac.keio.bio.fun.xitosbml.image.ImageExplorer;
-import jp.ac.keio.bio.fun.xitosbml.image.Interpolater;
+import jp.ac.keio.bio.fun.xitosbml.image.Interpolator;
 import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
 import jp.ac.keio.bio.fun.xitosbml.pane.TabTables;
 import jp.ac.keio.bio.fun.xitosbml.visual.DomainStruct;
@@ -81,7 +81,7 @@ public abstract class MainSpatial implements PlugIn{
 	/**
 	 * Following process is performed to an image:
 	 * <ol>
-	 * <li>Interpolate an image if it is a Z-stack image (3D image)</li>
+	 * <li>Interpolate an image if it is a Z-stack image (3D image) and the voxel size of each axis (x, y and z) is not equal</li>
 	 * <li>Fill holes (blank pixels) in the image by morphology operation if exists</li>
 	 * </ol>
 	 *
@@ -89,9 +89,9 @@ public abstract class MainSpatial implements PlugIn{
 	 * which is a base class for representing spatial image in XitoSBML.
 	 */
 	protected void computeImg(){
-		Interpolater interpolater = new Interpolater();
+		Interpolator interpolator = new Interpolator();
 		HashMap<String, ImagePlus> hashDomFile = imgexp.getDomFile();
-		interpolater.interpolate(hashDomFile);
+		interpolator.interpolate(hashDomFile);
 		Filler fill = new Filler();
 
 		for(Entry<String, ImagePlus> e : hashDomFile.entrySet())

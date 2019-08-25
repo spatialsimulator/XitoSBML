@@ -9,60 +9,66 @@ import ij.io.FileInfo;
 import ij.process.ByteProcessor;
 
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class Interpolater.
+ * The class Interpolator, which provides interpolation operations for Z-stack images.
+ * If the voxel size of each x, y and z axis is not the same, then apply interpolation
+ * to the spatial image so that the voxel size of each axis will be the same.
+ * Date Created: Feb 21, 2017
+ *
+ * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
+ * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
-public class Interpolater {
+public class Interpolator {
 	
-	/** The voxx. */
-	private double voxx;			
+	/** The voxel size of x axis. */
+	private double voxx;
 	
-	/** The voxy. */
+	/** The voxel size of y axis. */
 	private double voxy;
 	
-	/** The voxz. */
+	/** The voxel size of z axis. */
 	private double voxz;
 	
-	/** The zaxis. */
+	/** The size of zaxis. */
 	private double zaxis;
 	
-	/** The width. */
+	/** The width of an image. */
 	private int width;
 	
-	/** The height. */
+	/** The height of an image. */
 	private int height;
-	
+
+	/** The depth of an image. */
 	private int depth;
 	
-	/** The altz. */
+	/** The interpolated stack size. */
 	private int altz;
 	
-	/** The image. */
+	/** The ImageJ image object. */
 	private ImagePlus image;		//input image
 	
-	/** The altimage. */
+	/** The interpolated image object. */
 	private ImageStack altimage;	//output pixel image
 	
-	/** The pixels. */
+	/** The raw data of spatial image in 1D array. */
 	private byte[] pixels;
 	
-	/** The info. */
+	/** The file information of the spatial image. */
 	private FileInfo info;
 	
 	/**
-	 * Instantiates a new interpolater.
+	 * Instantiates a new interpolator.
 	 */
-	public Interpolater(){
+	public Interpolator(){
 		
 	}
 	
 	/**
-	 * Instantiates a new interpolater.
+	 * Instantiates a new interpolator with given spatial image.
 	 *
-	 * @param spImg the sp img
+	 * @param spImg the spatial image
 	 */
-	public Interpolater(SpatialImage spImg){
+	public Interpolator(SpatialImage spImg){
 			this.image = spImg.getImage();
 			getInfo(image);
 			this.pixels = spImg.getRaw();
@@ -78,10 +84,15 @@ public class Interpolater {
 	}
 	
 	/**
-	 * Gets the info.
+     * Obtain following information of the given image object and sets to the corresponding variables.
+	 * <ul>
+     *     <li>size of the image</li>
+	 *     <li>file information</li>
+	 *     <li>pixel size of the image</li>
+	 *     <li>size of z axis</li>
+	 * </ul>
 	 *
-	 * @param imgPlus the img plus
-	 * @return the info
+	 * @param imgPlus the ImageJ image object
 	 */
 	private void getInfo(ImagePlus imgPlus){
 		width = imgPlus.getWidth();
@@ -96,10 +107,10 @@ public class Interpolater {
 	}
 	
 	/**
-	 * Interpolate.
+	 * Interpolate given image object and return the interpolated image object.
 	 *
-	 * @param imagePlus the image plus
-	 * @return the image plus
+	 * @param imagePlus the ImageJ image object
+	 * @return the interpolated image object
 	 */
 	public ImagePlus interpolate(ImagePlus imagePlus){
 		this.image = imagePlus;
@@ -122,10 +133,10 @@ public class Interpolater {
 	}
 	
 	/**
-	 * Interpolate.
+	 * Interpolate given spatial image object and return the interpolated spatial image object.
 	 *
-	 * @param spImg the sp img
-	 * @return the spatial image
+	 * @param spImg the spatial image object
+	 * @return the interpolated spatial image object
 	 */
 	public SpatialImage interpolate(SpatialImage spImg){
 		this.image = spImg.getImage();
@@ -147,9 +158,10 @@ public class Interpolater {
 	}
 
 	/**
-	 * Interpolate.
+	 * Interpolate given set of ImageJ image objects (as hashmap of domain files, HashMap&lt;String, ImagePlus&gt;).
+	 * The value of given hashmap of domain files will be replaced by the interpolated image object.
 	 *
-	 * @param hashdomFile the hashdom file
+	 * @param hashdomFile the hashmap of domain file. HashMap&lt;String, ImagePlus&gt;
 	 */
 	public void interpolate(HashMap<String, ImagePlus> hashdomFile) {
 		for(Entry<String, ImagePlus> e : hashdomFile.entrySet()){
@@ -159,9 +171,10 @@ public class Interpolater {
 	}
 	
 	/**
-	 * Need interpolate.
+	 * Check if the spatial image needs interpolation.
+	 * If the voxel size of each x, y and z axis is the same, then we can skip the interpolation.
 	 *
-	 * @return true, if successful
+	 * @return true, if spatial image needs interpolation
 	 */
 	private boolean needInterpolate(){
 		if(depth == 1) return false;
@@ -172,7 +185,17 @@ public class Interpolater {
 	}
 
 	/**
-	 * Nearest neighbor.
+	 * The Nearest Neighbor algorithm, which is the core implementation of interpolation.
+	 * There are several algorithms proposed for interpolation. For example there exist following
+	 * non adaptive interpolation algorithms:
+	 * <ol>
+	 *     <li>Nearest Neighbour Interpolation</li>
+	 *     <li>Bilinear Interpolation</li>
+	 *     <li>Bicubic Interpolation</li>
+	 *     <li>Re-sampling process</li>
+	 * </ol>
+	 * XitoSBML adopt "Nearest Neighbor Interpolation" for interpolation.
+	 * Other algorithms will be implemented in the future.
 	 */
 	private void nearestNeighbor(){
 		altz = (int) (zaxis / voxx);
@@ -203,9 +226,9 @@ public class Interpolater {
 	}
 	
 	/**
-	 * Gets the interpolated image.
+	 * Gets the interpolated image object.
 	 *
-	 * @return the interpolated image
+	 * @return the interpolated image as ImageJ image object
 	 */
 	public ImagePlus getInterpolatedImage(){
 		return image;
