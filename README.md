@@ -99,6 +99,18 @@ For example, if you want to build XitoSBML on Fiji.app(MacOSX), the `mvn` comman
 % mvn install -Dimagej.app.directory=/Applications/Fiji.app/
 ```
 
-### Licensing
+### Documentation
+Javadocs of XitoSBML API are included under `apidocs` directory in the repository, and 
+are available on our [web site](https://fun.bio.keio.ac.jp/software/XitoSBML/apidocs/).
+
+Here are the high-level key classes of XitoSBML, which will be a good starting point to read through the code.
+
+Class | Plugin item on ImageJ
+:-- | :--
+[jp.ac.keio.bio.fun.xitosbml.xitosbml.MainImgSpatial.java](https://fun.bio.keio.ac.jp/software/XitoSBML/apidocs/jp/ac/keio/bio/fun/xitosbml/xitosbml/MainImgSpatial.html) | run Spatial Image SBML Plugin
+[jp.ac.keio.bio.fun.xitosbml.xitosbml.MainModelEdit.java](https://fun.bio.keio.ac.jp/software/XitoSBML/apidocs/jp/ac/keio/bio/fun/xitosbml/xitosbml/MainModelEdit.html) | run Model Editor
+[jp.ac.keio.bio.fun.xitosbml.xitosbml.MainModelValidator.java](https://fun.bio.keio.ac.jp/software/XitoSBML/apidocs/jp/ac/keio/bio/fun/xitosbml/xitosbml/MainModelValidator.html) | run Model Validation
+
+Licensing
 ------------------
 XitoSBML is licensed under the Apache License, Version 2.0. See [LICENSE](https://github.com/spatialsimulator/XitoSBML/blob/master/LICENSE-2.0.txt) for the full license text.
