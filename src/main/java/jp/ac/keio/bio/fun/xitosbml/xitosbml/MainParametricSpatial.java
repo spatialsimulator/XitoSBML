@@ -13,7 +13,7 @@ import jp.ac.keio.bio.fun.xitosbml.util.ModelSaver;
 public class MainParametricSpatial extends MainSpatial{
 	
 	/**
-	 * Overrides ij.plugin.PlugIn#run(java.lang.String)
+	 * Overrides ij.plugin.PlugIn#run(java.lang.String).
 	 * A dialog for specifying the correspondence between the image and the region in the cell will be displayed.
 	 * The specified image is read and the following process is performed.
 	 *

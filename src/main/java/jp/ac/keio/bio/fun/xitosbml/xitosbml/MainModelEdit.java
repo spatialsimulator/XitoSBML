@@ -15,7 +15,7 @@ import jp.ac.keio.bio.fun.xitosbml.util.ModelValidator;
 public class MainModelEdit extends MainSBaseSpatial {
 
 	/**
-	 * Overrides ij.plugin.PlugIn#run(java.lang.String)
+	 * Overrides ij.plugin.PlugIn#run(java.lang.String).
 	 * A dialog for editing the model will be displayed.
      * Users can add, modify following SBML elements and save the model through the dialog.
 	 * <ul>

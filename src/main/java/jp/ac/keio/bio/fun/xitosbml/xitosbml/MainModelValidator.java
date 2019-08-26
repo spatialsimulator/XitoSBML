@@ -16,7 +16,7 @@ import jp.ac.keio.bio.fun.xitosbml.util.ModelValidator;
 public class MainModelValidator extends MainSBaseSpatial {
 
 	/**
-	 * Overrides ij.plugin.PlugIn#run(java.lang.String)
+	 * Overrides ij.plugin.PlugIn#run(java.lang.String).
 	 * A file dialog for validating the model will be displayed.
 	 * Users will select a model (SBML file) through the graphical user interface,
 	 * and then XitoSBML will will check whether the SBML document has correct
