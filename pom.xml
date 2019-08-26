@@ -136,6 +136,8 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <locale>en</locale>
+          <reportOutputDirectory>${project.reporting.outputDirectory}/../</reportOutputDirectory>
+          <destDir>apidocs</destDir>
         </configuration>
         <executions>
           <execution>
