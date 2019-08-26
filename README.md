@@ -42,7 +42,7 @@ available as an [MP4 file](./screenshots/example1.mp4)).
 
 You can find example 2D and 3D images and converted Spatial SBML model under [examples](https://github.com/spatialsimulator/XitoSBML/tree/master/examples) directory.
 
-### Convert segmented images to Spatial SBML (as a mathematical model)
+### Convert segmented (binary) images to Spatial SBML (as a mathematical model)
 Next example will show how to create a Spatial SBML model, add SBML objects to the model, and make it as a mathematical model. The following figure represents the diagram of this example model. Note that species `A` and `B` diffuse inside the nucleus and cytosol with the given diffusion coefficients (`Dnuc` and `Dcyt`), respectively.
 
 ![diagram of example2](./screenshots/example2.png "Diagram of example model 2")
