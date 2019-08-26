@@ -22,7 +22,7 @@ public abstract class Spatial_SBML implements PlugIn {
 	String title = "Export segmented image to Spatial SBML";
 	
 	/** Version info. */
-	String version = "1.1.0";
+	String version = "1.2.0";
 	
   /**
    * Launch XitoSBML as ImageJ plugin.

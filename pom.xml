@@ -13,7 +13,7 @@
 
   <groupId>jp.ac.keio.bio.fun</groupId>
   <artifactId>Xito_SBML</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 
   <name>XitoSBML</name>
   <description>A plugin to create SBML model from microscopic images</description>
@@ -130,6 +130,15 @@
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
         </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
