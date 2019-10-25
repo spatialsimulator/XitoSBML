@@ -1,13 +1,40 @@
 package jp.ac.keio.bio.fun.xitosbml.pane;
 
+import java.util.Arrays;
+import java.util.Vector;
+import java.util.HashMap;
+import javax.swing.text.JTextComponent;
+
 import org.sbml.jsbml.IdentifierException;
 import org.sbml.jsbml.Model;
+import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Species;
+import org.sbml.jsbml.InitialAssignment;
+import org.sbml.jsbml.Parameter;
+import org.sbml.jsbml.ASTNode;
+import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
+import org.sbml.jsbml.ext.spatial.Geometry;
+import org.sbml.jsbml.ext.spatial.SampledField;
+import org.sbml.jsbml.ext.spatial.GeometryDefinition;
+import org.sbml.jsbml.ext.spatial.SampledFieldGeometry;
+import org.sbml.jsbml.ext.spatial.SampledVolume;
+import org.sbml.jsbml.ext.spatial.CompressionKind;
+import org.sbml.jsbml.ext.spatial.DataKind;
+import org.sbml.jsbml.ext.spatial.InterpolationKind;
 import org.sbml.jsbml.Unit;
 import org.sbml.jsbml.ext.spatial.SpatialConstants;
 import org.sbml.jsbml.ext.spatial.SpatialSpeciesPlugin;
+import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
+import org.sbml.jsbml.ext.spatial.SpatialSymbolReference;
 
+import ij.IJ;
 import ij.gui.GenericDialog;
+import ij.ImagePlus;
+import ij.ImageStack;
+import ij.process.ImageProcessor;
+import ij.WindowManager;
+
+//import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
 
 /**
  * The class SpeciesDialog, which generates a GUI for creating / editing Species.
@@ -36,6 +63,16 @@ public class SpeciesDialog {
 	
 	/** The SBML model. */
 	private Model model;
+        
+	/** The distribution. */
+	private final String[] distribution = {"uniform","local"};
+  	
+	/** The initial. */
+	private final String[] initial = {"amount","concentration"};
+
+        /** The Localization from Image. */
+        HashMap<String,String> speciesImage = new HashMap<String,String>();
+  
 	
 	/**
 	 * Instantiates a new species dialog.
@@ -43,10 +80,29 @@ public class SpeciesDialog {
 	 * @param model the SBML model
 	 */
 	public SpeciesDialog(Model model){
-		this.model = model;
-		
+		this.model = model;		
 	}
-	
+
+        /**
+         *
+         * set HashMap from species dialog
+         *
+         * @param speciesImage the tag of species with image
+         public void setHashMap( HashMap<String,String> speciesImage ){
+                this.speciesImage = speciesImage;
+         }
+	 */
+
+        /**
+         *
+         * get species image into species Dialog
+         *
+         * @param speciesImage the tag of species with image
+	 */
+         public StringBuffer getSpeciesImage( String SFid ){
+                return new StringBuffer(speciesImage.get( SFid )/*imagename*/);
+         }
+  
 	/**
 	 * Create and show a dialog for adding Species.
 	 * If a user creates a species through this dialog,
@@ -62,9 +118,13 @@ public class SpeciesDialog {
 		gd.pack();
 	
 		gd.addStringField("id:", "");
-		gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
-		gd.addNumericField("quantity:", 0, 1);
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), null);
+		gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");//added by morita
+		gd.setEditable(false).addRadioButtonGroup("initial:", initial, 1, 2, "amount");
+		gd.setEditable(false).addNumericField("quantity:", 0, 1);
+                addImageChoice();
+		gd.setEditable(false).addNumericField("Max:", 0, 1);
+		gd.setEditable(false).addNumericField("Min:", 0, 1);
 		gd.addChoice("substanceUnit:", units, null);
 		gd.addRadioButtonGroup("boundaryCondition:",bool,1,2,"false");
 		gd.addRadioButtonGroup("constant:",bool,1,2,"false");
@@ -96,14 +156,20 @@ public class SpeciesDialog {
 		gd.pack();
 		
 		gd.addStringField("id:", species.getId());
+		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), species.getCompartment());
+
+                //distribution added by morita
+		gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");
+                
 		if(species.isSetInitialAmount()){
 			gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
 			gd.addNumericField("quantity:", species.getInitialAmount(), 1);
 		} else if(species.isSetInitialConcentration()){
 			gd.addRadioButtonGroup("initial:", initial, 1, 2, "concentration");
 			gd.addNumericField("quantity:", species.getInitialConcentration(), 1);
-		}
-		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), species.getCompartment());
+		}                
+                addImageChoice();
+                
 		gd.addChoice("substanceUnit:", units, species.getUnits());			
 		gd.addRadioButtonGroup("boundaryCondition:",bool,1, 2, String.valueOf(species.getBoundaryCondition()));
 		gd.addRadioButtonGroup("constant:",bool,1,2, String.valueOf(species.getConstant()));
@@ -138,13 +204,62 @@ public class SpeciesDialog {
 		if (str.indexOf(' ')!=-1)
 				str = str.replace(' ', '_');
 		species.setId(str);
-		String quantity = gd.getNextRadioButton();
-		if(quantity.contains(initial[0])) 
-			species.setInitialAmount(gd.getNextNumber());
-		else 
-			species.setInitialConcentration(gd.getNextNumber());
-	
-		species.setCompartment(gd.getNextChoice());
+
+                String sCompartment = gd.getNextChoice();
+		species.setCompartment(sCompartment);
+
+                String distribute = gd.getNextRadioButton();
+                if( distribute.equals(distribution[0]) ){
+                        String quantity = gd.getNextRadioButton();
+                        if(quantity.contains(initial[0])) 
+                                species.setInitialAmount(gd.getNextNumber());
+                        else 
+                                species.setInitialConcentration(gd.getNextNumber());
+                } else if( distribute.equals(distribution[1]) ){
+                  
+                        String SId = str + "_" + species.getCompartment();
+                        String SFid = SId + "_initialConcentration";
+                        
+                        SpatialModelPlugin spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial"); 
+                        Geometry geometry = spatialplugin.getGeometry();
+                        ListOf<SampledField> losf = geometry.getListOfSampledFields();
+                        ListOf<GeometryDefinition> logd = geometry.getListOfGeometryDefinitions();
+                        SampledFieldGeometry sfg = (SampledFieldGeometry)logd.get(0);              
+                        ListOf<SampledVolume> losv = sfg.getListOfSampledVolumes();
+                        double volume = 1;
+                        for(int i = 0; i < losv.size(); i++){
+                                if( losv.get(i).getDomainType().equals(species.getCompartment()) ){
+                                        SampledVolume sv = losv.get(i);
+                                        volume = (double)sv.getSampledValue();
+                                }
+                        }
+                        double ia = 0;
+                        String imagename = gd.getNextChoice();
+                        if( imagename.equals("No Image") ){
+                                speciesImage.put( SFid, "No Image" );
+                                for(int i = 0; i < losf.size(); i++){
+                                        if( losf.get(i).equals(SFid) ){
+                                                losf.remove(i);
+                                        }
+                                }
+                        } else {
+                                speciesImage.put( SFid, imagename );
+                                for( int i = 0; i < losf.size(); i++){
+                                        if( losf.get(i).equals(SFid) ){
+                                                losf.remove(i);
+                                        }                        
+                                }
+                                InitialAssignment initialAssignment = model.createInitialAssignment();
+                                addInitalAssignment( initialAssignment, SId );
+                                Parameter parameter = model.createParameter();
+                                addIAParameter( parameter, SFid );
+                                ia = addSampledField( imagename, volume);
+                                
+                                if( species.isSetInitialAmount() )
+                                        species.unsetInitialAmount();
+                                species.setInitialAmount(ia);
+                        }         
+                }
 		species.setSubstanceUnits(Unit.Kind.valueOf(gd.getNextChoice().toUpperCase()));
 
 		if(species.isSetInitialAmount())
@@ -157,4 +272,115 @@ public class SpeciesDialog {
 		SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) species.getPlugin(SpatialConstants.shortLabel);
 		ssp.setSpatial(true);
 	}
+
+        /**                                                                                
+          * Adds the image choice.
+          */
+        private void addImageChoice(){
+
+                int numimage = WindowManager.getImageCount();
+                Vector<String> windows = new Vector<String>();
+          
+                if(numimage == 0){
+                        String[] s = {"No Image"};
+                        gd.addChoice("Image:", s, "NaN");
+                        return;
+                }else{
+                        for(int i = 1 ; i <= numimage ; i++){
+                        int id = WindowManager.getNthImageID(i);
+                        ImagePlus ip = WindowManager.getImage(id);
+                        windows.add(ip.getTitle());
+                        }
+                }
+          
+                final String[] images = new String[windows.size() + 1];
+                windows.toArray(images);
+                for(int i = windows.size(); i > 0; i--){
+                        images[i] = images[i-1];
+                } images[0] = "No Image"; 
+
+                gd.setEditable(false).addChoice("Localization from Image", images, images[0]);
+        }
+
+    	/**
+	 * Sets the species initial assignment.
+	 *
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IdentifierException the identifier exception
+         */
+         @SuppressWarnings("deprecation")
+         private void addInitalAssignment( InitialAssignment ia, String SId ) throws IllegalArgumentException, IdentifierException {//added by Morita
+
+                ia.setSymbol(SId);
+
+                String para = SId + "_initialConcentration";           
+                ASTNode astnode = new ASTNode( para );
+                //astnode.setVariable(para);
+                ia.setMath( astnode );
+         }
+
+      	/**
+	 * Sets the species initial assignment.
+	 *
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IdentifierException the identifier exception
+         */
+         private void addIAParameter( Parameter para, String SFid ) throws IllegalArgumentException, IdentifierException {//added by Morita
+
+                para.setId( SFid );
+                para.setConstant( true );
+                //SpatialSymbolReference
+                SpatialParameterPlugin spp = (SpatialParameterPlugin) para.getPlugin(SpatialConstants.namespaceURI);
+                SpatialSymbolReference ssr = new SpatialSymbolReference();
+                ssr.setSpatialRef( SFid );
+         }           
+  
+  	/**
+	 * Sets the species initial amount data.
+	 *
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IdentifierException the identifier exception
+         */
+         private double addSampledField( String imagename, double volume ) throws IllegalArgumentException, IdentifierException {//added by Morita
+    
+                IJ.selectWindow( imagename );
+                ImagePlus img = IJ.getImage();
+                int width = img.getWidth();
+                int height = img.getHeight();
+                int depth = img.getStackSize();
+
+                SpatialModelPlugin spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial"); 
+		Geometry geometry = spatialplugin.getGeometry(); 
+		SampledField sf = geometry.createSampledField();
+
+                sf.setSpatialId( species.getId() + "_" + species.getCompartment() + "_initialConcentration" );
+		sf.setDataType( DataKind.DOUBLE );
+		sf.setNumSamples1( width );
+		sf.setNumSamples2( height );
+		sf.setNumSamples3( depth );
+		sf.setInterpolation( InterpolationKind.linear );
+		sf.setCompression( CompressionKind.uncompressed );
+		sf.setSamplesLength( width * height * depth );
+
+		int brightness[] = new int[ width * height * depth ];
+                int amount = 0;
+                String sample;
+
+                ImageStack is = img.getStack();
+                
+		for ( int l = 0; l < depth; l++){
+                        ImageProcessor ip = is.getProcessor(l+1);
+                        for(int m = 0; m < height; m++){
+                                for( int n = 0; n < width; n++){
+                                        brightness[ l*width*height + m*width + n ] = ip.getPixel(n,m);
+                                }
+                        }
+                }
+                sample = Arrays.toString(brightness).replace( "[", "" ).replace( "]", "" ).replace( ",", "" );
+                for(int i = 0; i < brightness.length; i++)
+                        amount = Math.max(amount,brightness[i]);
+		sf.setSamples(sample);
+
+                return (double)amount;
+        }
 }

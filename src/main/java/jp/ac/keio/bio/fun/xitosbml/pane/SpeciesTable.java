@@ -1,12 +1,16 @@
 package jp.ac.keio.bio.fun.xitosbml.pane;
 
 import java.util.Vector;
+import java.util.HashMap;
 
 import javax.swing.JTable;
 
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Species;
+import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
+import org.sbml.jsbml.ext.spatial.Geometry;
+import org.sbml.jsbml.ext.spatial.SampledField;
 
 /**
  * The class SpeciesTable, which inherits SBaseTable and implements add() and edit() method for
@@ -17,10 +21,11 @@ import org.sbml.jsbml.Species;
  * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
  * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
+
 public class SpeciesTable extends SBaseTable{
 	
-	/** The header of table. */
-	private final String[] header = { "id","initial","quantity", "compartment", "substanceUnits","hasOnlySubstanceUnits","boundaryCondition","constant"};
+	/** The header. */
+        private final String[] header = { "id","initial","quantity","compartment","Localization from Image","substanceUnits","hasOnlySubstanceUnits","boundaryCondition","constant"}; 
 	
 	/** The JTable object. */
 	private JTable table;
@@ -30,7 +35,11 @@ public class SpeciesTable extends SBaseTable{
 	
 	/** The SBML model. */
 	private Model model;
-	
+
+        /** The speciesImage. */
+        //public HashMap<String,String> speciesImage = new HashMap<String,String>();
+
+  
 	/**
 	 * Instantiates a new species table.
 	 *
@@ -78,10 +87,12 @@ public class SpeciesTable extends SBaseTable{
 				data[i][2] = s.getInitialConcentration();
 			}
 			data[i][3] = s.getCompartment();
-			data[i][4] = s.getSubstanceUnits();
-			data[i][5] = s.getHasOnlySubstanceUnits();
-			data[i][6] = s.getBoundaryCondition();
-			data[i][7] = s.getConstant();
+                        String SFid = s.getId() + "_" + s.getCompartment() + "_initialConcentration";//added by Morita
+                        data[i][4] = SFid;
+			data[i][5] = s.getSubstanceUnits();
+			data[i][6] = s.getHasOnlySubstanceUnits();
+			data[i][7] = s.getBoundaryCondition();
+			data[i][8] = s.getConstant();
 		}
 		
 		MyTableModel tm = new MyTableModel(data, header) {
@@ -96,10 +107,12 @@ public class SpeciesTable extends SBaseTable{
 				case 2: // quantity
 					return Double.class;
 				case 3: // Compartment
-				case 4: // substance unit
-				case 5: // hasOnlySubstanceUnits
-				case 6: // boundaryCondition
-				case 7:	// constant
+				case 4: // Localization //***added by Morita
+                                        return String.class;
+				case 5: // substance unit
+				case 6: // hasOnlySubstanceUnits
+				case 7: // boundaryCondition
+				case 8:	// constant
 					return String.class;
 				default:
 					return String.class;
@@ -126,7 +139,7 @@ public class SpeciesTable extends SBaseTable{
 	 * @param s the JSBML Species object
 	 * @return the converted vector
 	 */
-	private Vector<Object> speciesToVector(Species s){
+        private Vector<Object> speciesToVector( Species s, String imagename ){
 		Vector<Object> v = new Vector<Object>();
 		v.add(s.getId());
 		if(s.isSetInitialAmount()){
@@ -136,7 +149,23 @@ public class SpeciesTable extends SBaseTable{
 			v.add("concentration");
 			v.add(s.getInitialConcentration());
 		}
+
 		v.add(s.getCompartment());
+
+                SpatialModelPlugin spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial") ;
+                Geometry geometry = spatialplugin.getGeometry();
+                ListOf<SampledField> losf =  geometry.getListOfSampledFields();
+
+                String SFid = s.getId() + "_" + s.getCompartment() + "_initialConcentration";
+                String noimage = "No image";
+                for(int listsize = 0; listsize < (losf.size() + 1); listsize++ ){
+                        if( listsize < losf.size() ){
+                                if( losf.get(listsize).getId().equals( SFid ) ){
+                                        v.add( imagename );
+                                        break;
+                                }
+                        } else if( listsize == losf.size() ) v.add( noimage ); 
+                } 
 		v.add(s.getSubstanceUnits());
 		v.add(s.getHasOnlySubstanceUnits());
 		v.add(s.getBoundaryCondition());
@@ -157,12 +186,17 @@ public class SpeciesTable extends SBaseTable{
 	void add() throws IllegalArgumentException{
 		if(sd == null)
 			sd = new SpeciesDialog(model);
-	
+
+                //sd.setHashMap(speciesImage);
+                
 		Species s = sd.showDialog();
 		if(s == null) return;
-			
+                
+		String SFid = s.getId() + "_" + s.getCompartment() + "_initialConcentration";
+                String sImage = sd.getSpeciesImage( SFid ).toString();
+
 		memberList.add(s.clone());
-		((MyTableModel)table.getModel()).addRow(speciesToVector(s.clone()));
+		((MyTableModel)table.getModel()).addRow(speciesToVector(s.clone(), sImage));
 	}
 
 	/* (non-Javadoc)
@@ -183,17 +217,25 @@ public class SpeciesTable extends SBaseTable{
 		if(index == -1 ) return ;
 		if(sd == null)
 			sd = new SpeciesDialog(model);
+
+                //sd.setHashMap(speciesImage);
+
 		Species s = sd.showDialog((Species) memberList.get(index));
-		
+		String SFid = s.getId() + "_" + s.getCompartment() + "_initialConcentration";
+                String sImage = sd.getSpeciesImage( SFid ).toString();
+                
 		if(s == null) return;
 		
 		memberList.set(index, s);
 
 		// copy contents of Species(JTable) to Species(Model)
 		Species sp = (Species) list.getElementBySId(s.getId());
+
+                System.out.println("s is " + s);
+                System.out.println("sp is " + sp);
 		SBMLProcessUtil.copySpeciesContents(s, sp);
 
-		((MyTableModel)table.getModel()).updateRow(index, speciesToVector(s));
+		((MyTableModel)table.getModel()).updateRow(index, speciesToVector(s, sImage));
 		
 	}
 }
