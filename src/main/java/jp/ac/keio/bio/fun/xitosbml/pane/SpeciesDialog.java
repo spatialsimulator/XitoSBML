@@ -3,7 +3,8 @@ package jp.ac.keio.bio.fun.xitosbml.pane;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.HashMap;
-import javax.swing.text.JTextComponent;
+//import javax.swing.JButton;
+import javax.swing.JTextField;
 
 import org.sbml.jsbml.IdentifierException;
 import org.sbml.jsbml.Model;
@@ -29,6 +30,7 @@ import org.sbml.jsbml.ext.spatial.SpatialSymbolReference;
 
 import ij.IJ;
 import ij.gui.GenericDialog;
+import ij.gui.MessageDialog;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ImageProcessor;
@@ -119,12 +121,15 @@ public class SpeciesDialog {
 	
 		gd.addStringField("id:", "");
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), null);
-		gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");//added by morita
-		gd.setEditable(false).addRadioButtonGroup("initial:", initial, 1, 2, "amount");
-		gd.setEditable(false).addNumericField("quantity:", 0, 1);
+		//gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");//added by morita
+		gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount")/*.setEditable(false)*/;
+                //JTextField quantity = new JTextField("0");
+                //quantity.setEditable(false);
+                //String num = quantity.paramString().clone();
+		gd.addNumericField("quantity:", 0, 1)/*.setEditable(false)*/;
                 addImageChoice();
-		gd.setEditable(false).addNumericField("Max:", 0, 1);
-		gd.setEditable(false).addNumericField("Min:", 0, 1);
+		//gd.addNumericField("Max:", 0, 1)/*.setEditable(false)*/;
+		//gd.addNumericField("Min:", 0, 1)/*.setEditable(false)*/;
 		gd.addChoice("substanceUnit:", units, null);
 		gd.addRadioButtonGroup("boundaryCondition:",bool,1,2,"false");
 		gd.addRadioButtonGroup("constant:",bool,1,2,"false");
@@ -159,7 +164,7 @@ public class SpeciesDialog {
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), species.getCompartment());
 
                 //distribution added by morita
-		gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");
+		//gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");
                 
 		if(species.isSetInitialAmount()){
 			gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
@@ -207,17 +212,19 @@ public class SpeciesDialog {
 
                 String sCompartment = gd.getNextChoice();
 		species.setCompartment(sCompartment);
+                species.unsetId();
+                String SId = str + "_" + species.getCompartment();
+                species.setId( SId );
 
-                String distribute = gd.getNextRadioButton();
-                if( distribute.equals(distribution[0]) ){
+                //String distribute = gd.getNextRadioButton();
+                //if( distribute.equals(distribution[0]) ){
                         String quantity = gd.getNextRadioButton();
                         if(quantity.contains(initial[0])) 
                                 species.setInitialAmount(gd.getNextNumber());
                         else 
                                 species.setInitialConcentration(gd.getNextNumber());
-                } else if( distribute.equals(distribution[1]) ){
-                  
-                        String SId = str + "_" + species.getCompartment();
+                        //} else if( distribute.equals(distribution[1]) ){
+
                         String SFid = SId + "_initialConcentration";
                         
                         SpatialModelPlugin spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial"); 
@@ -250,16 +257,16 @@ public class SpeciesDialog {
                                         }                        
                                 }
                                 InitialAssignment initialAssignment = model.createInitialAssignment();
-                                addInitalAssignment( initialAssignment, SId );
+                                addInitalAssignment( initialAssignment, SId );//add initial assignment
                                 Parameter parameter = model.createParameter();
-                                addIAParameter( parameter, SFid );
-                                ia = addSampledField( imagename, volume);
+                                addIAParameter( parameter, SFid );//add parameter in initial assignment's math
+                                addSampledField( imagename, volume);//add sampledField
                                 
-                                if( species.isSetInitialAmount() )
-                                        species.unsetInitialAmount();
-                                species.setInitialAmount(ia);
+                                //if( species.isSetInitialAmount() )
+                                //        species.unsetInitialAmount();
+                                //species.setInitialAmount(ia);
                         }         
-                }
+                        //}
 		species.setSubstanceUnits(Unit.Kind.valueOf(gd.getNextChoice().toUpperCase()));
 
 		if(species.isSetInitialAmount())
@@ -299,7 +306,7 @@ public class SpeciesDialog {
                         images[i] = images[i-1];
                 } images[0] = "No Image"; 
 
-                gd.setEditable(false).addChoice("Localization from Image", images, images[0]);
+                gd.addChoice("Localization from Image", images, images[0])/*.setEditable(false)*/;
         }
 
     	/**
@@ -336,51 +343,106 @@ public class SpeciesDialog {
          }           
   
   	/**
-	 * Sets the species initial amount data.
+	 * Sets the species sampledField data from Image.
 	 *
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws IdentifierException the identifier exception
          */
-         private double addSampledField( String imagename, double volume ) throws IllegalArgumentException, IdentifierException {//added by Morita
+         private void addSampledField( String imagename, double volume ) throws IllegalArgumentException, IdentifierException {//added by Morita
     
-                IJ.selectWindow( imagename );
-                ImagePlus img = IJ.getImage();
-                int width = img.getWidth();
-                int height = img.getHeight();
-                int depth = img.getStackSize();
+                 IJ.selectWindow( imagename );
+                 ImagePlus img = IJ.getImage();
+                 int width = img.getWidth();
+                 int height = img.getHeight();
+                 int depth = img.getStackSize();
+                 
+                 SpatialModelPlugin spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial"); 
+                 Geometry geometry = spatialplugin.getGeometry(); 
+                 SampledField sf = geometry.createSampledField();
+                 
+                 sf.setSpatialId( species.getId() + "_" + species.getCompartment() + "_initialConcentration" );
+                 sf.setDataType( DataKind.DOUBLE );
+                 sf.setNumSamples1( width );
+                 sf.setNumSamples2( height );
+                 sf.setNumSamples3( depth );
+                 sf.setInterpolation( InterpolationKind.linear );
+                 sf.setCompression( CompressionKind.uncompressed );
+                 sf.setSamplesLength( width * height * depth );
+                 
+                 int brightness[] = new int[ width * height * depth ];
+                 int amount = 0;
+                 String sample;
+                 
+                 ImageStack is = img.getStack();
+                 //2 dimension
+                 for ( int l = 0; l < depth; l++){
+                         ImageProcessor ip = is.getProcessor(l+1);
+                         for(int m = 0; m < height; m++){
+                                 for( int n = 0; n < width; n++){
+                                         brightness[ l*width*height + m*width + n ] = ip.getPixel(n,m);
+                                 }
+                         }
+                         brightness = checkImageBoundary(geometry,brightness,width,height,depth); //check species distribution
+                 }
+                 sample = Arrays.toString(brightness).replace( "[", "" ).replace( "]", "" ).replace( ",", "" );
+                 //for(int i = 0; i < brightness.length; i++)
+                 //        amount = Math.max(amount,brightness[i]);
+                 sf.setSamples(sample);
+                 
+                 //return (double)amount;
+         }
+  
+       /**
+	 * check boundary of species distribution from iamge.
+	 *
+	 * @throws IllegalArgumentException the illegal argument exception
+	 * @throws IdentifierException the identifier exception
+         */
+         private int[] checkImageBoundary( Geometry geo, int[] brightness, int width, int height, int depth ) throws IllegalArgumentException, IdentifierException {//added by Morita
 
-                SpatialModelPlugin spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial"); 
-		Geometry geometry = spatialplugin.getGeometry(); 
-		SampledField sf = geometry.createSampledField();
+                 SampledField sf = geo.getListOfSampledFields().get(0);
+                 String uncompr = sf.getSamples();
+                 int digit = 0;
+                 int num = 0;
+                 int[] sCompartment = new int[ width * height * depth ];
+                 for( int i = 0; i < uncompr.length(); i++ ){
+                         if( uncompr.substring(i,i+1).equals(" ") ){
+                                 sCompartment[num] = Integer.parseInt(uncompr.substring(digit,i));
+                                 num++;
+                                 digit = i+1;
+                         }
+                 }
+                 
+                 ListOf<GeometryDefinition> logd = geo.getListOfGeometryDefinitions();
+                 SampledFieldGeometry sfg = (SampledFieldGeometry)logd.get(0);
+                 ListOf<SampledVolume> losv = sfg.getListOfSampledVolumes();
 
-                sf.setSpatialId( species.getId() + "_" + species.getCompartment() + "_initialConcentration" );
-		sf.setDataType( DataKind.DOUBLE );
-		sf.setNumSamples1( width );
-		sf.setNumSamples2( height );
-		sf.setNumSamples3( depth );
-		sf.setInterpolation( InterpolationKind.linear );
-		sf.setCompression( CompressionKind.uncompressed );
-		sf.setSamplesLength( width * height * depth );
+                 for( int i = 0; i < losv.size(); i++ ){
+                         if( losv.get(i).getDomainType().equals(species.getCompartment()) ){
 
-		int brightness[] = new int[ width * height * depth ];
-                int amount = 0;
-                String sample;
-
-                ImageStack is = img.getStack();
-                
-		for ( int l = 0; l < depth; l++){
-                        ImageProcessor ip = is.getProcessor(l+1);
-                        for(int m = 0; m < height; m++){
-                                for( int n = 0; n < width; n++){
-                                        brightness[ l*width*height + m*width + n ] = ip.getPixel(n,m);
-                                }
-                        }
-                }
-                sample = Arrays.toString(brightness).replace( "[", "" ).replace( "]", "" ).replace( ",", "" );
-                for(int i = 0; i < brightness.length; i++)
-                        amount = Math.max(amount,brightness[i]);
-		sf.setSamples(sample);
-
-                return (double)amount;
-        }
+                                  double sv = losv.get(i).getSampledValue();
+                                  int numBeyond = 0;
+                                  int[] isInCompartment = new int[ width * height * depth ];
+                                  for( int in = 0; in < width * height * depth; in++ ){
+                                          if( sCompartment[in] == sv ){                         
+                                                  isInCompartment[i] = 1;
+                                          } else {                         
+                                                  isInCompartment[i] = 0;
+                                                  if( brightness[in] > 0 ){
+                                                    numBeyond++;
+                                                  }
+                                          }
+                                  }
+                                  //in case of species distribution beyond boundary
+                                  if( numBeyond > 0){
+                                    MessageDialog md = new MessageDialog( null/*gd*/, "Species Boundary ERROR", "species are distributed beyond your selected compartment!\nSpecies beyond the compartment was deleted." );
+                                           for( int j = 0; j < width * height * depth; j++ )
+                                                    brightness[i] *= isInCompartment[i];
+                                  }
+                         }
+                 }
+                 
+                 return brightness;
+         }
+  
 }
