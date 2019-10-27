@@ -180,6 +180,10 @@ public class TabTables extends JFrame implements ActionListener {
 				SBase sbase = sbaseList.get(paneIndex).removeFromList(table.getSelectedRow());
 				sbaseList.get(paneIndex).removeSelectedRowFromTable(table);
 				model.unregister(sbase);
+                                String Id = sbase.getId();//added by Morita
+                                Id += "_initialConcentration";
+                                SBase IC = model.getElementBySId(Id);
+                                model.unregister(IC);//added by Morita
 			}
 		} catch(IllegalArgumentException ex){
 			if(ex.getCause() == null){
