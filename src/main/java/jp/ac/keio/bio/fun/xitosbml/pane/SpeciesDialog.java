@@ -362,7 +362,7 @@ public class SpeciesDialog {
                  Geometry geometry = spatialplugin.getGeometry(); 
                  SampledField sf = geometry.createSampledField();
                  
-                 sf.setSpatialId( species.getId() + "_" + species.getCompartment() + "_initialConcentration" );
+                 sf.setSpatialId( species.getId() + "_initialConcentration" );
                  sf.setDataType( DataKind.DOUBLE );
                  sf.setNumSamples1( width );
                  sf.setNumSamples2( height );
@@ -384,7 +384,7 @@ public class SpeciesDialog {
                                          brightness[ l*width*height + m*width + n ] = ip.getPixel(n,m);
                                  }
                          }
-                         brightness = checkImageBoundary(geometry,brightness,width,height,depth); //check species distribution
+                 //brightness = checkImageBoundary(geometry,brightness,width,height,depth); //check species distribution
                  }
                  sample = Arrays.toString(brightness).replace( "[", "" ).replace( "]", "" ).replace( ",", "" );
                  //for(int i = 0; i < brightness.length; i++)
