@@ -25,7 +25,7 @@ import org.sbml.jsbml.ext.spatial.SampledField;
 public class SpeciesTable extends SBaseTable{
 	
 	/** The header. */
-        private final String[] header = { "id","initial","quantity","compartment","Localization from Image","substanceUnits","hasOnlySubstanceUnits","boundaryCondition","constant"}; 
+        private final String[] header = { "id","initial","quantity","compartment","Localization from Image"/* added by Morita */,"substanceUnits","hasOnlySubstanceUnits","boundaryCondition","constant"}; 
 	
 	/** The JTable object. */
 	private JTable table;
@@ -192,7 +192,7 @@ public class SpeciesTable extends SBaseTable{
 		Species s = sd.showDialog();
 		if(s == null) return;
                 
-		String SFid = s.getId() + "_" + s.getCompartment() + "_initialConcentration";
+		String SFid = s.getId() + "_initialConcentration";
                 String sImage = sd.getSpeciesImage( SFid ).toString();
 
 		memberList.add(s.clone());
@@ -221,7 +221,7 @@ public class SpeciesTable extends SBaseTable{
                 //sd.setHashMap(speciesImage);
 
 		Species s = sd.showDialog((Species) memberList.get(index));
-		String SFid = s.getId() + "_" + s.getCompartment() + "_initialConcentration";
+		String SFid = s.getId() + "_initialConcentration";
                 String sImage = sd.getSpeciesImage( SFid ).toString();
                 
 		if(s == null) return;

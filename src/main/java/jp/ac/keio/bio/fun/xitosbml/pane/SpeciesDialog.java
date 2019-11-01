@@ -75,7 +75,6 @@ public class SpeciesDialog {
         /** The Localization from Image. */
         HashMap<String,String> speciesImage = new HashMap<String,String>();
   
-	
 	/**
 	 * Instantiates a new species dialog.
 	 *
@@ -102,7 +101,10 @@ public class SpeciesDialog {
          * @param speciesImage the tag of species with image
 	 */
          public StringBuffer getSpeciesImage( String SFid ){
-                return new StringBuffer(speciesImage.get( SFid )/*imagename*/);
+                 if( speciesImage.get( SFid ) != null ){
+                         return new StringBuffer(speciesImage.get( SFid )/*imagename*/);
+                 }                 
+                 return new StringBuffer("No Image"/*no image*/);
          }
   
 	/**
