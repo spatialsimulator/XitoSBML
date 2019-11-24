@@ -3,8 +3,12 @@ package jp.ac.keio.bio.fun.xitosbml.pane;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.HashMap;
-//import javax.swing.JButton;
+import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButton;
+import java.awt.TextField;
+import java.awt.Choice;
 
 import org.sbml.jsbml.IdentifierException;
 import org.sbml.jsbml.Model;
@@ -120,20 +124,34 @@ public class SpeciesDialog {
 		gd = new GenericDialog("Add Species");
 		gd.setResizable(true);
 		gd.pack();
-	
+	        //species id
 		gd.addStringField("id:", "");
+                //compartment
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), null);
-		//gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");//added by morita
-		gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount")/*.setEditable(false)*/;
-                //JTextField quantity = new JTextField("0");
-                //quantity.setEditable(false);
-                //String num = quantity.paramString().clone();
-		gd.addNumericField("quantity:", 0, 1)/*.setEditable(false)*/;
+                //distribution
+                gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");//added by morita
+                //uniform
+                gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
+                //Vector<ButtonGroup> rbg = new Vector<ButtonGroup>();
+                //rbg = gd.getRadioButtonGroups();
+                //rbg.get(1).setEnabled(false);
+		gd.addNumericField("quantity:", 0, 1);
+                //Vector<TextField> nf = new Vector<TextField>();
+                //nf = gd.getNumericFields();
+                //nf.get(0).setEnabled(false);
+                //local
                 addImageChoice();
-		//gd.addNumericField("Max:", 0, 1)/*.setEditable(false)*/;
-		//gd.addNumericField("Min:", 0, 1)/*.setEditable(false)*/;
+                //Vector<TextField> nf = new Vector<TextField>();
+                //gd.addNumericField("Max:", 0, 1);                
+		//gd.addNumericField("Min:", 0, 1);
+                //nf = gd.getNumericFields();
+                //nf.get(1).setEditable(false);
+                //nf.get(2).setEditable(false);
+                //substanceUnit
 		gd.addChoice("substanceUnit:", units, null);
+                //boundary condition
 		gd.addRadioButtonGroup("boundaryCondition:",bool,1,2,"false");
+                //constant
 		gd.addRadioButtonGroup("constant:",bool,1,2,"false");
 		
 		gd.showDialog();
@@ -226,7 +244,8 @@ public class SpeciesDialog {
                         else 
                                 species.setInitialConcentration(gd.getNextNumber());
                         //} else if( distribute.equals(distribution[1]) ){
-
+                        //MessageDialog md = new MessageDialog( null, "Caution!", "Please set Max of color bar if you use spatial simulator." );
+                        
                         String SFid = SId + "_initialConcentration";
                         
                         SpatialModelPlugin spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial"); 
@@ -242,7 +261,7 @@ public class SpeciesDialog {
                                         volume = (double)sv.getSampledValue();
                                 }
                         }
-                        double ia = 0;
+                        
                         String imagename = gd.getNextChoice();
                         if( imagename.equals("No Image") ){
                                 speciesImage.put( SFid, "No Image" );
@@ -262,11 +281,12 @@ public class SpeciesDialog {
                                 addInitalAssignment( initialAssignment, SId );//add initial assignment
                                 Parameter parameter = model.createParameter();
                                 addIAParameter( parameter, SFid );//add parameter in initial assignment's math
-                                addSampledField( imagename, volume);//add sampledField
+                                double ia = 0;
+                                ia= addSampledField( imagename, volume);//add sampledField
                                 
-                                //if( species.isSetInitialAmount() )
-                                //        species.unsetInitialAmount();
-                                //species.setInitialAmount(ia);
+                                if( species.isSetInitialAmount() )
+                                        species.unsetInitialAmount();
+                                species.setInitialAmount(ia);
                         }         
                         //}
 		species.setSubstanceUnits(Unit.Kind.valueOf(gd.getNextChoice().toUpperCase()));
@@ -308,7 +328,10 @@ public class SpeciesDialog {
                         images[i] = images[i-1];
                 } images[0] = "No Image"; 
 
-                gd.addChoice("Localization from Image", images, images[0])/*.setEditable(false)*/;
+                gd.addChoice("Localization from Image", images, images[0]);
+                Vector<Choice> choice = new Vector<Choice>();                
+                choice = gd.getChoices();
+                //choice.get(1).setEnabled(false);
         }
 
     	/**
@@ -350,7 +373,7 @@ public class SpeciesDialog {
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws IdentifierException the identifier exception
          */
-         private void addSampledField( String imagename, double volume ) throws IllegalArgumentException, IdentifierException {//added by Morita
+         private double addSampledField( String imagename, double volume ) throws IllegalArgumentException, IdentifierException {//added by Morita
     
                  IJ.selectWindow( imagename );
                  ImagePlus img = IJ.getImage();
@@ -387,11 +410,11 @@ public class SpeciesDialog {
                  //brightness = checkImageBoundary(geometry,brightness,width,height,depth); //check species distribution
                  }
                  sample = Arrays.toString(brightness).replace( "[", "" ).replace( "]", "" ).replace( ",", "" );
-                 //for(int i = 0; i < brightness.length; i++)
-                 //        amount = Math.max(amount,brightness[i]);
+                 for(int i = 0; i < brightness.length; i++)
+                         amount = Math.max(amount,brightness[i]);
                  sf.setSamples(sample);
                  
-                 //return (double)amount;
+                 return (double)amount;
          }
   
        /**
