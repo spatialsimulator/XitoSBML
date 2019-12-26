@@ -129,7 +129,7 @@ public class SpeciesDialog {
                 //compartment
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), null);
                 //distribution
-                gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");//added by morita
+                //gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");//added by morita
                 //uniform
                 gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
                 //Vector<ButtonGroup> rbg = new Vector<ButtonGroup>();

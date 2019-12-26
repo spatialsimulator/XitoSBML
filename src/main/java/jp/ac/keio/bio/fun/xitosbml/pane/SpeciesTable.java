@@ -25,7 +25,7 @@ import org.sbml.jsbml.ext.spatial.SampledField;
 public class SpeciesTable extends SBaseTable{
 	
 	/** The header. */
-        private final String[] header = { "id","initial","quantity","compartment","Localization from Image"/* added by Morita */,"substanceUnits","hasOnlySubstanceUnits","boundaryCondition","constant"}; 
+        private final String[] header = { "id","distribution","initial","quantity","compartment"/*順番前？*/,"Localization from Image"/* added by Morita */,"substanceUnits","hasOnlySubstanceUnits","boundaryCondition","constant"}; 
 	
 	/** The JTable object. */
 	private JTable table;
@@ -79,12 +79,13 @@ public class SpeciesTable extends SBaseTable{
 		for(int i = 0; i < max; i++){
 			Species s = (Species) memberList.get(i);
 			data[i][0] = s.getId();
+                        //data[i][1]
 			if(s.isSetInitialAmount()){
 				data[i][1] = "amount";
 				data[i][2] = s.getInitialAmount();
 			} else if(s.isSetInitialConcentration()){
-				data[i][1] = "concentration";
-				data[i][2] = s.getInitialConcentration();
+				data[i][3] = "concentration";
+				data[i][4] = s.getInitialConcentration();
 			}
 			data[i][3] = s.getCompartment();
                         String SFid = s.getId() + "_" + s.getCompartment() + "_initialConcentration";//added by Morita
@@ -102,6 +103,8 @@ public class SpeciesTable extends SBaseTable{
 			public Class<?> getColumnClass(int Column) {
 				switch (Column) {
 				case 0: // id
+                                  //case 1: // distribution
+                                  //return String.class;
 				case 1: // initial
 					return String.class;
 				case 2: // quantity
@@ -231,8 +234,8 @@ public class SpeciesTable extends SBaseTable{
 		// copy contents of Species(JTable) to Species(Model)
 		Species sp = (Species) list.getElementBySId(s.getId());
 
-                System.out.println("s is " + s);
-                System.out.println("sp is " + sp);
+                //System.out.println("s is " + s);
+                //System.out.println("sp is " + sp);
 		SBMLProcessUtil.copySpeciesContents(s, sp);
 
 		((MyTableModel)table.getModel()).updateRow(index, speciesToVector(s, sImage));
