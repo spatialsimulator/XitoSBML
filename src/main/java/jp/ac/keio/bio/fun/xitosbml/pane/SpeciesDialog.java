@@ -295,7 +295,11 @@ public class SpeciesDialog {
 			species.setHasOnlySubstanceUnits(true);
 		else
 			species.setHasOnlySubstanceUnits(false);
-		species.setBoundaryCondition(Boolean.valueOf(gd.getNextRadioButton()));
+                Boolean hasBC = Boolean.valueOf(gd.getNextRadioButton());
+                if( hasBC ){
+                        MessageDialog md = new MessageDialog( null/*gd*/, "USAGE;;Boundary Condition",
+                                                              "Please select which membrane has which boundary condition at Parameter Panel.\n Also, set the other parameter such as diffusion coefficients for leaked species." );
+                } species.setBoundaryCondition(hasBC);
 		species.setConstant(Boolean.valueOf(gd.getNextRadioButton()));
 		
 		SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) species.getPlugin(SpatialConstants.shortLabel);
