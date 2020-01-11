@@ -3,12 +3,16 @@ package jp.ac.keio.bio.fun.xitosbml.pane;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.HashMap;
+import java.util.Enumeration;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
+import javax.swing.AbstractButton;
 import java.awt.TextField;
 import java.awt.Choice;
+import java.awt.CheckboxGroup;
+import java.awt.Checkbox;
 
 import org.sbml.jsbml.IdentifierException;
 import org.sbml.jsbml.Model;
@@ -134,7 +138,17 @@ public class SpeciesDialog {
                 gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
                 //Vector<ButtonGroup> rbg = new Vector<ButtonGroup>();
                 //rbg = gd.getRadioButtonGroups();
-                //rbg.get(1).setEnabled(false);
+                //CheckboxGroup cg = (CheckboxGroup)(rbg.elementAt(1));
+                //Enumeration<AbstractButton> enumeration = rbg.get(1).getElements();
+                //while(enumeration.hasMoreElements())
+                //  enumeration.nextElement().setEnabled(false);
+                //Vector<CheckboxGroup> cb = new Vector<CheckboxGroup>(); ←こっちの方がベター？？
+                //cb = gd.getRadioButtonGroups();
+                //Enumeration<AbstractButton> enumeration = cb.get(1).getElements();
+                //while(enumeration.hasMoreElements())
+                //  enumeration.nextElement().setEnabled(false);
+                
+                //quantity
 		gd.addNumericField("quantity:", 0, 1);
                 //Vector<TextField> nf = new Vector<TextField>();
                 //nf = gd.getNumericFields();
@@ -228,13 +242,12 @@ public class SpeciesDialog {
 		String str = gd.getNextString();
 		if (str.indexOf(' ')!=-1)
 				str = str.replace(' ', '_');
-		species.setId(str);
+		species.setName(str); // set name
 
                 String sCompartment = gd.getNextChoice();
-		species.setCompartment(sCompartment);
-                species.unsetId();
+		species.setCompartment(sCompartment); // set Compartment
                 String SId = str + "_" + species.getCompartment();
-                species.setId( SId );
+                species.setId( SId ); // set Id
 
                 //String distribute = gd.getNextRadioButton();
                 //if( distribute.equals(distribution[0]) ){

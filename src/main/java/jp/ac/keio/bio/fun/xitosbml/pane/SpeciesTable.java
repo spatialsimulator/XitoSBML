@@ -25,7 +25,7 @@ import org.sbml.jsbml.ext.spatial.SampledField;
 public class SpeciesTable extends SBaseTable{
 	
 	/** The header. */
-        private final String[] header = { "id","distribution","initial","quantity","compartment"/*順番前？*/,"Localization from Image"/* added by Morita */,"substanceUnits","hasOnlySubstanceUnits","boundaryCondition","constant"}; 
+        private final String[] header = { "id"/*,"distribution"*/,"initial","quantity","compartment"/*順番前？*/,"Localization from Image"/* added by Morita */,"substanceUnits","hasOnlySubstanceUnits","boundaryCondition","constant"}; 
 	
 	/** The JTable object. */
 	private JTable table;
