@@ -97,10 +97,10 @@ public class SpeciesDialog {
          * set HashMap from species dialog
          *
          * @param speciesImage the tag of species with image
+	 */
          public void setHashMap( HashMap<String,String> speciesImage ){
                 this.speciesImage = speciesImage;
          }
-	 */
 
         /**
          *
@@ -295,11 +295,15 @@ public class SpeciesDialog {
                                 Parameter parameter = model.createParameter();
                                 addIAParameter( parameter, SFid );//add parameter in initial assignment's math
                                 double ia = 0;
-                                ia= addSampledField( imagename, volume);//add sampledField
+                                ia = addSampledField( imagename, volume);//add sampledField
                                 
-                                if( species.isSetInitialAmount() )
+                                if( species.isSetInitialAmount() ){
                                         species.unsetInitialAmount();
-                                species.setInitialAmount(ia);
+                                        species.setInitialAmount(ia);
+                                } if( species.isSetInitialConcentration() ){
+                                        species.unsetInitialConcentration();
+                                        species.setInitialConcentration(ia);
+                                }
                         }         
                         //}
 		species.setSubstanceUnits(Unit.Kind.valueOf(gd.getNextChoice().toUpperCase()));

@@ -78,17 +78,37 @@ public class SpeciesTable extends SBaseTable{
 		Object[][] data  = new Object[max][header.length];
 		for(int i = 0; i < max; i++){
 			Species s = (Species) memberList.get(i);
+                        String SFid = s.getId() + "_initialConcentration";//added by Morita
 			data[i][0] = s.getId();
                         //data[i][1]
-			if(s.isSetInitialAmount()){
-				data[i][1] = "amount";
-				data[i][2] = s.getInitialAmount();
-			} else if(s.isSetInitialConcentration()){
-				data[i][3] = "concentration";
-				data[i][4] = s.getInitialConcentration();
-			}
+                        
+                        SpatialModelPlugin spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial") ;
+                        Geometry geometry = spatialplugin.getGeometry();
+                        ListOf<SampledField> losf =  geometry.getListOfSampledFields();
+                        
+                        for(int listsize = 0; listsize < (losf.size() + 1); listsize++ ){
+                                if( listsize < losf.size() ){
+                                        if( losf.get(listsize).getId().equals( SFid ) ){
+                                                if(s.isSetInitialAmount()){
+                                                        data[i][1] = "amount";
+                                                        data[i][2] = "max:" + String.valueOf(s.getInitialAmount());
+                                                } else if(s.isSetInitialConcentration()){
+                                                        data[i][1] = "concentration";
+                                                        data[i][2] = "max :" + String.valueOf(s.getInitialConcentration());
+                                                }                                  
+                                                break;
+                                        }
+                                } else if( listsize == losf.size() ){                                          
+                                        if(s.isSetInitialAmount()){
+                                                data[i][1] = "amount";
+                                                data[i][2] = String.valueOf(s.getInitialAmount());
+                                        } else if(s.isSetInitialConcentration()){
+                                                data[i][1] = "concentration";
+                                                data[i][2] = String.valueOf(s.getInitialConcentration());
+                                        }
+                                }
+                        }                                
 			data[i][3] = s.getCompartment();
-                        String SFid = s.getId() + "_" + s.getCompartment() + "_initialConcentration";//added by Morita
                         data[i][4] = SFid;
 			data[i][5] = s.getSubstanceUnits();
 			data[i][6] = s.getHasOnlySubstanceUnits();
@@ -108,7 +128,7 @@ public class SpeciesTable extends SBaseTable{
 				case 1: // initial
 					return String.class;
 				case 2: // quantity
-					return Double.class;
+					return String.class;
 				case 3: // Compartment
 				case 4: // Localization //***added by Morita
                                         return String.class;
@@ -145,30 +165,39 @@ public class SpeciesTable extends SBaseTable{
         private Vector<Object> speciesToVector( Species s, String imagename ){
 		Vector<Object> v = new Vector<Object>();
 		v.add(s.getId());
-		if(s.isSetInitialAmount()){
-			v.add("amount");
-			v.add(s.getInitialAmount());
-		} else if(s.isSetInitialConcentration()){
-			v.add("concentration");
-			v.add(s.getInitialConcentration());
-		}
-
-		v.add(s.getCompartment());
 
                 SpatialModelPlugin spatialplugin = (SpatialModelPlugin) model.getPlugin("spatial") ;
                 Geometry geometry = spatialplugin.getGeometry();
                 ListOf<SampledField> losf =  geometry.getListOfSampledFields();
 
-                String SFid = s.getId() + "_" + s.getCompartment() + "_initialConcentration";
-                String noimage = "No image";
+                String SFid = s.getId() + "_initialConcentration";
+                String noimage = "No image";                
+		v.add(s.getCompartment());
+                //imagename
                 for(int listsize = 0; listsize < (losf.size() + 1); listsize++ ){
                         if( listsize < losf.size() ){
-                                if( losf.get(listsize).getId().equals( SFid ) ){
-                                        v.add( imagename );
-                                        break;
+                          if( losf.get(listsize).getId().equals( SFid ) ){
+                                  if(s.isSetInitialAmount()){
+                                          v.add("amount");
+                                          v.add("max:" + String.valueOf(s.getInitialAmount()));
+                                  } else if(s.isSetInitialConcentration()){
+                                          v.add("concentration");
+                                          v.add("max :" + String.valueOf(s.getInitialConcentration()));
+                                  }                                  
+                                  v.add( imagename );
+                                  break;
+                          }
+                        } else if( listsize == losf.size() ){                                          
+                                if(s.isSetInitialAmount()){
+                                        v.add("amount");
+                                        v.add(String.valueOf(s.getInitialAmount()));
+                                } else if(s.isSetInitialConcentration()){
+                                        v.add("concentration");
+                                        v.add(String.valueOf(s.getInitialConcentration()));
                                 }
-                        } else if( listsize == losf.size() ) v.add( noimage ); 
-                } 
+                                v.add( noimage );                           
+                        }
+                }                                
 		v.add(s.getSubstanceUnits());
 		v.add(s.getHasOnlySubstanceUnits());
 		v.add(s.getBoundaryCondition());
