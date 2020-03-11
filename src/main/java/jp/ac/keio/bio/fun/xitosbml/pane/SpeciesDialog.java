@@ -133,28 +133,22 @@ public class SpeciesDialog {
                 //compartment
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), null);
                 //distribution
-                //gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");//added by morita
-                //uniform
+                gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");//added by morita
+                //initial amount / concentration
                 gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
-                //Vector<ButtonGroup> rbg = new Vector<ButtonGroup>();
-                //rbg = gd.getRadioButtonGroups();
-                //CheckboxGroup cg = (CheckboxGroup)(rbg.elementAt(1));
-                //Enumeration<AbstractButton> enumeration = rbg.get(1).getElements();
-                //while(enumeration.hasMoreElements())
-                //  enumeration.nextElement().setEnabled(false);
-                //Vector<CheckboxGroup> cb = new Vector<CheckboxGroup>(); ←こっちの方がベター？？
-                //cb = gd.getRadioButtonGroups();
-                //Enumeration<AbstractButton> enumeration = cb.get(1).getElements();
-                //while(enumeration.hasMoreElements())
-                //  enumeration.nextElement().setEnabled(false);
                 
-                //quantity
+                //uniform
 		gd.addNumericField("quantity:", 0, 1);
                 //Vector<TextField> nf = new Vector<TextField>();
                 //nf = gd.getNumericFields();
                 //nf.get(0).setEnabled(false);
+                
                 //local
-                addImageChoice();
+                addImageChoice( "No Image" );
+                //Vector<Choice> choice = new Vector<Choice>();                
+                //choice = gd.getChoices();
+                //choice.get(1).setEnabled(false);
+                
                 //Vector<TextField> nf = new Vector<TextField>();
                 //gd.addNumericField("Max:", 0, 1);                
 		//gd.addNumericField("Min:", 0, 1);
@@ -189,25 +183,47 @@ public class SpeciesDialog {
 	 * @throws IdentifierException the identifier exception
 	 */
 	public Species showDialog(Species species)throws IllegalArgumentException, IdentifierException{
-		this.species = species;
+          
+                this.species = species;
 		gd = new GenericDialog("Edit Species");
 		gd.setResizable(true);
 		gd.pack();
 		
-		gd.addStringField("id:", species.getId());
-		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), species.getCompartment());
+		gd.addStringField("id:", species.getId()); // id 
+		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), species.getCompartment()); // compartment
 
-                //distribution added by morita
-		//gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");
-                
-		if(species.isSetInitialAmount()){
-			gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
-			gd.addNumericField("quantity:", species.getInitialAmount(), 1);
-		} else if(species.isSetInitialConcentration()){
-			gd.addRadioButtonGroup("initial:", initial, 1, 2, "concentration");
-			gd.addNumericField("quantity:", species.getInitialConcentration(), 1);
-		}                
-                addImageChoice();
+                SpatialModelPlugin spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial"); 
+                Geometry geometry = spatialplugin.getGeometry();
+                ListOf<SampledField> losf = geometry.getListOfSampledFields();
+                int numOfLosf = 0;
+                for(numOfLosf = 0; numOfLosf < (int)losf.size(); numOfLosf++){ // local distribution
+                        if( losf.get(numOfLosf).getId().equals(species.getId() + "_initialConcentration") ){
+                                gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "local");
+
+                                if(species.isSetInitialAmount()){
+                                  gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
+                                  gd.addNumericField("max quantity:", species.getInitialAmount(), 1);
+                                } else if(species.isSetInitialConcentration()){
+                                  gd.addRadioButtonGroup("initial:", initial, 1, 2, "concentration");
+                                  gd.addNumericField("max quantity:", species.getInitialConcentration(), 1);
+                                }                
+
+                                break;
+                        }
+                } if( numOfLosf == (int)losf.size() ){ // uniform distribution
+                        gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");
+
+                        if(species.isSetInitialAmount()){
+                                gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
+                                gd.addNumericField("quantity:", species.getInitialAmount(), 1);
+                        } else if(species.isSetInitialConcentration()){
+                                gd.addRadioButtonGroup("initial:", initial, 1, 2, "concentration");
+                                gd.addNumericField("quantity:", species.getInitialConcentration(), 1);
+                        }                
+                }
+
+                String SFid = species.getId() + "_initialConcentration";
+                addImageChoice( speciesImage.get(SFid) );
                 
 		gd.addChoice("substanceUnit:", units, species.getUnits());			
 		gd.addRadioButtonGroup("boundaryCondition:",bool,1, 2, String.valueOf(species.getBoundaryCondition()));
@@ -248,19 +264,36 @@ public class SpeciesDialog {
 		species.setCompartment(sCompartment); // set Compartment
                 String SId = str + "_" + species.getCompartment();
                 species.setId( SId ); // set Id
+                // distribute
+                String distribute = gd.getNextRadioButton();
+                // quantity
+                String quantity = gd.getNextRadioButton();
+                // initial amount / concentration
+                if(quantity.contains(initial[0])) 
+                        species.setInitialAmount(gd.getNextNumber());
+                else 
+                        species.setInitialConcentration(gd.getNextNumber());
+                
+                String SFid = SId + "_initialConcentration";
+                if( distribute.equals(distribution[0]) ){ // uniform distribution
+ 
+                        gd.getNextChoice();
+                        speciesImage.put( SFid, "No Image" );
+                        
+                } else if( distribute.equals(distribution[1]) ){ // local distribution
 
-                //String distribute = gd.getNextRadioButton();
-                //if( distribute.equals(distribution[0]) ){
-                        String quantity = gd.getNextRadioButton();
-                        if(quantity.contains(initial[0])) 
-                                species.setInitialAmount(gd.getNextNumber());
-                        else 
-                                species.setInitialConcentration(gd.getNextNumber());
-                        //} else if( distribute.equals(distribution[1]) ){
-                        //MessageDialog md = new MessageDialog( null, "Caution!", "Please set Max of color bar if you use spatial simulator." );
+                        MessageDialog md = new MessageDialog( null, "Caution!", "Please set Max of color bar if you use spatial simulator." );
                         
-                        String SFid = SId + "_initialConcentration";
+                        // initial amount / concentration
+                        //Vector<TextField> nf = new Vector<TextField>();
+                        //nf = gd.getNumericFields();
+                        //nf.get(0).setEnabled(false);
+                        //gd.getNextNumber();
                         
+                        //Vector<Choice> choice = new Vector<Choice>();                
+                        //choice = gd.getChoices();
+                        //choice.get(1).setEnabled(true);
+                                                
                         SpatialModelPlugin spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial"); 
                         Geometry geometry = spatialplugin.getGeometry();
                         ListOf<SampledField> losf = geometry.getListOfSampledFields();
@@ -276,17 +309,17 @@ public class SpeciesDialog {
                         }
                         
                         String imagename = gd.getNextChoice();
-                        if( imagename.equals("No Image") ){
+                        if( imagename.equals("No Image") ){ // initial assignment ???
                                 speciesImage.put( SFid, "No Image" );
                                 for(int i = 0; i < losf.size(); i++){
-                                        if( losf.get(i).equals(SFid) ){
+                                        if( losf.get(i).getId().equals(SFid) ){
                                                 losf.remove(i);
                                         }
                                 }
                         } else {
                                 speciesImage.put( SFid, imagename );
                                 for( int i = 0; i < losf.size(); i++){
-                                        if( losf.get(i).equals(SFid) ){
+                                        if( losf.get(i).getId().equals(SFid) ){
                                                 losf.remove(i);
                                         }                        
                                 }
@@ -304,21 +337,23 @@ public class SpeciesDialog {
                                         species.unsetInitialConcentration();
                                         species.setInitialConcentration(ia);
                                 }
-                        }         
-                        //}
-		species.setSubstanceUnits(Unit.Kind.valueOf(gd.getNextChoice().toUpperCase()));
-
+                        }
+                }
+                //set substance units
+                species.setSubstanceUnits(Unit.Kind.valueOf(gd.getNextChoice().toUpperCase()));
+                
 		if(species.isSetInitialAmount())
-			species.setHasOnlySubstanceUnits(true);
+                        species.setHasOnlySubstanceUnits(true); 
 		else
 			species.setHasOnlySubstanceUnits(false);
+                // set boundary condition
                 Boolean hasBC = Boolean.valueOf(gd.getNextRadioButton());
                 if( hasBC ){
-                        MessageDialog md = new MessageDialog( null/*gd*/, "USAGE;;Boundary Condition",
+                        MessageDialog md = new MessageDialog( null/*gd*/, "USAGE ;; Boundary Condition",
                                                               "Please select which membrane has which boundary condition at Parameter Panel.\n Also, set the other parameter such as diffusion coefficients for leaked species." );
                 } species.setBoundaryCondition(hasBC);
+                // set constant
 		species.setConstant(Boolean.valueOf(gd.getNextRadioButton()));
-		
 		SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) species.getPlugin(SpatialConstants.shortLabel);
 		ssp.setSpatial(true);
 	}
@@ -326,7 +361,7 @@ public class SpeciesDialog {
         /**                                                                                
           * Adds the image choice.
           */
-        private void addImageChoice(){
+        private void addImageChoice( String topImg ){
 
                 int numimage = WindowManager.getImageCount();
                 Vector<String> windows = new Vector<String>();
@@ -347,12 +382,10 @@ public class SpeciesDialog {
                 windows.toArray(images);
                 for(int i = windows.size(); i > 0; i--){
                         images[i] = images[i-1];
-                } images[0] = "No Image"; 
+                } images[0] = topImg; 
 
                 gd.addChoice("Localization from Image", images, images[0]);
-                Vector<Choice> choice = new Vector<Choice>();                
-                choice = gd.getChoices();
-                //choice.get(1).setEnabled(false);
+
         }
 
     	/**
