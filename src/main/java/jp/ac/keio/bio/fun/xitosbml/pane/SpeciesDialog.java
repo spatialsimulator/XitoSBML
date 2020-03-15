@@ -192,25 +192,31 @@ public class SpeciesDialog {
 		gd.addStringField("id:", species.getId()); // id 
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), species.getCompartment()); // compartment
 
+                String dist = null;                
                 SpatialModelPlugin spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial"); 
                 Geometry geometry = spatialplugin.getGeometry();
                 ListOf<SampledField> losf = geometry.getListOfSampledFields();
+
                 int numOfLosf = 0;
                 for(numOfLosf = 0; numOfLosf < (int)losf.size(); numOfLosf++){ // local distribution
                         if( losf.get(numOfLosf).getId().equals(species.getId() + "_initialConcentration") ){
+
+                                dist = "local";
                                 gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "local");
 
                                 if(species.isSetInitialAmount()){
                                   gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
-                                  gd.addNumericField("max quantity:", species.getInitialAmount(), 1);
+                                  gd.addNumericField("quantity:", 0/*species.getInitialAmount()*/, 1);
                                 } else if(species.isSetInitialConcentration()){
                                   gd.addRadioButtonGroup("initial:", initial, 1, 2, "concentration");
-                                  gd.addNumericField("max quantity:", species.getInitialConcentration(), 1);
+                                  gd.addNumericField("quantity:", 0/*species.getInitialConcentration()*/, 1);
                                 }                
 
                                 break;
                         }
                 } if( numOfLosf == (int)losf.size() ){ // uniform distribution
+
+                        dist = "uniform";
                         gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");
 
                         if(species.isSetInitialAmount()){
@@ -223,17 +229,36 @@ public class SpeciesDialog {
                 }
 
                 String SFid = species.getId() + "_initialConcentration";
-                addImageChoice( speciesImage.get(SFid) );
+                addImageChoice( speciesImage.get(SFid)/*, dist*/ );
                 
 		gd.addChoice("substanceUnit:", units, species.getUnits());			
 		gd.addRadioButtonGroup("boundaryCondition:",bool,1, 2, String.valueOf(species.getBoundaryCondition()));
 		gd.addRadioButtonGroup("constant:",bool,1,2, String.valueOf(species.getConstant()));
 		gd.addRadioButtonGroup("hasOnlySubstnaceUnit:", bool, 1, 2, String.valueOf(species.getHasOnlySubstanceUnits()));
-		
+		// show dialog
 		gd.showDialog();
 		if(gd.wasCanceled())
 			return null;
-				
+
+                // delete previous species data
+                for(int i = 0; i < model.getNumSpecies(); i++){ // added by morita
+                        if( model.getSpecies(i).getId().equals(species.getId()) ){
+                                model.getListOfSpecies().remove(i);
+                                break;
+                        }
+                } if( dist != null && dist.equals("local") ){
+                        model.removeParameter(species.getId() + "_initialConcentration");
+                        for(int i = 0; i < model.getNumInitialAssignments(); i++){ // added by morita
+                          if( model.getInitialAssignment(i).getSymbol().equals(species.getId()) ){
+                            model.getListOfInitialAssignments().remove(i);
+                            break;
+                          }
+                        }
+                        //model.getListOfInitialAssignments().remove(species.getId());
+                        geometry.removeSampledField(numOfLosf);
+                }
+                
+                // set species data
 		setSpeciesData();
 		
 		return this.species;
@@ -300,7 +325,9 @@ public class SpeciesDialog {
                         ListOf<GeometryDefinition> logd = geometry.getListOfGeometryDefinitions();
                         SampledFieldGeometry sfg = (SampledFieldGeometry)logd.get(0);              
                         ListOf<SampledVolume> losv = sfg.getListOfSampledVolumes();
+
                         double volume = 1;
+
                         for(int i = 0; i < losv.size(); i++){
                                 if( losv.get(i).getDomainType().equals(species.getCompartment()) ){
                                         SampledVolume sv = losv.get(i);
@@ -382,9 +409,9 @@ public class SpeciesDialog {
                 windows.toArray(images);
                 for(int i = windows.size(); i > 0; i--){
                         images[i] = images[i-1];
-                } images[0] = topImg; 
+                } images[0] = "No Image"; 
 
-                gd.addChoice("Localization from Image", images, images[0]);
+                gd.addChoice("Localization from Image", images, topImg);
 
         }
 
@@ -461,6 +488,7 @@ public class SpeciesDialog {
                                          brightness[ l*width*height + m*width + n ] = ip.getPixel(n,m);
                                  }
                          }
+                 // check assigned local distribution in assigned compartment
                  //brightness = checkImageBoundary(geometry,brightness,width,height,depth); //check species distribution
                  }
                  sample = Arrays.toString(brightness).replace( "[", "" ).replace( "]", "" ).replace( ",", "" );
@@ -514,9 +542,9 @@ public class SpeciesDialog {
                                   }
                                   //in case of species distribution beyond boundary
                                   if( numBeyond > 0){
-                                    MessageDialog md = new MessageDialog( null/*gd*/, "Species Boundary ERROR", "species are distributed beyond your selected compartment!\nSpecies beyond the compartment was deleted." );
-                                           for( int j = 0; j < width * height * depth; j++ )
-                                                    brightness[i] *= isInCompartment[i];
+                                          MessageDialog md = new MessageDialog( null/*gd*/, "Species Boundary ERROR", "species are distributed beyond your selected compartment!\nSpecies beyond the compartment was deleted." );
+                                          for( int j = 0; j < width * height * depth; j++ )
+                                                   brightness[i] *= isInCompartment[i];
                                   }
                          }
                  }

@@ -8,9 +8,14 @@ import javax.swing.JTable;
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.Species;
+import org.sbml.jsbml.ext.spatial.SpatialSpeciesPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
+import org.sbml.jsbml.ext.spatial.SpatialConstants;
 import org.sbml.jsbml.ext.spatial.Geometry;
 import org.sbml.jsbml.ext.spatial.SampledField;
+import ij.gui.MessageDialog;
+
+// TODO: Auto-generated Javadoc
 
 /**
  * The class SpeciesTable, which inherits SBaseTable and implements add() and edit() method for
@@ -261,19 +266,23 @@ public class SpeciesTable extends SBaseTable{
 			sd = new SpeciesDialog(model);
 
                 //sd.setHashMap(speciesImage);
-
-		Species s = sd.showDialog((Species) memberList.get(index));
+                
+		Species s = sd.showDialog((Species) memberList.get(index)); // s is new input species
 		String SFid = s.getId() + "_initialConcentration";
                 String sImage = sd.getSpeciesImage( SFid ).toString();
                 
 		if(s == null) return;
 		
 		memberList.set(index, s);
-
 		// copy contents of Species(JTable) to Species(Model)
-		Species sp = (Species) list.getElementBySId(s.getId());
-
-		SBMLProcessUtil.copySpeciesContents(s, sp);
+                Species sp = (Species) list.getElementBySId(s.getId());
+                if( sp == null ){ // TO DO added by morita
+                  sp = model.createSpecies(s.getId());
+                  sp.setName(s.getName());
+                  SpatialSpeciesPlugin ssp = (SpatialSpeciesPlugin) s.getPlugin(SpatialConstants.shortLabel);
+                  ssp.setSpatial(true);
+                }
+                SBMLProcessUtil.copySpeciesContents(s, sp);
 
 		((MyTableModel)table.getModel()).updateRow(index, speciesToVector(s, sImage));
 		
