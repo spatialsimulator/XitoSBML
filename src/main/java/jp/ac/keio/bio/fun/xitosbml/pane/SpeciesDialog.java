@@ -77,9 +77,6 @@ public class SpeciesDialog {
 	/** The distribution. */
 	private final String[] distribution = {"uniform","local"};
   	
-	/** The initial. */
-	private final String[] initial = {"amount","concentration"};
-
         /** The Localization from Image. */
         HashMap<String,String> speciesImage = new HashMap<String,String>();
   
@@ -106,7 +103,7 @@ public class SpeciesDialog {
          *
          * get species image into species Dialog
          *
-         * @param speciesImage the tag of species with image
+         * //@param speciesImage the tag of species with image
 	 */
          public StringBuffer getSpeciesImage( String SFid ){
                  if( speciesImage.get( SFid ) != null ){
@@ -138,24 +135,10 @@ public class SpeciesDialog {
                 gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
                 
                 //uniform
-		gd.addNumericField("quantity:", 0, 1);
-                //Vector<TextField> nf = new Vector<TextField>();
-                //nf = gd.getNumericFields();
-                //nf.get(0).setEnabled(false);
-                
+		gd.addNumericField("quantity:", 0, 1);                
                 //local
                 addImageChoice( "No Image" );
-                //Vector<Choice> choice = new Vector<Choice>();                
-                //choice = gd.getChoices();
-                //choice.get(1).setEnabled(false);
                 
-                //Vector<TextField> nf = new Vector<TextField>();
-                //gd.addNumericField("Max:", 0, 1);                
-		//gd.addNumericField("Min:", 0, 1);
-                //nf = gd.getNumericFields();
-                //nf.get(1).setEditable(false);
-                //nf.get(2).setEditable(false);
-                //substanceUnit
 		gd.addChoice("substanceUnit:", units, null);
                 //boundary condition
 		gd.addRadioButtonGroup("boundaryCondition:",bool,1,2,"false");
@@ -489,7 +472,7 @@ public class SpeciesDialog {
                                  }
                          }
                  // check assigned local distribution in assigned compartment
-                 //brightness = checkImageBoundary(geometry,brightness,width,height,depth); //check species distribution
+                 brightness = checkImageBoundary(geometry,brightness,width,height,depth); //check species distribution
                  }
                  sample = Arrays.toString(brightness).replace( "[", "" ).replace( "]", "" ).replace( ",", "" );
                  for(int i = 0; i < brightness.length; i++)
@@ -547,8 +530,7 @@ public class SpeciesDialog {
                                                    brightness[i] *= isInCompartment[i];
                                   }
                          }
-                 }
-                 
+                 }                 
                  return brightness;
          }
   
