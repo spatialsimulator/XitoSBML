@@ -290,7 +290,7 @@ public class SpeciesDialog {
                         
                 } else if( distribute.equals(distribution[1]) ){ // local distribution
 
-                        MessageDialog md = new MessageDialog( null, "Caution!", "Please set Max of color bar if you use spatial simulator." );
+                        //MessageDialog md = new MessageDialog( null, "Caution!", "Please set Max of color bar if you use spatial simulator." );
                         
                         // initial amount / concentration
                         //Vector<TextField> nf = new Vector<TextField>();
@@ -359,8 +359,8 @@ public class SpeciesDialog {
                 // set boundary condition
                 Boolean hasBC = Boolean.valueOf(gd.getNextRadioButton());
                 if( hasBC ){
-                        MessageDialog md = new MessageDialog( null/*gd*/, "USAGE ;; Boundary Condition",
-                                                              "Please select which membrane has which boundary condition at Parameter Panel.\n Also, set the other parameter such as diffusion coefficients for leaked species." );
+                  //MessageDialog md = new MessageDialog( null/*gd*/, "USAGE ;; Boundary Condition",
+                  //                                            "Please select which membrane has which boundary condition at Parameter Panel.\n Also, set the other parameter such as diffusion coefficients for leaked species." );
                 } species.setBoundaryCondition(hasBC);
                 // set constant
 		species.setConstant(Boolean.valueOf(gd.getNextRadioButton()));
