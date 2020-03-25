@@ -45,6 +45,8 @@ import ij.process.ImageProcessor;
 import ij.WindowManager;
 
 //import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  * The class SpeciesDialog, which generates a GUI for creating / editing Species.
@@ -54,7 +56,7 @@ import ij.WindowManager;
  * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
  * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
  */
-public class SpeciesDialog {
+public class SpeciesDialog implements ItemListener {
 	
 	/** The JSBML Species object. */
 	private Species species;
@@ -111,6 +113,24 @@ public class SpeciesDialog {
                  }                 
                  return new StringBuffer("No Image"/*no image*/);
          }
+
+        /**
+         *
+         * Switch whether text field is enable
+         * 
+         */
+         public void itemStateChanged(ItemEvent e){
+
+                 // TextField is enable or not
+                 Vector<TextField> nf = new Vector<TextField>();
+                 nf = gd.getNumericFields();
+                 nf.get(0).setEnabled(false);
+
+                 // Choice is enable or not
+                 Vector<Choice> choice = new Vector<Choice>();
+                 choice = gd.getChoices();
+                 choice.get(1).setEnabled(false);
+         }
   
 	/**
 	 * Create and show a dialog for adding Species.
@@ -121,7 +141,7 @@ public class SpeciesDialog {
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws IdentifierException the identifier exception
 	 */
-	public Species showDialog()throws IllegalArgumentException, IdentifierException{
+	public Species showDialog() throws IllegalArgumentException, IdentifierException{
 		gd = new GenericDialog("Add Species");
 		gd.setResizable(true);
 		gd.pack();
@@ -131,6 +151,13 @@ public class SpeciesDialog {
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), null);
                 //distribution
                 gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");//added by morita
+                //Vector<CheckboxGroup> cbg = gd.getRadioButtonGroups();
+                Vector<ButtonGroup> bgs = gd.getRadioButtonGroups();
+                ButtonGroup bg = (ButtonGroup)bgs.get(0);
+                Enumeration<AbstractButton> rb = bg.getElements();
+                rb.nextElement().addItemListener(this);
+                rb.nextElement().addItemListener(this);
+
                 //initial amount / concentration
                 gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
                 
