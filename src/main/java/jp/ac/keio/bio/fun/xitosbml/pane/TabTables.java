@@ -183,7 +183,8 @@ public class TabTables extends JFrame implements ActionListener {
                                 String Id = sbase.getId();//added by Morita
                                 Id += "_initialConcentration";
                                 SBase IC = model.getElementBySId(Id);
-                                model.unregister(IC);//added by Morita
+                                if( IC != null )
+                                  model.unregister(IC);//added by Morita
 			}
 		} catch(IllegalArgumentException ex){
 			if(ex.getCause() == null){

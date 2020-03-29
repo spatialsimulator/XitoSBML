@@ -95,7 +95,6 @@ public class SpeciesDialog implements ItemListener {
          *
          * set HashMap from species dialog
          *
-         * @param speciesImage the tag of species with image
 	 */
          public void setHashMap( HashMap<String,String> speciesImage ){
                 this.speciesImage = speciesImage;
@@ -105,7 +104,6 @@ public class SpeciesDialog implements ItemListener {
          *
          * get species image into species Dialog
          *
-         * //@param speciesImage the tag of species with image
 	 */
          public StringBuffer getSpeciesImage( String SFid ){
                  if( speciesImage.get( SFid ) != null ){
@@ -121,15 +119,75 @@ public class SpeciesDialog implements ItemListener {
          */
          public void itemStateChanged(ItemEvent e){
 
-                 // TextField is enable or not
+                 Checkbox chb = (Checkbox) e.getItemSelectable();;
+
+                 Vector<Checkbox> cb = gd.getCheckboxes();
+                 Checkbox uniform = cb.get(0);
+                 Checkbox local = cb.get(1);
+
                  Vector<TextField> nf = new Vector<TextField>();
                  nf = gd.getNumericFields();
-                 nf.get(0).setEnabled(false);
-
-                 // Choice is enable or not
+                 TextField text = nf.get(0);
+                 
                  Vector<Choice> choice = new Vector<Choice>();
                  choice = gd.getChoices();
-                 choice.get(1).setEnabled(false);
+                 Choice chc = choice.get(1);
+
+                 if( chb.getLabel().equals("uniform") ){ // uniform distribution
+                         if( local.getState() ){
+                                 // local checkbox is off
+                                 uniform.setState(true);
+                                 local.setState(false);
+                                 uniform.show();
+                                 local.show();
+                                 // TextField is enable
+                                 text.setEnabled(true);
+                                 text.show();
+                                 // Choice is enable
+                                 chc.setEnabled(false);
+                                 chc.show();
+                         } else if( !uniform.getState() ){
+                                 // local checkbox is off
+                                 uniform.setState(true);
+                                 local.setState(false);
+                                 uniform.show();
+                                 local.show();
+                                 // TextField is enable
+                                 text.setEnabled(true);
+                                 text.show();
+                                 // Choice is enable
+                                 chc.setEnabled(false);
+                                 chc.show();
+                         }
+                 } else if( chb.getLabel().equals("local") ){ // local distribution
+                         if( uniform.getState() ){
+                                 // uniform checkbox is off
+                                 uniform.setState(false);
+                                 local.setState(true);
+                                 uniform.show();
+                                 local.show();
+                                 // TextField is unenable
+                                 text.setText("0.0");
+                                 text.setEnabled(false);
+                                 text.show();
+                                 // Choice is enable
+                                 chc.setEnabled(true);
+                                 chc.show();                           
+                         } else if( !local.getState() ){
+                                 // uniform checkbox is off
+                                 uniform.setState(false);
+                                 local.setState(true);
+                                 uniform.show();
+                                 local.show();
+                                 // TextField is unenable
+                                 text.setText("0.0");
+                                 text.setEnabled(false);
+                                 text.show();
+                                 // Choice is enable
+                                 chc.setEnabled(true);
+                                 chc.show();
+                         }
+                 }          
          }
   
 	/**
@@ -150,21 +208,22 @@ public class SpeciesDialog implements ItemListener {
                 //compartment
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), null);
                 //distribution
-                gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");//added by morita
-                //Vector<CheckboxGroup> cbg = gd.getRadioButtonGroups();
-                Vector<ButtonGroup> bgs = gd.getRadioButtonGroups();
-                ButtonGroup bg = (ButtonGroup)bgs.get(0);
-                Enumeration<AbstractButton> rb = bg.getElements();
-                rb.nextElement().addItemListener(this);
-                rb.nextElement().addItemListener(this);
+                gd.addMessage("distribution: ");
+                boolean[] distBool= {true,false};
+                gd.addCheckboxGroup( 1, 2, distribution, distBool);
+                Vector<Checkbox> cb = gd.getCheckboxes();
+                cb.get(0).addItemListener(this);
+                cb.get(1).addItemListener(this);
 
                 //initial amount / concentration
                 gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
                 
                 //uniform
-		gd.addNumericField("quantity:", 0, 1);                
+		gd.addNumericField("quantity:", 0, 1);
                 //local
                 addImageChoice( "No Image" );
+                Vector<Choice> choice = gd.getChoices(); // default image choice is unenabled
+                choice.get(1).setEnabled(false);
                 
 		gd.addChoice("substanceUnit:", units, null);
                 //boundary condition
@@ -199,7 +258,7 @@ public class SpeciesDialog implements ItemListener {
 		gd.setResizable(true);
 		gd.pack();
 		
-		gd.addStringField("id:", species.getId()); // id 
+		gd.addStringField("id:", species.getId()); // id
 		gd.addChoice("compartment:", SBMLProcessUtil.listIdToStringArray(model.getListOfCompartments()), species.getCompartment()); // compartment
 
                 String dist = null;                
@@ -211,8 +270,14 @@ public class SpeciesDialog implements ItemListener {
                 for(numOfLosf = 0; numOfLosf < (int)losf.size(); numOfLosf++){ // local distribution
                         if( losf.get(numOfLosf).getId().equals(species.getId() + "_initialConcentration") ){
 
+                                //distribution
                                 dist = "local";
-                                gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "local");
+                                gd.addMessage("distribution: ");
+                                boolean[] distBool= {false,true};
+                                gd.addCheckboxGroup( 1, 2, distribution, distBool);
+                                Vector<Checkbox> cb = gd.getCheckboxes();
+                                cb.get(0).addItemListener(this);
+                                cb.get(1).addItemListener(this);
 
                                 if(species.isSetInitialAmount()){
                                   gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
@@ -226,8 +291,14 @@ public class SpeciesDialog implements ItemListener {
                         }
                 } if( numOfLosf == (int)losf.size() ){ // uniform distribution
 
-                        dist = "uniform";
-                        gd.addRadioButtonGroup("distribution:", distribution, 1, 2, "uniform");
+                                //distribution
+                                dist = "uniform";
+                                gd.addMessage("distribution: ");
+                                boolean[] distBool= {true,false};
+                                gd.addCheckboxGroup( 1, 2, distribution, distBool);
+                                Vector<Checkbox> cb = gd.getCheckboxes();
+                                cb.get(0).addItemListener(this);
+                                cb.get(1).addItemListener(this);
 
                         if(species.isSetInitialAmount()){
                                 gd.addRadioButtonGroup("initial:", initial, 1, 2, "amount");
@@ -290,17 +361,24 @@ public class SpeciesDialog implements ItemListener {
 	 * @throws IdentifierException the identifier exception
 	 */
 	private void setSpeciesData() throws IllegalArgumentException, IdentifierException{
-		String str = gd.getNextString();
+
+                String str = gd.getNextString();
 		if (str.indexOf(' ')!=-1)
 				str = str.replace(' ', '_');
-		species.setName(str); // set name
 
                 String sCompartment = gd.getNextChoice();
+                if( str.contains( sCompartment ) ){
+                  str = str.replace( "_" + sCompartment, "" );
+                }
+		species.setName(str); // set name
+
 		species.setCompartment(sCompartment); // set Compartment
                 String SId = str + "_" + species.getCompartment();
                 species.setId( SId ); // set Id
                 // distribute
-                String distribute = gd.getNextRadioButton();
+                Vector<Checkbox> cb = gd.getCheckboxes();
+                Checkbox uniform = cb.get(0);
+                Checkbox local = cb.get(1);
                 // quantity
                 String quantity = gd.getNextRadioButton();
                 // initial amount / concentration
@@ -310,24 +388,12 @@ public class SpeciesDialog implements ItemListener {
                         species.setInitialConcentration(gd.getNextNumber());
                 
                 String SFid = SId + "_initialConcentration";
-                if( distribute.equals(distribution[0]) ){ // uniform distribution
+                if( uniform.getState() /*distribute.equals(distribution[0])*/){ // uniform distribution
  
                         gd.getNextChoice();
                         speciesImage.put( SFid, "No Image" );
                         
-                } else if( distribute.equals(distribution[1]) ){ // local distribution
-
-                        //MessageDialog md = new MessageDialog( null, "Caution!", "Please set Max of color bar if you use spatial simulator." );
-                        
-                        // initial amount / concentration
-                        //Vector<TextField> nf = new Vector<TextField>();
-                        //nf = gd.getNumericFields();
-                        //nf.get(0).setEnabled(false);
-                        //gd.getNextNumber();
-                        
-                        //Vector<Choice> choice = new Vector<Choice>();                
-                        //choice = gd.getChoices();
-                        //choice.get(1).setEnabled(true);
+                } else if( local.getState() /*distribute.equals(distribution[1])*/){ // local distribution
                                                 
                         SpatialModelPlugin spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial"); 
                         Geometry geometry = spatialplugin.getGeometry();
@@ -491,11 +557,11 @@ public class SpeciesDialog implements ItemListener {
                  
                  ImageStack is = img.getStack();
                  //2 dimension
-                 for ( int l = 0; l < depth; l++){
-                         ImageProcessor ip = is.getProcessor(l+1);
+                 for ( int l = 1; l <= depth; l++){
+                         ImageProcessor ip = is.getProcessor(l);
                          for(int m = 0; m < height; m++){
                                  for( int n = 0; n < width; n++){
-                                         brightness[ l*width*height + m*width + n ] = ip.getPixel(n,m);
+                                         brightness[ (l-1)*width*height + m*width + n ] = ip.getPixel(n,m);
                                  }
                          }
                  // check assigned local distribution in assigned compartment

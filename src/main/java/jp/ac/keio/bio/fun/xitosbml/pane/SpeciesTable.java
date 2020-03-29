@@ -266,12 +266,12 @@ public class SpeciesTable extends SBaseTable{
 			sd = new SpeciesDialog(model);
 
                 //sd.setHashMap(speciesImage);
-                
+
 		Species s = sd.showDialog((Species) memberList.get(index)); // s is new input species
-		String SFid = s.getId() + "_initialConcentration";
-                String sImage = sd.getSpeciesImage( SFid ).toString();
-                
 		if(s == null) return;
+
+		String SFid = s.getId() + "_initialConcentration";
+                String sImage = sd.getSpeciesImage( SFid ).toString();                
 		
 		memberList.set(index, s);
 		// copy contents of Species(JTable) to Species(Model)
