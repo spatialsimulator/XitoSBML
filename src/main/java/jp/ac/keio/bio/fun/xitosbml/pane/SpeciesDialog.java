@@ -537,6 +537,8 @@ public class SpeciesDialog implements ItemListener {
                  int width = img.getWidth();
                  int height = img.getHeight();
                  int depth = img.getStackSize();
+
+                 //MessageDialog md0 = new MessageDialog(null, "depth", String.valueOf(width));
                  
                  SpatialModelPlugin spatialplugin = (SpatialModelPlugin)model.getPlugin("spatial"); 
                  Geometry geometry = spatialplugin.getGeometry(); 
@@ -546,27 +548,38 @@ public class SpeciesDialog implements ItemListener {
                  sf.setDataType( DataKind.DOUBLE );
                  sf.setNumSamples1( width );
                  sf.setNumSamples2( height );
+                 if( depth > 1 ){
+                         depth += 2.0;
+                 }
                  sf.setNumSamples3( depth );
                  sf.setInterpolation( InterpolationKind.linear );
                  sf.setCompression( CompressionKind.uncompressed );
                  sf.setSamplesLength( width * height * depth );
                  
                  int brightness[] = new int[ width * height * depth ];
+                 for( int i = 0; i < (width * height * depth); i++){
+                         brightness[i] = 0;
+                 }
                  int amount = 0;
                  String sample;
                  
                  ImageStack is = img.getStack();
-                 //2 dimension
+                 // 2 & 3 dimension
                  for ( int l = 1; l <= depth; l++){
+                         if( depth > 1 && l > (depth - 2.0) )
+                                 break;
                          ImageProcessor ip = is.getProcessor(l);
                          for(int m = 0; m < height; m++){
                                  for( int n = 0; n < width; n++){
-                                         brightness[ (l-1)*width*height + m*width + n ] = ip.getPixel(n,m);
+                                         if(depth == 1)
+                                                 brightness[ (l-1)*width*height + m*width + n ] = ip.getPixel(n,m);
+                                         else if(depth > 1)
+                                                 brightness[ l*width*height + m*width + n ] = ip.getPixel(n,m);
                                  }
                          }
-                 // check assigned local distribution in assigned compartment
-                 brightness = checkImageBoundary(geometry,brightness,width,height,depth); //check species distribution
                  }
+                 // check assigned local distribution in assigned compartment
+                 brightness = checkImageBoundary( geometry, brightness, width, height, depth);
                  sample = Arrays.toString(brightness).replace( "[", "" ).replace( "]", "" ).replace( ",", "" );
                  for(int i = 0; i < brightness.length; i++)
                          amount = Math.max(amount,brightness[i]);
@@ -582,18 +595,32 @@ public class SpeciesDialog implements ItemListener {
 	 * @throws IdentifierException the identifier exception
          */
          private int[] checkImageBoundary( Geometry geo, int[] brightness, int width, int height, int depth ) throws IllegalArgumentException, IdentifierException {//added by Morita
-
+                 // get compartment geometry 
                  SampledField sf = geo.getListOfSampledFields().get(0);
                  String uncompr = sf.getSamples();
                  int digit = 0;
                  int num = 0;
+                 int[] sudoCompartment = sudoCompartment = new int[ width * height * depth ];                   
                  int[] sCompartment = new int[ width * height * depth ];
-                 for( int i = 0; i < uncompr.length(); i++ ){
-                         if( uncompr.substring(i,i+1).equals(" ") ){
-                                 sCompartment[num] = Integer.parseInt(uncompr.substring(digit,i));
+                 if( depth > 1 ){
+                         uncompr = uncompr.substring( 2 * width * height );
+                 }
+                 for( int i = 1; i < uncompr.length(); i++ ){
+                         if( uncompr.substring(i-1,i).equals(" ") ){
+                                 if( depth > 1 )
+                                         if( num == width * height * (depth - 2) )
+                                                 break;
+                                 sudoCompartment[num] = Integer.parseInt(uncompr.substring(digit,i-1));
                                  num++;
-                                 digit = i+1;
+                                 digit = i;
                          }
+                 } if( depth > 1 ){
+                         for(int i = 0; i < (width * height * depth); i++)
+                                   sCompartment[i] = 0;
+                         for(int i = 0; i < (width * height * (depth-2.0)); i++)
+                                   sCompartment[i+(width * height)] = sudoCompartment[i];
+                 } else if( depth == 1 ){
+                         sCompartment = sudoCompartment;
                  }
                  
                  ListOf<GeometryDefinition> logd = geo.getListOfGeometryDefinitions();
@@ -606,24 +633,25 @@ public class SpeciesDialog implements ItemListener {
                                   double sv = losv.get(i).getSampledValue();
                                   int numBeyond = 0;
                                   int[] isInCompartment = new int[ width * height * depth ];
-                                  for( int in = 0; in < width * height * depth; in++ ){
-                                          if( sCompartment[in] == sv ){                         
+                                  for( int in = 0; in < (width * height * depth); in++ ){
+                                          if( sCompartment[in] == sv ){         
                                                   isInCompartment[i] = 1;
-                                          } else {                         
+                                          } else { // check species beyond assigned compartment
                                                   isInCompartment[i] = 0;
                                                   if( brightness[in] > 0 ){
                                                     numBeyond++;
                                                   }
                                           }
                                   }
-                                  //in case of species distribution beyond boundary
+                                  // show message in case of species distribution beyond boundary
                                   if( numBeyond > 0){
                                           MessageDialog md = new MessageDialog( null/*gd*/, "Species Boundary ERROR", "species are distributed beyond your selected compartment!\nSpecies beyond the compartment was deleted." );
                                           for( int j = 0; j < width * height * depth; j++ )
                                                    brightness[i] *= isInCompartment[i];
                                   }
+                                  break;
                          }
-                 }                 
+                 }
                  return brightness;
          }
   
