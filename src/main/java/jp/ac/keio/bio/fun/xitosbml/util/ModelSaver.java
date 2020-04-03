@@ -133,7 +133,7 @@ public class ModelSaver {
 			
 		Calendar date = new GregorianCalendar();
 		annot = annot.concat(" in " + date.getTime());
-		
+		annot = annot.concat(" and this sbml model's release is 0.90");		
 
 		try {
 			document.setNotes(annot);
