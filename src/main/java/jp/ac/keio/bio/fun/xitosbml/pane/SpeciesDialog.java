@@ -285,8 +285,13 @@ public class SpeciesDialog implements ItemListener {
                                 } else if(species.isSetInitialConcentration()){
                                   gd.addRadioButtonGroup("initial:", initial, 1, 2, "concentration");
                                   gd.addNumericField("quantity:", 0/*species.getInitialConcentration()*/, 1);
-                                }                
+                                }
 
+                                Vector<TextField> nf = new Vector<TextField>();
+                                nf = gd.getNumericFields();
+                                TextField text = nf.get(0);
+                                text.setEnabled(false);
+                                
                                 break;
                         }
                 } if( numOfLosf == (int)losf.size() ){ // uniform distribution
@@ -311,6 +316,10 @@ public class SpeciesDialog implements ItemListener {
 
                 String SFid = species.getId() + "_initialConcentration";
                 addImageChoice( speciesImage.get(SFid)/*, dist*/ );
+                if( dist.equals("uniform") ){
+                                Vector<Choice> chc = gd.getChoices();
+                                chc.get(1).setEnabled(false);
+                }                
                 
 		gd.addChoice("substanceUnit:", units, species.getUnits());			
 		gd.addRadioButtonGroup("boundaryCondition:",bool,1, 2, String.valueOf(species.getBoundaryCondition()));
@@ -549,7 +558,7 @@ public class SpeciesDialog implements ItemListener {
                  sf.setNumSamples1( width );
                  sf.setNumSamples2( height );
                  if( depth > 1 ){
-                         depth += 2.0;
+                         depth += 2;
                  }
                  sf.setNumSamples3( depth );
                  sf.setInterpolation( InterpolationKind.linear );
