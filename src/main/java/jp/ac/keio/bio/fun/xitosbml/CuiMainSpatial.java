@@ -1,4 +1,4 @@
-package jp.ac.keio.bio.fun.xitosbml.xitosbml;
+package jp.ac.keio.bio.fun.xitosbml;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -21,21 +21,13 @@ import jp.ac.keio.bio.fun.xitosbml.image.CreateImage;
 import jp.ac.keio.bio.fun.xitosbml.image.Filler;
 import jp.ac.keio.bio.fun.xitosbml.image.ImageBorder;
 import jp.ac.keio.bio.fun.xitosbml.image.ImageEdit;
-import jp.ac.keio.bio.fun.xitosbml.image.ImageExplorer;
 import jp.ac.keio.bio.fun.xitosbml.image.Interpolator;
 import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
 import jp.ac.keio.bio.fun.xitosbml.pane.TabTables;
 import jp.ac.keio.bio.fun.xitosbml.visual.DomainStruct;
 import jp.ac.keio.bio.fun.xitosbml.visual.Viewer;
 
-/**
- * The class MainSpatial, which creates a GUI for XitoSBML. Date Created: Feb
- * 21, 2017
- *
- * @author Kaito Ii &lt;ii@fun.bio.keio.ac.jp&gt;
- * @author Akira Funahashi &lt;funa@bio.keio.ac.jp&gt;
- */
-public abstract class MainSpatial implements PlugIn {
+public abstract class CuiMainSpatial implements PlugIn {
 
 	/** The SBML document. */
 	protected SBMLDocument document;
@@ -45,9 +37,6 @@ public abstract class MainSpatial implements PlugIn {
 
 	/** The SBML spatialplugin. */
 	protected SpatialModelPlugin spatialplugin;
-
-	/** The ImageExplorer. */
-	protected ImageExplorer imgexp;
 
 	/** The hashmap of domain types. */
 	private HashMap<String, Integer> hashDomainTypes;
@@ -63,21 +52,16 @@ public abstract class MainSpatial implements PlugIn {
 	 */
 	protected SpatialImage spImg;
 
-	/**
-	 * Create a GUI which allows users to specify the correspondence between each
-	 * image and the region in the cell.
-	 */
-	protected void gui() {
+	/** TrialForImage **/
+	protected TrialForImg trial;
+
+	protected void cui(ImagePlus imager) {
 		hashDomainTypes = new HashMap<String, Integer>();
 		hashSampledValue = new HashMap<String, Integer>();
-		imgexp = new ImageExplorer(hashDomainTypes, hashSampledValue);
-		while (imgexp.isVisible()) {
-			synchronized (hashDomainTypes) {
-				synchronized (hashSampledValue) {
-
-				}
-			}
-		}
+		// imager.show();
+		trial = new TrialForImg(hashDomainTypes, hashSampledValue, imager);
+		// HashMap<String, ImagePlus> hashDomFile = trial.getDomFile();
+		// System.out.println(hashDomFile.values());
 	}
 
 	/**
@@ -94,16 +78,17 @@ public abstract class MainSpatial implements PlugIn {
 	 * {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage}, which is a base class
 	 * for representing spatial image in XitoSBML.
 	 */
-	protected void computeImg() {
+
+	protected void computeImgTrial() {
 		Interpolator interpolator = new Interpolator();
-		HashMap<String, ImagePlus> hashDomFile = imgexp.getDomFile();
+		HashMap<String, ImagePlus> hashDomFile = trial.getDomFile();
 		interpolator.interpolate(hashDomFile);
 		Filler fill = new Filler();
 
 		for (Entry<String, ImagePlus> e : hashDomFile.entrySet())
 			hashDomFile.put(e.getKey(), fill.fill(e.getValue()));
 
-		CreateImage creIm = new CreateImage(imgexp.getDomFile(), hashSampledValue);
+		CreateImage creIm = new CreateImage(trial.getDomFile(), hashSampledValue);
 		spImg = new SpatialImage(hashSampledValue, hashDomainTypes, creIm.getCompoImg());
 		ImagePlus img = fill.fill(spImg);
 		spImg.setImage(img);
@@ -111,6 +96,7 @@ public abstract class MainSpatial implements PlugIn {
 		spImg.updateImage(imgBorder.getStackImage());
 
 		new ImageEdit(spImg);
+
 	}
 
 	/**
@@ -177,4 +163,5 @@ public abstract class MainSpatial implements PlugIn {
 			e.printStackTrace();
 		}
 	}
+
 }
