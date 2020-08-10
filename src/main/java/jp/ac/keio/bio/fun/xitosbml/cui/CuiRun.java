@@ -10,15 +10,15 @@ import picocli.CommandLine.Option;
 
 public class CuiRun implements Callable<Integer> {
 
-	@Option(names = "-i", required = true, description = "The input option")
+	@Option(names = "-input", required = true, description = "The path to input image file")
 	String iValue;
-	@Option(names = "-o", required = true, description = "The output option")
+	@Option(names = "-output", required = true, description = "The path to output XML file")
 	String oValue;
 
 	@Override
 	public Integer call() {
-		System.out.printf("-i=%s%n", iValue);
-		System.out.printf("-o=%s%n", oValue);
+		System.out.printf("-input=%s%n", iValue);
+		System.out.printf("-output=%s%n", oValue);
 		new CuiMainImgSpatial().runCui(iValue, oValue);
 		return 0;
 	}
