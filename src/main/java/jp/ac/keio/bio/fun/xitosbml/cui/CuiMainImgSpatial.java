@@ -1,4 +1,4 @@
-package jp.ac.keio.bio.fun.xitosbml;
+package jp.ac.keio.bio.fun.xitosbml.cui;
 
 import java.io.File;
 import java.io.IOException;
