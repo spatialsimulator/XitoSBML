@@ -49,5 +49,4 @@ public class CuiRun implements Callable<Integer> {
  * @SuppressWarnings("deprecation") public static void main(String... args) {
  * CommandLine.run(new CuiRun(), System.err, args); }
  * 
- * } <<<<<<< HEAD
  */
