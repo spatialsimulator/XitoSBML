@@ -67,6 +67,7 @@ public class CuiMainImgSpatial extends CuiMainSpatial {
 		if (outputPath.contains(".xml"))
 			spImgPath = outputPath.substring(0, outputPath.indexOf('.'));
 		spImg.saveAsImage(spImgPath);
+
 		showDomainStructure();
 
 		print();

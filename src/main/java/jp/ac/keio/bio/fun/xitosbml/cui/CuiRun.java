@@ -20,6 +20,7 @@ public class CuiRun implements Callable<Integer> {
 		// System.out.printf("-i=%s%n", inputValue);
 		// System.out.printf("-o=%s%n", outputValue);
 		new CuiMainImgSpatial().runCui(inputValue, outputValue);
+
 		return 0;
 	}
 
@@ -48,5 +49,5 @@ public class CuiRun implements Callable<Integer> {
  * @SuppressWarnings("deprecation") public static void main(String... args) {
  * CommandLine.run(new CuiRun(), System.err, args); }
  * 
- * }
+ * } <<<<<<< HEAD
  */

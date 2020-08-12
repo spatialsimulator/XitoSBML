@@ -104,9 +104,6 @@ public abstract class CuiMainSpatial implements PlugIn {
 		new DomainStruct().show(g);
 	}
 
-	/**
-	 * Prints the SBML document to stdout.
-	 */
 	protected void print() {
 		String docStr;
 		try {
