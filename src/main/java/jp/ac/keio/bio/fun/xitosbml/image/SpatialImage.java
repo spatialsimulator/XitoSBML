@@ -1,5 +1,6 @@
 package jp.ac.keio.bio.fun.xitosbml.image;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -346,16 +347,16 @@ public class SpatialImage {
 			fs.saveAsTiff(path + "/" + name + ".tiff");
 	}
 
-	/**
-	 * Save image as TIFF file --> for the CUI version
-	 * 
-	 * @param path2
-	 */
-	public void saveAsImageCui(String path2) {
+	// Overloading for XitoSBML-CUI
+	public void saveAsImage(String path) {
 		FileSaver fs = new FileSaver(img);
-		if (path2 == null)
+		if (path == null)
 			return;
-		fs.saveAsTiff(path2 + "_sptl" + ".tiff");
+		File f = new File(path + ".tiff");
+		if (!f.exists())
+			fs.saveAsTiff(path + ".tiff");
+		else
+			fs.saveAsTiff(path + "_sptl" + ".tiff");
 	}
 
 	/**

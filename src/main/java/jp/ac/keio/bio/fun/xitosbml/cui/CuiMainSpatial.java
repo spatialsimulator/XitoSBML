@@ -5,12 +5,9 @@ import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
-import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.SBMLException;
-import org.sbml.jsbml.Species;
 import org.sbml.jsbml.TidySBMLWriter;
 import org.sbml.jsbml.ext.spatial.Geometry;
 import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
@@ -23,7 +20,6 @@ import jp.ac.keio.bio.fun.xitosbml.image.ImageBorder;
 import jp.ac.keio.bio.fun.xitosbml.image.ImageEdit;
 import jp.ac.keio.bio.fun.xitosbml.image.Interpolator;
 import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
-import jp.ac.keio.bio.fun.xitosbml.pane.TabTables;
 import jp.ac.keio.bio.fun.xitosbml.visual.DomainStruct;
 import jp.ac.keio.bio.fun.xitosbml.visual.Viewer;
 
@@ -100,35 +96,6 @@ public abstract class CuiMainSpatial implements PlugIn {
 	}
 
 	/**
-	 * Visualize the spatial model with ImageJ 3D Viewer.
-	 *
-	 * @param spImg the SpatialImage, which is a class for handling spatial image in
-	 *              XitoSBML.
-	 */
-	protected void visualize(SpatialImage spImg) {
-		viewer = new Viewer();
-		viewer.view(spImg);
-	}
-
-	/**
-	 * Create a tabbed table which allows users to add the SBases to the model
-	 * through GUI.
-	 */
-	protected void addSBases() {
-		ListOf<Parameter> lop = model.getListOfParameters();
-		ListOf<Species> los = model.getListOfSpecies();
-		TabTables tt = new TabTables(model);
-
-		while (tt.isRunning()) {
-			synchronized (lop) {
-				synchronized (los) {
-
-				}
-			}
-		}
-	}
-
-	/**
 	 * Show inclusion relationship of domains as a graph.
 	 */
 	protected void showDomainStructure() {
@@ -137,19 +104,6 @@ public abstract class CuiMainSpatial implements PlugIn {
 		new DomainStruct().show(g);
 	}
 
-	/**
-	 * Visualize SpatialImage.
-	 *
-	 * @param spImg the SpatialImage, which is a class for handling spatial image in
-	 *              XitoSBML.
-	 */
-	protected void showStep(SpatialImage spImg) {
-		visualize(spImg);
-	}
-
-	/**
-	 * Prints the SBML document to stdout.
-	 */
 	protected void print() {
 		String docStr;
 		try {

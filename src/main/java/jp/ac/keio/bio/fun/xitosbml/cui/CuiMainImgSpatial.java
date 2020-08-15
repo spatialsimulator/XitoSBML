@@ -18,13 +18,12 @@ public class CuiMainImgSpatial extends CuiMainSpatial {
 
 	protected ImagePlus imager;
 
-	public void run(String arg)
-	{
-		//empty
+	public void run(String arg) {
+		// empty
 	}
-	
-	public void runCui(String path1, String path2) {
-		ImagePlus imager = new ImagePlus(path1);
+
+	public void runCui(String imagePath, String outputPath) {
+		ImagePlus imager = new ImagePlus(imagePath);
 		this.imager = imager;
 		cui(imager);
 		computeImgTrial();
@@ -35,9 +34,9 @@ public class CuiMainImgSpatial extends CuiMainSpatial {
 		sbmlexp.addCoordParameter();
 		document = sbmlexp.getDocument();
 
-		//To save the SBML document
+		// To save the SBML document
 		try {
-			SBMLWriter.write(document, new File(path2), ' ', (short) 2);
+			SBMLWriter.write(document, new File(outputPath), ' ', (short) 2);
 			System.out.println("Saved model");
 		} catch (NullPointerException e) {
 			System.out.println("SBML document was not saved");
@@ -63,10 +62,12 @@ public class CuiMainImgSpatial extends CuiMainSpatial {
 			e.printStackTrace();
 		}
 
-		//So that the original image does not get overwritten
-		if (path1.contains(".tif"))
-			path1 = path1.substring(0, path1.indexOf('.'));
-		spImg.saveAsImageCui(path1);
+		// So that the original image does not get overwritten
+		String spImgPath = null;
+		if (outputPath.contains(".xml"))
+			spImgPath = outputPath.substring(0, outputPath.indexOf('.'));
+		spImg.saveAsImage(spImgPath);
+
 		showDomainStructure();
 
 		print();
