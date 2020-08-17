@@ -1,10 +1,10 @@
-package jp.ac.keio.bio.fun.xitosbml.cui;
+package jp.ac.keio.bio.fun.xitosbml.cli;
 
 public class TrialRunner {
 
 	public static void run(String path1, String path2) {
 		// imager.show();
-		new CuiMainImgSpatial().runCui(path1, path2);
+		new CliMainImgSpatial().runCli(path1, path2);
 	}
 
 	public static void main(String[] args) {

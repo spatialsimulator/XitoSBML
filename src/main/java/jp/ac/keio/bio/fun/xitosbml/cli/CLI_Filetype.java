@@ -1,4 +1,4 @@
-package jp.ac.keio.bio.fun.xitosbml.cui;
+package jp.ac.keio.bio.fun.xitosbml.cli;
 
 import java.io.File;
 import java.util.concurrent.Callable;
@@ -31,7 +31,7 @@ public class CLI_Filetype implements Callable<Integer> {
 			output[i] = dir + File.separator + outputId + (i + 1) + ".xml";
 			System.out.println(input[i]);
 			System.out.println(output[i]);
-			new CuiMainImgSpatial().runCui(input[i], output[i]);
+			new CliMainImgSpatial().runCli(input[i], output[i]);
 		}
 		return 0;
 	}

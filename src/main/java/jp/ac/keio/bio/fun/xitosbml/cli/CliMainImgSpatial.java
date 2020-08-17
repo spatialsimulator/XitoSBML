@@ -1,4 +1,4 @@
-package jp.ac.keio.bio.fun.xitosbml.cui;
+package jp.ac.keio.bio.fun.xitosbml.cli;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import ij.ImagePlus;
 import jp.ac.keio.bio.fun.xitosbml.util.ModelValidator;
 import jp.ac.keio.bio.fun.xitosbml.xitosbml.SpatialSBMLExporter;
 
-public class CuiMainImgSpatial extends CuiMainSpatial {
+public class CliMainImgSpatial extends CliMainSpatial {
 
 	protected ImagePlus imager;
 
@@ -22,10 +22,10 @@ public class CuiMainImgSpatial extends CuiMainSpatial {
 		// empty
 	}
 
-	public void runCui(String imagePath, String outputPath) {
+	public void runCli(String imagePath, String outputPath) {
 		ImagePlus imager = new ImagePlus(imagePath);
 		this.imager = imager;
-		cui(imager);
+		cli(imager);
 		computeImgTrial();
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg);
 		model = sbmlexp.getModel();
