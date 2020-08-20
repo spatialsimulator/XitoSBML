@@ -22,16 +22,12 @@ public class CLI_Filetype implements Callable<Integer> {
 
 	@Override
 	public Integer call() {
-		String[] input = new String[outputValue];
-		String[] output = new String[outputValue];
 		String dir = inputDir;
 
 		for (int i = 0; i < outputValue; i++) {
-			input[i] = dir + File.separator + imageId + (i + 1) + ".tif";
-			output[i] = dir + File.separator + outputId + (i + 1) + ".xml";
-			// System.out.println(input[i]);
-			// System.out.println(output[i]);
-			new CliMainImgSpatial().runCli(input[i], output[i]);
+			String input = dir + File.separator + imageId + (i + 1) + ".tif";
+			String output = dir + File.separator + outputId + (i + 1) + ".xml";
+			new CliMainImgSpatial().runCli(input, output);
 		}
 		return 0;
 	}
