@@ -29,8 +29,8 @@ public class CLI_Filetype implements Callable<Integer> {
 		for (int i = 0; i < outputValue; i++) {
 			input[i] = dir + File.separator + imageId + (i + 1) + ".tif";
 			output[i] = dir + File.separator + outputId + (i + 1) + ".xml";
-			System.out.println(input[i]);
-			System.out.println(output[i]);
+			// System.out.println(input[i]);
+			// System.out.println(output[i]);
 			new CliMainImgSpatial().runCli(input[i], output[i]);
 		}
 		return 0;
