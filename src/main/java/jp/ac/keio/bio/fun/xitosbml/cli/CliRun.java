@@ -1,5 +1,6 @@
 package jp.ac.keio.bio.fun.xitosbml.cli;
 
+import java.io.File;
 import java.util.concurrent.Callable;
 
 import picocli.CommandLine;
@@ -10,16 +11,67 @@ import picocli.CommandLine.Option;
 
 public class CliRun implements Callable<Integer> {
 
-	@Option(names = "-i", required = true, description = "The path to input image file")
+	@Option(names = "-i", required = true, description = "The path to input image file or folder containing images")
 	String inputValue;
-	@Option(names = "-o", required = true, description = "The path to output XML file")
+	@Option(names = "-o", required = true, description = "The path to output XML file if input is image file")
 	String outputValue;
+
+	// Function to check whether path specified is a folder or not
+	public void listFilesForFolder(final File folder) {
+
+		// Instantiating CliMainImgSpatial class
+		CliMainImgSpatial cliMain = new CliMainImgSpatial();
+
+		if (!folder.isDirectory()) {
+			// The input is path to an image file and hence can be processed directly
+			cliMain.runCli(inputValue, outputValue);
+		} else {
+			// The input is path to a folder containing image files
+			for (final File fileEntry : folder.listFiles()) {
+				if (fileEntry.isDirectory()) {
+					listFilesForFolder(fileEntry);
+				} else {
+					if (fileEntry.isFile()) {
+						String temp = folder.getAbsolutePath() + File.separator + fileEntry.getName();
+						// System.out.println(temp);
+
+						// Checking if file is an image
+						if (((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase()).equals("tif"))
+								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
+										.equals("tiff"))
+								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
+										.equals("bmp"))
+								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
+										.equals("dcm"))
+								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
+										.equals("fits"))
+								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
+										.equals("pdm"))
+								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
+										.equals("gif"))
+								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
+										.equals("jpeg"))
+								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
+										.equals("png"))) {
+							if (temp.contains(".")) {
+								// Default naming convention for the output SBML models
+								String tempOut = temp.substring(0, temp.indexOf('.')) + "_output" + ".xml";
+								cliMain.runCli(temp, tempOut);
+							}
+
+						}
+
+					}
+
+				}
+			}
+		}
+	}
 
 	@Override
 	public Integer call() {
-		// System.out.printf("-i=%s%n", inputValue);
-		// System.out.printf("-o=%s%n", outputValue);
-		new CliMainImgSpatial().runCli(inputValue, outputValue);
+		File folder = new File(inputValue);
+		listFilesForFolder(folder);
 
 		return 0;
 	}

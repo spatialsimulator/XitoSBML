@@ -23,6 +23,7 @@ public class CLI_Filetype implements Callable<Integer> {
 	@Override
 	public Integer call() {
 		String dir = inputDir;
+		File folder = new File(dir);
 		CliMainImgSpatial cliMain = new CliMainImgSpatial();
 
 		for (int i = 0; i < outputValue; i++) {
@@ -30,6 +31,7 @@ public class CLI_Filetype implements Callable<Integer> {
 			String output = dir + File.separator + outputId + (i + 1) + ".xml";
 			cliMain.runCli(input, output);
 		}
+
 		return 0;
 	}
 
