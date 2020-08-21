@@ -17,7 +17,7 @@ public class CliRun implements Callable<Integer> {
 	String outputValue;
 
 	// Function to check whether path specified is a folder or not
-	public void listFilesForFolder(final File folder) {
+	public void XitosbmlForFolder(final File folder) {
 
 		// Instantiating CliMainImgSpatial class
 		CliMainImgSpatial cliMain = new CliMainImgSpatial();
@@ -29,49 +29,31 @@ public class CliRun implements Callable<Integer> {
 			// The input is path to a folder containing image files
 			for (final File fileEntry : folder.listFiles()) {
 				if (fileEntry.isDirectory()) {
-					listFilesForFolder(fileEntry);
+					XitosbmlForFolder(fileEntry);
 				} else {
-					if (fileEntry.isFile()) {
-						String temp = folder.getAbsolutePath() + File.separator + fileEntry.getName();
-						// System.out.println(temp);
+					String temp = folder.getAbsolutePath() + File.separator + fileEntry.getName();
+					String ext = temp.substring(temp.lastIndexOf('.') + 1);
 
-						// Checking if file is an image
-						if (((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase()).equals("tif"))
-								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
-										.equals("tiff"))
-								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
-										.equals("bmp"))
-								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
-										.equals("dcm"))
-								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
-										.equals("fits"))
-								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
-										.equals("pdm"))
-								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
-										.equals("gif"))
-								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
-										.equals("jpeg"))
-								|| ((temp.substring(temp.lastIndexOf('.') + 1, temp.length()).toLowerCase())
-										.equals("png"))) {
-							if (temp.contains(".")) {
-								// Default naming convention for the output SBML models
-								String tempOut = temp.substring(0, temp.indexOf('.')) + "_output" + ".xml";
-								cliMain.runCli(temp, tempOut);
-							}
+					if (ext.equals("tif") || ext.equals("tiff") || ext.equals("bmp") || ext.equals("dcm")
+							|| ext.equals("fits") || ext.equals("pdm") || ext.equals("gif") || ext.equals("jpeg")) {
 
-						}
+						// Default naming convention for the output SBML models
+						String tempOut = temp.substring(0, temp.indexOf('.')) + "_output" + ".xml";
+						cliMain.runCli(temp, tempOut);
 
 					}
 
 				}
+
 			}
 		}
+
 	}
 
 	@Override
 	public Integer call() {
 		File folder = new File(inputValue);
-		listFilesForFolder(folder);
+		XitosbmlForFolder(folder);
 
 		return 0;
 	}
