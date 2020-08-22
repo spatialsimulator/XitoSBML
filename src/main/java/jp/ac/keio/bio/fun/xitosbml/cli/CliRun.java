@@ -17,7 +17,7 @@ public class CliRun implements Callable<Integer> {
 	String outputValue;
 
 	// Function to check whether path specified is a folder or not
-	public void XitosbmlForFolder(final File folder) {
+	public void RunXitosbml(final File folder) {
 
 		// Instantiating CliMainImgSpatial class
 		CliMainImgSpatial cliMain = new CliMainImgSpatial();
@@ -29,7 +29,7 @@ public class CliRun implements Callable<Integer> {
 			// The input is path to a folder containing image files
 			for (final File fileEntry : folder.listFiles()) {
 				if (fileEntry.isDirectory()) {
-					XitosbmlForFolder(fileEntry);
+					RunXitosbml(fileEntry);
 				} else {
 					String temp = folder.getAbsolutePath() + File.separator + fileEntry.getName();
 					String ext = temp.substring(temp.lastIndexOf('.') + 1);
@@ -53,7 +53,7 @@ public class CliRun implements Callable<Integer> {
 	@Override
 	public Integer call() {
 		File folder = new File(inputValue);
-		XitosbmlForFolder(folder);
+		RunXitosbml(folder);
 
 		return 0;
 	}
