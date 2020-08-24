@@ -15,7 +15,6 @@ import org.sbml.jsbml.TidySBMLWriter;
 import org.sbml.jsbml.ext.spatial.Geometry;
 import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
 
-import ij.IJ;
 import ij.ImagePlus;
 import jp.ac.keio.bio.fun.xitosbml.image.CreateImage;
 import jp.ac.keio.bio.fun.xitosbml.image.Filler;
@@ -83,17 +82,6 @@ public class CliMainImgSpatial {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		try {
-			String docStr = new TidySBMLWriter().writeSBMLToString(document);
-			IJ.log(docStr);
-		} catch (SBMLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (XMLStreamException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
