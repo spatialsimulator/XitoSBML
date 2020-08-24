@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 
 import ij.ImagePlus;
 
-public class TrialForImg {
+public class GetImgDom {
 	/** The hashmap of domain types. HashMap&lt;String, Integer&gt; */
 	private HashMap<String, Integer> hashDomainTypes;
 
@@ -19,7 +19,7 @@ public class TrialForImg {
 
 	public ImagePlus imager;
 
-	public TrialForImg(HashMap<String, Integer> hashDomainTypes, HashMap<String, Integer> hashSampledValues,
+	public GetImgDom(HashMap<String, Integer> hashDomainTypes, HashMap<String, Integer> hashSampledValues,
 			ImagePlus imager) {
 		this.hashDomainTypes = hashDomainTypes;
 		this.hashSampledValues = hashSampledValues;
