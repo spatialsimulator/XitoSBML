@@ -55,7 +55,7 @@ public class CliMainImgSpatial {
 	protected SpatialImage spImg;
 
 	/** TrialForImage **/
-	protected TrialForImg trial;
+	protected GetImgDom imgDom;
 
 	public void runCli(String imagePath, String outputPath) {
 		ImagePlus imager = new ImagePlus(imagePath);
@@ -104,7 +104,7 @@ public class CliMainImgSpatial {
 		hashDomainTypes = new HashMap<String, Integer>();
 		hashSampledValue = new HashMap<String, Integer>();
 		// imager.show();
-		trial = new TrialForImg(hashDomainTypes, hashSampledValue, imager);
+		imgDom = new GetImgDom(hashDomainTypes, hashSampledValue, imager);
 		// HashMap<String, ImagePlus> hashDomFile = trial.getDomFile();
 		// System.out.println(hashDomFile.values());
 	}
@@ -123,17 +123,16 @@ public class CliMainImgSpatial {
 	 * {@link jp.ac.keio.bio.fun.xitosbml.image.SpatialImage}, which is a base class
 	 * for representing spatial image in XitoSBML.
 	 */
-
 	protected void computeImg() {
 		Interpolator interpolator = new Interpolator();
-		HashMap<String, ImagePlus> hashDomFile = trial.getDomFile();
+		HashMap<String, ImagePlus> hashDomFile = imgDom.getDomFile();
 		interpolator.interpolate(hashDomFile);
 		Filler fill = new Filler();
 
 		for (Entry<String, ImagePlus> e : hashDomFile.entrySet())
 			hashDomFile.put(e.getKey(), fill.fill(e.getValue()));
 
-		CreateImage creIm = new CreateImage(trial.getDomFile(), hashSampledValue);
+		CreateImage creIm = new CreateImage(imgDom.getDomFile(), hashSampledValue);
 		spImg = new SpatialImage(hashSampledValue, hashDomainTypes, creIm.getCompoImg());
 		ImagePlus img = fill.fill(spImg);
 		spImg.setImage(img);
@@ -153,6 +152,9 @@ public class CliMainImgSpatial {
 		new DomainStruct().show(g);
 	}
 
+	/**
+	 * Prints the SBML document to stdout.
+	 */
 	protected void print() {
 		String docStr;
 		try {
