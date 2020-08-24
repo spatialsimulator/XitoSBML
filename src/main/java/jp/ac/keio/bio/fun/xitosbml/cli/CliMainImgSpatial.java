@@ -61,7 +61,7 @@ public class CliMainImgSpatial {
 		ImagePlus imager = new ImagePlus(imagePath);
 		this.imager = imager;
 		cli(imager);
-		computeImgTrial();
+		computeImg();
 		SpatialSBMLExporter sbmlexp = new SpatialSBMLExporter(spImg);
 		model = sbmlexp.getModel();
 		sbmlexp.createGeometryElements(); // visualize(spImg);
@@ -124,7 +124,7 @@ public class CliMainImgSpatial {
 	 * for representing spatial image in XitoSBML.
 	 */
 
-	protected void computeImgTrial() {
+	protected void computeImg() {
 		Interpolator interpolator = new Interpolator();
 		HashMap<String, ImagePlus> hashDomFile = trial.getDomFile();
 		interpolator.interpolate(hashDomFile);
