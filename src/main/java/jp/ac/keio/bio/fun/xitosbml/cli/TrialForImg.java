@@ -1,4 +1,4 @@
-package jp.ac.keio.bio.fun.xitosbml.cui;
+package jp.ac.keio.bio.fun.xitosbml.cli;
 
 import java.util.HashMap;
 import java.util.Map.Entry;

@@ -1,4 +1,4 @@
-package jp.ac.keio.bio.fun.xitosbml.cui;
+package jp.ac.keio.bio.fun.xitosbml.cli;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -23,7 +23,7 @@ import jp.ac.keio.bio.fun.xitosbml.image.SpatialImage;
 import jp.ac.keio.bio.fun.xitosbml.visual.DomainStruct;
 import jp.ac.keio.bio.fun.xitosbml.visual.Viewer;
 
-public abstract class CuiMainSpatial implements PlugIn {
+public abstract class CliMainSpatial implements PlugIn {
 
 	/** The SBML document. */
 	protected SBMLDocument document;
@@ -51,7 +51,7 @@ public abstract class CuiMainSpatial implements PlugIn {
 	/** TrialForImage **/
 	protected TrialForImg trial;
 
-	protected void cui(ImagePlus imager) {
+	protected void cli(ImagePlus imager) {
 		hashDomainTypes = new HashMap<String, Integer>();
 		hashSampledValue = new HashMap<String, Integer>();
 		// imager.show();

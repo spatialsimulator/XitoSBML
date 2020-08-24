@@ -112,6 +112,21 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <configuration>
+          <rules>
+            <enforceBytecodeVersion>
+              <maxJdkVersion>1.8</maxJdkVersion>
+              <excludes>
+                <exclude>info.picocli:picocli</exclude>
+              </excludes>
+            </enforceBytecodeVersion>
+          </rules>
+          <fail>true</fail>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>1.7</source>
@@ -184,7 +199,6 @@
     <dependency>
       <groupId>net.imagej</groupId>
       <artifactId>ij</artifactId><!--$NO-MVN-MAN-VER$-->
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>sc.fiji</groupId>
@@ -194,39 +208,34 @@
       <groupId>sc.fiji</groupId>
       <artifactId>3D_Viewer</artifactId>
       <version>4.0.1</version><!--$NO-MVN-MAN-VER$-->
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.scijava</groupId>
       <artifactId>j3dcore</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.scijava</groupId>
       <artifactId>j3dutils</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.scijava</groupId>
       <artifactId>vecmath</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>sc.fiji</groupId>
       <artifactId>VIB-lib</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.sbml.jsbml</groupId>
       <artifactId>jsbml-core</artifactId>
       <version>${jsbml.version}</version>
     </dependency>
-    
+
     <dependency>
-			<groupId>info.picocli</groupId>
-			<artifactId>picocli</artifactId>
-			<version>4.5.0</version>
-		</dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+      <version>4.5.0</version>
+    </dependency>
 
     <dependency>
       <groupId>org.sbml.jsbml.ext</groupId>
@@ -250,10 +259,5 @@
       <artifactId>jgrapht-ext</artifactId>
       <version>0.9.0</version>
     </dependency>
-    <dependency>
-	  <groupId>info.picocli</groupId>
-	  <artifactId>picocli</artifactId>
-	  <version>4.5.0</version>
-	</dependency>
   </dependencies>
 </project>
