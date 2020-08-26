@@ -7,6 +7,21 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+/**
+ * 
+ * The class CliRun.
+ * 
+ * This class implements the CLI version of XitoSBML. It allows the user to
+ * obtain spatial SBML models by specifying the directory of the image dataset
+ * or path of a single image via the command line. Date Created: August 9, 2020
+ * 
+ * @author Medha Bhattacharya
+ * @author Akira Funahashi
+ * @author Kaito Ii
+ * @author Yuta Tokuoka
+ *
+ */
+
 @Command(name = "Running XitoSBML-CLI", mixinStandardHelpOptions = true, description = "Saves SBML document and spatial image", version = "1.0")
 
 public class CliRun implements Callable<Integer> {
@@ -16,7 +31,13 @@ public class CliRun implements Callable<Integer> {
 	@Option(names = "-o", required = true, description = "The path to output XML file if input is image file")
 	String outputValue;
 
-	// Function to check whether path specified is a folder or not
+	/**
+	 * Checks whether the "inputValue" is the path to an image or a directory
+	 * containing image(s) and calls the "run XitoSBML_CLI version"
+	 * 
+	 * @param folder Can be either a single image File or an entire dataset of
+	 *               images
+	 */
 	public void RunXitosbml(final File folder) {
 
 		// Instantiating CliMainImgSpatial class
@@ -51,6 +72,10 @@ public class CliRun implements Callable<Integer> {
 	}
 
 	@Override
+	/**
+	 * Creates a file from the path specified through inputValue and calls
+	 * RunXitoSBML method for this file.
+	 */
 	public Integer call() {
 		File folder = new File(inputValue);
 		RunXitosbml(folder);
@@ -58,6 +83,11 @@ public class CliRun implements Callable<Integer> {
 		return 0;
 	}
 
+	/**
+	 * The main method which implements the execute(args) method for this class
+	 * 
+	 * @param args String array argument
+	 */
 	public static void main(String... args) {
 		System.exit(new CommandLine(new CliRun()).execute(args));
 	}

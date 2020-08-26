@@ -27,8 +27,22 @@ import jp.ac.keio.bio.fun.xitosbml.visual.DomainStruct;
 import jp.ac.keio.bio.fun.xitosbml.visual.Viewer;
 import jp.ac.keio.bio.fun.xitosbml.xitosbml.SpatialSBMLExporter;
 
-public class CliMainImgSpatial {
+/**
+ * 
+ * The class CliMainImgSpatial.
+ * 
+ * This class implements the "run XitoSBML_CLI version" function. Date Created:
+ * August 9, 2020
+ * 
+ * @author Medha Bhattacharya
+ * @author Akira Funahashi
+ * @author Kaito Ii
+ * @author Yuta Tokuoka
+ *
+ */
 
+public class CliMainImgSpatial {
+	/** The ImagePlus image */
 	protected ImagePlus imager;
 
 	/** The SBML document. */
@@ -54,10 +68,28 @@ public class CliMainImgSpatial {
 	 */
 	protected SpatialImage spImg;
 
-	/** TrialForImage **/
+	/**
+	 * The GetImgDom, which is a class responsible for associating the input image
+	 * file with its domain
+	 */
 	protected GetImgDom imgDom;
 
+	/**
+	 * The path to an image file is taken as a parameter, which is used to
+	 * instantiate an ImagePlus object. The domain corresponding to this image is
+	 * set to 'Cytosol'. The following process is performed.
+	 * <ol>
+	 * <li>Interpolate an image if it is a Z-stack image (3D image)</li>
+	 * <li>Fill holes (blank pixels) in the image by morphology operation if
+	 * exists</li>
+	 * <li>Export generated image to spatial SBML</li>
+	 * </ol>
+	 * 
+	 * @param imagePath  the path for obtaining input image
+	 * @param outputPath the path for saving the output SBML model
+	 */
 	public void runCli(String imagePath, String outputPath) {
+		// Creating an ImagePlus object from the specified image path
 		ImagePlus imager = new ImagePlus(imagePath);
 		this.imager = imager;
 		cli(imager);
@@ -100,6 +132,12 @@ public class CliMainImgSpatial {
 
 	}
 
+	/**
+	 * Provides access to the Hashmap of the ImagePlus object and its associated
+	 * domain, i.e. Cytosol.
+	 * 
+	 * @param imager the ImagePlus object
+	 */
 	protected void cli(ImagePlus imager) {
 		hashDomainTypes = new HashMap<String, Integer>();
 		hashSampledValue = new HashMap<String, Integer>();
