@@ -17,6 +17,7 @@ import javax.xml.stream.XMLStreamException;
 import org.sbml.jsbml.Compartment;
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
+import org.sbml.jsbml.NamedSBase;
 import org.sbml.jsbml.Parameter;
 import org.sbml.jsbml.SBMLDocument;
 import org.sbml.jsbml.Unit;
@@ -45,7 +46,6 @@ import org.sbml.jsbml.ext.spatial.SampledVolume;
 import org.sbml.jsbml.ext.spatial.SpatialCompartmentPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialConstants;
 import org.sbml.jsbml.ext.spatial.SpatialModelPlugin;
-import org.sbml.jsbml.ext.spatial.SpatialNamedSBase;
 import org.sbml.jsbml.ext.spatial.SpatialParameterPlugin;
 import org.sbml.jsbml.ext.spatial.SpatialPoints;
 import org.sbml.jsbml.ext.spatial.SpatialSymbolReference;
@@ -278,9 +278,8 @@ public class SpatialSBMLExporter{
 			one = one.replaceAll("[0-9]", "");
 			String two = e.get(1).substring(0, e.get(1).length());
 			two = two.replaceAll("[0-9]", "");
-			//DomainType dt = geometry.getListOfDomainTypes().get(one + "_" + two + "_membrane");
-			DomainType dt = (DomainType) getFromSpatialList(geometry.getListOfDomainTypes(), one + "_" + two + "_membrane");
-
+			DomainType dt = geometry.getDomainType(one + "_" + two + "_membrane");
+			
 			if (hashMembrane.containsKey(dt.getSpatialId())) {
 				hashMembrane.put(dt.getSpatialId(), hashMembrane.get(dt.getSpatialId()) + 1);
 			} else {
@@ -304,9 +303,8 @@ public class SpatialSBMLExporter{
 	 */
 	public void addDomains() {
      for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    	//add domains to corresponding domaintypes
-    	 //DomainType dt = geometry.getListOfDomainTypes().get(e.getKey());
-    	 DomainType dt = (DomainType) getFromSpatialList(geometry.getListOfDomainTypes(),e.getKey());
-
+    	DomainType dt = geometry.getDomainType(e.getKey());
+    	 
  		for (int i = 0; i < hashDomainNum.get(e.getKey()); i++) { // add each domain
 			Domain dom = geometry.createDomain();
 			String id = dt.getSpatialId() + i;
@@ -330,10 +328,11 @@ public class SpatialSBMLExporter{
 	 * @param id SpatialId
 	 * @return SpatialNamedSBase object
 	 */
-	public SpatialNamedSBase getFromSpatialList(ListOf<?> list, String id){
+	@Deprecated
+	public NamedSBase getFromSpatialList(ListOf<?> list, String id){
 		for(Object o : list){
-			SpatialNamedSBase sbase = (SpatialNamedSBase) o;
-			if(sbase.getSpatialId().equals(id))
+			NamedSBase sbase = (NamedSBase) o;
+			if(sbase.getId().equals(id))
 				return sbase;
 		}
 
@@ -351,9 +350,8 @@ public class SpatialSBMLExporter{
 			DomainType dt = geometry.createDomainType();
 			dt.setSpatialId(e.getKey());
 			dt.setSpatialDimensions(e.getValue());
-
 			// Compartment may need changes for name and id
-			if(model.getListOfCompartments().get(e.getKey()) != null)
+			if(model.getCompartment(e.getKey()) != null)
 				continue;
 			Compartment c = model.createCompartment();
 			c.setSpatialDimensions(e.getValue());
