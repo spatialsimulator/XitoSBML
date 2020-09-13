@@ -105,7 +105,7 @@
     <license.licenseName>Apache License, Version 2.0</license.licenseName>
     <license.copyrightOwners>Funahashi Lab.</license.copyrightOwners>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jsbml.version>1.4</jsbml.version>
+    <jsbml.version>1.5</jsbml.version>
   </properties>
 
   <build>
