@@ -91,7 +91,7 @@ public class DiffusionDialog {
 		gd.addNumericField("value:", parameter.getValue(), 1);
 		gd.addRadioButtonGroup("constant:", isConstant, 1, 2, String.valueOf(parameter.getConstant()));
 		gd.addChoice("species:", SBMLProcessUtil.listIdToStringArray(model.getListOfSpecies()), dc.getVariable());
-		gd.addChoice("type:", SBMLProcessUtil.diffType, dc.getDiffusionKind().name());
+		gd.addChoice("type:", SBMLProcessUtil.diffType, dc.getType().name());
 		if(dc.isSetCoordinateReference1())
 			gd.addChoice("coordinate1:", SBMLProcessUtil.lcoord, dc.getCoordinateReference1().name());
 		else
@@ -135,11 +135,11 @@ public class DiffusionDialog {
 		
 		DiffusionCoefficient dc = (DiffusionCoefficient) (sp.isSetParamType() ? sp.getParamType() : new DiffusionCoefficient());
 		dc.setVariable(gd.getNextChoice());
-		dc.setDiffusionKind(DiffusionKind.valueOf(gd.getNextChoice()));
+		dc.setType(DiffusionKind.valueOf(gd.getNextChoice()));
 		String coord1 = gd.getNextChoice();
 		String coord2 = gd.getNextChoice();
 		
-		switch (dc.getDiffusionKind()) {
+		switch (dc.getType()) {
 		case tensor:
 			dc.setCoordinateReference2(CoordinateKind.valueOf(coord2));
 
@@ -150,7 +150,7 @@ public class DiffusionDialog {
 			break;
 		}
 		
-		if(dc.getDiffusionKind() == DiffusionKind.tensor && dc.getCoordinateReference1() == dc.getCoordinateReference2())
+		if(dc.getType() == DiffusionKind.tensor && dc.getCoordinateReference1() == dc.getCoordinateReference2())
 			dc.unsetCoordinateReference2();
 		
 		if(!dc.isSetParentSBMLObject())

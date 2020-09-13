@@ -80,7 +80,7 @@ public class DiffusionTable extends SBaseTable {
 			data[i][1] = p.isSetValue() ? p.getValue(): null;			
 			data[i][2] = p.getConstant();
 			data[i][3] = dc.getVariable();
-			data[i][4] = dc.getDiffusionKind().name();
+			data[i][4] = dc.getType().name();
 			data[i][5] = dc.isSetCoordinateReference1() ? dc.getCoordinateReference1().name() : "";
 			data[i][6] = dc.isSetCoordinateReference2() ? dc.getCoordinateReference2().name() : "";
 		}
@@ -133,7 +133,7 @@ public class DiffusionTable extends SBaseTable {
 		SpatialParameterPlugin sp = (SpatialParameterPlugin) p.getPlugin("spatial");
 		DiffusionCoefficient dc = (DiffusionCoefficient) sp.getParamType();
 		v.add(dc.getVariable());
-		v.add(dc.getDiffusionKind().name());
+		v.add(dc.getType().name());
 		v.add(dc.isSetCoordinateReference1() ? dc.getCoordinateReference1().name() : "");
 		v.add(dc.isSetCoordinateReference2() ? dc.getCoordinateReference2().name() : "");
 		

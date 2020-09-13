@@ -167,8 +167,8 @@ public class SBMLProcessUtil {
 	  dst.setValue(src.getValue());
 	  dst.setConstant(src.getConstant());
 		dstDiff.setVariable(srcDiff.getVariable());
-		dstDiff.setDiffusionKind(srcDiff.getDiffusionKind());
-		switch (srcDiff.getDiffusionKind()) {
+		dstDiff.setType(srcDiff.getType());
+		switch (srcDiff.getType()) {
 		case tensor:
 		  dstDiff.setCoordinateReference2(srcDiff.getCoordinateReference2());
 		case anisotropic:
