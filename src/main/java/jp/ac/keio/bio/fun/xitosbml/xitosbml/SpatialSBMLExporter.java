@@ -67,43 +67,43 @@ public class SpatialSBMLExporter{
 
   /** The SBML document. */
   private SBMLDocument document;
-  
+
   /** The SBML model. */
   private Model model;
-  
+
   /** The SBML spatialplugin. */
   private SpatialModelPlugin spatialplugin;
-  
+
   /** The SBML spatialcompplugin. */
   private SpatialCompartmentPlugin spatialcompplugin;
-  
+
   /** The geometry. */
   private Geometry geometry;
-  
+
   /** The hashmap of domain types. */
   private HashMap<String, Integer> hashDomainTypes;
-  
+
   /** The hashmap of sampled value. */
   private HashMap<String, Integer> hashSampledValue;
-  
+
   /** The hashmap of the count number of domains in each domain types. */
   private HashMap<String, Integer> hashDomainNum;
-  
+
   /** The hashmap of domain InteriorPoint of spatial image. HashMap&lt;String domain name, Point3d coordinate&gt; */
   private HashMap<String,Point3d> hashDomInteriorPt;
-  
+
   /** The adjacents list of spatial image. */
   private ArrayList<ArrayList<String>> adjacentsList;
-  
+
   /** The raw data of spatial image in 1D array. */
   private byte[] raw;
-  
+
   /** The size of an image (width, height and depth). */
   private int width, height, depth;
-  
+
   /** The unit of a CoordinateComponent */
   private String unit;
-  
+
   /** The delta. */
   private Point3d delta;
 
@@ -195,7 +195,7 @@ public class SpatialSBMLExporter{
 				sv.setSampledValue(hashSampledValue.get(e.getKey()));
 			}
 		}
-		
+
 		SampledField sf = geometry.createSampledField();
 		sf.setSpatialId("mySampledField");
 		sf.setDataType(DataKind.UINT8);
@@ -203,7 +203,7 @@ public class SpatialSBMLExporter{
 		sf.setNumSamples2(height);
 		//if(depth > 1)
 		sf.setNumSamples3(depth);
-		sf.setInterpolation(InterpolationKind.nearestneighbor);
+		sf.setInterpolation(InterpolationKind.nearestNeighbor);
 //		byte[] compressed = compressRawData(raw);
 		String s;
 //		if (compressed == null){
@@ -280,7 +280,7 @@ public class SpatialSBMLExporter{
 			two = two.replaceAll("[0-9]", "");
 			//DomainType dt = geometry.getListOfDomainTypes().get(one + "_" + two + "_membrane");
 			DomainType dt = (DomainType) getFromSpatialList(geometry.getListOfDomainTypes(), one + "_" + two + "_membrane");
-			 
+
 			if (hashMembrane.containsKey(dt.getSpatialId())) {
 				hashMembrane.put(dt.getSpatialId(), hashMembrane.get(dt.getSpatialId()) + 1);
 			} else {
@@ -306,7 +306,7 @@ public class SpatialSBMLExporter{
      for(Entry<String,Integer> e : hashDomainTypes.entrySet()){    	//add domains to corresponding domaintypes
     	 //DomainType dt = geometry.getListOfDomainTypes().get(e.getKey());
     	 DomainType dt = (DomainType) getFromSpatialList(geometry.getListOfDomainTypes(),e.getKey());
- 
+
  		for (int i = 0; i < hashDomainNum.get(e.getKey()); i++) { // add each domain
 			Domain dom = geometry.createDomain();
 			String id = dt.getSpatialId() + i;
@@ -317,10 +317,10 @@ public class SpatialSBMLExporter{
 				  Point3d p = hashDomInteriorPt.get(id);
 				  ip.setCoord1(p.x);
 				  ip.setCoord2(p.y);
-				  if(depth > 1) ip.setCoord3(p.z);  
+				  if(depth > 1) ip.setCoord3(p.z);
 				}
 			}
-     	}   
+     	}
 	}
 
 	/**
@@ -336,10 +336,10 @@ public class SpatialSBMLExporter{
 			if(sbase.getSpatialId().equals(id))
 				return sbase;
 		}
-		
+
 		return null;
 	}
-	
+
   	/**
 	 * Adds the domain types to the Geometry object.
      * SpatialId and SpatialDimensions will be set to generated domain type.
@@ -351,7 +351,7 @@ public class SpatialSBMLExporter{
 			DomainType dt = geometry.createDomainType();
 			dt.setSpatialId(e.getKey());
 			dt.setSpatialDimensions(e.getValue());
-		
+
 			// Compartment may need changes for name and id
 			if(model.getListOfCompartments().get(e.getKey()) != null)
 				continue;
@@ -361,12 +361,12 @@ public class SpatialSBMLExporter{
 			c.setConstant(true);
 			c.setId(e.getKey());
 			c.setName(e.getKey());
-			
+
 			spatialcompplugin = (SpatialCompartmentPlugin) c.getPlugin("spatial");
 			CompartmentMapping cm = new CompartmentMapping();
 			cm.setSpatialId(e.getKey() + c.getId());
 			cm.setDomainType(e.getKey());
-			// TODO 
+			// TODO
 			//cm.setUnitSize(delta.x * delta.y * delta.z);
 			cm.setUnitSize(1);
 
@@ -423,7 +423,7 @@ public class SpatialSBMLExporter{
 	  coordinateComponent.setBoundaryMaximum(bmax);
 	  coordinateComponent.setBoundaryMinimum(bmin);
 	}
-  
+
 	/**
 	 * Adds the global Parameter to each CoordinateComponent.
 	 * The id and the value of created will be set as "coordinate"+SpatialId and 0d respectively.
@@ -444,7 +444,7 @@ public class SpatialSBMLExporter{
 			spp.setParamType(ssr);
 		}
 	}
-  
+
 	/**
 	 * Gets the SBML model.
 	 *
@@ -453,7 +453,7 @@ public class SpatialSBMLExporter{
 	public Model getModel(){
 		return model;
 	}
-	
+
 	/**
 	 * Gets the SBML document.
 	 *
@@ -462,13 +462,13 @@ public class SpatialSBMLExporter{
 	public SBMLDocument getDocument(){
 		return document;
 	}
-	
+
 	/**
 	 * Adds the units (length, area and volume) to the model.
 	 */
 	public void addUnits(){
-		if(unit == null) 
-			return; 
+		if(unit == null)
+			return;
 		UnitDefinition ud = model.createUnitDefinition();
 		ud.setId("length");
 		Unit u = ud.createUnit();
@@ -476,7 +476,7 @@ public class SpatialSBMLExporter{
 		u.setExponent(1d);
 		u.setScale(0);
 		u.setMultiplier(getUnitMultiplier(unit));
-	
+
 		ud = model.createUnitDefinition();
 		ud.setId("area");
 		u = ud.createUnit();
@@ -484,7 +484,7 @@ public class SpatialSBMLExporter{
 		u.setExponent(2d);
 		u.setScale(0);
 		u.setMultiplier(getUnitMultiplier(unit));
-		
+
 		ud = model.createUnitDefinition();
 		ud.setId("volume");
 		u = ud.createUnit();
@@ -505,7 +505,7 @@ public class SpatialSBMLExporter{
 		if(unit.equals("um")) return 0.000001;
 		return 1;
 	}
-	
+
 	/**
 	 * Creates the ParametricGeometry.
 	 * This method will create following objects:
@@ -542,7 +542,7 @@ public class SpatialSBMLExporter{
 	 *
 	 * @param hashBound the hashmap of boundary
 	 */
-	public void addCoordinates(HashMap<String, Point3d> hashBound) { 
+	public void addCoordinates(HashMap<String, Point3d> hashBound) {
 		CoordinateComponent ccx = geometry.createCoordinateComponent();
 		ccx.setSpatialId("x");
 		ccx.setType(CoordinateKind.cartesianX);
@@ -559,7 +559,7 @@ public class SpatialSBMLExporter{
 		if(unit !=null) ccz.setUnits(unit);
 		setCoordinateBoundary(ccz, "Z", hashBound.get("min").z, hashBound.get("max").z, delta.x);
 	}
-	
+
 	/**
 	 * Adds the parametric geometry definitions.
      * SpatialPoints will be set to ParametricGeometry.
@@ -573,7 +573,7 @@ public class SpatialSBMLExporter{
 		ParametricGeometry pg = geometry.createParametricGeometry();
 		pg.setIsActive(true);
 		pg.setSpatialId("ParametricGeometry");
-		
+
 		for (Entry<String, List<Point3d>> e : hashVertices.entrySet()) {
 			List<Point3d> list = e.getValue();
 			ArrayList<Point3d> uniquePointSet = new ArrayList<Point3d>(new LinkedHashSet<Point3d>(list));
@@ -582,15 +582,15 @@ public class SpatialSBMLExporter{
 			sp.setCompression(CompressionKind.uncompressed);
 			addUniqueVertices(sp, uniquePointSet);
 			pg.setSpatialPoints(sp);
-			
+
 			ParametricObject po = pg.createParametricObject();
 			po.setCompression(CompressionKind.uncompressed);
 			po.setDataType(DataKind.DOUBLE);
 			po.setPolygonType(PolygonKind.triangle);
 			po.setDomainType(e.getKey());
 			po.setSpatialId(e.getKey() + "_polygon");
-			setPointIndex(po, list, uniquePointSet);	
-		}	
+			setPointIndex(po, list, uniquePointSet);
+		}
 	}
 
 	/**
@@ -606,21 +606,21 @@ public class SpatialSBMLExporter{
 		Iterator<Point3d> pIt = uniquePointSet.iterator();
 		int count = 0;
 		double[] d = new double[uniquePointSet.size() *3];
-		
+
 		while(pIt.hasNext()){
 			Point3d point = pIt.next();
 			d[count++] = point.x;
 			d[count++] = point.y;
 			d[count++] = point.z;
-		}	
-		
+		}
+
 		String s = Arrays.toString(d);
 		s = s.replace("[", "");
 		s = s.replace("]", "");
 		s = s.replace(",", "");
 		sp.setArrayData(s);
 	}
-	
+
 	/**
 	 * Sets the index of unique vertices to the SpatialPoints object.
 	 * The set of index of unique vertices (an array of indices) will be stored
@@ -632,7 +632,7 @@ public class SpatialSBMLExporter{
 	 */
 	public void setPointIndex(ParametricObject po, List<Point3d> list, ArrayList<Point3d> uniquePointSet) {
 		int[] points = new int[list.size()];
-		
+
 		for(int i = 0 ; i < list.size() ; i++)
 			points[i] = uniquePointSet.indexOf(list.get(i));
 
@@ -642,7 +642,7 @@ public class SpatialSBMLExporter{
 		s = s.replace(",", "");
 		po.setPointIndex(s);
 	}
-	
+
 	/**
 	 * Add the outside annotation to Compartment for CellDesigner.
 	 */
@@ -665,7 +665,7 @@ public class SpatialSBMLExporter{
 					ex.printStackTrace();
 				}
 			}
-			
+
 			if(!commem.isSetAnnotation()){
 				String str = createOutsideAnnotationString(com2.getId());
 				try {
@@ -685,16 +685,16 @@ public class SpatialSBMLExporter{
 	 */
 	private Compartment getMappedCompartment(String id){
 		ListOf<Compartment> cList = model.getListOfCompartments();
-		
+
 		for(Compartment c : cList){
 			CompartmentMapping cm = ((SpatialCompartmentPlugin)c.getPlugin(SpatialConstants.shortLabel)).getCompartmentMapping();
 			if(cm.getDomainType().equals(id))
 				return c;
-		}		
-		
+		}
+
 		return null;
 	}
-	
+
 	/**
 	 * Creates the outside annotation to Compartment for CellDesigner.
 	 *
@@ -704,5 +704,5 @@ public class SpatialSBMLExporter{
 	private String createOutsideAnnotationString(String outside){
 		return "<celldesigner:outside>" + outside + "</celldesigner:outside>\n";
 	}
-	
+
 }
