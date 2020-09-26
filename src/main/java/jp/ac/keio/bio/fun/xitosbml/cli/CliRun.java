@@ -45,7 +45,17 @@ public class CliRun implements Callable<Integer> {
 
 		if (!folder.isDirectory()) {
 			// The input is path to an image file and hence can be processed directly
-			cliMain.runCli(inputValue, outputValue);
+			if (folder.exists()) {
+				// System.out.println(folder);
+				String ext = inputValue.substring(inputValue.lastIndexOf('.') + 1);
+				System.out.println(ext);
+				if (ext.equals("tif") || ext.equals("tiff") || ext.equals("bmp") || ext.equals("dcm")
+						|| ext.equals("fits") || ext.equals("pdm") || ext.equals("gif") || ext.equals("jpeg")) {
+					cliMain.runCli(inputValue, outputValue);
+				}
+			} else {
+				System.out.println("File: " + folder + " does not exist");
+			}
 		} else {
 			// The input is path to a folder containing image files
 			for (final File fileEntry : folder.listFiles()) {
@@ -63,7 +73,6 @@ public class CliRun implements Callable<Integer> {
 						cliMain.runCli(temp, tempOut);
 
 					}
-
 				}
 
 			}
