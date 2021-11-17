@@ -492,6 +492,14 @@ public class SpatialSBMLExporter{
 		u.setExponent(3d);
 		u.setScale(0);
 		u.setMultiplier(getUnitMultiplier(unit));
+
+		ud = model.createUnitDefinition();
+		ud.setId(unit);
+		u = ud.createUnit();
+		u.setKind(Kind.METRE);
+		u.setExponent(1d);
+		u.setScale(0);
+		u.setMultiplier(getUnitMultiplier(unit));
 	}
 
 	/**
