@@ -549,7 +549,7 @@ public class SpeciesDialog implements ItemListener {
 		para.setId(SFid);
 		para.setConstant(true);
                 para.setUnits("mole");
-                para.setValues(0); // need to modify average values in a image
+                para.setValue(0d); // need to modify average values in a image
 		// SpatialSymbolReference
 		SpatialParameterPlugin spp = (SpatialParameterPlugin) para.getPlugin(SpatialConstants.namespaceURI);
 		SpatialSymbolReference ssr = new SpatialSymbolReference();
