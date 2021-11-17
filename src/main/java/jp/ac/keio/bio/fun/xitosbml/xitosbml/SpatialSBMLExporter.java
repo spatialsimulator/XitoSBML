@@ -361,6 +361,13 @@ public class SpatialSBMLExporter{
 			c.setConstant(true);
 			c.setId(e.getKey());
 			c.setName(e.getKey());
+                        c.setSize(0); // need to modify average area size of a compartment
+                        if( e.getValue() == 1 )
+                          c.setUnits("length");
+                        else if( e.getValue() == 2 )
+                          c.setUnits("area");
+                        else if( e.getValue() == 3 )
+                          c.setUnits("volume");
 
 			spatialcompplugin = (SpatialCompartmentPlugin) c.getPlugin("spatial");
 			CompartmentMapping cm = new CompartmentMapping();
@@ -438,6 +445,7 @@ public class SpatialSBMLExporter{
 			p.setId("coordinate" + cc.getSpatialId());
 			p.setConstant(true);
 			p.setValue(0d);
+                        p.setUnits("length");
 			SpatialParameterPlugin spp = (SpatialParameterPlugin) p.getPlugin(SpatialConstants.namespaceURI);
 			SpatialSymbolReference ssr = new SpatialSymbolReference();
 			ssr.setSpatialRef(cc.getSpatialId());
@@ -470,8 +478,16 @@ public class SpatialSBMLExporter{
 		if(unit == null)
 			return;
 		UnitDefinition ud = model.createUnitDefinition();
-		ud.setId("length");
+		ud.setId("um");
 		Unit u = ud.createUnit();
+		u.setKind(Kind.METRE);
+		u.setExponent(1d);
+		u.setScale(0);
+		u.setMultiplier(getUnitMultiplier(unit));
+
+                ud = model.createUnitDefinition();
+		ud.setId("length");
+		u = ud.createUnit();
 		u.setKind(Kind.METRE);
 		u.setExponent(1d);
 		u.setScale(0);
