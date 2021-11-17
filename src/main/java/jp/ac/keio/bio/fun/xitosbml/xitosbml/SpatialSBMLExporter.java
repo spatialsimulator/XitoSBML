@@ -470,8 +470,16 @@ public class SpatialSBMLExporter{
 		if(unit == null)
 			return;
 		UnitDefinition ud = model.createUnitDefinition();
-		ud.setId("length");
+		ud.setId("um");
 		Unit u = ud.createUnit();
+		u.setKind(Kind.METRE);
+		u.setExponent(1d);
+		u.setScale(0);
+		u.setMultiplier(getUnitMultiplier(unit));
+
+                ud = model.createUnitDefinition();
+		ud.setId("length");
+		u = ud.createUnit();
 		u.setKind(Kind.METRE);
 		u.setExponent(1d);
 		u.setScale(0);
